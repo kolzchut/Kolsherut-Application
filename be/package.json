@@ -1,0 +1,35 @@
+{
+  "name": "be",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "engines": {
+    "node": "20.x",
+    "npm": "10.x"
+  },
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "build": "tsc",
+    "dev": "nodemon src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docker:build": "npm run build && npx cross-var docker build -t kolsherut_be:$npm_package_version .",
+    "docker:save": "npx cross-var docker save -o ../tars/kolsherut_be.$npm_package_version.tar kolsherut_be:$npm_package_version",
+    "tar": "npm run docker:build && npm run docker:save"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express": "^5.0.0",
+    "axios": "^1.8.1",
+    "cors": "^2.8.5",
+    "cross-var": "^1.1.0",
+    "express": "^4.21.2",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^4.9.5"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19"
+  }
+}

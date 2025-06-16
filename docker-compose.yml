@@ -1,0 +1,26 @@
+services:
+  be:
+    image: kolsherut_be:0.0.0
+    restart: unless-stopped
+    ports:
+      - 8000:8000
+    environment:
+      - PORT=8000
+      - ORIGIN=*
+      - ENV=dev
+    volumes:
+      - ./volumes/be/logs:/app/logs
+    depends_on:
+      - postgres
+  #     - mosquitto
+
+  fe:
+    image: kolsherut_fe:0.0.0
+    restart: unless-stopped
+    ports:
+      - 5173:80
+    volumes:
+      - ./volumes/fe/config.json:/usr/share/nginx/html/config.json
+      - ./volumes/fe/strings.json:/usr/share/nginx/html/strings.json
+    depends_on:
+      - be
