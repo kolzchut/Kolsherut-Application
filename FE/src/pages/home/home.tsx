@@ -1,7 +1,7 @@
 import useStyle from "./home.css";
-import Header from "../../components/header/header.tsx";
-import Search from "./search/search.tsx";
-const homePage = () => {
+import Header from "../../components/header/header";
+import Search from "./search/search";
+const Home = () => {
         const classes = useStyle();
         return <div className={classes.root}>
                 <Header/>
@@ -9,4 +9,4 @@ const homePage = () => {
         </div>
 }
 
-export default homePage;
+export default Home;

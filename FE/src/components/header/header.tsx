@@ -1,5 +1,5 @@
-import useStyle from "./header.css.ts";
-const homePage = () => {
+import useStyle from "./header.css";
+const Header = () => {
         const classes = useStyle();
         return <div className={classes.root}>
                 <div>
@@ -12,4 +12,4 @@ const homePage = () => {
         </div>
 }
 
-export default homePage;
+export default Header;

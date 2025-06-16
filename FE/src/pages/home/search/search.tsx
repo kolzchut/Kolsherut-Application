@@ -1,10 +1,10 @@
-import useStyle from "./search.css.ts";
+import useStyle from "./search.css";
 
-const homePage = () => {
+const Search = () => {
         const classes = useStyle();
         return <div className={classes.root}>
 
         </div>
 }
 
-export default homePage;
+export default Search;

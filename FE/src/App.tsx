@@ -1,5 +1,5 @@
 import './App.css'
-import pages from "./pages/pages.ts";
+import pages from "./pages/pages";
 
 function App() {
   const page = 'home';

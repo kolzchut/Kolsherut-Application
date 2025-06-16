@@ -1,7 +1,7 @@
-import loadConfig from './loadConfig.ts';
+import loadConfig from './loadConfig';
 import ReactDOM from 'react-dom/client';
 import React from "react";
-import testConnection from "../sendMessage/testConnection.ts";
+import testConnection from "../sendMessage/testConnection";
 
 export default async (main: React.ReactNode) => {
     await loadConfig();

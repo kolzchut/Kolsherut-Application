@@ -1,7 +1,7 @@
-import sendMessage from "./sendMessage.ts";
-import {store} from "../../store/store.ts";
-import {setConnected, setDisconnected} from "../../store/general/generalSlice.ts";
-import logger from "../logger/logger.ts";
+import sendMessage from "./sendMessage";
+import {store} from "../../store/store";
+import {setConnected, setDisconnected} from "../../store/general/generalSlice";
+import logger from "../logger/logger";
 
 const setConnection = (isConnected: boolean) => isConnected ? setConnected() : setDisconnected();
 
