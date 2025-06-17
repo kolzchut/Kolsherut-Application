@@ -10,13 +10,17 @@ export const generalSlice = createSlice({
         },
         setDisconnected(state: GeneralStore) {
             state.connected = false;
+        },
+        setPage(state: GeneralStore, action) {
+            state.page = action.payload;
         }
     },
 });
 
 export const {
     setConnected,
-    setDisconnected
+    setDisconnected,
+    setPage
 } = generalSlice.actions;
 
 export default generalSlice.reducer;
