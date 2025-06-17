@@ -19,18 +19,13 @@ const authenticationRequired = () =>{
     setTimeout(()=>window.location.reload(), window.config.reloadTimeIfNotAuthenticated)
 }
 
-const getHeaders = (): Record<string, string> => {
-    return { Authorization: `Bearer ${window.bearer || ''}` };
-};
-
 const createRequestConfig = (method: string, body: object): AxiosRequestConfig => {
-    const headers = getHeaders();
     const validateStatus = (status: number) => {
         return status === 403 || (status >= 200 && status < 300);
     };
     return method === 'get' || method === 'delete'
-        ? { headers, validateStatus }
-        : { headers, data: body, validateStatus };
+        ? { validateStatus }
+        : { data: body, validateStatus };
 };
 
 const sendMessage = async ({method,requestURL='',body={}}:{method: 'get' | 'post' | 'delete' | 'put' | 'patch' , requestURL?:string, body?: any}

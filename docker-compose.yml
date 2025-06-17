@@ -12,7 +12,6 @@ services:
       - ./volumes/be/logs:/app/logs
     depends_on:
       - postgres
-  #     - mosquitto
 
   fe:
     image: kolsherut_fe:0.0.0
