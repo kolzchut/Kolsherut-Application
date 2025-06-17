@@ -9,7 +9,7 @@ export default {
             connection:{
                 node: process.env.ELASTIC_URL || 'http://localhost:9200',
                 auth: {
-                    username: process.env.ELASTIC_USERNAME || 'your-username',
+                    username: process.env.ELASTIC_USERNAME || 'elastic',
                     password: process.env.ELASTIC_PASSWORD || 'your-password'
                 }
             },
