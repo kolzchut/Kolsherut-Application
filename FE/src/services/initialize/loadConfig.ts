@@ -1,6 +1,4 @@
 import axios from 'axios';
-import offlineConfig from './offlineConfigAndStrings/config.json';
-import offlineStrings from './offlineConfigAndStrings/strings.json';
 
 declare global {
     interface Window {
@@ -50,10 +48,6 @@ export default async () => {
         } else {
             console.error({ message: "Unexpected error loading config or strings", payload: error });
         }
-
-        // Fallback to offline config and strings
-        window.config = offlineConfig;
-        window.strings = offlineStrings;
     }
     finally {
         Object.freeze(window.config);
