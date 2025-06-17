@@ -1,5 +1,9 @@
 import home from "./home/home";
 
-export default {
+const pages = {
     home: home,
 };
+
+export default pages;
+
+export type Pages = keyof typeof pages;
