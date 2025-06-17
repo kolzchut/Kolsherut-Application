@@ -7,6 +7,7 @@
   "reloadTimeIfNotAuthenticated": 10000,
   "routes": {
     "logs": "/logs",
-    "test": "/test"
+    "test": "/test",
+    "homepage": "/homepage"
   }
 }

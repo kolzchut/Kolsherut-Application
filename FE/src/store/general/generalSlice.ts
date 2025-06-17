@@ -11,6 +11,9 @@ export const generalSlice = createSlice({
         setDisconnected(state: GeneralStore) {
             state.connected = false;
         },
+        setSearchOptions(state: GeneralStore, action) {
+            state.searchOptions = action.payload;
+        },
         setPage(state: GeneralStore, action) {
             state.page = action.payload;
         }
@@ -20,6 +23,7 @@ export const generalSlice = createSlice({
 export const {
     setConnected,
     setDisconnected,
+    setSearchOptions,
     setPage
 } = generalSlice.actions;
 
