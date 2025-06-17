@@ -1,8 +1,9 @@
 import {createUseStyles} from 'react-jss';
 
-export default  createUseStyles({
-    root:{
+export default createUseStyles({
+    root: {
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'row',
+        height: '100vh',
     }
 });

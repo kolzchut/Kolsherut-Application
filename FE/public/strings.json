@@ -2,5 +2,8 @@
 "authenticationRequired": {
   "header": "Auth Required",
   "message": "Please log in to access the mission control."
-}
+},
+  "search": {
+    "label": " כל שירות, כל קהל וכל מיקום..."
+  }
 }
