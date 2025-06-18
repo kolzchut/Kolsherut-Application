@@ -10,7 +10,6 @@ export default async (main: React.ReactNode) => {
     await loadConfig();
     const searchOptions = await sendMessage({method: 'get', requestURL: window.config.routes.homepage})
     const sortedSearchOptions = sortOptionalSearchValues(searchOptions.data);
-    console.log('sortedSearchOptions',sortedSearchOptions );
     if(searchOptions.success) store.dispatch(setSearchOptions(sortedSearchOptions))
     ReactDOM.createRoot(document.getElementById('root')!).render(main);
 };

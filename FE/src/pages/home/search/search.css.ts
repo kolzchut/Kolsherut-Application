@@ -32,6 +32,9 @@ export default createUseStyles({
         '&:focus': {
             outline: '2px solid royalblue',
         },
+        '&:hover': {
+            outline: '2px solid royalblue',
+        },
         '&::placeholder': {
             color: royalBlue,
         },

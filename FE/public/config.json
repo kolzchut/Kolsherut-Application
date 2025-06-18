@@ -8,6 +8,7 @@
   "routes": {
     "logs": "/logs",
     "test": "/test",
-    "homepage": "/homepage"
+    "homepage": "/homepage",
+    "autocomplete":"/autocomplete/:search"
   }
 }

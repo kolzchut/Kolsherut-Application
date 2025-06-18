@@ -2,18 +2,20 @@ import useStyle from './search.css';
 import lightIconSearch from '../../../assets/icon-search-blue-1.svg'
 import IconArrowTopRight from '../../../assets/icon-arrow-top-right-gray-4.svg';
 import {ChangeEvent, useState} from "react";
-import {filterOptions} from "./searchLogic";
+import sendMessage from "../../../services/sendMessage/sendMessage";
+import AutocompleteType from "../../../types/autocompleteType";
 
 const Search = () => {
     const classes = useStyle();
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [optionalSearchValues, setOptionalSearchValues] = useState<string[]>([]);
-    const MockOptions = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'zzza'];
-
-    const inputChangeEvent = (v: ChangeEvent<HTMLInputElement>,) => {
+    const [optionalSearchValues, setOptionalSearchValues] = useState<AutocompleteType[]>([]);
+    const inputChangeEvent = async(v: ChangeEvent<HTMLInputElement>,) => {
         const value: string = v.target.value;
         setSearchTerm(value)
-        filterOptions({searchTerm: value, Options: MockOptions, setOptionalSearchValues})
+        if(value === '') return setOptionalSearchValues([]);
+        const requestURL = window.config.routes.autocomplete.replace(':search', value)
+        const response = await sendMessage({method:'get', requestURL})
+        setOptionalSearchValues(response.data)
     }
     return (
         <section className={classes.root}>
@@ -29,11 +31,11 @@ const Search = () => {
 
             </div>
             <div className={classes.optionalSearchValuesWrapper}>
-                {optionalSearchValues.map((value, index) => (
-                    <div className={classes.optionalSearchValue}>
+                {optionalSearchValues.map((value: AutocompleteType, index:number) => (
+                    <div key={index} onClick={() => setSearchTerm(value.structured_query)} className={classes.optionalSearchValue}>
                         <span className={classes.iconAndText}>
                             <img className={classes.searchIcon} alt={"חיפוש"} src={lightIconSearch}/>
-                            <span key={index} onClick={() => setSearchTerm(value)}>{value}</span>
+                            <span key={index} >{value.query}</span>
                         </span>
                         <img className={classes.searchIcon} alt={"חיפוש"} src={IconArrowTopRight}/>
 
