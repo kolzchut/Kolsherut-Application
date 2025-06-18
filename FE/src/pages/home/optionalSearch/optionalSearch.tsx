@@ -8,12 +8,13 @@ const OptionalSearch = () => {
     const classes = useStyle();
     const [selected, setSelected] = useState<string>("");
     const optionalSearchValues = useSelector(getSearchOptions) as Record<string, SearchValue[]>;
-
     return (
         <div className={classes.root}>
             {Object.values(optionalSearchValues).map((group: SearchValue[]) => (
                 <div className={classes.group} key={group[0].group}>
-                    <h3 className={classes.groupTitle}>{group[0].group}</h3>
+                    <h3 onClick={() => {
+                        if(group[0].group_link) setSelected(group[0].group_link)
+                    }} className={classes.groupTitle}>{group[0].group}</h3>
                     <div className={classes.optionalSearchValuesWrapper}>
                         {group.filter((value: SearchValue) => value.title && value.query).map((value: SearchValue, index: number) => (
                             <div

@@ -7,6 +7,8 @@ export default createUseStyles({
         flexDirection: 'row',
         flexWrap:'wrap',
         fontFamily: 'RAG Sans, sans-serif',
+        justifyContent: "center",
+        alignItems: 'center',
         gap: 20,
         padding: 20,
         backgroundColor: white,
@@ -20,6 +22,9 @@ export default createUseStyles({
         fontWeight: 'bold',
         color: royalBlue,
         marginBottom: 10,
+        '&:hover': {
+            backgroundColor: Cyan
+        },
     },
     optionalSearchValuesWrapper: {
         display: 'flex',
