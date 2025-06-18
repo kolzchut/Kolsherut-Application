@@ -16,7 +16,8 @@ export default {
             reconnectTimeout: parseInt(process.env.ELASTIC_RECONNECT_TIMEOUT || '5') * 1000,
             indices:{
               card: "srm__cards_20220926183305498944_a9274d22",
-              homepage: "srm__homepage_20240523001317126410_9fa37757"
+              homepage: "srm__homepage_20240523001317126410_9fa37757",
+              autocomplete: "srm__autocomplete_20240505135631716607_372901c0"
             }
         }
     },

@@ -9,6 +9,7 @@ import {errorHandler} from "./middlewares/errorHandler";
 import logRoute from "./routes/logRoute";
 import searchRoute from "./routes/searchRoute";
 import homePageRoute from "./routes/homePageRoute";
+import autoCompleteRoute from "./routes/autoCompleteRoute";
 
 const app = express();
 const httpServer = createServer(app);
@@ -22,6 +23,7 @@ app.get('/test', (req: Request, res: Response) => {
     res.status(200).json({message:'Server is running 🍍☺', success: true});
 });
 app.get('/homepage', homePageRoute)
+app.get('/autocomplete/:search', autoCompleteRoute)
 app.get('/card/:card_id', cardRoute);
 app.post('/search', searchRoute)
 app.post('/logs/:provider', logRoute)
