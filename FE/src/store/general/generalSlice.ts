@@ -7,6 +7,7 @@ export const generalSlice = createSlice({
     reducers: {
         setRouteParams(state: GeneralStore, action) {
             state.page = action.payload.p || state.page;
+            state.cardId = action.payload.c || state.cardId;
         },
         setPage(state: GeneralStore, action) {
             state.page = action.payload;
