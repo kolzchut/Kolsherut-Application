@@ -6,7 +6,7 @@ import elasticFormater from "../services/db/es/elasticFormater";
 
 export default asyncHandler(async (req: Request, res: Response) => {
     const {card_id} = req.params;
-    const card = elasticFormater(await getCard(card_id));
+    const card = elasticFormater(await getCard(card_id))[0];
     logger.log({service: "Card Routes", message: `Fetched card with ID: ${card_id}`, payload: card});
     res.status(200).json({success: true, data: card});
 });
