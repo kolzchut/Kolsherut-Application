@@ -1,31 +1,34 @@
 import Map from "../../components/map/map";
 import useStyle from "../home/home.css";
-import {getFullCard} from "./cardLogic";
+import {backToHome, getFullCard, setMapToCard} from "./cardLogic";
 import {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
 import {getCardId} from "../../store/general/general.selector";
+import {ICard} from "../../types/cardType";
+import CardDetails from "./cardDetails/cardDetails";
 
 const Card = () => {
     const classes = useStyle();
     const cardId = useSelector(getCardId)
-    const [fullCard, setFullCard] = useState({})
+    const [fullCard, setFullCard] = useState<ICard | null>(null)
     useEffect(()=>{
         const fetchCard = async () => {
             const cardData = await getFullCard(cardId);
-            setFullCard(cardData);
+            if(cardData !== null) {
+                setFullCard(cardData);
+                setMapToCard(cardData)
+                return;
+            }
+            backToHome();
         };
         fetchCard();
     },[cardId])
-    console.log('full card', fullCard)
     return (
         <main className={classes.root}>
             <section className={classes.mapContainer}>
                 <Map/>
             </section>
-            <section>
-            <h1>Card Component</h1>
-            <p>This is a placeholder for the card component.</p>
-            </section>
+            {fullCard &&<CardDetails card={fullCard}/>}
         </main>
     );
 }

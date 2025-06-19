@@ -37,6 +37,7 @@ export class MapSingleton {
     public init({mapInteractions, viewInteractions}: MapInitParams) {
         this.sources = getSources();
         initLayers(this);
+        if(this.layers)
         this.ol.setLayers(this.layers);
         setViewPort();
 
