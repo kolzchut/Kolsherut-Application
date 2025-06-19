@@ -5,13 +5,13 @@ import OptionalSearch from "./optionalSearch/optionalSearch";
 
 const Home = () => {
     const classes = useStyle();
-    return <div className={classes.root}>
-        <div className={classes.main}>
+    return <main className={classes.root}>
+        <section className={classes.main}>
             <Header/>
             <OptionalSearch/>
-        </div>
+        </section>
         <Search/>
-    </div>
+    </main>
 }
 
 export default Home;

@@ -4,8 +4,16 @@ export default createUseStyles({
     root: {
         display: 'flex',
         flexDirection: 'row',
-        width: '100vh',
+        height: '100vh',
+        width: '100%',
         justifyContent: 'space-between',
+    },
+    main: {
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 6,
+        overflowY: 'auto',
+        scrollbarWidth: 'none',
     },
     mapContainer:{
         width: '50%',

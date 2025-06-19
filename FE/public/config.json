@@ -9,6 +9,7 @@
     "logs": "/logs",
     "test": "/test",
     "homepage": "/homepage",
+    "card" : "/card/:cardId",
     "autocomplete":"/autocomplete/:search"
   },
   "map": {
