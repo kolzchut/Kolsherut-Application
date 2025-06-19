@@ -10,7 +10,7 @@ const getLayers = ({osmSource, poiSource}: GetLayersParams): GetLayersReturn => 
     const poiLayer = new VectorLayer({
         source: poiSource,
         visible: true,
-        zIndex: 3
+        zIndex: 1
     });
     return [osmLayer, poiLayer];
 }
