@@ -1,90 +1,34 @@
 import {ICard} from "../../../types/cardType";
 import useStyle from "./cardDetails.css";
+import ServiceEssence from "./components/serviceEssence/serviceEssence";
+import TargetAudience from "./components/targetAudience/targetAudience";
+import Contact from "./components/contact/contact";
+import ServiceEligibility from "./components/serviceEligibility/serviceEligibility";
+import ProvidedBy from "./components/providedBy/providedBy";
+import DataSource from "./components/dataSource/dataSource";
 
 const CardDetails = ({card}: { card: ICard }) => {
     const classes = useStyle();
-    const constantText = {
-        serviceEssence: window.strings.cardDetails.serviceEssence,
-        targetAudience: window.strings.cardDetails.targetAudience,
-        contactDetails: window.strings.cardDetails.contactDetails,
-        serviceEligibility: window.strings.cardDetails.serviceEligibility,
-        providedBy: window.strings.cardDetails.providedBy,
-        dataErrorReport: window.strings.cardDetails.dataErrorReport,
-    }
     const email = card.service_email_address || card.organization_email_address;
-    return (<section className={classes.root}>
+    return <section className={classes.root}>
         <div>
             <h2>{card.organization_name}</h2>
         </div>
         <div>
             <h4>{card.service_name}</h4>
             <p>{card.service_description}</p>
-            <div>
-                <span>{constantText.serviceEssence}</span>
-                {card.responses.map((response => (
-                    <div key={response.id}>
-                        <h5>{response.name}</h5>
-                    </div>
-                )))}
-            </div>
-            <div>
-                <span>{constantText.targetAudience}</span>
-                {card.situations.map((situation => (
-                    <div key={situation.id}>
-                        <h5>{situation.name}</h5>
-                    </div>
-                )))}
-            </div>
-            <div>
-                <span>{constantText.contactDetails}:</span>
-                {card.service_phone_numbers.map((phoneNumber) => (
-                    <a key={phoneNumber} href={`tel:${phoneNumber}`}>
-                        <span>{phoneNumber}</span>
-                    </a>
-                ))}
-                {email && (
-                    <a href={`mailto:${email}`}>
-                        <span>{email}</span>
-                    </a>
-                )}
-            </div>
-            <div>
-                <span>{constantText.serviceEligibility}</span>
-                {card.service_details && (
-                    <p>{card.service_details}</p>
-                )}
-                {card.service_payment_details && (
-                    <p>{card.service_payment_details}</p>
-                )}
-            </div>
-            <div>
-                <span>{constantText.providedBy}</span>
-                <div>
-                    {card.organization_urls && card.organization_urls.map((url) => (
-                        <a key={url.href} href={url.href} target="_blank" rel="noopener noreferrer">
-                            {card.organization_name}
-                        </a>
-                    ))}
-                    {card.organization_phone_numbers.map((phoneNumber) => (
-                        <a key={phoneNumber} href={`tel:${phoneNumber}`}>
-                            <span>{phoneNumber}</span>
-                        </a>
-                    ))}
-                    {card.organization_email_address && (
-                        <a href={`mailto:${card.organization_email_address}`}>
-                            <span>{card.organization_email_address}</span>
-                        </a>
-                    )}
-                </div>
-                <div>
-                    {card.data_sources && card.data_sources.map((source, index) => (
-                    <span key={index}>
-                        {source}
-                    </span>
-                ))}
-                </div>
-            </div>
+            <ServiceEssence responses={card.responses}/>
+            <TargetAudience situations={card.situations}/>
+            <Contact email={email} servicePhoneNumbers={card.service_phone_numbers}/>
+            <ServiceEligibility serviceDetails={card.service_details}
+                                servicePaymentDetails={card.service_payment_details}/>
+            <ProvidedBy organizationUrls={card.organization_urls}
+                        organizationEmailAddress={card.organization_email_address}
+                        organizationName={card.organization_name}
+                        organizationPhoneNumbers={card.organization_phone_numbers}/>
+            <DataSource dataSource={card.data_sources}/>
         </div>
-    </section>)
+</section>
+
 }
 export default CardDetails;
