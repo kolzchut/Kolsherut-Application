@@ -5,5 +5,6 @@ export default createUseStyles({
         display: 'flex',
         flexDirection: 'column',
         width: '100%',
+        overflowY: 'auto'
     },
 });

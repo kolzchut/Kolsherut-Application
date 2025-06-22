@@ -1,5 +1,5 @@
 import Map from "../../components/map/map";
-import useStyle from "../home/home.css";
+import useStyle from "./card.css";
 import {backToHome, getFullCard, setMapToCard} from "./cardLogic";
 import {useEffect, useState} from "react";
 import {useSelector} from "react-redux";

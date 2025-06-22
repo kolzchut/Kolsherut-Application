@@ -23,7 +23,10 @@ export const setMapToCard = (card:ICard) =>{
         branch_geometry,
         responses: card.responses,
         situations: card.situations,
-        cardId: card.card_id
+        cardId: card.card_id,
+        branch_address: card.branch_address,
+        branch_city: card.branch_city,
+        branch_name: card.branch_name || card.organization_name
     }
     addPOI(poiData)
 }

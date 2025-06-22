@@ -14,10 +14,5 @@ export default createUseStyles({
         flex: 6,
         overflowY: 'auto',
         scrollbarWidth: 'none',
-    },
-    mapContainer:{
-        width: '50%',
-        height: '100%',
-        minWidth: 500,
     }
 });

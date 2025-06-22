@@ -6,7 +6,7 @@ import sendMessage from "./sendMessage/sendMessage";
 import {setRouteParams, setSearchOptions} from "../store/general/generalSlice";
 import sortOptionalSearchValues from "./sortOptionalSearchValues";
 import mapService from './map/map'
-import {mapInteractions, viewInteractions} from "./map/mapInteraction";
+import {mapInteractions, viewInteractions} from "./map/events/mapInteraction";
 import {getRouteParams} from "./route";
 
 
