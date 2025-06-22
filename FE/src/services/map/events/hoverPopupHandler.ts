@@ -2,22 +2,11 @@ import { Feature } from "ol";
 import { Geometry, Point } from "ol/geom";
 import { MapBrowserEvent } from "ol";
 import { MapSingleton } from "../map";
-import PoiData from "../../../types/poiData";
+import buildPopupContent from "../style/PopupContent/PopupContent";
 
-const buildPopupContent = (feature: Feature<Geometry>): string => {
-    if (!feature) return '';
-    const props = feature.getProperties() as PoiData;
-    return `
-    <div>
-      <strong>${props.branch_name}</strong>
-      <span>${props.branch_city} , ${props.branch_address}</span>
-    </div>
-  `;
-};
 
 export const createHoverPopupHandler = (map: MapSingleton) => {
     const contentElement = document.createElement("div");
-
     return (event: MapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>) => {
         const popupOverlay = map.getPopupOverlay?.();
         if (!popupOverlay) return;
@@ -28,7 +17,7 @@ export const createHoverPopupHandler = (map: MapSingleton) => {
             if (geometry instanceof Point) {
                 const coords = geometry.getCoordinates();
 
-                contentElement.innerHTML = buildPopupContent(feature);
+                contentElement.innerHTML = buildPopupContent({feature, root: contentElement});
 
                 const popupEl = popupOverlay.getElement();
                 if (popupEl && !popupEl.contains(contentElement)) {

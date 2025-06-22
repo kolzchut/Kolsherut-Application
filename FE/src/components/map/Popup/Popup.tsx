@@ -1,4 +1,3 @@
-import useStyles from './Popup.css';
 import {FC, RefObject} from "react";
 
 export interface PopupProps {
@@ -7,10 +6,8 @@ export interface PopupProps {
 }
 
 const Popup: FC<PopupProps> = ({popupRef, contentRef}) => {
-    const classes = useStyles();
-
     return (
-        <div ref={popupRef} className={classes.popup}>
+        <div ref={popupRef}>
             <div ref={contentRef}/>
         </div>
     );
