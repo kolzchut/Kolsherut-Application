@@ -10,14 +10,10 @@ export default createUseStyles({
     },
     main: {
         display: 'flex',
+        alignItems: 'center',
         flexDirection: 'column',
         flex: 6,
         overflowY: 'auto',
         scrollbarWidth: 'none',
     },
-    mapContainer:{
-        width: '50%',
-        height: '100%',
-        minWidth: 500,
-    }
 });

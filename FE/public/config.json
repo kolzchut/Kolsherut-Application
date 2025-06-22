@@ -2,6 +2,17 @@
   "URLS": {
     "server": "http://localhost:3000"
   },
+  "redirects": {
+    "macro": "%%MACRO%%",
+    "responseFromCard": "s/%%MACRO%%/from=tag-response",
+    "situationFromCard": "s/%%MACRO%%/from=tag-situation"
+  },
+  "responsesColors": {
+    "human_services:emergency:emergency_food": "#FF0000",
+    "human_services:goods": "#0000FF",
+    "human_services:internal_emergency_services": "#FFA500"
+  },
+  "situationsColors": "#CCCDF5",
   "logToServer": false,
   "reloadWhenNotAuthenticated": true,
   "reloadTimeIfNotAuthenticated": 10000,
@@ -20,11 +31,6 @@
     "zoom": 12,
     "rotation": 0,
     "poi": {
-      "colors": {
-        "human_services:emergency:emergency_food": "rgba(255, 0, 0, 0.5)",
-        "human_services:goods": "rgba(0, 0, 255, 0.5)",
-        "human_services:internal_emergency_services": "rgba(255, 165, 0, 0.5)"
-      },
       "radius": 7
     }
   }

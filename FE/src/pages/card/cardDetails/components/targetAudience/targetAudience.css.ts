@@ -1,7 +1,8 @@
 import {createUseStyles} from 'react-jss';
 
 export default createUseStyles({
-    root: {
-
-    },
+    linkList:{
+        display: 'flex',
+        flexWrap: 'wrap',
+    }
 });
