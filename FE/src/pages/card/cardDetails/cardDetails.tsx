@@ -1,4 +1,4 @@
-import {ICard} from "../../../types/cardType";
+import {BranchUrl, ICard} from "../../../types/cardType";
 import useStyle from "./cardDetails.css";
 import ServiceEssence from "./components/serviceEssence/serviceEssence";
 import TargetAudience from "./components/targetAudience/targetAudience";
@@ -10,7 +10,12 @@ import Header from "./components/header/header";
 
 const CardDetails = ({card}: { card: ICard }) => {
     const classes = useStyle();
-    const email = card.service_email_address || card.organization_email_address;
+    const email: string = card.service_email_address || card.organization_email_address;
+    const websites: BranchUrl[] = [card.branch_urls, card.organization_urls, card.service_urls].find(arr => {
+        if (arr === null) return;
+        return arr.length > 0
+    }) || [];
+    const phoneNumbers: string[] = [card.branch_phone_numbers, card.organization_phone_numbers, card.service_phone_numbers].find(arr => arr.length > 0) || [];
     return <section className={classes.root}>
         <Header organizationName={card.organization_name} branchLocationAccurate={card.branch_location_accurate}
                 branchAddress={card.branch_address}/>
@@ -19,7 +24,8 @@ const CardDetails = ({card}: { card: ICard }) => {
             <p className={classes.serviceDescriptionText}>{card.service_description}</p>
             <ServiceEssence responses={card.responses}/>
             <TargetAudience situations={card.situations}/>
-            <Contact email={email} servicePhoneNumbers={card.service_phone_numbers}/>
+            <Contact email={email} phoneNumbers={phoneNumbers} address={card.branch_address}
+                     websites={websites}/>
             <ServiceEligibility serviceDetails={card.service_details}
                                 servicePaymentDetails={card.service_payment_details}/>
             <ProvidedBy organizationUrls={card.organization_urls}
