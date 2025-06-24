@@ -16,8 +16,6 @@ export const setMapToCard = (card:ICard) =>{
     if(!card || !card.branch_geometry) return;
     const {branch_geometry} = card;
     goToXy(branch_geometry);
-    removeAllPOIs();
-    console.log('card ', card)
     const poiData: PoiData = {
         branch_geometry,
         responses: card.responses,
