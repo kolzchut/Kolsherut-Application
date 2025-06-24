@@ -5,9 +5,6 @@ import {pageKeys, Pages} from "../../pages/pages";
 
 export const generalStore = (state: RootState) => state.general;
 
-export const getSearchOptions = createSelector([generalStore], (generalStore:GeneralStore) => {
-    return generalStore.searchOptions;
-});
 export const getPage = createSelector([generalStore], (generalStore:GeneralStore) => {
     if(!pageKeys.includes(generalStore.page as Pages))  return pageKeys[0];
     return generalStore.page;

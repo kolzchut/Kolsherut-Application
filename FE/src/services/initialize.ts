@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import React from "react";
 import {store} from "../store/store";
 import sendMessage from "./sendMessage/sendMessage";
-import {setSearchOptions} from "../store/general/generalSlice";
+import {setSearchOptions} from "../store/data/dataSlice";
 import sortOptionalSearchValues from "./sortOptionalSearchValues";
 
 export default async (main: React.ReactNode) => {

@@ -8,9 +8,6 @@ export const generalSlice = createSlice({
         setRouteParams(state: GeneralStore, action) {
             state.page = action.payload.p || state.page;
         },
-        setSearchOptions(state: GeneralStore, action) {
-            state.searchOptions = action.payload;
-        },
         setPage(state: GeneralStore, action) {
             state.page = action.payload;
         },
@@ -19,7 +16,6 @@ export const generalSlice = createSlice({
 
 export const {
     setRouteParams,
-    setSearchOptions,
 } = generalSlice.actions;
 
 export default generalSlice.reducer;
