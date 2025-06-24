@@ -1,5 +1,6 @@
 import Connection from "../../../../../components/connection/connection";
 import {BranchUrl} from "../../../../../types/cardType";
+import useStyles from "./contact.css";
 
 interface IProps {
     email: string,
@@ -13,16 +14,14 @@ interface IProps {
 
 const Contact = ({email, phoneNumbers, websites, address}: IProps) => {
     const contactTitle = window.strings.cardDetails.contactDetails
-
-    console.log('email', email, 'phoneNumbers', phoneNumbers, 'websites', websites, 'address', address);
-
     const {macro, addressLink} = window.config.redirects;
-    const addressFullLink = addressLink.replace(macro, address.geom.reverse().join(','));
+    const addressFullLink = addressLink.replace(macro, address?.geom?.reverse().join(','));
     const addressCondition: boolean = !!(address && address.text && Array.isArray(address.geom) && address.geom.length === 2)
+    const classes = useStyles();
 
     return (
         <div>
-            <span>{contactTitle}:</span>
+            <span className={classes.title}>{contactTitle}:</span>
             {phoneNumbers.map((phoneNumber) => (<Connection type={`tel`} text={phoneNumber} key={phoneNumber}/>))}
             {email && (<Connection text={email} type={`mailto`}/>)}
             {websites && websites.map((website) => (

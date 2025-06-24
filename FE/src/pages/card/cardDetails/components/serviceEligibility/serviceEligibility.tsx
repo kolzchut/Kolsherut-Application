@@ -1,13 +1,17 @@
-const ServiceEligibility = ({serviceDetails, servicePaymentDetails}: {
+import useStyle from "./serviceEligibility.css";
+
+const ServiceEligibility = ({serviceDetails, servicePaymentDetails, branchDescription}: {
     serviceDetails: string | null,
     servicePaymentDetails: string | null
+    branchDescription: string | null
 }) => {
     const serviceEligibilityTitle = window.strings.cardDetails.serviceEligibility;
-
+    const classes = useStyle();
     return <div>
-        <span>{serviceEligibilityTitle}</span>
-        {serviceDetails && <p>{serviceDetails}</p>}
-        {servicePaymentDetails && <p>{servicePaymentDetails}</p>}
+        <span className={classes.title}>{serviceEligibilityTitle}</span>
+        {serviceDetails && <p className={classes.paragraphText}>{serviceDetails}</p>}
+        {servicePaymentDetails && <p className={classes.paragraphText}>{servicePaymentDetails}</p>}
+        {branchDescription && <p className={classes.paragraphText}>{branchDescription}</p>}
     </div>
 }
 export default ServiceEligibility;

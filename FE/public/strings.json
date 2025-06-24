@@ -8,11 +8,11 @@
   },
   "cardDetails": {
     "serviceEssence": "מהות השירות:",
-    "targetAudience": "השירות מתאים עבור",
-    "contactDetails": "פרטי התקשרות",
-    "serviceEligibility": "תנאים לקבלת השירות",
-    "providedBy":"השירות ניתן ע״י",
-    "dataErrorReport": "מצאתי טעות בנתונים",
+    "targetAudience": "השירות מתאים עבור:",
+    "contactDetails": "פרטי התקשרות:",
+    "serviceEligibility": "תנאים לקבלת השירות:",
+    "providedBy":"השירות ניתן ע״י:",
+    "dataErrorReport": "מצאתי טעות בנתונים:",
     "notAccurateLocation": "(במיקום לא מדויק)"
   }
 }

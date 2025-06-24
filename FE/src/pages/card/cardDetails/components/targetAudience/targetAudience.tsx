@@ -4,12 +4,12 @@ import useStyle from "./targetAudience.css";
 const TargetAudience = ({situations}: { situations: Situation[] }) => {
     const targetAudienceTitle = window.strings.cardDetails.targetAudience;
     const classes = useStyle();
-
+    if(situations.length < 1) return <></>
     return <div>
-        <span>{targetAudienceTitle}</span>
+        <span className={classes.title}>{targetAudienceTitle}</span>
         <div className={classes.linkList}>
-        {situations.map((situation => (
-            <Link situation={situation} />
+        {situations.map(((situation:Situation, index:number) => (
+            <Link key={index} situation={situation} />
         )))}
         </div>
     </div>

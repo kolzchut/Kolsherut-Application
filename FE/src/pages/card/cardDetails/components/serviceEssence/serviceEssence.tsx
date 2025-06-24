@@ -10,9 +10,9 @@ const ServiceEssence = ({responses}: { responses: Response[] }) => {
     return <div>
         <span className={classes.title}>{serviceEssenceTitle}</span>
         <div className={classes.linkList}>
-            {responses.map((response => (
-               <Link response={response}/>
-            )))}
+            {responses.map((response:Response, index:number) => (
+               <Link key={index} response={response}/>
+            ))}
         </div>
     </div>
 }

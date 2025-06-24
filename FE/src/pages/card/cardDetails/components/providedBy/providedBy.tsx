@@ -1,30 +1,77 @@
-import {OrganizationURL} from "../../../../../types/cardType";
+import {OrganizationNameParts, OrganizationURL} from "../../../../../types/cardType";
+import useStyle from "./providedBy.css";
+import linkIcon from "../../../../../assets/icon-external-link-blue.svg";
+import phoneIcon from "../../../../../assets/icon-call-blue.svg"
+import emailIcon from "../../../../../assets/icon-mail-blue.svg"
+import {useEffect, useState} from "react";
+import openIcon from "../../../../../assets/icon-chevron-down-blue.svg";
+import ArrowDirection from "./arrowDirectionEnum";
 
-const ProvidedBy = ({organizationName, organizationUrls, organizationPhoneNumbers, organizationEmailAddress}: {
-    organizationName: string;
+interface IProps {
+    organizationNameParts: OrganizationNameParts;
+    organizationName: string,
     organizationUrls: OrganizationURL[],
     organizationPhoneNumbers: string[],
     organizationEmailAddress: string
-}) => {
-    const providedByTitle = window.strings.cardDetails.providedBy;
+}
 
+
+const ProvidedBy = ({
+                        organizationNameParts,
+                        organizationName,
+                        organizationUrls,
+                        organizationPhoneNumbers,
+                        organizationEmailAddress
+                    }: IProps) => {
+    const providedByTitle = window.strings.cardDetails.providedBy;
+    const isOrgUrlAvailable: boolean = !!(organizationUrls && organizationUrls.length > 0 && organizationUrls[0].href)
+    const noEmailAndNoPhone: boolean = !organizationEmailAddress && (!organizationPhoneNumbers || organizationPhoneNumbers.length < 1)
+    const [arrowDirection, setArrowDirection] = useState<ArrowDirection>(ArrowDirection.Close);
+    useEffect(() => {
+    if (noEmailAndNoPhone) setArrowDirection(ArrowDirection.NotDisplayed);
+    }, []);
+
+    const handleToggle = () => setArrowDirection((prevState) => prevState === ArrowDirection.Open ? ArrowDirection.Close : ArrowDirection.Open)
+
+    const classes = useStyle({arrow: arrowDirection});
     return <div>
-        <span>{providedByTitle}</span>
-        <div>
-            {organizationUrls && organizationUrls.map((url) => (
-                <a key={url.href} href={url.href} target="_blank" rel="noopener noreferrer">
+        <span className={classes.title}>{providedByTitle}</span>
+        <div className={classes.mainDiv}>
+            {arrowDirection !== ArrowDirection.NotDisplayed && (
+                <img src={openIcon} className={classes.arrow} alt={"Toggle Details"} onClick={handleToggle}/>
+            )}
+            {organizationNameParts && !isOrgUrlAvailable && (<>
+                {organizationNameParts.primary && <span>{organizationNameParts.primary}</span>}
+                {organizationNameParts.secondary && <span> - {organizationNameParts.secondary}</span>}
+            </>)}
+            {organizationNameParts && isOrgUrlAvailable && (
+                <a className={classes.link} href={organizationUrls[0].href} target="_blank" rel="noopener noreferrer">
+                    {organizationNameParts.primary}
+                    <img src={linkIcon} alt={"link to organization"} className={classes.linkIcon}/>
+                </a>)}
+            {!organizationNameParts && isOrgUrlAvailable && (
+                <a className={classes.link} href={organizationUrls[0].href} target="_blank">
                     {organizationName}
                 </a>
-            ))}
-            {organizationPhoneNumbers.map((phoneNumber) => (
-                <a key={phoneNumber} href={`tel:${phoneNumber}`}>
-                    <span>{phoneNumber}</span>
-                </a>
-            ))}
-            {organizationEmailAddress && (
-                <a href={`mailto:${organizationEmailAddress}`}>
-                    <span>{organizationEmailAddress}</span>
-                </a>
+            )}
+            {!organizationNameParts && !isOrgUrlAvailable && (
+                <span>{organizationName}</span>
+            )}
+            {arrowDirection === ArrowDirection.Open && (
+                <div>
+                    {organizationPhoneNumbers.map((phoneNumber) => (
+                        <a href={`tel:${phoneNumber}`} key={phoneNumber} className={classes.link}>
+                            <img src={phoneIcon} alt={"link to phone number"}
+                                 className={classes.linkIcon}/> {phoneNumber}
+                        </a>
+                    ))}
+                    {organizationEmailAddress && (
+                        <a href={`mailto:${organizationEmailAddress}`} className={classes.link}>
+                            <img src={emailIcon} alt={"link to email"}
+                                 className={classes.linkIcon}/> {organizationEmailAddress}
+                        </a>
+                    )}
+                </div>
             )}
         </div>
     </div>

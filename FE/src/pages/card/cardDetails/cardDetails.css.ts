@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {blackOne} from "../../../services/theme";
+import {blackOne, darkGrayOne} from "../../../services/theme";
 
 export default createUseStyles({
     root: {
@@ -15,17 +15,29 @@ export default createUseStyles({
         scrollbarWidth: 'none',
     },
     content:{
+        display: 'flex',
+        flexDirection:'column',
         width: '100%',
         boxSizing: 'border-box',
         padding: '16px 56px',
+        gap:'16px'
     },
     serviceNameText:{
         fontSize: '24px',
+        margin:0,
         lineHeight:'28px',
         color: blackOne,
         fontWeight: 600,
     },
+    branchNameText:{
+        fontWeight:400,
+        fontSize: '20px',
+        lineHeight: '28px',
+        color: darkGrayOne,
+        margin:0
+    },
     serviceDescriptionText: {
+        margin:0,
         fontSize: 16,
         fontWeight: 300,
         lineHeight: '24px',
