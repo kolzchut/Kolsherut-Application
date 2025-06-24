@@ -23,6 +23,7 @@ app.get('/test', (req: Request, res: Response) => {
     res.status(200).json({message:'Server is running 🍍☺', success: true});
 });
 app.get('/homepage', homePageRoute)
+//TODO: replecating current way to change to better way
 app.get('/autocomplete/:search', autoCompleteRoute)
 app.get('/card/:card_id', cardRoute);
 app.post('/search', searchRoute)
