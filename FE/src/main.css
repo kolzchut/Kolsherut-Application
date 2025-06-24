@@ -1,5 +1,13 @@
+@font-face {
+    font-family: 'RAG Sans';
+    src: url('./assets/fonts/RAG-Sans-1.2-Regular.woff');
+}
+
 body{
   margin: 0;
   padding: 0;
   border: 0;
+  font-family: 'RAG Sans', sans-serif;
+  font-weight: 300;
+  color: #333231;
 }

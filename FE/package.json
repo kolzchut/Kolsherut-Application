@@ -10,13 +10,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "copy-configs": "npx shx cp ./public/config.json ./src/services/initialize/offlineConfigAndStrings/config.json && npx shx cp ./public/strings.json ./src/services/initialize/offlineConfigAndStrings/strings.json",
-    "generate-assets": "npm run generate-pwa-assets && tsc -b",
-    "prebuild": "npm run copy-configs && npm run generate-assets",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate-pwa-assets": "pwa-assets-generator --preset minimal public/icon.svg",
     "docker:build": "npm run build && npx cross-var docker build -t kolsherut_fe:$npm_package_version .",
     "docker:save": "npx cross-var docker save -o ../tars/kolsherut_fe.$npm_package_version.tar kolsherut_fe:$npm_package_version",
     "tar": "npm run docker:build && npm run docker:save"
