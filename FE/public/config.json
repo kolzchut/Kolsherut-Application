@@ -17,7 +17,15 @@
       34.69025618483177,
       31.848182290755105
     ],
-    "zoom": 15,
-    "rotation": 0
+    "zoom": 12,
+    "rotation": 0,
+    "poi": {
+      "colors": {
+        "human_services:emergency:emergency_food": "rgba(255, 0, 0, 0.5)",
+        "human_services:goods": "rgba(0, 0, 255, 0.5)",
+        "human_services:internal_emergency_services": "rgba(255, 165, 0, 0.5)"
+      },
+      "radius": 7
+    }
   }
 }

@@ -13,6 +13,7 @@ export default async (cardId: string) => {
             },
             _source: [
                 "service_details",
+                "service_description",
                 "service_payment_details",
                 "service_urls",
                 "service_phone_numbers",
@@ -27,6 +28,8 @@ export default async (cardId: string) => {
                 "organization_phone_numbers",
                 "organization_email_address",
                 "organization_branch_count",
+                "branch_name",
+                "service_name",
                 "branch_operating_unit",
                 "branch_description",
                 "branch_urls",

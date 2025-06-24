@@ -5,7 +5,7 @@ import {ObjectEvent} from "ol/Object";
 export type MapInteractionEventTypes = 'click' | 'pointermove' | 'pointerdrag';
 export type ViewInteractionEventTypes = 'change:resolution' | 'change:rotation';
 
-export type mapInteractions = Array<{
+export type IMapInteractions = Array<{
     event: MapInteractionEventTypes,
     handler: (m: MapSingleton) => (event: MapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>) => void
 }>;
@@ -14,6 +14,6 @@ export type viewInteractions = Array<{
     handler: (m: MapSingleton) => (event: ObjectEvent) => void
 }>;
 export type MapInitParams = {
-    mapInteractions: mapInteractions;
+    mapInteractions: IMapInteractions;
     viewInteractions: viewInteractions;
 }
