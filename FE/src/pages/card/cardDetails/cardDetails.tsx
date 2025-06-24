@@ -12,6 +12,7 @@ const CardDetails = ({card}: { card: ICard }) => {
         dataErrorReport: window.strings.cardDetails.dataErrorReport,
     }
     const email = card.service_email_address || card.organization_email_address;
+    //TODO: make more readable
     return (<section className={classes.root}>
         <div>
             <h2>{card.organization_name}</h2>
