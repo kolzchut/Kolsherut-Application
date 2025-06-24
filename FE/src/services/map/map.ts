@@ -11,6 +11,7 @@ import {getSources} from "./sources";
 import view, {setViewPort} from "./view";
 import {MapInitParams} from "../../types/InteractionsTypes";
 import TileLayer from "ol/layer/Tile";
+import Overlay from "ol/Overlay";
 
 export class MapSingleton {
     readonly ol: Map;
@@ -20,7 +21,7 @@ export class MapSingleton {
         osmSource: OSM;
         poiSource: VectorSource<Feature<Geometry>>;
     } | null;
-
+    private popupOverlay?: Overlay;
     public constructor() {
         this.layers = undefined;
         this.sources = null;
@@ -52,6 +53,22 @@ export class MapSingleton {
     public setTarget(target: HTMLElement | string) {
         this.ol.setTarget(target);
     };
+    public setPopupOverlay(popupContainer: HTMLElement) {
+        if (this.popupOverlay) {
+            this.ol.removeOverlay(this.popupOverlay);
+        }
+        this.popupOverlay = new Overlay({
+            element: popupContainer,
+            positioning: "bottom-center",
+            stopEvent: false,
+            offset: [0, -20],
+        });
+        this.ol.addOverlay(this.popupOverlay);
+    }
+
+    public getPopupOverlay() {
+        return this.popupOverlay;
+    }
 }
 
 const map = new MapSingleton();

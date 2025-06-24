@@ -15,5 +15,5 @@ export default createUseStyles({
         flex: 6,
         overflowY: 'auto',
         scrollbarWidth: 'none',
-    },
+    }
 });

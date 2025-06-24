@@ -1,0 +1,7 @@
+.popup-content-div{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    background-color: #f00;
+    color: #0f0;
+}

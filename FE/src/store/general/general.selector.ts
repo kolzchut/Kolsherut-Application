@@ -14,9 +14,7 @@ export const getCardId = createSelector([generalStore], (generalStore: GeneralSt
     return generalStore.cardId;
 })
 
-export const getSearchOptions = createSelector([generalStore], (generalStore: GeneralStore) => {
-    return generalStore.searchOptions;
-});
+
 
 export const getUrlParams = createSelector([getPage, getCardId], (page, cardId) => {
     const params: UrlParams= {

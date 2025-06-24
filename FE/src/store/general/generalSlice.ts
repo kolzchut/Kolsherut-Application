@@ -12,15 +12,11 @@ export const generalSlice = createSlice({
         setPage(state: GeneralStore, action) {
             state.page = action.payload;
         },
-        setSearchOptions(state: GeneralStore, action) {
-            state.searchOptions = action.payload;
-        },
     },
 });
 
 export const {
     setRouteParams,
-    setSearchOptions,
     setPage
 } = generalSlice.actions;
 
