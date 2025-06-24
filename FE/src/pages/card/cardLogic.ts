@@ -6,11 +6,10 @@ import {goToXy} from "../../services/map/view";
 import {removeAllPOIs, addPOI} from "../../services/map/poiInteraction";
 import PoiData from "../../types/poiData";
 
-export const getFullCard = async (cardId: string) => {
-    const requestURL = window.config.routes.card.replace(':cardId', cardId);
-    const response = await sendMessage({method: 'get', requestURL})
-    const card: ICard = response.data;
-    return response.success ? card : null;
+export const getFullCard = async(cardId:string) => {
+    const requestURL = window.config.routes.card.replace('%%cardId%%', cardId);
+    const response = await sendMessage({method:'get', requestURL})
+    return response.success ? response.data : null;
 }
 
 export const setMapToCard = (card:ICard) =>{

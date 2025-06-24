@@ -1,6 +1,6 @@
 import useStyle from "./optionalSearch.css";
 import {useSelector} from "react-redux";
-import {getSearchOptions} from "../../../store/general/general.selector";
+import {getSearchOptions} from "../../../store/data/data.selector";
 import SearchValue from "../../../types/searchValue";
 import {useState} from "react";
 

@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom/client';
 import React from "react";
 import {store} from "../store/store";
 import sendMessage from "./sendMessage/sendMessage";
-import {setRouteParams, setSearchOptions} from "../store/general/generalSlice";
+import {setRouteParams} from "../store/general/generalSlice";
+import {setSearchOptions} from "../store/data/dataSlice";
 import sortOptionalSearchValues from "./sortOptionalSearchValues";
 import mapService from './map/map'
 import {mapInteractions, viewInteractions} from "./map/events/mapInteraction";

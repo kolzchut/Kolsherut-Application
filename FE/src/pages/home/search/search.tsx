@@ -13,7 +13,7 @@ const Search = () => {
         const value: string = v.target.value;
         setSearchTerm(value)
         if(value === '') return setOptionalSearchValues([]);
-        const requestURL = window.config.routes.autocomplete.replace(':search', value)
+        const requestURL = window.config.routes.autocomplete.replace('%%search%%', value)
         const response = await sendMessage({method:'get', requestURL})
         setOptionalSearchValues(response.data)
     }
