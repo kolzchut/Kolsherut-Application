@@ -23,8 +23,8 @@ const Card = () => {
                 <Map/>
             </section>
             <section>
-            <h1>Card Component</h1>
-            <p>This is a placeholder for the card component.</p>
+                <h1>Card Component</h1>
+                <p>This is a placeholder for the card component.</p>
             </section>
         </main>
     );
