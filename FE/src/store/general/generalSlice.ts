@@ -16,7 +16,6 @@ export const generalSlice = createSlice({
 
 export const {
     setRouteParams,
-    setPage
 } = generalSlice.actions;
 
 export default generalSlice.reducer;

@@ -1,12 +1,12 @@
 import {RootState} from '../store';
 import {createSelector} from '@reduxjs/toolkit';
 import {GeneralStore} from "./initialState";
-import {pageKeys} from "../../pages/pages.ts";
+import {pageKeys, Pages} from "../../pages/pages";
 
 export const generalStore = (state: RootState) => state.general;
 
 export const getPage = createSelector([generalStore], (generalStore:GeneralStore) => {
-    if(!pageKeys.includes(generalStore.page))  return pageKeys[0];
+    if(!pageKeys.includes(generalStore.page as Pages))  return pageKeys[0];
     return generalStore.page;
 });
 
