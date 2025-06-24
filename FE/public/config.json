@@ -9,6 +9,15 @@
     "logs": "/logs",
     "test": "/test",
     "homepage": "/homepage",
-    "autocomplete":"/autocomplete/:search"
+    "card" : "/card/%%cardId%%",
+    "autocomplete":"/autocomplete/%%search%%"
+  },
+  "map": {
+    "center": [
+      34.69025618483177,
+      31.848182290755105
+    ],
+    "zoom": 15,
+    "rotation": 0
   }
 }

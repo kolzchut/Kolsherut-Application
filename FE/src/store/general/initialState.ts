@@ -1,4 +1,5 @@
 export const initialState = {
-    page: "home",
+    page: "card",
+    cardId: "",
 };
 export type GeneralStore = typeof initialState;
