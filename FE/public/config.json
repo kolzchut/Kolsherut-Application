@@ -5,12 +5,13 @@
   "redirects": {
     "macro": "%%MACRO%%",
     "responseFromCard": "s/%%MACRO%%/from=tag-response",
-    "situationFromCard": "s/%%MACRO%%/from=tag-situation"
+    "situationFromCard": "s/%%MACRO%%/from=tag-situation",
+    "addressLink": "https://www.google.com/maps/search/?api=1&query=%%MACRO%%"
   },
   "responsesColors": {
     "human_services:emergency:emergency_food": "#FF0000",
     "human_services:goods": "#0000FF",
-    "human_services:internal_emergency_services": "#FFA500"
+    "human_services:internal_emergency_services": "#9B0000"
   },
   "situationsColors": "#CCCDF5",
   "logToServer": false,

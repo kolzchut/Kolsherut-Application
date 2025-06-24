@@ -5,7 +5,7 @@ export default createUseStyles({
         display: 'flex',
         alignItems: 'center',
         gap: 8,
-        backgroundColor: `${color}20`, // 12.5% opacity (hex alpha)
+        backgroundColor: `${color}10`, // 6.75% opacity (hex alpha)
         textDecoration: 'none',
         padding: '4px 8px',
         border: `1px solid ${color}80`, // 50% opacity (hex alpha)

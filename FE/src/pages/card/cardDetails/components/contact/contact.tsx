@@ -5,12 +5,21 @@ interface IProps {
     email: string,
     phoneNumbers: string[],
     websites: BranchUrl[] | null,
-    address: string
+    address: {
+        text: string,
+        geom: [number,number]
+    }
 }
 
 const Contact = ({email, phoneNumbers, websites, address}: IProps) => {
     const contactTitle = window.strings.cardDetails.contactDetails
+
     console.log('email', email, 'phoneNumbers', phoneNumbers, 'websites', websites, 'address', address);
+
+    const {macro, addressLink} = window.config.redirects;
+    const addressFullLink = addressLink.replace(macro, address.geom.reverse().join(','));
+    const addressCondition: boolean = !!(address && address.text && Array.isArray(address.geom) && address.geom.length === 2)
+
     return (
         <div>
             <span>{contactTitle}:</span>
@@ -18,7 +27,7 @@ const Contact = ({email, phoneNumbers, websites, address}: IProps) => {
             {email && (<Connection text={email} type={`mailto`}/>)}
             {websites && websites.map((website) => (
                 <Connection type={`website`} text={website.title} link={website.href} key={website.href}/>))}
-            {address && (<Connection text={address} type={`address`}/>)}
+            {addressCondition && (<Connection text={address.text} link={addressFullLink} type={`address`}/>)}
         </div>
     )
 }
