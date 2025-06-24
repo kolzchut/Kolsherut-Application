@@ -1,6 +1,7 @@
 import App from './App'
 import initialize from "./services/initialize";
-import './main.css'
+import './main.css';
+import './fonts.css';
 import { Provider } from 'react-redux';
 import {store} from "./store/store";
 
