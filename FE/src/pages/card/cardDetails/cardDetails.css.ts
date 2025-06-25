@@ -7,7 +7,7 @@ export default createUseStyles({
         display: 'flex',
         flexDirection: 'column',
         width: '100%',
-        fontFamily: "RAG SANS ,Arial , Helvetica , sans-serif",
+        fontFamily: "RAG SANS ,Arial, sans-serif",
         flex:2,
         overflowY: 'auto',
         boxShadow: '-2px 0 15px rgba(0, 0, 0, 0.5)',

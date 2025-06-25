@@ -31,7 +31,7 @@ const Connection = ({text, type, link}:IProps) =>{
     const fullLink = link || `${additionalTextToLink}:${text}`
     return <div className={classes.root}>
         <a href={fullLink} target="_blank" className={classes.aTag}>
-        <img src={imageToPresent} className={classes.aTagImage} alt={isTel ? "Call" : "Email"} />
+            <img src={imageToPresent} className={classes.aTagImage} alt={isTel ? "Call" : "Email"} />
             <span>{text}</span>
         </a>
         <button className={classes.button} onClick={handleCopy}>
