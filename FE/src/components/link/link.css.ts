@@ -1,6 +1,12 @@
 import {createUseStyles} from 'react-jss';
 
 export default createUseStyles({
+    container:{
+      display:"flex",
+        flexDirection: "row",
+        alignItems:'center',
+        margin: 8
+    },
     label: ({color}: { color: string; isResponse: boolean }) => ({
         display: 'flex',
         alignItems: 'center',
@@ -11,7 +17,7 @@ export default createUseStyles({
         border: `1px solid ${color}80`, // 50% opacity (hex alpha)
         borderRadius: 4,
         width: 'fit-content',
-        margin: 8,
+        margin: 0,
         fontSize: 14,
         '&:hover': {
             backgroundColor: `${color}30`, // 18.75% opacity (hex alpha)
@@ -35,5 +41,14 @@ export default createUseStyles({
     situationLinkIcon: {
         width: 16,
         height: 16,
-    }
+    },
+    extra:({color}: {color: string; isResponse: boolean}) => ({
+        backgroundColor: `${color}10`,
+        borderTop: `1px solid ${color}80`,
+        borderLeft: `1px solid ${color}80`,
+        borderBottom: `1px solid ${color}80`,
+        padding: '4px 2px',
+        fontSize:14,
+        borderRadius: '4px 0px 0px 4px',
+    })
 });

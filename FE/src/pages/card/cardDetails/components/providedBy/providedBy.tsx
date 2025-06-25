@@ -58,15 +58,15 @@ const ProvidedBy = ({
                 <span>{organizationName}</span>
             )}
             {arrowDirection === ArrowDirection.Open && (
-                <div>
+                <div className={classes.hiddenLinksDiv}>
                     {organizationPhoneNumbers.map((phoneNumber) => (
-                        <a href={`tel:${phoneNumber}`} key={phoneNumber} className={classes.link}>
+                        <a href={`tel:${phoneNumber}`} key={phoneNumber} className={`${classes.link} ${classes.hiddenLinks}`}>
                             <img src={phoneIcon} alt={"link to phone number"}
                                  className={classes.linkIcon}/> {phoneNumber}
                         </a>
                     ))}
                     {organizationEmailAddress && (
-                        <a href={`mailto:${organizationEmailAddress}`} className={classes.link}>
+                        <a href={`mailto:${organizationEmailAddress}`} className={`${classes.link} ${classes.hiddenLinks}`}>
                             <img src={emailIcon} alt={"link to email"}
                                  className={classes.linkIcon}/> {organizationEmailAddress}
                         </a>

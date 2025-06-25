@@ -1,8 +1,8 @@
 {
-"authenticationRequired": {
-  "header": "Auth Required",
-  "message": "Please log in to access the mission control."
-},
+  "authenticationRequired": {
+    "header": "Auth Required",
+    "message": "Please log in to access the mission control."
+  },
   "search": {
     "label": " כל שירות, כל קהל וכל מיקום..."
   },
@@ -11,8 +11,32 @@
     "targetAudience": "השירות מתאים עבור:",
     "contactDetails": "פרטי התקשרות:",
     "serviceEligibility": "תנאים לקבלת השירות:",
-    "providedBy":"השירות ניתן ע״י:",
-    "dataErrorReport": "מצאתי טעות בנתונים:",
-    "notAccurateLocation": "(במיקום לא מדויק)"
+    "providedBy": "השירות ניתן ע״י:",
+    "jotForm": "מצאתי טעות בנתונים",
+    "notAccurateLocation": "(במיקום לא מדויק)",
+    "moreServicesInBranchTitle": "שירותים נוספים בסניף:"
+  },
+  "cardBanner": {
+    "more": "עוד",
+    "less": "פחות"
+  },
+  "footer": {
+    "nameOfWebsite": "כל שירות",
+    "firstParagraph": "ממפה מגוון של שירותים ומענים חברתיים שהמדינה, ארגונים וגופים שונים מעמידים לרשותינו, האזרחים. בעזרת סינון, חיפוש ושיטוט במפה ניתן לגלות בדיוק מי יוכל לעזור לך.\n\nהמערכת כרגע בגירסת בטא - חלק מהמידע יכול להיות חסר או לא מדויק.",
+    "runBy": "אתר כל שירות מופעל ע״י ",
+    "nameOfOrganization": "כל זכות",
+    "secondParagraph": "בסיוע  %%MACRO%%  ו %%MACRO%%. אין בסיוע הממשלתי משום נטילת אחריות לפעילות האתר או תכניו. האתר מיועד לכלל המגדרים.",
+    "secondParagraphFirstMacro": "משרד המשפטים",
+    "secondParagraphSecondMacro": "מערך הדיגיטל הלאומי",
+    "thirdParagraph": "כל זכות בע\"מ (חל\"צ), אינה אחראית לתוכן המוצג באתר. המידע באתר הוא כללי, ברובו מוזן בהדרגה ממקורות שונים בצורה אוטומטית, ואינו בהכרח מלא, מדויק, עדכני וכיו\"ב. השימוש באתר הוא באחריות המשתמשים בלבד. למידע נוסף ראו הסבר על %%MACRO%%",
+    "thirdParagraphMacro": "מדיניות האתר."
+  },
+  "linksMenu": {
+    "about": "אודות",
+    "missing": "הוסיפו שירות חסר",
+    "partners": "שותפים",
+    "contact": "צרו קשר",
+    "map": "מפת אתר",
+    "a11yStatement": "הצהרת נגישות"
   }
 }

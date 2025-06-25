@@ -1,4 +1,5 @@
 import {createUseStyles} from 'react-jss';
+import {lightBlue} from "../../services/theme";
 
 export default  createUseStyles({
     root:{
@@ -6,7 +7,7 @@ export default  createUseStyles({
         backgroundColor: 'white',
         width: '100%',
         height: 200,
-        color: '#1f37f6',
+        color: lightBlue,
         justifyContent: 'space-around',
     },
     links:{

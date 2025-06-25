@@ -7,6 +7,9 @@ import ServiceEligibility from "./components/serviceEligibility/serviceEligibili
 import ProvidedBy from "./components/providedBy/providedBy";
 import DataSource from "./components/dataSource/dataSource";
 import Header from "./components/header/header";
+import JotForm from "./components/jotForm/jotForm";
+import MoreServicesInBranch from "./components/moreServicesInBranch/moreServicesInBranch";
+import Footer from "../../../components/footer/footer";
 
 const CardDetails = ({card}: { card: ICard }) => {
     const classes = useStyle();
@@ -38,7 +41,11 @@ const CardDetails = ({card}: { card: ICard }) => {
                         organizationEmailAddress={card.organization_email_address}
                         organizationPhoneNumbers={card.organization_phone_numbers}/>
             <DataSource dataSource={card.data_sources}/>
+            <JotForm cardId={card.card_id} serviceName={card.service_name ||""}/>
+
         </div>
+            <MoreServicesInBranch moreServicesInBranch={card.moreServicesInBranch}/>
+        <Footer/>
     </section>
 
 }

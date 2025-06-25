@@ -4,7 +4,7 @@ import useStyle from "./link.css";
 import linkSvg from '../../assets/icon-arrow-top-right-gray-4.svg'
 import situationSvg from '../../assets/icon-person-blue-5.svg'
 
-const Link = ({response, situation} :{response?: Response, situation?: Situation}) => {
+const Link = ({response, situation, extra} :{response?: Response, situation?: Situation, extra: number}) => {
     let occasion =null;
     let hrefWithMacro = '';
     let isResponse = false;
@@ -25,13 +25,14 @@ const Link = ({response, situation} :{response?: Response, situation?: Situation
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const classes = useStyle({color, isResponse});
 
-    return (
+    return (<div className={classes.container}>
         <a href={getHref(occasion.name, hrefWithMacro)} className={classes.label} key={occasion.id}>
             {isResponse && <span className={classes.dot} />}
             {!isResponse && <img alt="situation icon" src={situationSvg} className={classes.situationLinkIcon} />}
             <span>{occasion.name}</span>
             <img alt="link icon" src={linkSvg} className={classes.linkIcon} />
         </a>
-    );
+            {extra && <span className={classes.extra}>{extra}</span>}
+        </div>);
 }
 export default Link;

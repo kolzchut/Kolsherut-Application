@@ -1,0 +1,82 @@
+import {createUseStyles} from 'react-jss';
+import {blackOne, lightGray, royalBlue, white} from "../../services/theme";
+
+export default createUseStyles({
+    aTag: {
+        textDecoration: "none",
+    },
+    cardBanner: {
+        width: '100%',
+        position: 'relative',
+        padding: '10px',
+        boxSizing: 'border-box',
+        backgroundColor: white,
+        borderRadius: 2,
+        '&:hover': {
+            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+            transform: 'translateY(-2px)',
+        },
+    },
+    emergencyIcon: {
+        height: '18px',
+        left: '5px',
+        top: '5px',
+        position: 'absolute',
+    },
+    bannerTitle: {
+        color: blackOne,
+        fontWeight:300,
+        lineHeight: '28px',
+        fontSize: '20px',
+        margin: 0,
+        width: 'calc(100% - 30px)',
+    },
+    bannerDescriptionDiv:{
+        display:"flex",
+        width: '100%',
+        flexDirection: 'row',
+    },
+    bannerDescriptionShort:{
+        display: '-webkit-box',
+        WebkitLineClamp: 3,
+        WebkitBoxOrient: 'vertical',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace:'pre-wrap',
+        fontWeight:400,
+        lineHeight:'normal',
+        fontSize:'16px',
+        color:lightGray
+    },
+    bannerDescriptionLong:{
+        display: '-webkit-box',
+        WebkitLineClamp: 5,
+        WebkitBoxOrient: 'vertical',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace:'pre-wrap',
+        fontWeight:400,
+        lineHeight:'normal',
+        fontSize:'16px',
+        color:lightGray
+    },
+    bannerDescriptionButton:{
+        display:'flex',
+        alignItems:'flex-end',
+        background: "transparent",
+        color:royalBlue,
+        fontWeight:500,
+        fontSize:'16px',
+        border: "none",
+        cursor:'pointer',
+        '&:hover': {
+            textDecoration: 'underline',
+        }
+    },
+    linksDiv:{
+        display: 'flex',
+        flexWrap: 'wrap',
+        width: '100%',
+    }
+
+});

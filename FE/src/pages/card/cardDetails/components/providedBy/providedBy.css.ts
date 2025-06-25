@@ -1,12 +1,13 @@
 import {createUseStyles} from 'react-jss';
-import {brightBlue, brightBlueOne, darkGrayOne} from "../../../../../services/theme";
+import {brightBlue, brightBlueOne, darkGrayOne, lightGray} from "../../../../../services/theme";
 import ArrowDirection from "./arrowDirectionEnum";
+
 export default createUseStyles({
     title: {
         color: darkGrayOne,
-        fontWeight:600,
+        fontWeight: 600,
         lineHeight: '21px',
-        fontSize:16
+        fontSize: 16
     },
     mainDiv: {
         width: '100%',
@@ -21,30 +22,41 @@ export default createUseStyles({
     },
     link: {
         cursor: 'pointer',
-        width:'fit-content',
-        display: 'flex',
-        alignItems: 'center',
+        width: 'fit-content',
+        display: 'inline-block',
         paddingLeft: '18px',
         fontWeight: 600,
         fontSize: '16px',
         lineHeight: '20px',
-        height: '20px',
         color: brightBlue,
         textDecoration: 'none',
         '&:hover': {
             textDecoration: 'underline',
         }
     },
-    linkIcon:{
-        height: '60%'
+    linkIcon: {
+        height: '16px'
     },
-    arrow: ({ arrow }: {arrow:ArrowDirection}) => ({
+    hiddenLinksDiv: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 4
+    },
+    hiddenLinks: {
+        display: 'flex',
+        gap: 5,
+        color: lightGray,
+        fontWeight: 400,
+        lineHeight: '16px',
+        fontSize: '16px'
+    },
+    arrow: ({arrow}: { arrow: ArrowDirection }) => ({
         height: '16px',
         width: '16px',
         position: 'absolute',
         top: 'calc(50% - 8px)',
         left: '10px',
-        transform: arrow === ArrowDirection.Close ? 'rotate(0deg)':  'rotate(180deg)',
+        transform: arrow === ArrowDirection.Close ? 'rotate(0deg)' : 'rotate(180deg)',
         transition: 'transform 0.3s ease-in-out',
     }),
 });
