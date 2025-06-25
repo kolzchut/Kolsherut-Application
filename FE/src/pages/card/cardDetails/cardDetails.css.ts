@@ -3,6 +3,7 @@ import {blackOne, darkGrayOne} from "../../../services/theme";
 
 export default createUseStyles({
     root: {
+        position: "relative",
         display: 'flex',
         flexDirection: 'column',
         width: '100%',
@@ -42,5 +43,16 @@ export default createUseStyles({
         fontWeight: 300,
         lineHeight: '24px',
         color: blackOne
-    }
+    },
+    quickActionContainer: {
+        position: 'sticky',
+        bottom: 0,
+        width: '100%',
+        backgroundColor: 'white',
+        boxShadow: '0px -2px 8px rgba(0, 0, 0, 0.1)',
+        transition: 'transform 0.3s ease-in-out',
+    },
+    hidden: {
+        transform: 'translateY(100%) scaleY(0)',
+    },
 });

@@ -5,8 +5,6 @@ import CardBanner from "../../../../../components/cardBanner/cardBanner";
 const MoreServicesInBranch = ({moreServicesInBranch}: { moreServicesInBranch: ICard[] }) => {
     const moreServicesInBranchTitle = window.strings.cardDetails.moreServicesInBranchTitle;
     const classes = useStyle();
-
-    console.log('moreServicesInBranch', moreServicesInBranch);
     return (
         <div className={classes.mainDiv}>
             <span className={classes.title}>{moreServicesInBranchTitle}</span>

@@ -5,7 +5,7 @@ export default createUseStyles({
     mainDiv: {
         width: '100%',
         display: 'flex',
-        padding: '0 70px 70px 70px',
+        padding: '0 70px 20px 70px',
         gap: '16PX 32px',
         boxSizing: 'border-box',
         justifyContent: 'center',

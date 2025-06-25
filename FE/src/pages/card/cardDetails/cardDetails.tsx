@@ -10,10 +10,39 @@ import Header from "./components/header/header";
 import JotForm from "./components/jotForm/jotForm";
 import MoreServicesInBranch from "./components/moreServicesInBranch/moreServicesInBranch";
 import Footer from "../../../components/footer/footer";
+import QuickAction from "./components/quickActions/quickAction";
+import {useEffect, useRef, useState} from "react";
 
 const CardDetails = ({card}: { card: ICard }) => {
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const [isScrollUp, setIsScrollUp] = useState(false);
+    const previousScrollTop = useRef(0);
+
+    useEffect(() => {
+        const div = scrollRef.current;
+        if (!div) return;
+
+        const handleScroll = () => {
+            const currentScrollTop = div.scrollTop;
+
+            if (currentScrollTop < previousScrollTop.current) {
+                setIsScrollUp(true);
+            } else {
+                setIsScrollUp(false);
+            }
+
+            previousScrollTop.current = currentScrollTop;
+        };
+
+        div.addEventListener('scroll', handleScroll);
+
+        return () => {
+            div.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
+
     const classes = useStyle();
-    console.log('cardDetails card', card);
     const email: string = card.branch_email_address || card.service_email_address || card.organization_email_address;
     const websites: BranchUrl[] = [card.branch_urls, card.organization_urls, card.service_urls].find(arr => {
         if (arr === null) return;
@@ -21,7 +50,7 @@ const CardDetails = ({card}: { card: ICard }) => {
     }) || [];
     const phoneNumbers: string[] = [card.branch_phone_numbers, card.organization_phone_numbers, card.service_phone_numbers].find(arr => arr.length > 0) || [];
     const address = {text: card.branch_address, geom: card.branch_geometry};
-    return <section className={classes.root}>
+    return <section ref={scrollRef} className={classes.root}>
         <Header organizationName={card.organization_name} branchLocationAccurate={card.branch_location_accurate}
                 branchAddress={card.branch_address}/>
         <div className={classes.content}>
@@ -46,6 +75,9 @@ const CardDetails = ({card}: { card: ICard }) => {
         </div>
             <MoreServicesInBranch moreServicesInBranch={card.moreServicesInBranch}/>
         <Footer/>
+        <div  className={`${classes.quickActionContainer} ${isScrollUp ? classes.hidden : ""}`}>
+        <QuickAction email={email} phoneNumber={phoneNumbers[0]}/>
+        </div>
     </section>
 
 }
