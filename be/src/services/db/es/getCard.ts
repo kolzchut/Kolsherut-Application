@@ -46,7 +46,8 @@ export default async (cardId: string) => {
                 "situations",
                 "situation_ids",
                 "responses",
-                "point_id"
+                "point_id",
+                "address_parts"
             ]
         }
     };

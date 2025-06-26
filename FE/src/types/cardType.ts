@@ -10,6 +10,10 @@ export interface OrganizationNameParts {
     primary: string;
     secondary: string | null;
 }
+export interface AddressParts {
+    primary: string;
+    secondary: string | null;
+}
 
 export interface Response {
     id: string;
@@ -36,6 +40,7 @@ export interface ICard {
     moreServicesInBranch: ICard[]
 
     // Location
+    address_parts: AddressParts | null;
     branch_address: string;
     branch_city: string;
     branch_description: string | null;

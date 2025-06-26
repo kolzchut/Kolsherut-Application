@@ -5,17 +5,28 @@ import websiteIcon from "../../assets/icon-external-link-blue.svg";
 import addressIcon from "../../assets/icon-nav-blue.svg";
 
 import useStyle from "./connection.css";
+import {ICard} from "../../types/cardType";
+import {executeAddToCartAndCardAction} from "../../services/gtag/analyticsEvents";
 
-type ConnectionType = 'tel' | 'mailto'| 'address' | 'website';
+type ConnectionType = 'tel' | 'mailto' | 'address' | 'website';
+type ActionType = 'phone' | 'email' | 'url' | 'nav';
+
 interface IProps {
+    card?: ICard;
+    actionType?: ActionType;
     text: string;
     type: ConnectionType;
-    link?:string;
+    link?: string;
 }
 
-const Connection = ({text, type, link}:IProps) =>{
+const Connection = ({text, type, link, card, actionType}: IProps) => {
+    const gtag = () => {
+        if (!card || !actionType) return;
+        executeAddToCartAndCardAction({action_url: window.location.href, action:actionType, card})
+    }
     const handleCopy = async () => {
         await navigator.clipboard.writeText(text);
+        gtag();
     }
     const isTel = type === 'tel';
     const classes = useStyle({isTel})
@@ -27,15 +38,16 @@ const Connection = ({text, type, link}:IProps) =>{
     };
     const imageToPresent = iconMap[type] || websiteIcon;
 
-    const additionalTextToLink = (type != 'address'&& type != 'website') ? type : ""
+    const additionalTextToLink = (type != 'address' && type != 'website') ? type : ""
     const fullLink = link || `${additionalTextToLink}:${text}`
     return <div className={classes.root}>
-        <a href={fullLink} target="_blank" className={classes.aTag}>
-            <img src={imageToPresent} className={classes.aTagImage} alt={isTel ? "Call" : "Email"} />
+        <a href={fullLink} target="_blank" className={classes.aTag}
+           onClick={gtag}>
+            <img src={imageToPresent} className={classes.aTagImage} alt={isTel ? "Call" : "Email"}/>
             <span>{text}</span>
         </a>
         <button className={classes.button} onClick={handleCopy}>
-            <img src={copyIcon} alt={"Copy to clipboard"} />
+            <img src={copyIcon} alt={"Copy to clipboard"}/>
         </button>
     </div>
 }
