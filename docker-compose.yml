@@ -5,14 +5,18 @@ services:
     ports:
       - 3000:3000
     environment:
-      - PORT=3000
       - ORIGIN=*
       - ENV=dev
+      - PORT=3000
+      - ELASTIC_URL=https://srm-staging-elasticsearch.whiletrue.industries
+      - ELASTIC_USERNAME=elastic
+      - ELASTIC_PASSWORD=ChangeMePlz
+      - ELASTIC_RECONNECT_TIMEOUT=5
+      - VERBOSE=true
+      - LOG_TO_FILE=true
+      - LOG_DURATION=10
     volumes:
       - ./volumes/be/logs:/app/logs
-    depends_on:
-      - postgres
-
   fe:
     image: kolsherut_fe:0.0.0
     restart: unless-stopped
@@ -21,5 +25,7 @@ services:
     volumes:
       - ./volumes/fe/config.json:/usr/share/nginx/html/config.json
       - ./volumes/fe/strings.json:/usr/share/nginx/html/strings.json
+      - ./volumes/fe/responseColors.json:/usr/share/nginx/html/responseColors.json
+      - ./volumes/fe/sitemap.txt:/usr/share/nginx/html/sitemap.txt
     depends_on:
       - be
