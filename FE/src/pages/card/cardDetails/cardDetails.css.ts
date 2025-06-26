@@ -21,8 +21,11 @@ export default createUseStyles({
         width: '100%',
         boxSizing: 'border-box',
         padding: '16px 56px',
-        gap:'16px'
-    },
+        gap:'16px',
+        '@media (max-width: 768px)': {
+            padding: '8px 16px'
+        }
+        },
     serviceNameText:{
         fontSize: '24px',
         margin:0,

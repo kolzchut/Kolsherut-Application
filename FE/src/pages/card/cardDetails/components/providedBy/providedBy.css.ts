@@ -22,13 +22,13 @@ export default createUseStyles({
     },
     link: {
         cursor: 'pointer',
-        width: 'fit-content',
+        width: 'calc(100% - 30px)',
         display: 'inline-block',
         paddingLeft: '18px',
         fontWeight: 600,
         fontSize: '16px',
         lineHeight: 1.25,
-        height: '20px',
+        height: 'fit-content',
         color: brightBlue,
         textDecoration: 'none',
         '&:hover': {

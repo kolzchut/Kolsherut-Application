@@ -17,5 +17,8 @@ export default createUseStyles({
         display: 'flex',
         flexDirection: 'column',
         gap:'20px',
+        '@media (max-width: 768px)': {
+            padding: '24px 16px'
+        }
     }
 });

@@ -7,6 +7,11 @@ export default createUseStyles({
         height: '100vh',
         width: '100%',
         justifyContent: 'space-between',
+        '@media (max-width: 768px)': {
+            flexDirection: 'column',
+            height: '100%',
+            width: '100%',
+        }
     },
     main: {
         display: 'flex',
@@ -16,10 +21,15 @@ export default createUseStyles({
         scrollbarWidth: 'none',
         direction: 'rtl',
     },
-    mapContainer:{
+    mapContainer: {
         width: '50%',
-        height: '100%',
-        minWidth: 500,
-        flex:3
+        height: '100vh',
+        minWidth: 480,
+        flex: 3,
+        '@media (max-width: 768px)': {
+            width: '100%',
+            height: '40vh',
+            flex:'none',
+        }
     }
 });

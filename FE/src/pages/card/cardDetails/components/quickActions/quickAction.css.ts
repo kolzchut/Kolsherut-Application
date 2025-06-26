@@ -39,7 +39,7 @@ export default createUseStyles({
         alignItems: 'center',
         padding: '16px 24px',
         height:'56px',
-        gap: '16px',
+        gap: '8px',
         boxSizing: 'border-box',
         backgroundColor: lightYellow
     },
@@ -47,13 +47,15 @@ export default createUseStyles({
         ...aTagGeneralStyle,
         border: 'none',
         backgroundColor: brightBlue ,
-        color:  white
+        color:  white,
+        flex: 3
     },
-    aTagMail:{
+    aTagGeneral:{
         ...aTagGeneralStyle,
         border:`1px solid ${gray}`,
         backgroundColor: white,
         color: brightBlue,
+        flex:2
     },
     aTagImage:{
         height:'60%'

@@ -23,5 +23,4 @@ export default  createUseStyles({
     icons:{
         height:13
     }
-
 });

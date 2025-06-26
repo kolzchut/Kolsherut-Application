@@ -39,5 +39,6 @@
     "map": "מפת אתר",
     "a11yStatement": "הצהרת נגישות"
   },
-  "quickActionMail": "מייל"
+  "quickActionMail": "מייל",
+  "quickActionWebsite": "אתר"
 }
