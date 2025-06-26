@@ -8,17 +8,19 @@ export default createUseStyles({
         lineHeight: 1.3,
         fontSize:16
     },
-    mainDiv: {
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        position: 'relative',
-        padding: '10px',
-        boxSizing: 'border-box',
-        backgroundColor: brightBlueOne,
-        borderRadius: 10,
-        border: `1px solid ${brightBlue}40` // Adding a semi-transparent border
-    },
+    mainDiv:()=> {
+        const halfTransparentBrightBlue = `${brightBlue}40`;
+        return({
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            position: 'relative',
+            padding: '10px',
+            boxSizing: 'border-box',
+            backgroundColor: brightBlueOne,
+            borderRadius: 10,
+            border: `1px solid ${halfTransparentBrightBlue}`
+        })},
     link: {
         cursor: 'pointer',
         width:'fit-content',
