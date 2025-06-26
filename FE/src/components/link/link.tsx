@@ -8,7 +8,7 @@ const Link = ({response, situation, extra} :{response?: Response, situation?: Si
     let occasion =null;
     let hrefWithMacro = '';
     const isResponse = !!response;
-    const responseColors = window.config.responsesColors;
+    const responseColors = window.responseColors;
     const responseColor = responseColors[response?.id as keyof typeof responseColors] || '#000'
     const situationColor = window.config.situationsColors;
     const color: string = isResponse ? responseColor : situationColor;
@@ -30,7 +30,7 @@ const Link = ({response, situation, extra} :{response?: Response, situation?: Si
             <span>{occasion.name}</span>
             <img alt="link icon" src={linkSvg} className={classes.linkIcon} />
         </a>
-            {extra && <span className={classes.extra}>{extra}</span>}
+            {extra && <span className={classes.extra}>+{extra}</span>}
         </div>);
 }
 export default Link;

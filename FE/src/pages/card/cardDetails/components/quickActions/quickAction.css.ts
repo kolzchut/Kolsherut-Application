@@ -22,11 +22,14 @@ const aTagGeneralStyle = {
     '&:hover': {
         boxShadow: '0 2px 7px rgba(0, 0, 0, 0.4)',
     },
-
     '&:focus': {
         outline: '2px solid #007BFF',
         outlineOffset: '2px',
     },
+    '@media (max-width: 768px)': {
+        fontSize: '14px',
+        gap: '4px',
+    }
 }
 
 
@@ -41,14 +44,21 @@ export default createUseStyles({
         height:'56px',
         gap: '8px',
         boxSizing: 'border-box',
-        backgroundColor: lightYellow
+        backgroundColor: lightYellow,
+        '@media (max-width: 768px)': {
+            padding: '8px 12px',
+            gap: '4px',
+        }
     },
     aTagTel:{
         ...aTagGeneralStyle,
         border: 'none',
         backgroundColor: brightBlue ,
         color:  white,
-        flex: 3
+        flex: 3,
+        '@media (max-width: 768px)': {
+            flex:4
+        }
     },
     aTagGeneral:{
         ...aTagGeneralStyle,

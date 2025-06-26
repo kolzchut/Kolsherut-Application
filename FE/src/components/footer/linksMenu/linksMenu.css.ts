@@ -11,6 +11,9 @@ export default createUseStyles({
         justifyContent: 'center',
         alignItems: 'center',
         flexWrap: 'wrap',
+        '@media (max-width: 768px)': {
+            padding: '24px 16px'
+        }
     },
     links: {
         textDecoration: 'none',

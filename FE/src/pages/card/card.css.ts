@@ -24,7 +24,6 @@ export default createUseStyles({
     mapContainer: {
         width: '50%',
         height: '100vh',
-        minWidth: 480,
         flex: 3,
         '@media (max-width: 768px)': {
             width: '100%',

@@ -8,7 +8,7 @@ const MoreServicesInBranch = ({moreServicesInBranch}: { moreServicesInBranch: IC
     return (
         <div className={classes.mainDiv}>
             <span className={classes.title}>{moreServicesInBranchTitle}</span>
-            {moreServicesInBranch.map((service: ICard) => (<CardBanner card={service}/>))}
+            {moreServicesInBranch.map((service: ICard, index:number) => (<CardBanner key={index} card={service}/>))}
         </div>
     )
 }

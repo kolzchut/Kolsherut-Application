@@ -3,7 +3,10 @@ import {blackOne} from "../../services/theme";
 
 export default  createUseStyles({
     disclaimer:{
-        padding: "32px 56px"
+        padding: "32px 56px",
+        '@media (max-width: 768px)': {
+            padding: '24px 16px'
+        }
     },
     firstParagraph:{
         fontSize:16,

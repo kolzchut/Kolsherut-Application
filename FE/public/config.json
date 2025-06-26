@@ -29,11 +29,6 @@
     "human_services:emergency:emergency_food",
     "human_services:place:health:clinic:mental_health_clinic"
   ],
-  "responsesColors": {
-    "human_services:emergency:emergency_food": "#FF0000",
-    "human_services:goods": "#0000FF",
-    "human_services:internal_emergency_services": "#9B0000"
-  },
   "situationsColors": "#CCCDF5",
   "logToServer": false,
   "reloadWhenNotAuthenticated": true,
