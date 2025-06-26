@@ -15,7 +15,7 @@ export default createUseStyles({
     links: {
         textDecoration: 'none',
         color: lightBlue,
-        lineHeight: '20px',
+        lineHeight: 1.25,
         fontSize: '16px',
         fontWeight: 300,
         '&:hover': {

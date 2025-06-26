@@ -5,7 +5,7 @@ export default createUseStyles({
     text: {
         fontWeight: 400,
         fontSize: 13,
-        lineHeight: '17px',
+        lineHeight: 1.3,
         color: lightGray
     }
 })

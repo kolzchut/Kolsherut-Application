@@ -5,7 +5,7 @@ export default createUseStyles({
     title: {
         color: darkGrayOne,
         fontWeight:600,
-        lineHeight: '21px',
+        lineHeight: 1.25,
         fontSize:16
     },
     mainDiv:{

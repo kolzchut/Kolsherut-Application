@@ -26,7 +26,7 @@ export default createUseStyles({
     bannerTitle: {
         color: blackOne,
         fontWeight:300,
-        lineHeight: '28px',
+        lineHeight: 1.4,
         fontSize: '20px',
         margin: 0,
         width: 'calc(100% - 30px)',

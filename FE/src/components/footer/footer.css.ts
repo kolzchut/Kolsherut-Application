@@ -7,7 +7,7 @@ export default  createUseStyles({
     },
     firstParagraph:{
         fontSize:16,
-        lineHeight: '20px',
+        lineHeight: 1.25,
         fontWeight: 300,
         color:blackOne
     },
@@ -16,7 +16,7 @@ export default  createUseStyles({
     },
     secondAndThirdParagraphs:{
         fontSize:13,
-        lineHeight: '16px',
+        lineHeight: 1.25,
         fontWeight: 300,
         color: blackOne
     },

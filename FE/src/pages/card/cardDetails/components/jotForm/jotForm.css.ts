@@ -17,7 +17,7 @@ export default createUseStyles({
     title:{
         fontSize:16,
         fontWeight: 300,
-        lineHeight: '16px',
+        lineHeight: 1,
         color: darkGrayTwo
     }
 });

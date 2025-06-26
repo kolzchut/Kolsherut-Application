@@ -2,28 +2,34 @@ import {createUseStyles} from 'react-jss';
 
 export default createUseStyles({
     container:{
-      display:"flex",
+        display:"flex",
         flexDirection: "row",
         alignItems:'center',
         margin: 8
     },
-    label: ({color}: { color: string; isResponse: boolean }) => ({
-        display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-        backgroundColor: `${color}10`, // 6.75% opacity (hex alpha)
-        textDecoration: 'none',
-        padding: '4px 8px',
-        border: `1px solid ${color}80`, // 50% opacity (hex alpha)
-        borderRadius: 4,
-        width: 'fit-content',
-        margin: 0,
-        fontSize: 14,
-        '&:hover': {
-            backgroundColor: `${color}30`, // 18.75% opacity (hex alpha)
-            borderColor: `${color}90`, // 56.25% opacity (hex alpha)
-        }
-    }),
+    label: ({color}: { color: string; isResponse: boolean }) =>{
+        const backgroundColor = `${color}10`;
+        const borderColor = `${color}80`;
+        const hoverBackgroundColor = `${color}30`;
+        const hoverBorderColor = `${color}90`;
+        return ({
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            backgroundColor: backgroundColor,
+            textDecoration: 'none',
+            padding: '4px 8px',
+            border: `1px solid ${borderColor}`,
+            borderRadius: 4,
+            width: 'fit-content',
+            margin: 0,
+            fontSize: 14,
+            '&:hover': {
+                backgroundColor: hoverBackgroundColor,
+                borderColor: hoverBorderColor,
+            }
+        })
+    },
     dot: ({color}: { color: string }) => ({
         width: 8,
         height: 8,

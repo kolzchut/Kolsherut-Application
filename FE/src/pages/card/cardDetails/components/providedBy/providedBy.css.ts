@@ -5,9 +5,9 @@ import ArrowDirection from "./arrowDirectionEnum";
 export default createUseStyles({
     title: {
         color: darkGrayOne,
-        fontWeight: 600,
-        lineHeight: '21px',
-        fontSize: 16
+        fontWeight:600,
+        lineHeight: 1.3,
+        fontSize:16
     },
     mainDiv: {
         width: '100%',
@@ -27,7 +27,8 @@ export default createUseStyles({
         paddingLeft: '18px',
         fontWeight: 600,
         fontSize: '16px',
-        lineHeight: '20px',
+        lineHeight: 1.25,
+        height: '20px',
         color: brightBlue,
         textDecoration: 'none',
         '&:hover': {
@@ -47,7 +48,7 @@ export default createUseStyles({
         gap: 5,
         color: lightGray,
         fontWeight: 400,
-        lineHeight: '16px',
+        lineHeight: 1,
         fontSize: '16px'
     },
     arrow: ({arrow}: { arrow: ArrowDirection }) => ({
