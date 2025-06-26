@@ -48,13 +48,16 @@ export default createUseStyles({
         width: 16,
         height: 16,
     },
-    extra:({color}: {color: string; isResponse: boolean}) => ({
-        backgroundColor: `${color}10`,
-        borderTop: `1px solid ${color}80`,
-        borderLeft: `1px solid ${color}80`,
-        borderBottom: `1px solid ${color}80`,
+    extra:({color}: {color: string; isResponse: boolean}) =>{
+        const backgroundColor = `${color}10`;
+        const borderColor = `${color}80`;
+        return ({
+        backgroundColor: backgroundColor,
+        borderTop: `1px solid ${borderColor}`,
+        borderLeft: `1px solid ${borderColor}`,
+        borderBottom: `1px solid ${borderColor}`,
         padding: '4px 2px',
         fontSize:14,
         borderRadius: '4px 0px 0px 4px',
-    })
+    })}
 });
