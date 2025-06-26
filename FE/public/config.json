@@ -1,4 +1,5 @@
 {
+  "jotFormBaseLink": "https://form.jotform.com/222203528302038",
   "URLS": {
     "server": "http://localhost:3000"
   },
@@ -6,8 +7,28 @@
     "macro": "%%MACRO%%",
     "responseFromCard": "s/%%MACRO%%/from=tag-response",
     "situationFromCard": "s/%%MACRO%%/from=tag-situation",
-    "addressLink": "https://www.google.com/maps/search/?api=1&query=%%MACRO%%"
+    "addressLink": "https://www.google.com/maps/search/?api=1&query=%%MACRO%%",
+    "linkToCard": "c/%%MACRO%%",
+    "kolzchutLink": "https://www.kolzchut.org.il/he/כל-זכות:אודות_המיזם",
+    "justiceLink": "https://www.gov.il/he/departments/ministry_of_justice/govil-landing-page",
+    "nationalDigitalLink": "https://www.gov.il/he/departments/national-digital-agency/govil-landing-page",
+    "policyLink": "https://www.kolzchut.org.il/he/כל_שירות:מדיניות_השימוש",
+    "linksMenu": {
+      "about": "about/kolsherut",
+      "missing": "about/missing",
+      "partners": "about/partners",
+      "contact": "about/contact",
+      "map": "about/index",
+      "a11yStatement": "https://www.kolzchut.org.il/he/כל_שירות:נגישות"
+    }
   },
+  "emergencyConditionsByResponseId": [
+    "human_services:internal_emergency_services",
+    "human_services:emergency:emergency_mental_assistance",
+    "human_services:emergency:emergency_helpline",
+    "human_services:emergency:emergency_food",
+    "human_services:place:health:clinic:mental_health_clinic"
+  ],
   "responsesColors": {
     "human_services:emergency:emergency_food": "#FF0000",
     "human_services:goods": "#0000FF",
@@ -21,8 +42,8 @@
     "logs": "/logs",
     "test": "/test",
     "homepage": "/homepage",
-    "card" : "/card/%%cardId%%",
-    "autocomplete":"/autocomplete/%%search%%"
+    "card": "/card/%%cardId%%",
+    "autocomplete": "/autocomplete/%%search%%"
   },
   "map": {
     "center": [

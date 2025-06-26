@@ -4,8 +4,8 @@ import useStyle from "./link.css";
 import linkSvg from '../../assets/icon-arrow-top-right-gray-4.svg'
 import situationSvg from '../../assets/icon-person-blue-5.svg'
 
-const Link = ({response, situation}: { response?: Response, situation?: Situation }) => {
-    let occasion = null;
+const Link = ({response, situation, extra} :{response?: Response, situation?: Situation, extra: number}) => {
+    let occasion =null;
     let hrefWithMacro = '';
     const isResponse = !!response;
     const responseColors = window.config.responsesColors;
@@ -23,13 +23,14 @@ const Link = ({response, situation}: { response?: Response, situation?: Situatio
     }
     if (!occasion) return <></>;
 
-    return (
+    return (<div className={classes.container}>
         <a href={getHref(occasion.name, hrefWithMacro)} className={classes.label} key={occasion.id}>
-            {isResponse && <span className={classes.dot}/>}
-            {!isResponse && <img alt="situation icon" src={situationSvg} className={classes.situationLinkIcon}/>}
+            {isResponse && <span className={classes.dot} />}
+            {!isResponse && <img alt="situation icon" src={situationSvg} className={classes.situationLinkIcon} />}
             <span>{occasion.name}</span>
-            <img alt="link icon" src={linkSvg} className={classes.linkIcon}/>
+            <img alt="link icon" src={linkSvg} className={classes.linkIcon} />
         </a>
-    );
+            {extra && <span className={classes.extra}>{extra}</span>}
+        </div>);
 }
 export default Link;

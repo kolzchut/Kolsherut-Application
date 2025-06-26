@@ -3,6 +3,7 @@ import {blackOne, darkGrayOne} from "../../../services/theme";
 
 export default createUseStyles({
     root: {
+        position: "relative",
         display: 'flex',
         flexDirection: 'column',
         width: '100%',
@@ -20,8 +21,11 @@ export default createUseStyles({
         width: '100%',
         boxSizing: 'border-box',
         padding: '16px 56px',
-        gap:'16px'
-    },
+        gap:'16px',
+        '@media (max-width: 768px)': {
+            padding: '8px 16px'
+        }
+        },
     serviceNameText:{
         fontSize: '24px',
         margin:0,
@@ -42,5 +46,16 @@ export default createUseStyles({
         fontWeight: 300,
         lineHeight: 1.5,
         color: blackOne
-    }
+    },
+    quickActionContainer: {
+        position: 'sticky',
+        bottom: 0,
+        width: '100%',
+        backgroundColor: 'white',
+        boxShadow: '0px -2px 8px rgba(0, 0, 0, 0.1)',
+        transition: 'transform 0.3s ease-in-out',
+    },
+    hidden: {
+        transform: 'translateY(100%) scaleY(0)',
+    },
 });

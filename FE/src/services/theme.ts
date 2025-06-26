@@ -23,6 +23,7 @@ const brightRed = 'rgba(255,0,0,0.8)';
 const brightPink = 'rgba(255, 0, 255, 0.8)';
 const brightYellow = 'rgba(255, 255, 0, 0.8)';
 const brightBlue = '#0012F0';
+const lightBlue = '#1f37f6'
 const brightBlueOne ="#F8FBFF";
 const brightOrange = 'rgba(255, 165, 0, 0.8)';
 const brightLime = 'rgba(0,255,140,0.8)';
@@ -94,5 +95,5 @@ export const colorArray = [
     brightLime,
     brightOrange,
 ];
-export {blue,royalBlue,brightBlue,brightBlueOne,lightGray, black,blackOne, red,lightRed, orange, darkOrange, green, white, gray, darkGrayOne, darkGrayTwo,darkGrayThree, transparent,lightYellow, brightYellow, Cyan};
+export {blue,royalBlue,lightBlue,brightBlue,brightBlueOne,lightGray, black,blackOne, red,lightRed, orange, darkOrange, green, white, gray, darkGrayOne, darkGrayTwo,darkGrayThree, transparent,lightYellow, brightYellow, Cyan};
 export default theme;

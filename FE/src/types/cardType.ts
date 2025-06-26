@@ -32,6 +32,9 @@ export interface ICard {
     card_id: string;
     point_id: string;
 
+    // Not exist in DB
+    moreServicesInBranch: ICard[]
+
     // Location
     branch_address: string;
     branch_city: string;
