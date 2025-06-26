@@ -27,7 +27,7 @@ export default createUseStyles({
         paddingLeft: '18px',
         fontWeight: 600,
         fontSize: '16px',
-        lineHeight: '20px',
+        lineHeight: 1.25,
         height: '20px',
         color: brightBlue,
         textDecoration: 'none',

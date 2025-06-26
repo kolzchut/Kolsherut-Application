@@ -25,14 +25,14 @@ export default createUseStyles({
     serviceNameText:{
         fontSize: '24px',
         margin:0,
-        lineHeight:'28px',
+        lineHeight:1.15,
         color: blackOne,
         fontWeight: 600,
     },
     branchNameText:{
         fontWeight:400,
         fontSize: '20px',
-        lineHeight: '28px',
+        lineHeight: 1.4,
         color: darkGrayOne,
         margin:0
     },
@@ -40,7 +40,7 @@ export default createUseStyles({
         margin:0,
         fontSize: 16,
         fontWeight: 300,
-        lineHeight: '24px',
+        lineHeight: 1.5,
         color: blackOne
     }
 });
