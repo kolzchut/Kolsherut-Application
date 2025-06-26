@@ -1,91 +1,45 @@
-import {ICard} from "../../../types/cardType";
+import {BranchUrl, ICard} from "../../../types/cardType";
 import useStyle from "./cardDetails.css";
+import ServiceEssence from "./components/serviceEssence/serviceEssence";
+import TargetAudience from "./components/targetAudience/targetAudience";
+import Contact from "./components/contact/contact";
+import ServiceEligibility from "./components/serviceEligibility/serviceEligibility";
+import ProvidedBy from "./components/providedBy/providedBy";
+import DataSource from "./components/dataSource/dataSource";
+import Header from "./components/header/header";
 
 const CardDetails = ({card}: { card: ICard }) => {
     const classes = useStyle();
-    const constantText = {
-        serviceEssence: window.strings.cardDetails.serviceEssence,
-        targetAudience: window.strings.cardDetails.targetAudience,
-        contactDetails: window.strings.cardDetails.contactDetails,
-        serviceEligibility: window.strings.cardDetails.serviceEligibility,
-        providedBy: window.strings.cardDetails.providedBy,
-        dataErrorReport: window.strings.cardDetails.dataErrorReport,
-    }
-    const email = card.service_email_address || card.organization_email_address;
-    //TODO: make more readable
-    return (<section className={classes.root}>
-        <div>
-            <h2>{card.organization_name}</h2>
+    console.log('cardDetails card', card);
+    const email: string = card.branch_email_address || card.service_email_address || card.organization_email_address;
+    const websites: BranchUrl[] = [card.branch_urls, card.organization_urls, card.service_urls].find(arr => {
+        if (arr === null) return;
+        return arr.length > 0
+    }) || [];
+    const phoneNumbers: string[] = [card.branch_phone_numbers, card.organization_phone_numbers, card.service_phone_numbers].find(arr => arr.length > 0) || [];
+    const address = {text: card.branch_address, geom: card.branch_geometry};
+    return <section className={classes.root}>
+        <Header organizationName={card.organization_name} branchLocationAccurate={card.branch_location_accurate}
+                branchAddress={card.branch_address}/>
+        <div className={classes.content}>
+            <h1 className={classes.serviceNameText}>{card.service_name}</h1>
+            {card.branch_name && <h2 className={classes.branchNameText}>{card.branch_name}</h2>}
+            <p className={classes.serviceDescriptionText}>{card.service_description}</p>
+            <ServiceEssence responses={card.responses}/>
+            <TargetAudience situations={card.situations}/>
+            <Contact email={email} phoneNumbers={phoneNumbers} address={address}
+                     websites={websites}/>
+            <ServiceEligibility serviceDetails={card.service_details}
+                                servicePaymentDetails={card.service_payment_details}
+                                branchDescription={card.branch_description}/>
+            <ProvidedBy  organizationNameParts={card.organization_name_parts}
+                         organizationName={card.organization_name}
+                         organizationUrls={card.organization_urls}
+                        organizationEmailAddress={card.organization_email_address}
+                        organizationPhoneNumbers={card.organization_phone_numbers}/>
+            <DataSource dataSource={card.data_sources}/>
         </div>
-        <div>
-            <h4>{card.service_name}</h4>
-            <p>{card.service_description}</p>
-            <div>
-                <span>{constantText.serviceEssence}</span>
-                {card.responses.map((response => (
-                    <div key={response.id}>
-                        <h5>{response.name}</h5>
-                    </div>
-                )))}
-            </div>
-            <div>
-                <span>{constantText.targetAudience}</span>
-                {card.situations.map((situation => (
-                    <div key={situation.id}>
-                        <h5>{situation.name}</h5>
-                    </div>
-                )))}
-            </div>
-            <div>
-                <span>{constantText.contactDetails}:</span>
-                {card.service_phone_numbers.map((phoneNumber) => (
-                    <a key={phoneNumber} href={`tel:${phoneNumber}`}>
-                        <span>{phoneNumber}</span>
-                    </a>
-                ))}
-                {email && (
-                    <a href={`mailto:${email}`}>
-                        <span>{email}</span>
-                    </a>
-                )}
-            </div>
-            <div>
-                <span>{constantText.serviceEligibility}</span>
-                {card.service_details && (
-                    <p>{card.service_details}</p>
-                )}
-                {card.service_payment_details && (
-                    <p>{card.service_payment_details}</p>
-                )}
-            </div>
-            <div>
-                <span>{constantText.providedBy}</span>
-                <div>
-                    {card.organization_urls && card.organization_urls.map((url) => (
-                        <a key={url.href} href={url.href} target="_blank" rel="noopener noreferrer">
-                            {card.organization_name}
-                        </a>
-                    ))}
-                    {card.organization_phone_numbers.map((phoneNumber) => (
-                        <a key={phoneNumber} href={`tel:${phoneNumber}`}>
-                            <span>{phoneNumber}</span>
-                        </a>
-                    ))}
-                    {card.organization_email_address && (
-                        <a href={`mailto:${card.organization_email_address}`}>
-                            <span>{card.organization_email_address}</span>
-                        </a>
-                    )}
-                </div>
-                <div>
-                    {card.data_sources && card.data_sources.map((source, index) => (
-                    <span key={index}>
-                        {source}
-                    </span>
-                ))}
-                </div>
-            </div>
-        </div>
-    </section>)
+    </section>
+
 }
 export default CardDetails;

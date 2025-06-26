@@ -58,7 +58,7 @@ export default createUseStyles({
     },
     optionalSearchValue:{
         borderBottom: `1px dotted ${gray}`,
-        lineHeight: '50px',
+        lineHeight: 2,
         width:'100%',
         display: 'flex',
         flexDirection: "row",

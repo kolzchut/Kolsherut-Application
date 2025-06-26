@@ -10,6 +10,7 @@ export default createUseStyles({
     },
     main: {
         display: 'flex',
+        alignItems: 'center',
         flexDirection: 'column',
         flex: 6,
         overflowY: 'auto',

@@ -2,7 +2,10 @@ export interface OrganizationURL {
     href: string;
     title: string;
 }
-
+export interface ServiceURL {
+    href: string;
+    title: string;
+}
 export interface OrganizationNameParts {
     primary: string;
     secondary: string | null;
@@ -18,6 +21,10 @@ export interface Situation {
     id: string;
     name: string;
     synonyms: string[];
+}
+export interface BranchUrl {
+    href: string;
+    title: string;
 }
 
 export interface ICard {
@@ -35,11 +42,11 @@ export interface ICard {
     // Contact
     branch_phone_numbers: string[];
     branch_email_address: string | null;
-    branch_urls: string[] | null;
+    branch_urls: BranchUrl[] | null;
 
     service_phone_numbers: string[];
     service_email_address: string | null;
-    service_urls: string[] | null;
+    service_urls: ServiceURL[] | null;
 
     service_payment_details: string | null;
     service_details: string | null;
