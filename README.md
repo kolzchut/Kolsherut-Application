@@ -7,7 +7,7 @@
 The BE of this project is built with Typescript and Node.js, using the Express framework. It is designed to handle
 requests from the frontend, process data, and interact with the database.
 
-#### Environment Variables of BE:
+#### EnvironmentEnum Variables of BE:
 
 | Variable                  | Description                                                        | Default               |
 |---------------------------|--------------------------------------------------------------------|-----------------------|

@@ -8,11 +8,11 @@ interface IProps {
 
 const JotForm = ({serviceName, cardId}:IProps) => {
     const title = window.strings.cardDetails.jotForm;
-    const link = `${window.config.jotFormBaseLink}?service_name=${encodeURIComponent(serviceName)}&id=${encodeURIComponent(cardId)}&url=${encodeURIComponent(window.location.href)}`;
+    const link = `${window.config.redirects.jotFormBaseLink}?service_name=${encodeURIComponent(serviceName)}&id=${encodeURIComponent(cardId)}&url=${encodeURIComponent(window.location.href)}`;
 
     const classes = useStyle();
     return (
-        <a className={classes.aTag} href={link}>
+        <a className={classes.aTag} href={link} target={"_blank"}>
             <img src={editIcon} alt={'Edit icon'} />
             <span className={classes.title}>{title}</span>
         </a>

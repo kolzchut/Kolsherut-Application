@@ -1,10 +1,10 @@
 import {ICard} from "../../types/cardType";
 import {GtagItem, LogEventArgs} from "../../types/gTagTypes";
+import EnvironmentEnum from "../../types/environmentEnum";
 
 
 const logEvent = ({event, params}: LogEventArgs) => {
-
-    // return;
+    if (window.config.environment !== EnvironmentEnum.Production) return;
     const url = window.location.href;
     const analyticsId = 'G-SSW46Z8STP';
     window.gtag('event', event, {
@@ -130,9 +130,16 @@ export const executeAddToCartAndCardAction = ({card, action, action_url}:{ card:
     cardActionEvent(card, action, action_url);
 };
 
-export const extendDescriptionEvent = (cardId: string) => {
+export const extendDescriptionEvent = (card_id: string) => {
     logEvent({
         event: 'srm:extend_description',
-        params: {cardId},
+        params: { card_id },
     });
-}
+};
+
+export const shrinkDescriptionEvent = (card_id: string) => {
+    logEvent({
+        event: 'srm:shrink_description',
+        params: { card_id },
+    });
+};

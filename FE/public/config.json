@@ -1,5 +1,5 @@
 {
-  "jotFormBaseLink": "https://form.jotform.com/222203528302038",
+  "environment": "development",
   "URLS": {
     "server": "http://localhost:3000"
   },
@@ -9,6 +9,7 @@
     "situationFromCard": "s/%%MACRO%%/from=tag-situation",
     "addressLink": "https://www.google.com/maps/search/?api=1&query=%%MACRO%%",
     "linkToCard": "c/%%MACRO%%",
+    "jotFormBaseLink": "https://form.jotform.com/222203528302038",
     "kolzchutLink": "https://www.kolzchut.org.il/he/כל-זכות:אודות_המיזם",
     "justiceLink": "https://www.gov.il/he/departments/ministry_of_justice/govil-landing-page",
     "nationalDigitalLink": "https://www.gov.il/he/departments/national-digital-agency/govil-landing-page",
