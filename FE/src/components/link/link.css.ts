@@ -18,7 +18,7 @@ export default createUseStyles({
             gap: 8,
             backgroundColor: backgroundColor,
             textDecoration: 'none',
-            padding: '4px 8px',
+            padding: '4px 8px 4px 0px',
             border: `1px solid ${borderColor}`,
             borderRadius: 4,
             width: 'fit-content',

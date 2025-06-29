@@ -1,17 +1,24 @@
-const logEvent = ({event, params}) => {
-    //TODO: remove in production. this return is only so we don't log events in development
-    return;
-    const url = window.location.href;
-    window.gtag({
-        event,
-        url,
-        ...params
-    });
-}
+import {LogEventArgs} from "../../types/gTagTypes";
+import EnvironmentEnum from "../../types/environmentEnum";
 
-export const extendDescriptionEvent = (cardId: string) => {
-    logEvent({
-        event: 'srm:extend_description',
-        params: {cardId},
+
+export const logEvent = ({event, params}: LogEventArgs) => {
+    if (window.config.environment !== EnvironmentEnum.Production) return;
+    const url = window.location.href;
+    const analyticsId = 'G-SSW46Z8STP';
+    window.gtag('event', event, {
+        send_to: analyticsId,
+        url,
+        ...params,
     });
-}
+};
+
+export const interactionEvent = (what: string, where: string, content?: string) => {
+    const event = {
+        event: 'srm:interaction',
+        interaction_where: where,
+        interaction_what: what,
+        interaction_content: content || null,
+    };
+    logEvent({event: event.event, params: event});
+};

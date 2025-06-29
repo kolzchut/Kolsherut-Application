@@ -51,7 +51,7 @@ const CardDetails = ({card}: { card: ICard }) => {
     const phoneNumbers: string[] = [card.branch_phone_numbers, card.organization_phone_numbers, card.service_phone_numbers].find(arr => arr.length > 0) || [];
     const address = {text: card.branch_address, geom: card.branch_geometry};
     return <section ref={scrollRef} className={classes.root}>
-        <Header organizationName={card.organization_name} branchLocationAccurate={card.branch_location_accurate}
+        <Header organizationName={card.organization_name} isNational={card.national_service} branchLocationAccurate={card.branch_location_accurate}
                 branchAddress={card.branch_address}/>
         <div className={classes.content}>
             <h1 className={classes.serviceNameText}>{card.service_name}</h1>
@@ -59,7 +59,7 @@ const CardDetails = ({card}: { card: ICard }) => {
             <p className={classes.serviceDescriptionText}>{card.service_description}</p>
             <ServiceEssence responses={card.responses}/>
             <TargetAudience situations={card.situations}/>
-            <Contact email={email} phoneNumbers={phoneNumbers} address={address}
+            <Contact card={card} email={email} phoneNumbers={phoneNumbers} address={address}
                      websites={websites}/>
             <ServiceEligibility serviceDetails={card.service_details}
                                 servicePaymentDetails={card.service_payment_details}
@@ -76,7 +76,7 @@ const CardDetails = ({card}: { card: ICard }) => {
             <MoreServicesInBranch moreServicesInBranch={card.moreServicesInBranch}/>
         <Footer/>
         <div  className={`${classes.quickActionContainer} ${isScrollUp ? classes.hidden : ""}`}>
-        <QuickAction email={email} phoneNumber={phoneNumbers[0]} websiteURL={websites[0].href}/>
+        <QuickAction email={email} phoneNumber={phoneNumbers[0]} websiteURL={websites[0]?.href}/>
         </div>
     </section>
 

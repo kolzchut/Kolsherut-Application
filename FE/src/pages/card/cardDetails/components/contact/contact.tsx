@@ -1,8 +1,9 @@
 import Connection from "../../../../../components/connection/connection";
-import {BranchUrl} from "../../../../../types/cardType";
+import {BranchUrl, ICard} from "../../../../../types/cardType";
 import useStyles from "./contact.css";
 
 interface IProps {
+    card:ICard,
     email: string,
     phoneNumbers: string[],
     websites: BranchUrl[] | null,
@@ -12,7 +13,7 @@ interface IProps {
     }
 }
 
-const Contact = ({email, phoneNumbers, websites, address}: IProps) => {
+const Contact = ({email, phoneNumbers, websites, address,card}: IProps) => {
     const contactTitle = window.strings.cardDetails.contactDetails
     const {macro, addressLink} = window.config.redirects;
     const addressFullLink = addressLink.replace(macro, address?.geom?.reverse().join(','));
@@ -22,11 +23,11 @@ const Contact = ({email, phoneNumbers, websites, address}: IProps) => {
     return (
         <div>
             <span className={classes.title}>{contactTitle}:</span>
-            {phoneNumbers.map((phoneNumber) => (<Connection type={`tel`} text={phoneNumber} key={phoneNumber}/>))}
-            {email && (<Connection text={email} type={`mailto`}/>)}
+            {phoneNumbers.map((phoneNumber) => (<Connection type={`tel`} text={phoneNumber} key={phoneNumber} card={card} actionType={'phone'}/>))}
+            {email && (<Connection text={email} type={`mailto`}  card={card} actionType={'email'}/>)}
             {websites && websites.map((website) => (
-                <Connection type={`website`} text={website.title} link={website.href} key={website.href}/>))}
-            {addressCondition && (<Connection text={address.text} link={addressFullLink} type={`address`}/>)}
+                <Connection type={`website`} text={website.title} link={website.href} key={website.href}  card={card} actionType={'url'}/>))}
+            {addressCondition && (<Connection text={address.text} link={addressFullLink} type={`address`}  card={card} actionType={'nav'}/>)}
         </div>
     )
 }
