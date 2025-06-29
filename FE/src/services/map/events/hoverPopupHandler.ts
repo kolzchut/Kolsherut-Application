@@ -24,7 +24,7 @@ export const createHoverPopupHandler = (map: MapSingleton) => {
                     popupEl.innerHTML = '';
                     popupEl.appendChild(contentElement);
                 }
-
+                popupOverlay.setOffset([0, 37]);
                 popupOverlay.setPosition(coords);
             } else {
                 popupOverlay.setPosition(undefined);

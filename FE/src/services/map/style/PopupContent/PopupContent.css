@@ -2,6 +2,6 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    background-color: #f00;
-    color: #0f0;
+    background-color: #ff0000;
+    color: #000000;
 }
