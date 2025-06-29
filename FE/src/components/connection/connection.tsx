@@ -6,7 +6,7 @@ import addressIcon from "../../assets/icon-nav-blue.svg";
 
 import useStyle from "./connection.css";
 import {ICard} from "../../types/cardType";
-import {executeAddToCartAndCardAction} from "../../services/gtag/analyticsEvents";
+import {executeAddToCartAndCardAction} from "../../services/gtag/cardEvents";
 
 type ConnectionType = 'tel' | 'mailto' | 'address' | 'website';
 type ActionType = 'phone' | 'email' | 'url' | 'nav';

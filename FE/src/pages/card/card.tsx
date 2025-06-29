@@ -6,7 +6,7 @@ import {useSelector} from "react-redux";
 import {getCardId} from "../../store/general/general.selector";
 import {ICard} from "../../types/cardType";
 import CardDetails from "./cardDetails/cardDetails";
-import {cardEvent} from "../../services/gtag/analyticsEvents";
+import {cardEvent} from "../../services/gtag/cardEvents";
 
 const Card = () => {
     const classes = useStyle();

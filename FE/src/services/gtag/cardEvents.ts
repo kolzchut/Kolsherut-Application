@@ -1,0 +1,94 @@
+import {ICard} from "../../types/cardType";
+import {interactionEvent, logEvent} from "./analyticsEvents";
+import {cardToItem} from "./gtagUtilities";
+
+export const cardEvent = (
+    card: ICard,
+    index: number,
+    select: boolean,
+    from: string | null = null
+) => {
+    if (select) {
+        logEvent({
+            event: 'select_item',
+            params: {
+                ecommerce: {
+                    items: [cardToItem(card, index)],
+                },
+            },
+        });
+    } else {
+        const eventParams = {
+            card_id: card.card_id,
+            card_name: card.service_name,
+            card_org: card.organization_id,
+        };
+        logEvent({
+            event: 'srm:card',
+            params: eventParams,
+        });
+        logEvent({
+            event: 'view_item',
+            params: {
+                ...eventParams,
+                items: [cardToItem(card, index)],
+            },
+        });
+        interactionEvent('card', from || 'unknown', undefined);
+    }
+};
+
+const addToCartEvent = (card: ICard, action: string, action_url: string) => {
+    const eventParams = {
+        action_type: action,
+        action_url: action_url,
+        card_id: card.card_id,
+        card_name: card.service_name,
+        card_org: card.organization_id,
+        cta_action: action,
+        landing_page: 'no',
+        items: [cardToItem(card, 0)],
+    };
+    logEvent({
+        event: 'add_to_cart',
+        params: {
+            conversion: true,
+            ...eventParams,
+        },
+    });
+};
+
+const cardActionEvent = (card: ICard, action: string, action_url: string) => {
+    const eventParams = {
+        action_type: action,
+        action_url: action_url,
+        card_id: card.card_id,
+        card_name: card.service_name,
+        card_org: card.organization_id,
+        landing_page: 'no',
+    };
+    logEvent({
+        event: 'card_action',
+        params: eventParams,
+    });
+};
+
+export const executeAddToCartAndCardAction = ({card, action, action_url}:{ card: ICard, action: 'email' | 'phone' | 'url' | 'nav', action_url: string }
+) => {
+    addToCartEvent(card, action, action_url);
+    cardActionEvent(card, action, action_url);
+};
+
+export const extendDescriptionEvent = (card_id: string) => {
+    logEvent({
+        event: 'srm:extend_description',
+        params: { card_id },
+    });
+};
+
+export const shrinkDescriptionEvent = (card_id: string) => {
+    logEvent({
+        event: 'srm:shrink_description',
+        params: { card_id },
+    });
+};

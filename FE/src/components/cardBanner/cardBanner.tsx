@@ -4,7 +4,7 @@ import emergencyIcon from "../../assets/emergency-icon.svg";
 import {getLinkToCard, isEmergency as checkIfEmergency} from "./cardBannerLogic";
 import React, {useState} from "react";
 import Link from "../link/link";
-import {extendDescriptionEvent, shrinkDescriptionEvent} from "../../services/gtag/analyticsEvents";
+import {extendDescriptionEvent, shrinkDescriptionEvent} from "../../services/gtag/cardEvents";
 
 const CardBanner = ({card}: { card: ICard }) => {
     const [extendText, setExtendText] = useState<boolean>(false);
