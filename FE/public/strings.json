@@ -2,6 +2,9 @@
   "search": {
     "label": " כל שירות, כל קהל וכל מיקום..."
   },
+  "map": {
+    "serviceGivenNationWide": "השירות ניתן בכל הארץ"
+  },
   "cardDetails": {
     "serviceGivenNationWide": "השירות ניתן בכל הארץ",
     "notAccurateLocation": "(במיקום לא מדויק)",

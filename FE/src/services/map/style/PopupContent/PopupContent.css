@@ -1,7 +1,22 @@
 .popup-content-div{
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
     background-color: #ff0000;
     color: #000000;
+    max-width: 240px;
+    padding: 10px;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    height: 28px;
+}
+.popup-content{
+    font-weight: 400;
+    font-size: 14px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    direction: rtl;
 }

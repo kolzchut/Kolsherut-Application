@@ -42,11 +42,8 @@
     "autocomplete": "/autocomplete/%%search%%"
   },
   "map": {
-    "center": [
-      34.69025618483177,
-      31.848182290755105
-    ],
-    "zoom": 12,
+    "center": [35.2137, 31.4683],
+    "zoom": 7.5,
     "rotation": 0,
     "poi": {
       "circleRadius": 5,

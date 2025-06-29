@@ -12,6 +12,7 @@ import view, {setViewPort} from "./view";
 import {MapInitParams} from "../../types/InteractionsTypes";
 import TileLayer from "ol/layer/Tile";
 import Overlay from "ol/Overlay";
+import nationalServiceNotification from "./style/nationalServiceNotification/nationalServiceNotification";
 
 export class MapSingleton {
     readonly ol: Map;
@@ -40,7 +41,7 @@ export class MapSingleton {
         initLayers(this);
         if(this.layers)
         this.ol.setLayers(this.layers);
-        setViewPort();
+        setViewPort({});
 
         mapInteractions.forEach(({event, handler}) => {
             this.ol.on(event, handler(this));
@@ -69,6 +70,31 @@ export class MapSingleton {
     public getPopupOverlay() {
         return this.popupOverlay;
     }
+
+    public disableMovement(disable: boolean) {
+        this.ol.getInteractions().forEach(interaction => {
+            interaction.setActive(!disable);
+        });
+    }
+
+    public showNotification(message: string) {
+        const notificationElement = nationalServiceNotification({message})
+        const targetElement = this.ol.getTargetElement();
+        if (targetElement) {
+            targetElement.appendChild(notificationElement);
+        }
+    }
+
+    public removeNotification() {
+        const targetElement = this.ol.getTargetElement();
+        if (targetElement) {
+            const notificationElement = targetElement.querySelector('.map-notification');
+            if (notificationElement) {
+                targetElement.removeChild(notificationElement);
+            }
+        }
+    }
+
 }
 
 const map = new MapSingleton();

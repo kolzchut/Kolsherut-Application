@@ -13,8 +13,7 @@ const buildPopupContent = ({feature,root}:{feature: Feature<Geometry>, root: HTM
     root.style.backgroundColor = color.background;
     root.style.color = color.font;
     return `
-      <strong>${props.branch_name}</strong>
-      <span>${props.branch_city} , ${props.branch_address}</span>
+      <strong class="popup-content">${props.branch_name}</strong>
   `;
 };
 export default buildPopupContent;
