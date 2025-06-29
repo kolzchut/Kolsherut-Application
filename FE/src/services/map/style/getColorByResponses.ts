@@ -1,11 +1,12 @@
 import {Response} from "../../../types/cardType";
 
-export default (responses: Response[]): string => {
-    const poiColors = window.responseColors;
-    let color: string = 'rgba(255, 0, 0, 1)';
+export default (responses: Response[]): {background:string, font:string} => {
+    const poiColors = window.responseColors.responses;
+    let color = {background: '#ffffff', font: '#000000'};
     for (const response of responses) {
         if (response.id && poiColors[response.id]) {
-            color = poiColors[response.id];
+            const colorName = poiColors[response.id];
+            color = window.responseColors.colors[colorName] || color;
             break;
         }
     }

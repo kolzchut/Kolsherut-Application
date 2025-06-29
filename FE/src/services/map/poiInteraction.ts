@@ -25,6 +25,6 @@ export const addPOI = (poiData: PoiData) => {
         geometry: new Point(fromLonLat(poiData.branch_geometry)),
         featureType: "poi",
     });
-    f.setStyle(dynamicBranchStyle(poiData.responses));
+    f.setStyle(dynamicBranchStyle({responses:poiData.responses, accurateLocation: poiData.accurateLocation}));
     source.addFeature(f);
 };

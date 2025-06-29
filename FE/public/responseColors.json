@@ -1,5 +1,22 @@
 {
-  "human_services:emergency:emergency_food": "#FFF000",
-  "human_services:goods": "#0000FF",
-  "human_services:internal_emergency_services": "#9B0000"
+  "colors": {
+    "yellow": {
+      "background":"#9B9000",
+      "font": "#000000"
+
+    },
+    "blue": {
+      "background":"#00009B",
+      "font": "#FFFFFF"
+    },
+    "red": {
+      "background":"#9B0000",
+      "font": "#FFFFFF"
+    }
+  },
+  "responses": {
+  "human_services:emergency:emergency_food": "yellow",
+  "human_services:goods": "blue",
+  "human_services:internal_emergency_services": "red"
+  }
 }

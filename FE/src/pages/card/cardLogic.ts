@@ -3,7 +3,7 @@ import {ICard} from "../../types/cardType";
 import {store} from "../../store/store";
 import {setPage} from "../../store/general/generalSlice";
 import {goToXy} from "../../services/map/view";
-import {removeAllPOIs, addPOI} from "../../services/map/poiInteraction";
+import {addPOI} from "../../services/map/poiInteraction";
 import PoiData from "../../types/poiData";
 
 export const getFullCard = async(cardId:string) => {
@@ -23,7 +23,8 @@ export const setMapToCard = (card:ICard) =>{
         cardId: card.card_id,
         branch_address: card.branch_address,
         branch_city: card.branch_city,
-        branch_name: card.branch_name || card.organization_name
+        branch_name: card.branch_name || card.organization_name,
+        accurateLocation: card.branch_location_accurate
     }
     addPOI(poiData)
 }

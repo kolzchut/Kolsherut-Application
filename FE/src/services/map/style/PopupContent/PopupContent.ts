@@ -9,7 +9,9 @@ const buildPopupContent = ({feature,root}:{feature: Feature<Geometry>, root: HTM
     root.className = "popup-content-div";
     const props = feature.getProperties() as PoiData;
     const responses = props.responses;
-    root.style.backgroundColor = getColorByResponses(responses);
+    const color = getColorByResponses(responses);
+    root.style.backgroundColor = color.background;
+    root.style.color = color.font;
     return `
       <strong>${props.branch_name}</strong>
       <span>${props.branch_city} , ${props.branch_address}</span>
