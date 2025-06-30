@@ -3,13 +3,13 @@ import {getHref} from "./linkLogic";
 import useStyle from "./link.css";
 import linkSvg from '../../assets/icon-arrow-top-right-gray-4.svg'
 import situationSvg from '../../assets/icon-person-blue-5.svg'
+import getColorByResponses from "../../services/map/style/getColorByResponses";
 
 const Link = ({response, situation, extra} :{response?: Response, situation?: Situation, extra: number}) => {
     let occasion =null;
     let hrefWithMacro = '';
     const isResponse = !!response;
-    const responseColors = window.responseColors;
-    const responseColor = responseColors[response?.id as keyof typeof responseColors] || '#000'
+    const responseColor = (response && getColorByResponses([response]).background) || "#ffffff";
     const situationColor = window.config.situationsColors;
     const color: string = isResponse ? responseColor : situationColor;
     const classes = useStyle({color, isResponse});

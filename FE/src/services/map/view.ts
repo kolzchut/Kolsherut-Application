@@ -5,11 +5,7 @@ import {toRadians} from "ol/math";
 
 const view = new View();
 
-export const setViewPort = (
-    center: [number, number] = window.config.map.center,
-    zoom: number = window.config.map.zoom,
-    rotation: number = window.config.map.rotation
-) => {
+export const setViewPort = ({center=window.config.map.center,zoom = window.config.map.zoom,rotation = window.config.map.rotation}:{center?: [number, number], zoom?: number, rotation?: number}) => {
     view.setCenter(fromLonLat(center));
     view.setZoom(zoom);
     view.setRotation(rotation);

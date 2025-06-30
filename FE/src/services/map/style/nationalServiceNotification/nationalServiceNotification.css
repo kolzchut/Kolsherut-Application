@@ -1,0 +1,16 @@
+.map-notification {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #FFFFFF;
+    color: #4764FA;
+    border: 1px solid #4764FA;
+    direction: rtl;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    padding: 5px 10px;
+    border-radius:10px;
+    font-size: 16px;
+}

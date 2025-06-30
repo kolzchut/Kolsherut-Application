@@ -1,6 +1,6 @@
 import Map from "../../components/map/map";
 import useStyle from "./card.css";
-import {backToHome, getFullCard, setMapToCard} from "./cardLogic";
+import {backToHome, getFullCard, setCardOnMap, setMapBackToDefault} from "./cardLogic";
 import {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
 import {getCardId} from "../../store/general/general.selector";
@@ -10,20 +10,23 @@ import {cardEvent} from "../../services/gtag/cardEvents";
 
 const Card = () => {
     const classes = useStyle();
-    const cardId = useSelector(getCardId)
     const [fullCard, setFullCard] = useState<ICard | null>(null)
+    const cardId = useSelector(getCardId)
     useEffect(()=>{
         const fetchCard = async () => {
             const cardData = await getFullCard(cardId);
             if(cardData !== null) {
                 setFullCard(cardData);
-                setMapToCard(cardData)
+                setCardOnMap(cardData)
                 cardEvent(cardData, 0, false, 'card');
                 return;
             }
             backToHome();
         };
         fetchCard();
+        return () => {
+            setMapBackToDefault();
+        }
     },[cardId])
     return (
         <main className={classes.root}>
