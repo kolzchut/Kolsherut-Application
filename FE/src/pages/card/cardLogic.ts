@@ -1,7 +1,6 @@
 import sendMessage from "../../services/sendMessage/sendMessage";
 import {ICard} from "../../types/cardType";
 import {store} from "../../store/store";
-import {setPage} from "../../store/general/generalSlice";
 import {setViewPort} from "../../services/map/view";
 import {addPOI, removeAllPOIs} from "../../services/map/poiInteraction";
 import PoiData from "../../types/poiData";

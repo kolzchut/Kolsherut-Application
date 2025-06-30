@@ -1,9 +1,11 @@
 import home from "./home/home";
 import card from "./card/card";
+import maintenance from "./maintanence/maintenance";
 
 const pages = {
-    home: home,
-    card: card,
+    home,
+    card,
+    maintenance,
 };
 
 export default pages;
