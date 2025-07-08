@@ -26,6 +26,7 @@ services:
       - ./volumes/fe/config.json:/usr/share/nginx/html/config.json
       - ./volumes/fe/strings.json:/usr/share/nginx/html/strings.json
       - ./volumes/fe/responseColors.json:/usr/share/nginx/html/responseColors.json
+      - ./volumes/fe/filters.json:/usr/share/nginx/html/filters.json
       - ./volumes/fe/sitemap.txt:/usr/share/nginx/html/sitemap.txt
     depends_on:
       - be

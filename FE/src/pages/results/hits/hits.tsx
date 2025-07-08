@@ -7,12 +7,12 @@ import OrganizationWithSingleBranch from "./organization/organizationWithSingleB
 
 const Hits = ({service}: { service: IService }) => {
     const classes = useStyles();
-
+    if(!service || !service.organizations || service.organizations.length === 0) return <></>;
     return <div className={classes.mainDiv} key={service.id}>
         <CardBanner card={service as unknown as ICard}/>
         <div>
             {service.organizations.map((organization) => {
-                const singleBranch = organization.branches.length == 1;
+                const singleBranch = organization.branches?.length == 1;
                 if(singleBranch) return <OrganizationWithSingleBranch key={organization.id} branch={organization.branches[0]}/>
                 return <Organization key={organization.id} organization={organization}/>;
             })}

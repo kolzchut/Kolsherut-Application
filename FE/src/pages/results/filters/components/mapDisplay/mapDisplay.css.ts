@@ -7,7 +7,6 @@ export default createUseStyles({
         height:120,
         boxSizing: 'border-box',
         display: 'flex',
-        position: 'relative',
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: royalBlue,

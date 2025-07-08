@@ -1,5 +1,233 @@
 export const mockServices = [
     {
+        "id": "ServiceId131",
+        "service_name": "שירותי בריאות וחינוך למשפחות",
+        "service_description": `השירותים נועדו לספק תמיכה בריאותית וחינוכית למשפחות, כולל סדנאות חינוך והכוונה בריאותית.`,
+        "responses": [
+            {
+                "synonyms": [],
+                "name": "שירותי בריאות",
+                "id": "human_services:health"
+            },
+            {
+                "synonyms": [
+                    "סדנאות חינוכיות"
+                ],
+                "name": "שירותי חינוך",
+                "id": "human_services:education"
+            }
+        ],
+        "situations": [
+            {"id": "human_situations:language:hebrew_speaking", "name": "דוברי עברית"},
+            {"id": "human_situations:population:families", "name": "משפחות"}
+        ],
+        "organizations": [
+            {
+                "id": "org131",
+                "name": "עמותת בריאות וחינוך למשפחות",
+                "branches": [
+                    {
+                        "id": "branch201",
+                        "name": "מרכז בריאות וחינוך",
+                        "address": "456 רחוב החינוך, עיר הבריאות, HC 45678",
+                        "isNational": true,
+                        "isAccurate": true,
+                        "geometry": [34.201, 31.2360],
+                        "responses": [
+                            {
+                                "synonyms": [],
+                                "name": "שירותי בריאות",
+                                "id": "human_services:health"
+                            },
+                            {
+                                "synonyms": [
+                                ],
+                                "name": "שירותי חינוך",
+                                "id": "human_services:education"
+                            }
+                        ],
+                        "situations": [
+                            {"id": "human_situations:language:hebrew_speaking", "name": "דוברי עברית"}
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "ServiceId200",
+        "service_name": "שירותי בריאות וחינוך לילדים",
+        "service_description": `השירותים נועדו לספק תמיכה בריאותית וחינוכית לילדים, כולל סדנאות חינוך והכוונה בריאותית.`,
+        "responses": [
+            {
+                "synonyms": [],
+                "name": "שירותי בריאות לילדים",
+                "id": "human_services:health:children"
+            },
+            {
+                "synonyms": [
+                    "סדנאות חינוכיות לילדים"
+                ],
+                "name": "שירותי חינוך לילדים",
+                "id": "human_services:education:children"
+            }
+        ],
+        "situations": [
+            {"id": "human_situations:language:hebrew_speaking:children", "name": "דוברי עברית ילדים"},
+            {"id": "human_situations:population:children", "name": "ילדים"}
+        ],
+        "organizations": [
+            {
+                "id": "org200",
+                "name": "עמותת בריאות וחינוך לילדים",
+                "branches": [
+                    {
+                        "id": "branch300",
+                        "name": "מרכז בריאות וחינוך לילדים",
+                        "address": "789 רחוב הילדים, עיר הבריאות, HC 45678",
+                        "isNational": true,
+                        "isAccurate": true,
+                        "geometry": [34.300, 31.3000],
+                        "responses": [
+                            {
+                                "synonyms": [],
+                                "name": "שירותי בריאות לילדים",
+                                "id": "human_services:health:children"
+                            },
+                            {
+                                "synonyms": [],
+                                "name": "שירותי חינוך לילדים",
+                                "id": "human_services:education:children"
+                            }
+                        ],
+                        "situations": [
+                            {"id": "human_situations:language:hebrew_speaking:children", "name": "דוברי עברית ילדים"}
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "ServiceId130",
+        "service_name": "שירותי תמיכה למשפחות בסיכון",
+        "service_description": `השירותים נועדו לספק תמיכה וליווי למשפחות בסיכון, כולל אמהות ואבות דוברי ערבית. השירות כולל ייעוץ משפחתי, סדנאות חינוכיות, ותמיכה רגשית.`,
+        "responses": [
+            {
+                "synonyms": [],
+                "name": "ייעוץ משפחתי",
+                "id": "human_services:family_counseling"
+            },
+            {
+                "synonyms": [
+                    "תמיכה רגשית"
+                ],
+                "name": "שירותים רגשיים",
+                "id": "human_services:emotional_support"
+            }
+        ],
+        "situations": [
+            {"id": "human_situations:language:arabic_speaking", "name": "דוברי ערבית"},
+            {"id": "human_situations:deprivation:at_risk", "name": "בסיכון"},
+            {"id": "human_situations:household:families:mothers", "name": "אמהות"},
+            {"id": "human_situations:household:families:fathers", "name": "אבות"}
+        ],
+        "organizations": [
+            {
+                "id": "org130",
+                "name": "עמותת משפחות בטוחות",
+                "branches": [
+                    {
+                        "id": "branch200",
+                        "name": "מרכז תמיכה למשפחות בסיכון",
+                        "address": "123 רחוב התקווה, עיר הבריאות, HC 45678",
+                        "isNational": true,
+                        "isAccurate": true,
+                        "geometry": [34.200, 31.2350],
+                        "responses": [
+                            {
+                                "synonyms": [],
+                                "name": "ייעוץ משפחתי",
+                                "id": "human_services:family_counseling"
+                            }
+                        ],
+                        "situations": [
+                            {"id": "human_situations:language:arabic_speaking", "name": "דוברי ערבית"},
+                            {"id": "human_situations:deprivation:at_risk", "name": "בסיכון"}
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "ServiceId999",
+        "service_name": "שירותי תמיכה לנפגעי אסונות",
+        "service_description": `השירותים נועדו לספק תמיכה וליווי לנפגעי אסונות טבע. השירות כולל סיוע חירום, ייעוץ פסיכולוגי, סדנאות קבוצתיות, וייעוץ פרטני.`,
+        "responses": [
+            {
+                "synonyms": [],
+                "name": "סיוע חירום",
+                "id": "human_services:emergency_support"
+            },
+            {
+                "synonyms": [
+                    "תמיכה נפשית"
+                ],
+                "name": "שירותים פסיכולוגיים",
+                "id": "human_services:psychological_services"
+            }
+        ],
+        "situations": [
+            {"id": "NaturalDisaster", "name": "אסון טבע"},
+            {"id": "EmergencyCare", "name": "טיפול חירום"}
+        ],
+        "organizations": [
+            {
+                "id": "org999",
+                "name": "עמותת תקווה לנפגעי אסונות",
+                "branches": [
+                    {
+                        "id": "branch9991",
+                        "name": "מרכז טיפול תל אביב",
+                        "address": "123 רחוב התקווה, תל אביב, HC 45678",
+                        "isNational": false,
+                        "isAccurate": true,
+                        "geometry": [34.7818, 32.0853],
+                        "responses": [
+                            {
+                                "synonyms": [],
+                                "name": "סיוע חירום",
+                                "id": "human_services:emergency_support"
+                            }
+                        ],
+                        "situations": [
+                            {"id": "NaturalDisaster", "name": "אסון טבע"}
+                        ]
+                    },
+                    {
+                        "id": "branch9992",
+                        "name": "מרכז טיפול חיפה",
+                        "address": "456 רחוב השלום, חיפה, HC 45678",
+                        "isNational": false,
+                        "isAccurate": true,
+                        "geometry": [34.9895, 32.7940],
+                        "responses": [
+                            {
+                                "synonyms": [],
+                                "name": "סיוע חירום",
+                                "id": "human_services:emergency_support"
+                            }
+                        ],
+                        "situations": [
+                            {"id": "NaturalDisaster", "name": "אסון טבע"}
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
         "id": "ServiceId123",
         "service_name": "שירותי בריאות למבוגרים",
         "service_description": `שירותי הטיפול במבוגרים מכורים נועדו לספק תמיכה מתמשכת, שיקום והתאמה לחיים יומיומיים עבור מבוגרים הנאבקים בהתמכרויות לסמים, אלכוהול או הפרעות התנהגותיות אחרות.
@@ -1898,7 +2126,7 @@ export const mockServices = [
                         "id": "branch232332",
                         "name": "מרכז טיפול תל אביב",
                         "address": "123 רחוב התקווה, תל אביב, HC 45678",
-                        "isNational": true,
+                        "isNational": false,
                         "isAccurate": true,
                         "geometry": [34.7818, 32.0853],
                         "responses": [
@@ -1951,7 +2179,7 @@ export const mockServices = [
                 ]
             }
         ]
-    },  {
+    }, {
         "id": "ServiceId125",
         "service_name": "שירותי תמיכה לנוער בסיכון",
         "service_description": `השירותים נועדו לספק תמיכה, ליווי והכוונה לנוער בסיכון. השירות כולל מפגשים קבוצתיים, ייעוץ פרטני, סדנאות חינוכיות ותמיכה פסיכולוגית.`,

@@ -18,7 +18,7 @@ export const dataSlice = createSlice({
             } else {
                 state.selectedOrganization = null;
             }
-        }
+        },
     },
 });
 

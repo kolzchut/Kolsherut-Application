@@ -5,6 +5,8 @@ export interface UIContextType {
     setDistanceFromTop: (distance: number) => void;
     displayResultsMap: boolean;
     setDisplayResultsMap: (display: boolean) => void;
+    showFiltersModal: boolean;
+    setShowFiltersModal: (show: boolean) => void;
 }
 
 export const UIContext = createContext<UIContextType | null>(null);
@@ -39,5 +41,11 @@ export const useSetDisplayResultsMap = () => {
     const { setDisplayResultsMap } = useUI();
     return setDisplayResultsMap;
 };
-
-
+export const useShowFiltersModal = () => {
+    const { showFiltersModal } = useUI();
+    return showFiltersModal;
+}
+export const useSetShowFiltersModal = () => {
+    const { setShowFiltersModal } = useUI();
+    return setShowFiltersModal;
+};

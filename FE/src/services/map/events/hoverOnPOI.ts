@@ -26,6 +26,6 @@ export const handler = (_map: MapSingleton) => (event: MapBrowserEvent<PointerEv
     });
 
     } else {
-        console.log("No POI hovered");
+        // console.log("No POI hovered");
     }
 };

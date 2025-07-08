@@ -1,11 +1,11 @@
 import {getLinkToCard} from "../../../../services/str";
 import nationalBranchIcon from "../../../../assets/icon-headset.svg";
 import link from "../../../../assets/icon-arrow-top-right-gray-4.svg";
-import useStyles from "./organization.css";
+import useStyles from "./organizationWithSingleBranch.css";
 import {IBranch} from "../../../../types/serviceType";
 
 const OrganizationWithSingleBranch = ({branch}: { branch: IBranch }) => {
-    const classes = useStyles({isSelected: false});
+    const classes = useStyles();
     return <a href={getLinkToCard(branch.id)} className={classes.organization}>
                 <span className={classes.nationalSpan}>
                     <span className={`${classes.text}`}>{branch.name}</span>

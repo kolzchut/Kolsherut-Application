@@ -21,9 +21,7 @@ const Organization = ({organization}: { organization: IOrganization }) => {
         const currentTargetTop = (event.currentTarget.parentElement?.parentElement as HTMLElement).offsetTop;
         const margin = currentTargetTop - containerTop;
         const mainDiv = (event.currentTarget.parentElement?.parentElement?.parentElement?.parentElement as HTMLElement);
-        console.log('mainDiv', mainDiv.scrollHeight);
         mainDiv.scrollTo({top:margin, behavior: 'smooth'});
-        console.log('margin', margin);
         setDistanceFromTop(margin);
     }
 

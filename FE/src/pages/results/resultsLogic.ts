@@ -1,5 +1,5 @@
 import sendMessage from "../../services/sendMessage/sendMessage";
-import {IBranch, IService} from "../../types/serviceType";
+import {IBranch} from "../../types/serviceType";
 import {addPOI} from "../../services/map/poiInteraction";
 import PoiData from "../../types/poiData";
 
@@ -18,26 +18,10 @@ export const getResultsFromServer = async ({serviceName, responseId, situationId
     return results.data;
 }
 
-const splitServicesToBranches = (services: IService[]) => {
-    const branches: IBranch[] = [];
-    services.forEach(service => {
-        if (!service.organizations || service.organizations.length === 0) return
-        service.organizations.forEach(organization => {
-            if (!organization.branches || organization.branches.length === 0) return;
-            organization.branches.forEach(branch => {
-                const existingBranch = branches.find((b) => b.id === branch.id);
-                if (existingBranch) return;
-                branches.push(branch)
-            })
-        })
-    });
-    return branches;
-}
 
-export const addResultsPOIs = (services: IService[]) => {
-    const branches = splitServicesToBranches(services);
-    branches.forEach((branch) => {
-        if(!branch.geometry || !branch.responses || !branch.situations) return;
+export const addResultsPOIs = (branches: IBranch[]) => {
+    branches.forEach((branch: IBranch) => {
+        if (!branch.geometry || !branch.responses || !branch.situations) return;
         const poiData: PoiData = {
             branch_geometry: branch.geometry,
             responses: branch.responses,
@@ -50,3 +34,4 @@ export const addResultsPOIs = (services: IService[]) => {
         addPOI(poiData)
     });
 }
+

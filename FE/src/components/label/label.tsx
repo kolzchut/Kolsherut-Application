@@ -1,4 +1,4 @@
-import {getColor} from "./labelLogic";
+import {getColor} from "../../services/colorLogic";
 import situationSvg from "../../assets/icon-person-blue-5.svg";
 import linkSvg from "../../assets/icon-arrow-top-right-gray-4.svg";
 import {Response, Situation} from "../../types/cardType";

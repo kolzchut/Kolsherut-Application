@@ -1,0 +1,63 @@
+{
+  "responses": {
+    "titles": {
+      "human_services": "שירותים אנושיים",
+      "health": "בריאות",
+      "care": "טיפול",
+      "education": "חינוך",
+      "legal": "משפטי",
+      "work": "עבודה",
+      "housing": "דיור",
+      "community_services": "שירותים קהילתיים",
+      "goods": "מוצרים",
+      "money": "כסף",
+      "emergency": "חירום",
+      "internal_emergency_services": "שירותי חירום פנימיים",
+      "culture_and_sports": "תרבות וספורט",
+      "food": "מזון",
+      "place": "מקום"
+    }
+  },
+  "situations": {
+    "titles": {
+      "audiences": "סינון קהלי יעד",
+      "healthIssues": "מצבים רפואים ומוגבליות",
+      "benefitHolders": "מוכרות ממשלתיות",
+      "employment": "מצב תעסוקתי",
+      "lifeEvents": "אירועי חיים",
+      "urgency": "דחיפות",
+      "community": "קהילה",
+      "role": "תפקיד",
+      "ageGroups": "קבוצות גיל",
+      "gender": "מיועד עבור",
+      "languages": "לדוברי שפות (שאינן עברית)"
+    },
+    "situationsMap": {
+      "audiences": [
+        "armed_forces",
+        "citizenship",
+        "criminal_history",
+        "deprivation",
+        "education",
+        "household",
+        "housing",
+        "income",
+        "sectors",
+        "sexuality",
+        "survivors"
+      ],
+      "healthIssues": [
+        "mental_health",
+        "substance_dependency",
+        "disability",
+        "health"
+      ],
+      "ageGroups": [
+        "age_group"
+      ],
+      "languages": [
+        "language"
+      ]
+    }
+  }
+}

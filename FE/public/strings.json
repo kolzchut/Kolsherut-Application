@@ -46,6 +46,11 @@
     "nationalBranch": "שירות ארצי",
     "notAccurateLocation": "(במיקום לא מדויק)",
     "hideMap": "הסתר מפה",
-    "showMap": "תצוגת מפה"
+    "showMap": "תצוגת מפה",
+    "quickFilters": "סינון מהיר:",
+    "moreFilters": "סננים נוספים",
+    "cleanup": "ניקוי",
+    "showMore": "עוד",
+    "resultsAmount": " %%MACRO%% תוצאות"
   }
 }
