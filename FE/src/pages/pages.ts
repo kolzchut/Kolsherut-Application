@@ -1,10 +1,12 @@
 import home from "./home/home";
 import card from "./card/card";
 import maintenance from "./maintanence/maintenance";
+import resultsWithContext from "./results/context/resultsWithContext";
 
 const pages = {
     home,
     card,
+    results: resultsWithContext,
     maintenance,
 };
 

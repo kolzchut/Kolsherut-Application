@@ -1,4 +1,8 @@
+import {IOrganization, IService} from "../../types/serviceType";
+
 export const initialState = {
-    searchOptions: {}
+    searchOptions: {},
+    results: [] as IService[],
+    selectedOrganization: null as null | IOrganization,
 };
 export type DataStore = typeof initialState;

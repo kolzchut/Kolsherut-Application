@@ -8,6 +8,13 @@ export default createUseStyles({
         lineHeight: 1.25,
         fontSize:16
     },
+    aTag: {
+        textDecoration: "none",
+        '&:hover': {
+            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+            transform: 'translateY(-2px)',
+        },
+    },
     mainDiv:{
         width: '100%',
         padding: '25px 70px',

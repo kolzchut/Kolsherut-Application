@@ -27,7 +27,7 @@ export default createUseStyles({
         flex: 3,
         '@media (max-width: 768px)': {
             width: '100%',
-            height: '40vh',
+            height: '32vh',
             flex:'none',
         }
     }

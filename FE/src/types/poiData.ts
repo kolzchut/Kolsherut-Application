@@ -5,7 +5,6 @@ export default interface PoiData{
     responses: Response[]
     situations: Situation[]
     branch_geometry: [number,number]
-    branch_city: string;
     branch_name: string;
     branch_address: string;
     accurateLocation:boolean;

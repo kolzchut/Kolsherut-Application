@@ -1,8 +1,8 @@
 import axios from 'axios';
 import logger from "../logger/logger";
 import SendMessageType from "../../types/sendMessageType";
-import {store} from "../../store/store.ts";
-import {setPage} from "../../store/general/generalSlice.ts";
+import {store} from "../../store/store";
+import {setPage} from "../../store/general/generalSlice";
 
 
 const getBaseURL = (): string => {

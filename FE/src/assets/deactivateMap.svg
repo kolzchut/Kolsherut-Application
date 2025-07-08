@@ -1,0 +1,62 @@
+<svg width="372" height="121" viewBox="0 0 372 121" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="372" height="121" rx="8" fill="#E9F0FE"/>
+    <!-- First column -->
+    <g clip-path="url(#clip0_9656_171963)">
+        <rect x="24" y="-46.7725" width="90" height="69" rx="8" fill="#BBCDFE"/>
+        <rect x="24.5" y="-46.2725" width="89" height="52" fill="#BBCDFE" stroke="#9DB4FD"/>
+    </g>
+    <rect x="24.5" y="-46.2725" width="89" height="68" rx="7.5" fill="#BBCDFE" stroke="#9DB4FD"/>
+    <g clip-path="url(#clip1_9656_171963)">
+        <rect x="24" y="26.2275" width="90" height="69" rx="8" fill="#BBCDFE"/>
+        <rect x="24.5" y="26.7275" width="89" height="52" fill="#BBCDFE" stroke="#9DB4FD"/>
+    </g>
+    <rect x="24.5" y="26.7275" width="89" height="68" rx="7.5" fill="#BBCDFE" stroke="#9DB4FD"/>
+    <g clip-path="url(#clip2_9656_171963)">
+        <rect x="24" y="99.2275" width="90" height="69" rx="8" fill="#BBCDFE"/>
+        <rect x="24.5" y="99.7275" width="89" height="52" fill="#BBCDFE" stroke="#9DB4FD"/>
+    </g>
+    <rect x="24.5" y="99.7275" width="89" height="68" rx="7.5" fill="#BBCDFE" stroke="#9DB4FD"/>
+    <!-- Second column -->
+    <g clip-path="url(#clip0_9656_171963)">
+        <rect x="144" y="-46.7725" width="90" height="69" rx="8" fill="#BBCDFE"/>
+        <rect x="144.5" y="-46.2725" width="89" height="52" fill="#BBCDFE" stroke="#9DB4FD"/>
+    </g>
+    <rect x="144.5" y="-46.2725" width="89" height="68" rx="7.5" fill="#BBCDFE" stroke="#9DB4FD"/>
+    <g clip-path="url(#clip1_9656_171963)">
+        <rect x="144" y="26.2275" width="90" height="69" rx="8" fill="#BBCDFE"/>
+        <rect x="144.5" y="26.7275" width="89" height="52" fill="#BBCDFE" stroke="#9DB4FD"/>
+    </g>
+    <rect x="144.5" y="26.7275" width="89" height="68" rx="7.5" fill="#BBCDFE" stroke="#9DB4FD"/>
+    <g clip-path="url(#clip2_9656_171963)">
+        <rect x="144" y="99.2275" width="90" height="69" rx="8" fill="#BBCDFE"/>
+        <rect x="144.5" y="99.7275" width="89" height="52" fill="#BBCDFE" stroke="#9DB4FD"/>
+    </g>
+    <rect x="144.5" y="99.7275" width="89" height="68" rx="7.5" fill="#BBCDFE" stroke="#9DB4FD"/>
+    <!-- Third column -->
+    <g clip-path="url(#clip0_9656_171963)">
+        <rect x="264" y="-46.7725" width="90" height="69" rx="8" fill="#BBCDFE"/>
+        <rect x="264.5" y="-46.2725" width="89" height="52" fill="#BBCDFE" stroke="#9DB4FD"/>
+    </g>
+    <rect x="264.5" y="-46.2725" width="89" height="68" rx="7.5" fill="#BBCDFE" stroke="#9DB4FD"/>
+    <g clip-path="url(#clip1_9656_171963)">
+        <rect x="264" y="26.2275" width="90" height="69" rx="8" fill="#BBCDFE"/>
+        <rect x="264.5" y="26.7275" width="89" height="52" fill="#BBCDFE" stroke="#9DB4FD"/>
+    </g>
+    <rect x="264.5" y="26.7275" width="89" height="68" rx="7.5" fill="#BBCDFE" stroke="#9DB4FD"/>
+    <g clip-path="url(#clip2_9656_171963)">
+        <rect x="264" y="99.2275" width="90" height="69" rx="8" fill="#BBCDFE"/>
+        <rect x="264.5" y="99.7275" width="89" height="52" fill="#BBCDFE" stroke="#9DB4FD"/>
+    </g>
+    <rect x="264.5" y="99.7275" width="89" height="68" rx="7.5" fill="#BBCDFE" stroke="#9DB4FD"/>
+    <defs>
+        <clipPath id="clip0_9656_171963">
+            <rect x="48" y="-46.7725" width="90" height="69" rx="8" fill="white"/>
+        </clipPath>
+        <clipPath id="clip1_9656_171963">
+            <rect x="48" y="26.2275" width="90" height="69" rx="8" fill="white"/>
+        </clipPath>
+        <clipPath id="clip2_9656_171963">
+            <rect x="48" y="99.2275" width="90" height="69" rx="8" fill="white"/>
+        </clipPath>
+    </defs>
+</svg>

@@ -5,7 +5,8 @@ import {setViewPort} from "../../services/map/view";
 import {addPOI, removeAllPOIs} from "../../services/map/poiInteraction";
 import PoiData from "../../types/poiData";
 import map from "../../services/map/map";
-import {createPopupByCardId, deletePopup, lockPopup, unlockPopup} from "../../services/map/events/hoverPopupHandler";
+import {createPopupByCardId, deletePopup, lockPopup, unlockPopup} from "../../services/map/events/popup";
+import {setPage} from "../../store/general/generalSlice";
 
 export const getFullCard = async(cardId:string) => {
     const requestURL = window.config.routes.card.replace('%%cardId%%', cardId);
@@ -36,7 +37,6 @@ export const setMapToCard = (card:ICard) =>{
         situations: card.situations,
         cardId: card.card_id,
         branch_address: card.branch_address,
-        branch_city: card.branch_city,
         branch_name: card.branch_name || card.organization_name,
         accurateLocation: card.branch_location_accurate
     }

@@ -2,3 +2,13 @@ export const removeMacro = ({stringWithMacro, macro, replacement}: {stringWithMa
     if (!stringWithMacro || !macro || !replacement) return stringWithMacro;
     return stringWithMacro.replace(macro, replacement);
 }
+
+export const getHref = (occasion: string, hrefWithMacro:string): string => {
+    const macro = window.config.redirects.macro
+    return removeMacro({stringWithMacro: hrefWithMacro, macro, replacement: occasion})
+}
+
+export const getLinkToCard = (cardId: string) =>{
+    const macro = window.config.redirects.macro;
+    return window.config.redirects.linkToCard.replace(macro, cardId);
+}

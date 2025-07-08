@@ -1,22 +1,57 @@
 {
   "colors": {
-    "yellow": {
-      "background":"#9B9000",
-      "font": "#000000"
-
-    },
-    "blue": {
-      "background":"#00009B",
-      "font": "#FFFFFF"
-    },
     "red": {
-      "background":"#9B0000",
+      "background": "#9B0000",
       "font": "#FFFFFF"
+    },
+    "lime": {
+      "background": "#469EB1",
+      "font": "#000000"
+    },
+    "green": {
+      "background": "#2da961",
+      "font": "#000000"
+    },
+    "purple": {
+      "background": "#d067f7",
+      "font": "#000000"
+    },
+    "orange": {
+      "background": "#D0820D",
+      "font": "#000000"
+    },
+    "gold": {
+      "background": "#a89400",
+      "font": "#000000"
+    },
+    "pink": {
+      "background": "#f84dc8",
+      "font": "#000000"
+    },
+    "salmon": {
+      "background": "#e96d6d",
+      "font": "#000000"
+    },
+    "brown": {
+      "background": "#a98d6f",
+      "font": "#000000"
     }
   },
   "responses": {
-  "human_services:emergency:emergency_food": "yellow",
-  "human_services:goods": "blue",
-  "human_services:internal_emergency_services": "red"
+    "human_services": "red",
+    "health": "lime",
+    "care": "green",
+    "education": "purple",
+    "legal": "orange",
+    "work": "gold",
+    "housing": "pink",
+    "community_services": "salmon",
+    "goods": "brown",
+    "money": "brown",
+    "emergency": "red",
+    "internal_emergency_services": "red",
+    "culture_and_sports": "brown",
+    "food": "brown",
+    "place": "lime"
   }
 }

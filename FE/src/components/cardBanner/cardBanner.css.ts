@@ -4,6 +4,10 @@ import {blackOne, lightGray, royalBlue, white} from "../../services/theme";
 export default createUseStyles({
     aTag: {
         textDecoration: "none",
+        '&:hover': {
+            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+            transform: 'translateY(-2px)',
+        },
     },
     cardBanner: {
         width: '100%',
@@ -12,10 +16,6 @@ export default createUseStyles({
         boxSizing: 'border-box',
         backgroundColor: white,
         borderRadius: 2,
-        '&:hover': {
-            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
-            transform: 'translateY(-2px)',
-        },
     },
     emergencyIcon: {
         height: '18px',
@@ -50,7 +50,7 @@ export default createUseStyles({
     },
     bannerDescriptionLong:{
         display: '-webkit-box',
-        WebkitLineClamp: 5,
+        WebkitLineClamp: 20,
         WebkitBoxOrient: 'vertical',
         overflow: 'hidden',
         textOverflow: 'ellipsis',

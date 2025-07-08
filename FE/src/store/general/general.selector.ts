@@ -12,14 +12,15 @@ export const getPage = createSelector([generalStore], (generalStore: GeneralStor
 });
 export const getCardId = createSelector([generalStore], (generalStore: GeneralStore) => {
     return generalStore.cardId;
-})
-
-
-
-export const getUrlParams = createSelector([getPage, getCardId], (page, cardId) => {
+});
+export const getSearchQuery = createSelector([generalStore], (generalStore: GeneralStore) => {
+    return generalStore.searchQuery;
+});
+export const getUrlParams = createSelector([getPage, getCardId, getSearchQuery], (page, cardId, searchQuery) => {
     const params: UrlParams= {
         p: page
     };
     if (cardId) params.c = cardId;
+    if(searchQuery) params.sq = searchQuery;
     return params;
 });

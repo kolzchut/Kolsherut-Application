@@ -12,4 +12,7 @@ export default createUseStyles({
         lineHeight: 1.3,
         fontSize:16
     },
+    link:{
+        textDecoration:'none'
+    }
 });

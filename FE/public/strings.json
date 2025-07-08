@@ -40,5 +40,12 @@
     "a11yStatement": "הצהרת נגישות"
   },
   "quickActionMail": "מייל",
-  "quickActionWebsite": "אתר"
+  "quickActionWebsite": "אתר",
+  "results": {
+    "numOfBranches": "סניפים",
+    "nationalBranch": "שירות ארצי",
+    "notAccurateLocation": "(במיקום לא מדויק)",
+    "hideMap": "הסתר מפה",
+    "showMap": "תצוגת מפה"
+  }
 }

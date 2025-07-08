@@ -11,6 +11,7 @@ const orange = 'rgb(238, 124, 37)';
 const darkOrange = 'rgb(112,72,0)';
 const green = 'rgb(34, 161, 123)';
 const white = 'rgb(255, 255, 255)'
+const lightGrayOne = '#F1EEEA'
 const lightGray = "#767573";
 const gray = 'rgb(135, 135, 135)';
 const darkGrayOne= 'rgb(85, 84, 82)';
@@ -24,8 +25,9 @@ const brightPink = 'rgba(255, 0, 255, 0.8)';
 const brightYellow = 'rgba(255, 255, 0, 0.8)';
 const brightBlue = '#0012F0';
 const lightBlue = '#1f37f6'
+const lightBlueOne = '#BBCDFE';
 const brightBlueOne ="#F8FBFF";
-const brightOrange = 'rgba(255, 165, 0, 0.8)';
+const brightOrange = '#FAF1E0';
 const brightLime = 'rgba(0,255,140,0.8)';
 const lightYellow = '#FFFDF5';
 
@@ -95,5 +97,5 @@ export const colorArray = [
     brightLime,
     brightOrange,
 ];
-export {blue,royalBlue,lightBlue,brightBlue,brightBlueOne,lightGray, black,blackOne, red,lightRed, orange, darkOrange, green, white, gray, darkGrayOne, darkGrayTwo,darkGrayThree, transparent,lightYellow, brightYellow, Cyan};
+export {blue,royalBlue,lightBlue,brightBlue,lightBlueOne,brightBlueOne,lightGray,lightGrayOne, black,blackOne, red,lightRed, orange,brightOrange, darkOrange, green, white, gray, darkGrayOne, darkGrayTwo,darkGrayThree, transparent,lightYellow, brightYellow, Cyan};
 export default theme;

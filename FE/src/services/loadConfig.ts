@@ -1,7 +1,7 @@
 import axios from 'axios';
-import logger from "./logger/logger.ts";
-import {store} from "../store/store.ts";
-import {setPage} from "../store/general/generalSlice.ts";
+import logger from "./logger/logger";
+import {store} from "../store/store";
+import {setPage} from "../store/general/generalSlice";
 
 
 declare global {

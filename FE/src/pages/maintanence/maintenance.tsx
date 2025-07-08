@@ -1,5 +1,4 @@
-import useStyle from "./maintenance.css.ts";
-import React from "react";
+import useStyle from "./maintenance.css";
 import maintenance from "../../assets/maintenance.png";
 
 const Maintenance = () => {

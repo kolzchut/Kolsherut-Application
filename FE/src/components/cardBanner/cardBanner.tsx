@@ -1,18 +1,29 @@
 import {ICard} from "../../types/cardType";
-import useStyle from "./cardBanner.css";
 import emergencyIcon from "../../assets/emergency-icon.svg";
-import {getLinkToCard, isEmergency as checkIfEmergency} from "./cardBannerLogic";
-import React, {useState} from "react";
-import Link from "../link/link";
+import React, {useEffect, useRef, useState} from "react";
+import Label from "../label/label";
+import useStyle from "./cardBanner.css";
+import {isEmergency as checkIfEmergency} from "./cardBannerLogic";
 import {extendDescriptionEvent, shrinkDescriptionEvent} from "../../services/gtag/cardEvents";
 
 const CardBanner = ({card}: { card: ICard }) => {
     const [extendText, setExtendText] = useState<boolean>(false);
     const classes = useStyle();
-    const linkToCard = getLinkToCard(card.card_id)
-    const isEmergency = checkIfEmergency(card.responses)
+    const isEmergency = checkIfEmergency(card.responses);
     const buttonText = extendText ? window.strings.cardBanner.less : window.strings.cardBanner.more;
     const buttonClass = extendText ? classes.bannerDescriptionLong : classes.bannerDescriptionShort;
+    const el = useRef<HTMLSpanElement | null>(null);
+    const [isOverflowing, setIsOverflowing] = useState(false);
+
+    useEffect(() => {
+        if (el.current) {
+            const lineHeightStr = getComputedStyle(el.current).lineHeight;
+            const lineHeight = lineHeightStr === 'normal' ? 16 : parseFloat(lineHeightStr) || 16;
+            const maxLines = 3;
+            const maxHeight = lineHeight * maxLines;
+            setIsOverflowing(el.current.scrollHeight > maxHeight);
+        }
+    }, []);
     const handleExtendOrMinimizeClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation();
         event.preventDefault();
@@ -20,27 +31,28 @@ const CardBanner = ({card}: { card: ICard }) => {
         else extendDescriptionEvent(card.card_id);
         setExtendText((prev) => !prev);
     };
+
     const responsesAmount = card.responses ? card.responses.length : 0;
     const situationsAmount = card.situations ? card.situations.length : 0;
-    const displayLinks = extendText && (responsesAmount > 0 || situationsAmount > 0);
+    const displayLinks = !isOverflowing || (extendText && (responsesAmount > 0 || situationsAmount > 0));
+
     return (
-        <a href={linkToCard} className={classes.aTag}>
             <div className={classes.cardBanner}>
                 {isEmergency && <img src={emergencyIcon} alt={"Emergency Icon"} className={classes.emergencyIcon}/>}
                 <h4 className={classes.bannerTitle}>
                     {card.service_name}
                 </h4>
                 <div className={classes.bannerDescriptionDiv}>
-                    <span className={buttonClass}>{card.service_description}</span>
-                    <button onClick={handleExtendOrMinimizeClick}
-                            className={classes.bannerDescriptionButton}>{buttonText}</button>
+                    <span ref={el} className={buttonClass}>{card.service_description}</span>
+                    {isOverflowing && <button onClick={handleExtendOrMinimizeClick}
+                             className={classes.bannerDescriptionButton}>{buttonText}</button>}
                 </div>
                 {displayLinks && <div className={classes.linksDiv}>
-                    {responsesAmount !== 0 && (<Link response={card.responses[0]} extra={responsesAmount - 1}/>)}
-                    {situationsAmount !== 0 && (<Link situation={card.situations[0]} extra={situationsAmount - 1}/>)}
+                    {responsesAmount !== 0 && (<Label response={card.responses[0]} extra={responsesAmount - 1}/>)}
+                    {situationsAmount !== 0 && (<Label situation={card.situations[0]} extra={situationsAmount - 1}/>)}
                 </div>}
             </div>
-        </a>)
-}
+    );
+};
 
-export default CardBanner
+export default CardBanner;

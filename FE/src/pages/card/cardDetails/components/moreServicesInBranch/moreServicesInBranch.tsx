@@ -1,5 +1,6 @@
 import {ICard} from "../../../../../types/cardType";
 import useStyle from "./moreServicesInBranch.css";
+import {getLinkToCard} from "../../../../../services/str";
 import CardBanner from "../../../../../components/cardBanner/cardBanner";
 
 const MoreServicesInBranch = ({moreServicesInBranch}: { moreServicesInBranch: ICard[] }) => {
@@ -8,7 +9,11 @@ const MoreServicesInBranch = ({moreServicesInBranch}: { moreServicesInBranch: IC
     return (
         <div className={classes.mainDiv}>
             <span className={classes.title}>{moreServicesInBranchTitle}</span>
-            {moreServicesInBranch.map((service: ICard, index:number) => (<CardBanner key={index} card={service}/>))}
+            {moreServicesInBranch.map((service: ICard) => (
+                <a key={service.card_id} href={getLinkToCard(service.card_id)} className={classes.aTag}>
+                    <CardBanner key={service.card_id} card={service}/>
+                </a>
+            ))}
         </div>
     )
 }

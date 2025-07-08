@@ -11,5 +11,8 @@ export default createUseStyles({
     linkList:{
         display: 'flex',
         flexWrap: 'wrap',
+    },
+    link:{
+        textDecoration:'none'
     }
 });

@@ -90,4 +90,5 @@ export interface ICard {
 
     // Optional / Unused
     branch_operating_unit: string | null;
+    collapseHitsByGroups?: Array<{key:string, vals:Array<ICard>}>;
 }

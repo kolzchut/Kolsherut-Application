@@ -1,7 +1,6 @@
 import {Feature} from "ol";
 import {Geometry, Point} from "ol/geom";
-import {MapBrowserEvent} from "ol";
-import map, {MapSingleton} from "../map";
+import map from "../map";
 import buildPopupContent from "../style/PopupContent/PopupContent";
 
 const globals = {
@@ -39,21 +38,6 @@ const deletePopupOverlay = (
     popupOverlay: { setPosition: (coords: number[] | undefined) => void }
 ) => {
     popupOverlay.setPosition(undefined);
-};
-
-export const createHoverPopupHandler = (map: MapSingleton) => {
-    return (event: MapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>) => {
-        if(globals.popUpLocked) return;
-        const popupOverlay = map.getPopupOverlay?.();
-        if (!popupOverlay) return;
-        const feature = map.ol.forEachFeatureAtPixel(event.pixel, (f) => f as Feature<Geometry>);
-        if (feature) {
-            const contentElement = document.createElement("div") as HTMLDivElement;
-            createPopupOverlay(popupOverlay, feature, contentElement);
-        } else {
-            deletePopupOverlay(popupOverlay);
-        }
-    };
 };
 
 export const createPopupByCardId = ({cardId}: { cardId: string }) => {

@@ -1,10 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import generalReducer from './general/generalSlice';
 import dataReducer from './data/dataSlice';
+
 export const store = configureStore({
   reducer: {
     general: generalReducer,
-    data: dataReducer
+    data: dataReducer,
   },
 });
 

@@ -1,16 +1,17 @@
 import {createUseStyles} from 'react-jss';
-import {lightBlue} from "../../services/theme";
+import {lightBlue, royalBlue} from "../../services/theme";
 
 export default  createUseStyles({
     root:{
         display: 'flex',
         backgroundColor: 'white',
         width: '100%',
-        height: 200,
+        height: 80,
         color: lightBlue,
         justifyContent: 'space-around',
     },
     links:{
+        background:royalBlue,
         width: "100%",
         display: "flex",
         justifyContent: "space-around",
