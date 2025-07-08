@@ -39,6 +39,4 @@ const SituationSection = ({title, situations, onClick, onClear}: IProps) => {
         </div>
     </div>
 }
-            
 export default SituationSection;
-    

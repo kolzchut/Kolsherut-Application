@@ -8,5 +8,6 @@ export default createUseStyles({
         padding: 10,
         minWidth: '300px',
         direction:"rtl",
+        gap:15,
     }
 });

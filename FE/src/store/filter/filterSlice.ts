@@ -5,7 +5,9 @@ export const filterSlice = createSlice({
     name: 'filter',
     initialState,
     reducers: {
-
+        setSearchLocation(state: FilterStore, action) {
+            state.searchLocation = action.payload;
+        },
         addResponseFilter(state: FilterStore, action) {
             if(state.filters.responses.some((id) => id === action.payload)) return;
             state.filters.responses.push(action.payload);
@@ -40,6 +42,13 @@ export const filterSlice = createSlice({
         },
         setSituationsFilter(state: FilterStore, action) {
             state.filters.situations = action.payload;
+        },
+        setLocationFilter(state: FilterStore, action) {
+            const {key, bounds} = action.payload;
+            state.filters.location = {
+                key,
+                bounds
+            };
         }
     },
 });
@@ -52,7 +61,9 @@ export const {
     addResponseFilter,
     addMultipleResponseFilters,
     removeResponseFilter,
-    removeMultipleResponseFilters
+    removeMultipleResponseFilters,
+    setLocationFilter,
+    setSearchLocation
 } = filterSlice.actions;
 
 export default filterSlice.reducer;

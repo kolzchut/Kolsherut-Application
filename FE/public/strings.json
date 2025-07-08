@@ -51,6 +51,7 @@
     "moreFilters": "סננים נוספים",
     "cleanup": "ניקוי",
     "showMore": "עוד",
-    "resultsAmount": " %%MACRO%% תוצאות"
+    "resultsAmount": " %%MACRO%% תוצאות",
+    "geoFilterModalPlaceHolder": "ניתן לחפש ישוב או מקום מוגדר"
   }
 }

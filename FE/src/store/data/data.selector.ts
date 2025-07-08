@@ -20,3 +20,6 @@ export const getSelectedOrganization = createSelector([dataStore], (dataStore: D
 export const getSelectedOrganizationId = createSelector([dataStore], (dataStore: DataStore) => {
     return dataStore.selectedOrganization ? dataStore.selectedOrganization.id : null;
 });
+export const getLocations = createSelector([dataStore], (dataStore: DataStore) => {
+    return dataStore.locations;
+});

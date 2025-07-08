@@ -1,9 +1,9 @@
 import {createSelector} from "@reduxjs/toolkit";
-import {getAllBranches, getResults} from "../data/data.selector";
+import {getAllBranches, getLocations, getResults} from "../data/data.selector";
 import {IBranch, IService} from "../../types/serviceType";
 import IFilterOptions from "../../types/filterOptions";
 import {Response, Situation} from "../../types/cardType";
-import {filterStore, getFilters} from "../filter/filter.selector";
+import {filterStore, getFilters, getSearchLocation} from "../filter/filter.selector";
 import {
     filterServices,
     getBranches,
@@ -15,6 +15,8 @@ import {
 import {FilterStore} from "../filter/initialState";
 import ISituationsToFilter from "../../types/SituationsToFilter";
 import IResponseToFilter from "../../types/ResponseToFilter";
+import {checkIfCoordinatesInBounds} from "../../services/geoLogic";
+import ILocation from "../../types/locationType";
 
 export const getFilteredSituationIds = createSelector([filterStore], (filterStore: FilterStore) => {
     return filterStore.filters.situations;
@@ -25,19 +27,23 @@ export const getFilteredResponseIds = createSelector([filterStore], (filterStore
 });
 
 export const getFilteredResults = createSelector([getResults, getFilters], (results, filters) => {
-    if (!filters || (filters.situations.length == 0 && filters.responses.length == 0)) return results;
+    if (!filters || (filters.situations.length == 0 && filters.responses.length == 0 && !filters.location)) return results;
     return filterServices({filters, services: results})
 });
-export const getFilterResultsLength = createSelector([getFilteredResults], (services: IService[]) => {
-    return services.length;
-});
+
 
 export const getFilteredBranches = createSelector([getFilteredResults], (services: IService[]) => getBranches(services));
 
+export const getFilterResultsLength = createSelector([getFilteredBranches], (branches: IBranch[]) => {
+    return branches.length;
+});
 
-export const getQuickFilterResponseOptions = createSelector([getFilteredResults], (services: IService[]) => {
+export const getQuickFilterResponseOptions = createSelector([getFilteredResults, getFilters], (services: IService[], filters) => {
     const responses = services.flatMap((service: IService) =>
-        service.organizations.flatMap((organization) => organization.branches.flatMap(branch => branch.responses) || []));
+        service.organizations.flatMap((organization) => organization.branches.filter(branch => checkIfCoordinatesInBounds({
+            bounds: filters.location.bounds,
+            coordinates: branch.geometry
+        })).flatMap(branch => branch.responses) || []));
     const options: IFilterOptions = runOverResponsesAndGetOptions(responses);
     return Object.entries(options)
         .sort(([, a], [, b]) => b.count - a.count) // Sort by the `count` property in descending order
@@ -107,4 +113,19 @@ export const getQuickFilterSituationOptions = createSelector([getAllSituationsTo
     return situationsToFilter.flatMap(([, situations]) =>
         situations.filter(situation => situation.selected)
     );
+});
+
+export const getOptionalLocations = createSelector([getSearchLocation, getLocations], (searchLocation: string, locations: ILocation[]) => {
+    const fixedSearchLocation = searchLocation.trim().replace(' ', "_");
+    if (!locations || locations.length === 0) return [];
+    if (fixedSearchLocation != '') return locations
+        .filter(location => location.key
+        .includes(fixedSearchLocation))
+        .map(location => {
+        return {
+            ...location,
+            key: location.key.replace(/_/g, ' ').trim()
+        };
+    }).slice(0, 5);
+    return [];
 });

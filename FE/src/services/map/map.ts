@@ -13,6 +13,7 @@ import {MapInitParams} from "../../types/InteractionsTypes";
 import TileLayer from "ol/layer/Tile";
 import Overlay from "ol/Overlay";
 import nationalServiceNotification from "./style/nationalServiceNotification/nationalServiceNotification";
+import {fromLonLat} from "ol/proj";
 
 export class MapSingleton {
     readonly ol: Map;
@@ -83,6 +84,10 @@ export class MapSingleton {
         if (targetElement) {
             targetElement.appendChild(notificationElement);
         }
+    }
+    public gotoLocation({zoom = 12,coordinates}:{zoom?: number, coordinates: [number, number]}) {
+        this.view.setCenter(fromLonLat(coordinates));
+        this.view.setZoom(zoom);
     }
 
     public removeNotification() {

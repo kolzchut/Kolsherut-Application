@@ -2,16 +2,19 @@ import {IBranch, IOrganization, IService} from "../../types/serviceType";
 import {checkIfAllFirstArrayValuesExistsInSecondArrayValues} from "../../services/str";
 import {Response} from "../../types/cardType";
 import IFilterOptions from "../../types/filterOptions";
+import {checkIfCoordinatesInBounds} from "../../services/geoLogic";
+import ILocation from "../../types/locationType";
 
 interface IFilterServicesProps {
     services: IService[];
     filters: {
         responses: string[],
-        situations: string[]
+        situations: string[],
+        location: ILocation;
     }
 }
 
-const checkTags = ({ids,filters}:{ids: string[], filters: string[]}) => {
+const checkTags = ({ids, filters}: { ids: string[], filters: string[] }) => {
     if (filters.length === 0 || filters.length === 0) return true;
     const idsTags = ids.flatMap(tag => tag.split(':').map(t => t.trim()));
     const filterTags = filters.flatMap(tag => tag.split(':').map(t => t.trim()));
@@ -25,6 +28,10 @@ export const filterServices = ({filters, services}: IFilterServicesProps) => {
         const filteredOrganizations: IOrganization[] = [];
         for (const organization of service.organizations) {
             const filteredBranches = organization.branches.filter((branch: IBranch) => {
+                if (!checkIfCoordinatesInBounds({
+                    bounds: filters.location.bounds,
+                    coordinates: branch.geometry
+                })) return false;
                 if (filters.responses.length > 0 && !checkTags({
                     filters: filters.responses,
                     ids: branch.responses.map(r => r.id)
@@ -92,7 +99,7 @@ export const translateKeyToTitle = (key: string): string => {
 }
 export const getKeyForResponse = (id: string): string | null => {
     const keyParts = id.split(':').reverse();
-    if (keyParts[keyParts.length-1] !== 'human_services') return null;
+    if (keyParts[keyParts.length - 1] !== 'human_services') return null;
     const {titles} = window.filters.responses;
     for (const part of keyParts) {
         if (titles[part]) return titles[part];
@@ -100,7 +107,7 @@ export const getKeyForResponse = (id: string): string | null => {
     return null;
 }
 
-export const runOverResponsesAndGetOptions = (responses: Response[]) =>{
+export const runOverResponsesAndGetOptions = (responses: Response[]) => {
     const options: IFilterOptions = {};
     responses.forEach((response: Response) => {
         if (!response.id) return;

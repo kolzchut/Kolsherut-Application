@@ -9,13 +9,15 @@ import sortOptionalSearchValues from "./sortOptionalSearchValues";
 import mapService from './map/map'
 import {mapInteractions, viewInteractions} from "./map/events/mapInteraction";
 import {getRouteParams} from "./route";
+import  {setAllLocationsInStore} from "./geoLogic";
 
 
 export default async (main: React.ReactNode) => {
     const routeParams = getRouteParams();
     store.dispatch(setRouteParams(routeParams));
-    if(await loadConfig()){
+    if (await loadConfig()) {
         mapService.init({mapInteractions, viewInteractions})
+        setAllLocationsInStore();
         const searchOptions = await sendMessage({method: 'get', requestURL: window.config.routes.homepage})
         const sortedSearchOptions = sortOptionalSearchValues(searchOptions.data || []);
         if (searchOptions.success) store.dispatch(setSearchOptions(sortedSearchOptions))

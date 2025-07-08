@@ -19,12 +19,16 @@ export const dataSlice = createSlice({
                 state.selectedOrganization = null;
             }
         },
+        setLocations(state: DataStore, action) {
+            state.locations = action.payload;
+        }
     },
 });
 
 export const {
     setSelectedOrganization,
     setSearchOptions,
+    setLocations,
     setResults
 } = dataSlice.actions;
 

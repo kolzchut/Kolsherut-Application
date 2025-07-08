@@ -7,6 +7,8 @@ export interface UIContextType {
     setDisplayResultsMap: (display: boolean) => void;
     showFiltersModal: boolean;
     setShowFiltersModal: (show: boolean) => void;
+    showGeoModal: boolean;
+    setShowGeoModal: (show: boolean) => void;
 }
 
 export const UIContext = createContext<UIContextType | null>(null);
@@ -48,4 +50,13 @@ export const useShowFiltersModal = () => {
 export const useSetShowFiltersModal = () => {
     const { setShowFiltersModal } = useUI();
     return setShowFiltersModal;
+};
+
+export const useShowGeoModal = () => {
+    const { showGeoModal } = useUI();
+    return showGeoModal;
+}
+export const useSetShowGeoModal = () => {
+    const { setShowGeoModal } = useUI();
+    return setShowGeoModal;
 };
