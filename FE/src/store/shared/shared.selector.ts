@@ -38,20 +38,35 @@ export const getFilterResultsLength = createSelector([getFilteredBranches], (bra
     return branches.length;
 });
 
-export const getQuickFilterResponseOptions = createSelector([getFilteredResults, getFilters], (services: IService[], filters) => {
+export const getTopResponses = createSelector([getResults], (services: IService[]) => {
+    if (!services || services.length === 0) return [];
+    const responsesArray = services.flatMap((service: IService) =>
+        service.organizations.flatMap((organization) =>
+            organization.branches.flatMap(branch => branch.responses) || []));
+    const options = runOverResponsesAndGetOptions(responsesArray);
+    return Object.entries(options)
+        .sort(([, a], [, b]) => b.count - a.count) // Sort by count in descending order
+        .slice(0, 7) // Take the top 7
+});
+
+export const getQuickFilterResponseOptions = createSelector([getFilteredResults, getFilters, getTopResponses], (services: IService[], filters, topResponses) => {
     const responses = services.flatMap((service: IService) =>
         service.organizations.flatMap((organization) => organization.branches.filter(branch => checkIfCoordinatesInBounds({
             bounds: filters.location.bounds,
             coordinates: branch.geometry
         })).flatMap(branch => branch.responses) || []));
     const options: IFilterOptions = runOverResponsesAndGetOptions(responses);
-    return Object.entries(options)
-        .sort(([, a], [, b]) => b.count - a.count) // Sort by the `count` property in descending order
-        .slice(0, 10) // Take the top 10
-        .reduce((acc, [key, value]) => {
-            acc[key] = value;
-            return acc;
-        }, {} as IFilterOptions);
+    const filteredOptions: IFilterOptions = {}
+    topResponses.forEach((response) => {
+        if (options[response[0]]) {
+            filteredOptions[response[0]] = options[response[0]];
+            return;
+        }
+        console.log(response)
+        filteredOptions[response[0]] = {count:0, name:response[1].name};
+
+    });
+    return filteredOptions;
 });
 
 export const getMoreFiltersResponseOptions = createSelector([getAllBranches, getFilteredResponseIds], (branches: IBranch[], filteredResponseIds: string[]) => {
@@ -120,12 +135,12 @@ export const getOptionalLocations = createSelector([getSearchLocation, getLocati
     if (!locations || locations.length === 0) return [];
     if (fixedSearchLocation != '') return locations
         .filter(location => location.key
-        .includes(fixedSearchLocation))
+            .includes(fixedSearchLocation))
         .map(location => {
-        return {
-            ...location,
-            key: location.key.replace(/_/g, ' ').trim()
-        };
-    }).slice(0, 5);
+            return {
+                ...location,
+                key: location.key.replace(/_/g, ' ').trim()
+            };
+        }).slice(0, 5);
     return [];
 });

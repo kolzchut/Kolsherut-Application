@@ -2,6 +2,7 @@ import {store} from "../store/store";
 import {setLocations} from "../store/data/dataSlice";
 import map from "./map/map";
 import locations from "../assets/locations.json"
+import logger from "./logger/logger";
 interface ICheckIfCoordinatesInBounds {
     bounds: [number, number, number, number],
     coordinates: [number, number]
@@ -35,7 +36,7 @@ export const centerByLocation = (bounds: [number,number,number,number], zoom=12)
 }
 
 export const getCurrentLocationBounds = (): Promise<{ bounds: [number, number, number, number] } | null> => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const { latitude, longitude } = position.coords;
@@ -48,8 +49,8 @@ export const getCurrentLocationBounds = (): Promise<{ bounds: [number, number, n
                 resolve({ bounds });
             },
             (error) => {
-                console.error('Error getting location:', error);
-                reject(null);
+                logger.warning({message:'Error getting location:', payload:error});
+                resolve(null);
             }
         );
     });

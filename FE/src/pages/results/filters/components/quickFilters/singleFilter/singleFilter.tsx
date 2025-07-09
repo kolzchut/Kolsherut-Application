@@ -8,7 +8,7 @@ const SingleFilter = ({value, onClick, isFilterActive}: {value: { count?: number
                         <input className={classes.checkBox} type={"checkbox"} readOnly={true} checked={isFilterActive}/>
                         {value.name}
                     </span>
-        {!isFilterActive && value.count && <span className={classes.optionValue}>{value.count}</span>}
+        {!isFilterActive && value.count != undefined && value.count > 0 && <span className={classes.optionValue}>{value.count}</span>}
     </div>
 
 }
