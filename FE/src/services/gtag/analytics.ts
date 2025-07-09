@@ -1,15 +1,17 @@
+import ReactGA from "react-ga4";
 import {LogEventArgs} from "../../types/gTagTypes";
-import EnvironmentEnum from "../../types/environmentEnum";
 
+
+const init = ()=>{
+    ReactGA.initialize(window.config.analytics.appId);
+}
 
 export const logEvent = ({event, params}: LogEventArgs) => {
     if (window.config.environment !== EnvironmentEnum.Production) return;
     const url = window.location.href;
-    const analyticsId = 'G-SSW46Z8STP';
-    window.gtag('event', event, {
-        send_to: analyticsId,
+    ReactGA.event(event, {
         url,
-        ...params,
+        ...params
     });
 };
 
@@ -22,3 +24,9 @@ export const interactionEvent = (what: string, where: string, content?: string) 
     };
     logEvent({event: event.event, params: event});
 };
+
+export default {
+    init,
+    logEvent,
+    interactionEvent,
+}

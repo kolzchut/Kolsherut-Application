@@ -10,6 +10,7 @@ import mapService from './map/map'
 import {mapInteractions, viewInteractions} from "./map/events/mapInteraction";
 import {getRouteParams} from "./route";
 import  {setAllLocationsInStore} from "./geoLogic";
+import analytics from "./gtag/analytics";
 
 
 export default async (main: React.ReactNode) => {
@@ -22,5 +23,6 @@ export default async (main: React.ReactNode) => {
         const sortedSearchOptions = sortOptionalSearchValues(searchOptions.data || []);
         if (searchOptions.success) store.dispatch(setSearchOptions(sortedSearchOptions))
     }
+    analytics.init();
     ReactDOM.createRoot(document.getElementById('root')!).render(main);
 };

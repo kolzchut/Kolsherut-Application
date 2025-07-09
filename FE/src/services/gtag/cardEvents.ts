@@ -1,5 +1,5 @@
 import {ICard} from "../../types/cardType";
-import {interactionEvent, logEvent} from "./analyticsEvents";
+import {interactionEvent, logEvent} from "./analytics";
 import {cardToItem} from "./gtagUtilities";
 
 export const cardEvent = (

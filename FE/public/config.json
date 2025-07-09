@@ -3,6 +3,9 @@
   "URLS": {
     "server": "http://localhost:3000"
   },
+  "analytics": {
+    "id": "G-SSW46Z8STP"
+  },
   "redirects": {
     "macro": "%%MACRO%%",
     "responseFromCard": "s/%%MACRO%%/from=tag-response",
