@@ -1,5 +1,4 @@
 import useStyles from "./geoFilterModal.css";
-import {useSetDisplayResultsMap, useSetShowGeoModal} from "../../../../context/contextFunctions";
 import closeIcon from '../../../../../../assets/icon-close-black.svg'
 import {useSelector} from "react-redux";
 import {getFilterResultsLength, getOptionalLocations} from "../../../../../../store/shared/shared.selector"
@@ -13,15 +12,15 @@ import {useEffect, useRef, useState} from "react";
 import israelLocation from "../../../../../../constants/israelLocation";
 import locationIcon from "../../../../../../assets/location.svg"
 import wideLocationIcon from "../../../../../../assets/wideLocation.svg"
+import {setModal} from "../../../../../../store/general/generalSlice";
+
 const GeoFilterModal = () => {
     const classes = useStyles();
     const searchLocations = useSelector(getSearchLocation);
-    const setShowGeoModal = useSetShowGeoModal();
     const dynamicLocations = useSelector(getOptionalLocations);
     const [optionalLocations, setOptionalLocations] = useState<ILocation[]>([]);
     const resultsLength = useSelector(getFilterResultsLength)
     const location = useSelector(getLocationFilter)
-    const setDisplayResultsMap = useSetDisplayResultsMap();
     const placeholder = window.strings.results.geoFilterModalPlaceHolder;
     const focusRef = useRef<HTMLInputElement>(null);
     useEffect(() => {
@@ -35,14 +34,13 @@ const GeoFilterModal = () => {
         }
         setLocations()
     }, [dynamicLocations]);
-    const close = () => setShowGeoModal(false);
+    const close = () => store.dispatch(setModal(null));
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         store.dispatch(setSearchLocation(e.target.value));
     }
     const onClick = (location: ILocation, zoom=12) => {
         store.dispatch(setLocationFilter(location))
         centerByLocation(location.bounds, zoom);
-        setDisplayResultsMap(true);
         close();
     }
     return <div className={classes.root}>

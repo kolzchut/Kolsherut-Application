@@ -1,10 +1,10 @@
 import useStyles from './moreFilters.css';
-import {useSetShowFiltersModal} from "../../../context/contextFunctions";
+import {store} from "../../../../../store/store";
+import {setModal} from "../../../../../store/general/generalSlice";
 const MoreFilters = () =>{
     const classes = useStyles()
-    const setShowFiltersModal = useSetShowFiltersModal();
     const text = window.strings.results.moreFilters
-    return <button onClick={()=>setShowFiltersModal(true)} className={classes.button}>
+    return <button onClick={()=>store.dispatch(setModal('MoreFiltersModal'))} className={classes.button}>
         {text}
     </button>
 }

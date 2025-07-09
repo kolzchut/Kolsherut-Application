@@ -5,15 +5,15 @@ import {
     getAllSituationsToFilter,
     getFilterResultsLength
 } from "../../../../../../store/shared/shared.selector";
-import {useSetShowFiltersModal} from "../../../../context/contextFunctions";
 import {removeMacro} from "../../../../../../services/str";
 import {onSituationClear, onSituationClick} from "./moreFiltersModalLogic";
 import ResponseSection from "./responseSection/responseSection";
+import {store} from "../../../../../../store/store";
+import {setModal} from "../../../../../../store/general/generalSlice";
 
 
 const MoreFiltersModal = () => {
     const classes = useStyles()
-    const setShowFiltersModal = useSetShowFiltersModal();
     const resultsLength = useSelector(getFilterResultsLength)
     const situationsToFilter= useSelector(getAllSituationsToFilter)
     const numOfResults = removeMacro({
@@ -23,7 +23,7 @@ const MoreFiltersModal = () => {
     })
 
     const close = () => {
-        setShowFiltersModal(false);
+        store.dispatch(setModal(null));
     }
 
     return <div className={classes.mainDiv}>

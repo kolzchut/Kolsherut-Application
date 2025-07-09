@@ -2,6 +2,7 @@ import {createUseStyles} from 'react-jss';
 
 export default createUseStyles({
     modalBackground: {
+        overflowY:'hidden',
         position: "fixed",
         left: 0,
         top: 0,

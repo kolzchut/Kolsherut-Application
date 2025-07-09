@@ -3,7 +3,6 @@ import {createTheme} from '@mui/material/styles';
 const blue = 'rgb(69, 163, 219)';
 const Cyan = 'rgb(0, 255, 255)';
 const royalBlue = 'rgb(65, 105, 225)';
-const royalBlueOne = '#E9F0FE'
 const black = 'rgb(34, 28, 35)';
 const blackOne = 'rgb(51, 50, 49)'
 const red = 'rgb(238, 37, 47)';
@@ -24,6 +23,7 @@ const brightGreen = 'rgba(0,255,0,0.8)';
 const brightRed = 'rgba(255,0,0,0.8)';
 const brightPink = 'rgba(255, 0, 255, 0.8)';
 const brightYellow = 'rgba(255, 255, 0, 0.8)';
+const brightMattYellow = '#ffffb7';
 const brightBlue = '#0012F0';
 const lightBlue = '#1f37f6'
 const lightBlueOne = '#e9f0fe';
@@ -98,5 +98,5 @@ export const colorArray = [
     brightLime,
     brightOrange,
 ];
-export {blue,royalBlue,royalBlueOne,lightBlue,brightBlue,lightBlueOne,brightBlueOne,lightGray,lightGrayOne, black,blackOne, red,lightRed, orange,brightOrange, darkOrange, green, white, gray, darkGrayOne, darkGrayTwo,darkGrayThree, transparent,lightYellow, brightYellow, Cyan};
+export {blue,royalBlue,lightBlueOne, mattYellow,lightBlue,brightBlue,brightBlueOne,lightGray,lightGrayOne, black,blackOne, red,lightRed, orange,brightOrange, darkOrange, green, white, gray, darkGrayOne, darkGrayTwo,darkGrayThree, transparent,lightYellow, brightYellow,brightMattYellow, Cyan};
 export default theme;

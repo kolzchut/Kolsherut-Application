@@ -3,14 +3,14 @@ import {getFilterResultsLength} from "../../../../../store/shared/shared.selecto
 import {getLocationFilter} from "../../../../../store/filter/filter.selector";
 import mapIcon from '../../../../../assets/icon-map-region-blue-2.svg';
 import useStyles from "./geoFilter.css";
-import {useSetShowGeoModal} from "../../../context/contextFunctions";
+import {store} from "../../../../../store/store";
+import {setModal} from "../../../../../store/general/generalSlice";
 
 const GeoFilter = () => {
     const classes = useStyles();
     const resultsLength = useSelector(getFilterResultsLength)
     const location = useSelector(getLocationFilter)
-    const setShowGeoFilter = useSetShowGeoModal()
-    return <div className={classes.root} onClick={()=> setShowGeoFilter(true)}>
+    return <div className={classes.root} onClick={()=> store.dispatch(setModal('GeoFilterModal'))}>
         <div className={classes.textAndMapDiv}>
             <img src={mapIcon} alt={"map"}/>
             <span>{location.key}</span>

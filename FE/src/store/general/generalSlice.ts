@@ -13,12 +13,16 @@ export const generalSlice = createSlice({
         setPage(state: GeneralStore, action) {
             state.page = action.payload;
         },
+        setModal(state: GeneralStore, action) {
+            state.modal = action.payload;
+        }
     },
 });
 
 export const {
     setRouteParams,
-    setPage
+    setPage,
+    setModal
 } = generalSlice.actions;
 
 export default generalSlice.reducer;

@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {lightBlue, royalBlue, royalBlueOne} from "../../../../../services/theme";
+import {lightBlue, royalBlue, lightBlueOne} from "../../../../../services/theme";
 
 export default createUseStyles({
     button:{
@@ -11,7 +11,7 @@ export default createUseStyles({
         backgroundColor: 'transparent',
         border: `1px solid ${royalBlue}`,
         '&:hover':{
-            backgroundColor: royalBlueOne,
+            backgroundColor: lightBlueOne,
             cursor: 'pointer',
         }
     }

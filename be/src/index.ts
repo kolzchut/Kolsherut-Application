@@ -10,6 +10,7 @@ import logRoute from "./routes/logRoute";
 import searchRoute from "./routes/searchRoute";
 import homePageRoute from "./routes/homePageRoute";
 import autoCompleteRoute from "./routes/autoCompleteRoute";
+import locationsRoute from "./routes/locationsRoute";
 
 const app = express();
 const httpServer = createServer(app);
@@ -26,6 +27,7 @@ app.get('/homepage', homePageRoute)
 //TODO: replecating current way to change to better way
 app.get('/autocomplete/:search', autoCompleteRoute)
 app.get('/card/:card_id', cardRoute);
+app.get('/locations', locationsRoute)
 app.post('/search', searchRoute)
 app.post('/logs/:provider', logRoute)
 

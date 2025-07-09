@@ -10,6 +10,11 @@ export const getPage = createSelector([generalStore], (generalStore: GeneralStor
     if (!pageKeys.includes(generalStore.page as Pages)) return pageKeys[0];
     return generalStore.page;
 });
+
+export const getModal = createSelector([generalStore], (generalStore: GeneralStore) => {
+    return generalStore.modal;
+});
+
 export const getCardId = createSelector([generalStore], (generalStore: GeneralStore) => {
     return generalStore.cardId;
 });

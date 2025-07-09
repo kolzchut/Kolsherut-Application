@@ -1,14 +1,19 @@
 import './App.css'
 import pages, {Pages} from "./pages/pages";
 import {useSelector} from "react-redux";
-import {getPage} from "./store/general/general.selector";
+import {getModal, getPage} from "./store/general/general.selector";
 import {useRouteUpdater} from "./services/route";
+import ControlledModal from "./components/controlledModal/controlledModal";
 
 function App() {
   useRouteUpdater();
   const page = useSelector(getPage) as Pages;
   const Page = pages[page];
-  return <Page />;
+  const modal =useSelector(getModal);
+  return <>
+    <Page />;
+    {modal && <ControlledModal/>}
+  </>
 }
 
 export default App;

@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {lightBlue, lightBlueOne, royalBlueOne} from "../../../../../../services/theme";
+import {lightBlue, lightBlueOne} from "../../../../../../services/theme";
 
 export default createUseStyles({
     optionDiv:{
@@ -10,7 +10,7 @@ export default createUseStyles({
         justifyContent: 'space-between',
         borderRadius: 3,
         '&:hover':{
-        backgroundColor: royalBlueOne
+        backgroundColor: lightBlueOne
         }
     },
     optionText:{
@@ -34,7 +34,7 @@ export default createUseStyles({
         WebkitAppearance: 'none',
         MozAppearance: 'none',
         boxSizing: 'border-box',
-        border: `4px solid ${royalBlueOne}`,
+        border: `4px solid ${lightBlueOne}`,
         outline: `1px solid ${lightBlue}`,
         borderRadius: '50%',
         cursor: 'pointer',

@@ -16,16 +16,9 @@ import {getSearchQuery} from "../../store/general/general.selector";
 import Map from "../../components/map/map";
 import {
     useDisplayResultsMap,
-    useSetShowFiltersModal, useSetShowGeoModal,
-    useShowFiltersModal,
-    useShowGeoModal
 } from "./context/contextFunctions";
 import {removeAllPOIs} from "../../services/map/poiInteraction";
-import ControlledModal from "../../components/controlledModal/controlledModal";
-import MoreFiltersModal from "./filters/components/moreFilters/moreFiltersModal/moreFiltersModal";
 import {getFilteredBranches, getFilteredResults} from "../../store/shared/shared.selector";
-import GeoFilterModal from "./filters/components/geoFilter/geoFilterModal/geoFilterModal";
-
 
 const Results = () => {
 
@@ -34,10 +27,6 @@ const Results = () => {
     const searchQuery = useSelector(getSearchQuery);
     const branches = useSelector(getFilteredBranches);
     const displayResultsMap = useDisplayResultsMap();
-    const showFiltersModal = useShowFiltersModal();
-    const setShowFiltersModal = useSetShowFiltersModal();
-    const showGeoModal = useShowGeoModal();
-    const setShowGeoModal = useSetShowGeoModal();
     const classes = useStyles({displayResultsMap, isSelectedOrganization: !!selectedOrganization});
 
     const newResults = () => {
@@ -57,8 +46,6 @@ const Results = () => {
         newResults();
     }, [filteredResults, searchQuery]);
     return <div>
-        {showFiltersModal && <ControlledModal onClose={() => setShowFiltersModal(false)}><MoreFiltersModal/></ControlledModal>}
-        {showGeoModal && <ControlledModal onClose={() => setShowGeoModal(false)}><GeoFilterModal/></ControlledModal>}
         <Header/>
         <div className={classes.mainDiv}>
             <Filters/>
