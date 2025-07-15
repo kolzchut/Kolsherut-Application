@@ -1,9 +1,12 @@
 import ReactGA from "react-ga4";
 import {LogEventArgs} from "../../types/gTagTypes";
+import EnvironmentEnum from "../../enums/environmentEnum";
+import logger from "../logger/logger";
 
 
 const init = ()=>{
-    ReactGA.initialize(window.config.analytics.appId);
+    ReactGA.initialize(window.config.analytics.id);
+    logger.log({message:'Initializing Google Analytics'});
 }
 
 export const logEvent = ({event, params}: LogEventArgs) => {

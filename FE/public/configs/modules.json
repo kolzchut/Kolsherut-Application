@@ -1,0 +1,66 @@
+[
+  {
+    "title": "שירותים המופעלים על ידי עמותה",
+    "content": [
+      {
+        "title": "האם שירותי העמותה שלכם מופיעים ב\"כל שירות\"?"
+      },
+      {
+        "paragraphs": [
+          "אם עדיין לא – זה הזמן לדאוג שיופיעו כך שכל הזקוקים להם ידעו על קיומם ויוכלו ליהנות מהם.",
+          "עליכם להזין את המידע על כל שירותי העמותה באתר \"גיידסטאר\" והמידע יישאב אוטומטית לאתר \"כל שירות\".",
+          "לעזרה בתהליך הזנת המידע ראו:"
+        ]
+      },
+      {
+        "links": [
+          {
+            "key": "המדריך של \"כל שירות\" להזנת מידע",
+            "href": "https://drive.google.com/file/d/1oglrpfBCbBnP8dhFEoj6ExiZ-L3G-4rU/view?usp=sharing"
+          },
+          {
+            "key": "סרטון הסבר על הזנת מידע בגיידסטאר",
+            "href": "https://drive.google.com/file/d/13fc4OstcWxvfw6_H1v542vee1Gh0gjzj/view?usp=sharing"
+          },
+          {
+            "key": "סרטון הסבר של גיידסטאר למה כדאי להזין מידע",
+            "href": "https://www.youtube.com/watch?v=nvEqq2dxb9Q"
+          }
+        ]
+      }
+    ],
+    "buttonTitle": "לאתר גיידסטאר",
+    "href": "https://www.guidestar.org.il/"
+  },
+  {
+    "title": "שירותים אחרים",
+    "content": [
+      {
+        "title": "אילו שירותים מוצגים באתר?"
+      },
+      {
+        "paragraphs": [
+          "אתר כל שירות מציג שירותים ומענים חברתיים שהמדינה, ארגונים וגופים שונים מעמידים לרשותנו, התושבים."
+        ]
+      },
+      {
+        "title": "מה צריך לעשות על מנת שהשירותים שלכם יופיע באתר?"
+      },
+      {
+        "paragraphs": [
+          "כתבו אלינו לכתובת"
+        ],
+        "links": [
+          {
+            "key": "info@kolsherut.org.il",
+            "href": "mailto:info@kolsherut.org.il"
+          }
+        ],
+        "text": "כתבו אלינו",
+        "href": "mailto:info@kolsherut.org.il"
+      }
+    ],
+    "buttonTitle": "כתבו אלינו",
+    "href": "mailto:info@kolsherut.org.il"
+  }
+]

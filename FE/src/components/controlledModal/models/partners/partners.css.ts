@@ -5,7 +5,7 @@ export default createUseStyles({
     root: {
         position: 'relative',
         display: 'flex',
-        gap:10,
+        gap: 10,
         flexDirection: 'column',
         width: '100%',
         heigh: 'fit-content',
@@ -34,5 +34,9 @@ export default createUseStyles({
             transition: 'background 0.3s ease, transform 0.5s ease',
         }
     },
+    text: {
+        fontSize: 18,
+        fontWeight: 300
+    }
 });
 

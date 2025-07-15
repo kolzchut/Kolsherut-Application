@@ -44,7 +44,7 @@ const Connection = ({text, type, link, card, actionType}: IProps) => {
         <a href={fullLink} target="_blank" className={classes.aTag}
            onClick={gtag}>
             <img src={imageToPresent} className={classes.aTagImage} alt={isTel ? "Call" : "Email"}/>
-            <span>{text}</span>
+            <span className={classes.innerATagText}>{text}</span>
         </a>
         <button className={classes.button} onClick={handleCopy}>
             <img src={copyIcon} alt={"Copy to clipboard"}/>

@@ -42,6 +42,9 @@ export default createUseStyles({
     aTagImage:{
         height:'70%'
     },
+    innerATagText:{
+      direction:'ltr',
+    },
 
     button: {
         display: 'flex',

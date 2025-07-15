@@ -61,6 +61,12 @@ export default createUseStyles({
     link:{
         lineHeight: 4,
         fontSize: 20,
-        textDecoration: "none"
+        fontWeight:300,
+        textDecoration: "none",
+        '&:hover': {
+            fontWeight:400,
+            textDecoration: 'underline',
+            cursor: 'pointer',
+        }
     }
 });

@@ -34,5 +34,9 @@ export default createUseStyles({
             transition: 'background 0.3s ease, transform 0.5s ease',
         }
     },
+    text: {
+        fontSize: 18,
+        fontWeight: 300
+    }
 });
 

@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {blackOne, lightBlueOne, white} from "../../../../services/theme";
+import {blackOne, lightBlue, lightBlueOne, white} from "../../../../services/theme";
 
 export default createUseStyles({
     root: {
@@ -48,5 +48,16 @@ export default createUseStyles({
         margin: '10px 0',
         color:blackOne
     },
+    button:{
+        width: '100%',
+        fontSize: '16px',
+        height: '40px',
+        borderRadius: '20px',
+        background:lightBlue,
+        color: white,
+        '&:hover': {
+            cursor: 'pointer',
+        }
+    }
 });
 

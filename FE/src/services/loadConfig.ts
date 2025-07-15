@@ -11,36 +11,33 @@ declare global {
         responseColors:any;
         filters:any;
         gtag:any;
+        modules:any;
     }
 }
 
-const configUrl = `/config.json?cacheBuster=${Date.now()}`;
-const stringsUrl = `/strings.json?cacheBuster=${Date.now()}`;
-const responseColorsUrl = `/responseColors.json?cacheBuster=${Date.now()}`;
-const filtersUrl = `/filters.json?cacheBuster=${Date.now()}`;
+type ConfigType = { type: string, fileName: string };
 
+const configs:Array<ConfigType> = [
+    {"type":"config","fileName": `config.json`},
+    {"type":"strings","fileName": `strings.json`},
+    {"type":"responseColors","fileName": `responseColors.json`},
+    {"type":"filters","fileName": `filters.json`},
+    {"type":"modules","fileName": `modules.json`},
+];
 
 export  default async () => {
     try{
-        const promises = await Promise.all([
-            axios.get(configUrl),
-            axios.get(stringsUrl),
-            axios.get(responseColorsUrl),
-            axios.get(filtersUrl),
-        ]);
-        if(promises[0]['headers']["content-type"] !== "application/json") throw new Error("Config file is not JSON");
-        if(promises[1]['headers']["content-type"] !== "application/json") throw new Error("String file is not JSON");
-        if(promises[2]['headers']["content-type"] !== "application/json") throw new Error("color file is not JSON");
-        if(promises[3]['headers']["content-type"] !== "application/json") throw new Error("color file is not JSON");
+        const promises = await Promise.all(
+            configs.map(async config => axios.get(`/configs/${config.fileName}?cacheBuster=${Date.now()}`))
+        );
 
-        window.config = promises[0].data;
-        window.strings = promises[1].data;
-        window.responseColors = promises[2].data;
-        window.filters = promises[3].data;
-        Object.freeze(window.config);
-        Object.freeze(window.strings);
-        Object.freeze(window.responseColors);
-        Object.freeze(window.filters);
+        configs.map((config, index)=>{
+            if(promises[index]['headers']["content-type"] !== "application/json") throw new Error(`${config.type} file is not JSON`);
+        })
+        configs.map((config:ConfigType, index:number) => {
+            window[config.type] =  promises[index].data;
+            Object.freeze(window[config.type]);
+        });
         return true;
     }catch(e){
         logger.error({message: `Error loading config `, payload: e});
