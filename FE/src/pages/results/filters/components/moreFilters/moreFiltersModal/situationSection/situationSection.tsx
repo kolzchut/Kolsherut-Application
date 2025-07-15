@@ -6,7 +6,7 @@ interface IProps {
     title: string,
     situations: ISituationsToFilter[],
     onClick: ({situation}: { situation: ISituationsToFilter }) => void,
-    onClear: ({situations}:{situations: ISituationsToFilter[]}) => void
+    onClear: ({situations}: { situations: ISituationsToFilter[] }) => void
 }
 
 const SituationSection = ({title, situations, onClick, onClear}: IProps) => {
@@ -15,7 +15,7 @@ const SituationSection = ({title, situations, onClick, onClear}: IProps) => {
     const classes = useStyles();
     const [amountOfSituationsToDisplay, setAmountOfSituationsToDisplay] = useState(Math.min(situations.length, 5));
     const situationsToDisplay = situations.slice(0, amountOfSituationsToDisplay);
-
+    const inputDescription = "Filter by: ";
     return <div className={classes.mainDiv}>
         <div className={classes.titleDiv}>
             <span className={classes.title}>{title}</span>
@@ -24,10 +24,17 @@ const SituationSection = ({title, situations, onClick, onClear}: IProps) => {
         <div className={classes.labelContainer}>
             {situationsToDisplay.map((situation) => (
                 <div className={classes.label} key={situation.id} onClick={() => onClick({situation})}>
+                    <label
+                        htmlFor={`checkbox-${situation.id}`}
+                        className={classes.visuallyHidden}
+                    >
+                        {inputDescription}
+                    </label>
                     <input
+                        id={`checkbox-${situation.id}`}
                         className={classes.checkBox}
-                        type={"checkbox"}
-                        readOnly={true}
+                        type="checkbox"
+                        readOnly
                         checked={situation.selected}
                     />
                     <span>{situation.name}</span>

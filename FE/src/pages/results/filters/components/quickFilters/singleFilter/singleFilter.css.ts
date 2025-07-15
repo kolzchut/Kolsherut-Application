@@ -28,6 +28,17 @@ export default createUseStyles({
         background: lightBlueOne,
         padding:'2px 6px',
     },
+    visuallyHidden: {
+        position: 'absolute',
+        width: 1,
+        height: 1,
+        padding: 0,
+        margin: -1,
+        overflow: 'hidden',
+        clip: 'rect(0, 0, 0, 0)',
+        whiteSpace: 'nowrap',
+        border: 0,
+    },
     checkBox: {
         height: '100%' ,
         appearance: 'none',

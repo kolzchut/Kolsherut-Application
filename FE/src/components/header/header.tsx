@@ -26,14 +26,27 @@ const Header = () => {
         return store.dispatch(setShowSidebar(true));
     }
     const {names} = window.strings.staticModals
+    const inputDescription = "Search for services, organizations, branches, and more"
+
     return <div className={classes.root}>
-        <img onClick={handleIconClick} className={classes.logo} src={isMobile ? hamburger : logo} alt={"kolsherut logo"}/>
+        <img onClick={handleIconClick} className={classes.logo} src={isMobile ? hamburger : logo}
+             alt={"kolsherut logo"}/>
         <div className={classes.inputDiv}>
             <img className={classes.searchIcon} alt={"search icon"} onClick={onSearch}
                  src={isInputFocused ? activeSearchIcon : inactiveSearchIcon}/>
-            <input ref={inputRef} className={classes.input} type={"text"} onFocus={() => setIsInputFocused(true)}
-                   onBlur={() => setIsInputFocused(false)} onKeyDown={(e) => {
-                if (e.key === "Enter") onSearch();}}/>
+            <label htmlFor="search-input" className={classes.visuallyHidden}>
+                {inputDescription}
+            </label>
+            <input
+                id="search-input"
+                ref={inputRef}
+                className={classes.input}
+                type={"text"}
+                onFocus={() => setIsInputFocused(true)}
+                onBlur={() => setIsInputFocused(false)}
+                onKeyDown={(e) => {if (e.key === "Enter") onSearch();}}
+                aria-label={inputDescription}
+            />
         </div>
         {!isMobile && <div className={classes.linksDiv}>
             <span className={classes.link} onClick={() => store.dispatch(setModal("About"))}>{names.about}</span>
