@@ -7,12 +7,23 @@ import Branch from "./branch/branch";
 import {useDistanceFromTop} from "../context/contextFunctions";
 import {useMediaQuery} from "@mui/material";
 import {widthOfMobile} from "../../../constants/mediaQueryProps";
+import {useEffect} from "react";
+import {viewItemListEvent} from "../../../services/gtag/resultsEvents.ts";
+import {useSelector} from "react-redux";
+import {getSearchQuery} from "../../../store/general/general.selector.ts";
+import {getFilteredResponseLength} from "../../../store/shared/shared.selector.ts";
 
 
 const BranchList = ({organization}: { organization: IOrganization }) => {
     const distanceFromTop = useDistanceFromTop()
     const isMobile = useMediaQuery(widthOfMobile);
+    const searchQuery = useSelector(getSearchQuery);
+    const filtersCount = useSelector(getFilteredResponseLength);
+    const responsesCount = useSelector(getFilteredResponseLength);
     const classes = useStyles({distanceFromTop, isMobile});
+    useEffect(() => {
+        viewItemListEvent({branches:organization.branches, organizationName:organization.name, searchQuery, filtersCount,responsesCount})
+    }, [filtersCount, organization.branches, organization.name, responsesCount, searchQuery]);
     const onClose = () => store.dispatch(setSelectedOrganization(null));
     return <div className={classes.mainDiv}>
         <div className={classes.title}>

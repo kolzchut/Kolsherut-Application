@@ -25,13 +25,19 @@ export const getFilteredSituationIds = createSelector([filterStore], (filterStor
 export const getFilteredResponseIds = createSelector([filterStore], (filterStore: FilterStore) => {
     return filterStore.filters.responses;
 });
+export const getFiltersLength = createSelector([filterStore], (filterStore: FilterStore) => {
+    return filterStore.filters.responses.length + filterStore.filters.situations.length;
+});
+
+export const getFilteredResponseLength = createSelector([getFilteredResponseIds], (filterResponse:string[]) => {
+    return filterResponse.length;
+});
+
 
 export const getFilteredResults = createSelector([getResults, getFilters], (results, filters) => {
     if (!filters || (filters.situations.length == 0 && filters.responses.length == 0 && !filters.location)) return results;
     return filterServices({filters, services: results})
 });
-
-
 export const getFilteredBranches = createSelector([getFilteredResults], (services: IService[]) => getBranches(services));
 
 export const getFilterResultsLength = createSelector([getFilteredBranches], (branches: IBranch[]) => {

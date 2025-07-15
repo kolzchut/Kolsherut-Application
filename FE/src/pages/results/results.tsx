@@ -18,16 +18,20 @@ import {
     useDisplayResultsMap,
 } from "./context/contextFunctions";
 import {removeAllPOIs} from "../../services/map/poiInteraction";
-import {getFilteredBranches, getFilteredResults} from "../../store/shared/shared.selector";
+import {getFilteredBranches, getFilteredResponseLength, getFilteredResults} from "../../store/shared/shared.selector";
 import { useMediaQuery } from '@mui/material';
 import {widthOfMobile} from "../../constants/mediaQueryProps";
+import {searchEvent} from "../../services/gtag/resultsEvents.ts";
 
 const Results = () => {
 
     const filteredResults = useSelector(getFilteredResults);
     const selectedOrganization = useSelector(getSelectedOrganization);
-    const searchQuery = useSelector(getSearchQuery);
     const branches = useSelector(getFilteredBranches);
+    //TODO: change name to better one
+    const searchQuery = useSelector(getSearchQuery);
+    const filtersCount = useSelector(getFilteredResponseLength);
+    const responseCount = useSelector(getFilteredResponseLength);
     const displayResultsMap = useDisplayResultsMap();
     const isMobile = useMediaQuery(widthOfMobile);
     const classes = useStyles({displayResultsMap, isSelectedOrganization: !!selectedOrganization, isMobile});
@@ -48,6 +52,9 @@ const Results = () => {
         fetchResults();
         newResults();
     }, [filteredResults, searchQuery]);
+    useEffect(() => {
+        searchEvent({searchQuery, responseCount,filtersCount});
+    }, [searchQuery]);
     return <div>
         <Header/>
         <div className={classes.mainDiv}>
