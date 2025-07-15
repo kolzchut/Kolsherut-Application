@@ -4,6 +4,7 @@ import {useSelector} from "react-redux";
 import {getModal, getPage} from "./store/general/general.selector";
 import {useRouteUpdater} from "./services/route";
 import ControlledModal from "./components/controlledModal/controlledModal";
+import Sidebar from "./components/sidebar/sidebar.tsx";
 
 function App() {
   useRouteUpdater();
@@ -11,8 +12,9 @@ function App() {
   const Page = pages[page];
   const modal =useSelector(getModal);
   return <>
-    <Page />;
+    <Page />
     {modal && <ControlledModal/>}
+    <Sidebar/>
   </>
 }
 

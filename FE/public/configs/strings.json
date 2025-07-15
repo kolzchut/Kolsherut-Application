@@ -49,12 +49,20 @@
     "showMap": "תצוגת מפה",
     "quickFilters": "סינון מהיר:",
     "moreFilters": "סננים נוספים",
+    "moreFiltersForMobile": "סננים",
     "cleanup": "ניקוי",
     "showMore": "עוד",
     "resultsAmount": " %%MACRO%% תוצאות",
     "geoFilterModalPlaceHolder": "ניתן לחפש ישוב או מקום מוגדר"
   },
   "staticModals": {
+    "names": {
+      "home": "דף הבית",
+      "about": "אודות",
+      "addService": "הוספת שירות חסר",
+      "partners": "שותפים",
+      "contact": "צרו קשר"
+    },
     "about": {
       "title": "כל שירות",
       "subtitleOne": "כל השירותים החברתיים -",
@@ -97,5 +105,3 @@
     }
   }
 }
-
-

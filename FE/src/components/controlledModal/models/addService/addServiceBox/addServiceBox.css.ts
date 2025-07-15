@@ -43,7 +43,8 @@ export default createUseStyles({
         lineHeight: 1.3,
         fontSize: 20,
         margin: 0,
-        color: brightBlue
+        color: brightBlue,
+        width:'80%'
     },
     subtitle:{
         fontWeight: 600,

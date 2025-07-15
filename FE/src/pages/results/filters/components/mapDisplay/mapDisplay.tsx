@@ -4,11 +4,14 @@ import innerActivateMapIcon from '../../../../../assets/icon-map-region-blue-2.s
 import innerDeactivateMapIcon from '../../../../../assets/icon-close-blue-3.svg';
 import useStyles from "./mapDisplay.css";
 import {useDisplayResultsMap, useSetDisplayResultsMap} from "../../../context/contextFunctions";
+import {useMediaQuery} from "@mui/material";
+import {widthOfMobile} from "../../../../../constants/mediaQueryProps.ts";
 
 const MapDisplay = () => {
     const displayResultsMap = useDisplayResultsMap()
     const setDisplayResultsMap = useSetDisplayResultsMap()
-    const classes = useStyles();
+    const isMobile = useMediaQuery(widthOfMobile);
+    const classes = useStyles({isMobile});
     const vals = {
         text: displayResultsMap ? window.strings.results.hideMap : window.strings.results.showMap,
         icon: displayResultsMap ? deactivateMapIcon : activateMapIcon,

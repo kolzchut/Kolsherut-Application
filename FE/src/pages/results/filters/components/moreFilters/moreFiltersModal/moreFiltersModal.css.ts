@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {brightBlue, lightBlue, white} from "../../../../../../services/theme";
+import {brightBlue, lightBlue, lightBlueOne, white} from "../../../../../../services/theme";
 
 export default createUseStyles({
     mainDiv: {
@@ -12,6 +12,22 @@ export default createUseStyles({
         padding: 20,
         boxSizing: "border-box",
         justifyContent: "space-between",
+    },
+    closeIcon: {
+        background: "transparent",
+        cursor: 'pointer',
+        height: '30px',
+        width: '30px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        border: 'none',
+        borderRadius: 15,
+        '&:hover': {
+            background: lightBlueOne,
+            transform: 'rotate(90deg)',
+            transition: 'background 0.3s ease, transform 0.5s ease',
+        }
     },
     innerDiv:{
         height: 'calc(100% - 50px)',

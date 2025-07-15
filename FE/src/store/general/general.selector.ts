@@ -29,3 +29,6 @@ export const getUrlParams = createSelector([getPage, getCardId, getSearchQuery],
     if(searchQuery) params.sq = searchQuery;
     return params;
 });
+export const getShowSidebar = createSelector([generalStore], (generalStore: GeneralStore) => {
+    return generalStore.showSidebar;
+});

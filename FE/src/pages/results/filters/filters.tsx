@@ -3,13 +3,17 @@ import MapDisplay from "./components/mapDisplay/mapDisplay";
 import QuickFilters from "./components/quickFilters/quickFilters";
 import MoreFilters from "./components/moreFilters/moreFilters";
 import GeoFilter from "./components/geoFilter/geoFilter";
+import {useMediaQuery} from "@mui/material";
+import {widthOfMobile} from "../../../constants/mediaQueryProps.ts";
 
 const Filters = () => {
-    const classes = useStyles();
+    const isMobile = useMediaQuery(widthOfMobile);
+    const classes = useStyles({isMobile});
+
     return <div className={classes.root}>
         <GeoFilter/>
         <MapDisplay/>
-        <QuickFilters/>
+        {!isMobile && <QuickFilters/>}
         <MoreFilters/>
     </div>
 }

@@ -19,6 +19,8 @@ import {
 } from "./context/contextFunctions";
 import {removeAllPOIs} from "../../services/map/poiInteraction";
 import {getFilteredBranches, getFilteredResults} from "../../store/shared/shared.selector";
+import { useMediaQuery } from '@mui/material';
+import {widthOfMobile} from "../../constants/mediaQueryProps";
 
 const Results = () => {
 
@@ -27,7 +29,8 @@ const Results = () => {
     const searchQuery = useSelector(getSearchQuery);
     const branches = useSelector(getFilteredBranches);
     const displayResultsMap = useDisplayResultsMap();
-    const classes = useStyles({displayResultsMap, isSelectedOrganization: !!selectedOrganization});
+    const isMobile = useMediaQuery(widthOfMobile);
+    const classes = useStyles({displayResultsMap, isSelectedOrganization: !!selectedOrganization, isMobile});
 
     const newResults = () => {
         store.dispatch(setSelectedOrganization(null));

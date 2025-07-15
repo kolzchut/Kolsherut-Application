@@ -5,22 +5,23 @@ export default createUseStyles({
     root: {
         position: 'relative',
         display: 'flex',
-        gap:10,
+        gap: 10,
         flexDirection: 'column',
         width: '100%',
         heigh: 'fit-content',
+        boxSizing: 'border-box',
         padding: '10px',
         borderRadius: 8,
         boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
         direction: 'rtl',
         background: white,
     },
-    searchDiv:{
-      display: 'flex',
+    searchDiv: {
+        display: 'flex',
         flexDirection: 'row',
         background: lightBlueOne,
-        borderRadius:8,
-        gap:3,
+        borderRadius: 8,
+        gap: 3,
         padding: '5px',
         boxSizing: 'border-box',
         alignItems: 'center',
@@ -56,17 +57,17 @@ export default createUseStyles({
             transition: 'background 0.3s ease, transform 0.5s ease',
         }
     },
-    count:()=> {
+    count: () => {
         const colorOfText = lightBlue;
         const colorOfBackground = `${lightBlue}33`;
         return ({
-        fontSize: 18,
-        fontWeight: 700,
-        lineHeight: 1,
-        color: colorOfText,
-        borderRadius: 12,
-        background: colorOfBackground,
-        padding: '2px 6px',
+            fontSize: 18,
+            fontWeight: 700,
+            lineHeight: 1,
+            color: colorOfText,
+            borderRadius: 12,
+            background: colorOfBackground,
+            padding: '2px 6px',
         })
     },
     currentLocationDiv: {
@@ -85,17 +86,17 @@ export default createUseStyles({
         gap: 15,
         justifyContent: 'center'
     },
-    locationDiv:{
+    locationDiv: {
         width: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        direction:'rtl',
-        background:white,
+        direction: 'rtl',
+        background: white,
         border: `1px solid transparent`,
         fontSize: '20px',
         boxSizing: 'border-box',
-        fontWeight:400,
+        fontWeight: 400,
         borderRadius: 8,
         color: lightBlue,
         padding: '10px 20px',

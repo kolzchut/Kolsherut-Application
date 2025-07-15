@@ -15,6 +15,9 @@ export const generalSlice = createSlice({
         },
         setModal(state: GeneralStore, action) {
             state.modal = action.payload;
+        },
+        setShowSidebar(state: GeneralStore, action) {
+            state.showSidebar = action.payload;
         }
     },
 });
@@ -22,7 +25,8 @@ export const generalSlice = createSlice({
 export const {
     setRouteParams,
     setPage,
-    setModal
+    setModal,
+    setShowSidebar
 } = generalSlice.actions;
 
 export default generalSlice.reducer;

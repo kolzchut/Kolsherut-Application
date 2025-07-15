@@ -2,7 +2,7 @@ import {createUseStyles} from 'react-jss';
 
 export default createUseStyles({
     modalBackground: {
-        overflowY:'hidden',
+        overflowY: 'hidden',
         position: "fixed",
         left: 0,
         top: 0,
@@ -15,10 +15,19 @@ export default createUseStyles({
         justifyContent: "center",
         alignItems: "center",
     },
-    modalContent: {
-        width:'50%',
-        height:'70%',
-        zIndex: 2,
+    modalContent: ({isMobile}: { isMobile: boolean }) => {
+        if (!isMobile)
+            return ({
+                width: '50vw',
+                height: '70vh',
+                zIndex: 2,
+            })
+        return ({
+            width: '90vw',
+            height: '90vh',
+            zIndex: 2,
+        })
+
     },
 });
 

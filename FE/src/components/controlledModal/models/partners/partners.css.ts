@@ -7,7 +7,6 @@ export default createUseStyles({
         display: 'flex',
         gap: 10,
         flexDirection: 'column',
-        width: '100%',
         heigh: 'fit-content',
         padding: '20px 40px',
         borderRadius: 8,

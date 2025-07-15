@@ -2,12 +2,12 @@ import {createUseStyles} from 'react-jss';
 import {white} from "../../../services/theme";
 
 export default createUseStyles({
-    mainDiv:({distanceFromTop}:{distanceFromTop:number})=>({
+    mainDiv:({distanceFromTop, isMobile}:{distanceFromTop:number, isMobile:boolean})=>({
         width:'100%',
         boxSizing: 'border-box',
         position:'absolute',
         padding:10,
-        top: distanceFromTop,
+        top: !isMobile ? distanceFromTop: 0,
     }),
     title: {
         width: '100%',

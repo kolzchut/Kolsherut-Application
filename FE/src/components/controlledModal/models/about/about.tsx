@@ -34,7 +34,7 @@ const About = () => {
             </p>
             <p className={classes.paragraph}>{strings.paragraphSix}</p>
             <p className={classes.paragraph}>{strings.paragraphSeven}</p>
-            <p className={classes.paragraph}>{strings.paragraphEight}
+            <p className={classes.inlineParagraph}>{strings.paragraphEight}
                 <a className={classes.blackRegularLink} href={window.config.redirects.policyLink}>{strings.paragraphEightLink}</a>
             </p>
         </div>

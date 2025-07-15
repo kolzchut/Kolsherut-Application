@@ -10,6 +10,7 @@ import {onSituationClear, onSituationClick} from "./moreFiltersModalLogic";
 import ResponseSection from "./responseSection/responseSection";
 import {store} from "../../../../../../store/store";
 import {setModal} from "../../../../../../store/general/generalSlice";
+import closeIcon from "../../../../../../assets/icon-close-black.svg";
 
 
 const MoreFiltersModal = () => {
@@ -27,10 +28,11 @@ const MoreFiltersModal = () => {
     }
 
     return <div className={classes.mainDiv}>
+        <button className={classes.closeIcon} onClick={close}><img src={closeIcon} alt={"close icon"}/></button>
         <div className={classes.innerDiv}>
             <ResponseSection />
-            {situationsToFilter.map(([title, situations]) => (
-                <SituationSection onClick={onSituationClick} onClear={onSituationClear} title={title}
+            {situationsToFilter.map(([title, situations], index) => (
+                <SituationSection key={index} onClick={onSituationClick} onClear={onSituationClear} title={title}
                                   situations={situations}/>
             ))}
         </div>
