@@ -2,6 +2,7 @@
   {
     "group": "מצב החירום",
     "showBorder": true,
+    "icon": "emergency-icon.svg",
     "group_link": null,
     "response_id": null,
     "labels": [

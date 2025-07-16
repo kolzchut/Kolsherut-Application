@@ -5,7 +5,7 @@ import useStyles from "./sidebar.css";
 import {useSelector} from "react-redux";
 import {getShowSidebar} from "../../store/general/general.selector";
 import SidebarButton from "./sidebarButton/sidebarButton";
-import logo from "../../assets/logo.svg";
+import logo from "../../../public/icons/logo.svg";
 const Sidebar = () => {
     const classes = useStyles();
     const showSidebar = useSelector(getShowSidebar)

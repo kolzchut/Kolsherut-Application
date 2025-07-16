@@ -2,21 +2,26 @@ import {secondaryTextColorTwo, primaryTextColorThree} from "../../../../services
 import {createUseStyles} from "react-jss";
 
 export default createUseStyles({
-    group: ({wrapColor, showBorder}: { wrapColor: string, showBorder:boolean }) => {
+    group: ({wrapColor, showBorder}: { wrapColor: string, showBorder: boolean }) => {
         const backgroundColor = `${wrapColor}20`;
         const borderColor = `${wrapColor}FF`;
         const style = {
             width: 350,
             display: 'flex',
             flexDirection: 'column',
-            borderRadius:10,
+            borderRadius: 10,
             backgroundColor: 'unset',
             border: 'unset',
-
+            boxSizing: 'unset',
+            padding: 0,
+            margin: 'unset',
         };
-        if(showBorder) {
+        if (showBorder) {
             style.backgroundColor = backgroundColor;
-            style.border= `3px solid ${borderColor}`;
+            style.border = `3px solid ${borderColor}`;
+            style.boxSizing = 'content-box'
+            style.padding = 10;
+            style.margin = '-10px';
         }
         return style;
     },
@@ -26,6 +31,8 @@ export default createUseStyles({
         color: secondaryTextColorTwo,
         paddingRight: 10,
         margin: 0,
+        display:"flex",
+        alignItems: "center",
     },
     optionalSearchValuesWrapper: {
         display: 'flex',
@@ -44,5 +51,10 @@ export default createUseStyles({
         "&:hover": {
             cursor: "pointer",
         }
-    }
+    },
+    icon: {
+        scale:1.5,
+        marginRight:15,
+        top:10,
+    },
 });

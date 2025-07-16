@@ -1,5 +1,5 @@
 import useStyles from './links.css'
-import justiceLogo from '../../assets/icon-state-of-israel.svg'
+import justiceLogo from '../../../public/icons/icon-state-of-israel.svg'
 const LINK = 'https://www.gov.il/he/departments/ministry_of_justice/govil-landing-page'
 const LINK_TEXT =  'משרד המשפטים'
 

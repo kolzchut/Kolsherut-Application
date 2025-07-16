@@ -1,5 +1,5 @@
-import logoKZ from '../../assets/icon-kz.svg';
-import israelIcon from '../../assets/icon-state-of-israel.svg'
+import logoKZ from '../../../public/icons/icon-kz.svg';
+import israelIcon from '../../../public/icons/icon-state-of-israel.svg'
 import useStyle from './footer.css';
 import LinksMenu from "./linksMenu/linksMenu";
 

@@ -24,7 +24,6 @@ const configs:Array<ConfigType> = [
     {"type":"responseColors","fileName": `responseColors.json`},
     {"type":"filters","fileName": `filters.json`},
     {"type":"modules","fileName": `modules.json`},
-    {"type":"homepage", "fileName": `homepage.json`}
 ];
 
 export  default async () => {

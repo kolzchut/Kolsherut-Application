@@ -1,5 +1,5 @@
 import useStyles from './links.css'
-import kzLogo from '../../assets/icon-kz.svg'
+import kzLogo from '../../../public/icons/icon-kz.svg'
 const LINK = 'https://www.kolzchut.org.il/he/כל-זכות:אודות_המיזם';
 const LINK_TEXT =  'כל זכות';
 

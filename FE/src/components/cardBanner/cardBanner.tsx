@@ -1,5 +1,5 @@
 import {ICard} from "../../types/cardType";
-import emergencyIcon from "../../assets/emergency-icon.svg";
+import emergencyIcon from "../../../public/icons/emergency-icon.svg";
 import React, {useEffect, useRef, useState} from "react";
 import Label from "../label/label";
 import useStyle from "./cardBanner.css";

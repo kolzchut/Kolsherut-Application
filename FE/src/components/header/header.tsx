@@ -1,5 +1,5 @@
 import useStyle from "./header.css";
-import logo from "../../assets/logo.svg";
+import logo from "../../../public/icons/logo.svg";
 import inactiveSearchIcon from "../../assets/icon-search-blue-1.svg";
 import activeSearchIcon from "../../assets/icon-search-blue-0.svg";
 import { useRef, useState} from "react";

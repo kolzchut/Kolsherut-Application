@@ -1,5 +1,5 @@
 import useStyles from './links.css'
-import digitalLogo from '../../assets/icon-state-of-israel.svg'
+import digitalLogo from '../../../public/icons/icon-state-of-israel.svg'
 const LINK = 'https://www.gov.il/he/departments/national-digital-agency/govil-landing-page'
 const LINK_TEXT =  'מערך הדיגיטל הלאומי'
 
