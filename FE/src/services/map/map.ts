@@ -1,5 +1,5 @@
 import View from "ol/View";
-import {defaults as defaultControls} from 'ol/control';
+import {Attribution} from 'ol/control';
 import Map from "ol/Map";
 import {Feature} from "ol";
 import {Geometry} from "ol/geom";
@@ -14,13 +14,17 @@ import TileLayer from "ol/layer/Tile";
 import Overlay from "ol/Overlay";
 import nationalServiceNotification from "./style/nationalServiceNotification/nationalServiceNotification";
 import {fromLonLat} from "ol/proj";
+import {XYZ} from "ol/source";
 
+const attribution = new Attribution({
+    collapsible: false,
+});
 export class MapSingleton {
     readonly ol: Map;
     public readonly view: View;
     public layers: [TileLayer<OSM>, VectorLayer<VectorSource<Feature<Geometry>>>] | undefined;
     public sources: {
-        osmSource: OSM;
+        worldImagerySource: XYZ;
         poiSource: VectorSource<Feature<Geometry>>;
     } | null;
     private popupOverlay?: Overlay;
@@ -31,9 +35,7 @@ export class MapSingleton {
         this.ol = new Map({
             view: this.view,
             layers: this.layers,
-            controls: defaultControls({
-                rotateOptions: {autoHide: false}
-            }),
+            controls: [attribution],
         });
     };
 

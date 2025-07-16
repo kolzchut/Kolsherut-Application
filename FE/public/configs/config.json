@@ -51,6 +51,12 @@
     "poi": {
       "circleRadius": 5,
       "strokeRadius": 15
+    },
+    "worldImagery": {
+      "url": "https://api.maptiler.com/maps/basic-v2/{z}/{x}/{y}.png?key=ARZwtpXssK20EkYXBmuE",
+      "attributions": [
+        "© <a href=\"https://www.maptiler.com/\">MapTiler</a>"
+      ]
     }
   },
   "defaultLocations": [

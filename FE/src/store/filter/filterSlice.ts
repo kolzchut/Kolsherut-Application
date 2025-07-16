@@ -6,9 +6,9 @@ export const filterSlice = createSlice({
     initialState,
     reducers: {
         setFilterRouteParams(state: FilterStore, action) {
-            state.filters.location = action.payload.lf || state.filters.location;
-            state.filters.situations = action.payload.sf || state.filters.situations;
-            state.filters.responses = action.payload.rf || state.filters.responses;
+            state.filters.location = JSON.parse(action.payload.lf) || state.filters.location;
+            state.filters.situations = JSON.parse(action.payload.sf) || state.filters.situations;
+            state.filters.responses = JSON.parse(action.payload.rf) || state.filters.responses;
         },
         setSearchLocation(state: FilterStore, action) {
             state.searchLocation = action.payload;

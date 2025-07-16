@@ -8,9 +8,9 @@ export const getFilters = createSelector([filterStore], (filterStore: FilterStor
     return filterStore.filters;
 });
 
-export const getResponsesFilter = createSelector(getFilters], (filters) => filters.responses);
-export const getSituationsFilter = createSelector(getFilters], (filters) => filters.situations);
-export const getLocationFilter = createSelector(getFilters], (filters) => filters.location);
+export const getResponsesFilter = createSelector([getFilters], (filters) => filters.responses);
+export const getSituationsFilter = createSelector([getFilters], (filters) => filters.situations);
+export const getLocationFilter = createSelector([getFilters], (filters) => filters.location);
 export const getSearchLocation = createSelector([filterStore], (filterStore: FilterStore) => {
     return filterStore.searchLocation;
 });

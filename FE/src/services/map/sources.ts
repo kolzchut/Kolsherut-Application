@@ -1,13 +1,13 @@
 import VectorSource from "ol/source/Vector";
-import OSM from "ol/source/OSM";
+import {XYZ} from "ol/source";
 
 
 export function getSources() {
-    const osmSource = new OSM();
+    const worldImagerySource = new XYZ(window.config.map.worldImagery);
     const poiSource = new VectorSource({});
 
     return {
-        osmSource,
+        worldImagerySource,
         poiSource,
     };
 }
