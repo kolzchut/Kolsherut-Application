@@ -12,10 +12,10 @@ const Card = () => {
     const classes = useStyle();
     const [fullCard, setFullCard] = useState<ICard | null>(null)
     const cardId = useSelector(getCardId)
-    useEffect(()=>{
+    useEffect(() => {
         const fetchCard = async () => {
-            const cardData = await getFullCard(cardId);
-            if(cardData !== null) {
+            const cardData = await getFullCard(cardId); // TODO: Fix this
+            if (cardData !== null) {
                 setFullCard(cardData);
                 setCardOnMap(cardData)
                 cardEvent(cardData, 0, false, 'card');
@@ -23,17 +23,17 @@ const Card = () => {
             }
             backToHome();
         };
-        fetchCard();
+        if (cardId) fetchCard();
         return () => {
             setMapBackToDefault();
         }
-    },[cardId])
+    }, [cardId])
     return (
         <main className={classes.root}>
             <section className={classes.mapContainer}>
                 <Map/>
             </section>
-            {fullCard &&<CardDetails card={fullCard}/>}
+            {fullCard && <CardDetails card={fullCard}/>}
         </main>
     );
 }
