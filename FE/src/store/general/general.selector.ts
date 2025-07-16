@@ -8,7 +8,20 @@ export const generalStore = (state: RootState) => state.general;
 
 export const getPage = createSelector([generalStore], (generalStore: GeneralStore) => {
     if (!pageKeys.includes(generalStore.page as Pages)) return pageKeys[0];
-    return generalStore.page;
+    switch (generalStore.page as Pages) {
+        case 'home':
+            return 'home';
+        case 'results': {
+            if (!generalStore.searchQuery) return 'home';
+            return 'results';
+        }
+        case 'card': {
+            if (!generalStore.cardId) return 'home';
+            return 'card';
+        }
+        default:
+            return pageKeys[0];
+    }
 });
 
 export const getModal = createSelector([generalStore], (generalStore: GeneralStore) => {
@@ -22,11 +35,11 @@ export const getSearchQuery = createSelector([generalStore], (generalStore: Gene
     return generalStore.searchQuery;
 });
 export const getUrlParams = createSelector([getPage, getCardId, getSearchQuery], (page, cardId, searchQuery) => {
-    const params: UrlParams= {
+    const params: UrlParams = {
         p: page
     };
     if (cardId) params.c = cardId;
-    if(searchQuery) params.sq = searchQuery;
+    if (searchQuery) params.sq = searchQuery;
     return params;
 });
 export const getShowSidebar = createSelector([generalStore], (generalStore: GeneralStore) => {
