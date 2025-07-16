@@ -5,18 +5,23 @@ export const filterSlice = createSlice({
     name: 'filter',
     initialState,
     reducers: {
+        setFilterRouteParams(state: FilterStore, action) {
+            state.filters.location = action.payload.lf || state.filters.location;
+            state.filters.situations = action.payload.sf || state.filters.situations;
+            state.filters.responses = action.payload.rf || state.filters.responses;
+        },
         setSearchLocation(state: FilterStore, action) {
             state.searchLocation = action.payload;
         },
         addResponseFilter(state: FilterStore, action) {
             if(state.filters.responses.some((id) => id === action.payload)) return;
-            state.filters.responses.push(action.payload);
+            state.filters.responses = [...state.filters.responses, action.payload];
         },
         addMultipleResponseFilters(state: FilterStore, action) {
             const responseIds:string[] = action.payload;
             responseIds.forEach((id) => {
                 if(!state.filters.responses.includes(id)) {
-                    state.filters.responses.push(id);
+                    state.filters.responses = [...state.filters.responses, id];
                 }
             });
         },
@@ -33,7 +38,7 @@ export const filterSlice = createSlice({
         },
         addSituationFilter(state: FilterStore, action) {
             if(state.filters.situations.some((id) => id === action.payload)) return;
-            state.filters.situations.push(action.payload);
+            state.filters.situations = [...state.filters.situations, action.payload];
         },
         removeSituationFilter(state: FilterStore, action) {
             const situationId = action.payload;
@@ -73,7 +78,8 @@ export const {
     removeResponseFilter,
     removeMultipleResponseFilters,
     setLocationFilter,
-    setSearchLocation
+    setSearchLocation,
+    setFilterRouteParams,
 } = filterSlice.actions;
 
 export default filterSlice.reducer;
