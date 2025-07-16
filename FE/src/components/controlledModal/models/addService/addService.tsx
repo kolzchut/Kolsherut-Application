@@ -4,6 +4,8 @@ import {setModal} from "../../../../store/general/generalSlice";
 import closeIcon from "../../../../assets/icon-close-black.svg";
 import AddServiceBox from "./addServiceBox/addServiceBox";
 import {useState} from "react";
+import {useMediaQuery} from "@mui/material";
+import {widthOfMobile} from "../../../../constants/mediaQueryProps.ts";
 
 interface Service {
     title: string;
@@ -11,7 +13,8 @@ interface Service {
 }
 
 const AddService = () => {
-    const classes = useStyle();
+    const isMobile = useMediaQuery(widthOfMobile);
+    const classes = useStyle({isMobile});
     const [selectedService, setSelectedService] = useState<number>(-1);
     const strings = window.strings.staticModals.addService;
     const [services] = useState(window.modules);

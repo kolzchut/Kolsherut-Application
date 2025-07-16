@@ -1,18 +1,33 @@
 import {createUseStyles} from 'react-jss';
-import {secondaryTextColorTwo, primaryTextColorTwo, secondaryBackgroundColorOne, primaryBackgroundColorOne} from "../../../../services/theme";
+import {
+    secondaryTextColorTwo,
+    primaryTextColorTwo,
+    secondaryBackgroundColorOne,
+    primaryBackgroundColorOne
+} from "../../../../services/theme";
 
 export default createUseStyles({
-    root: {
-        position: 'relative',
-        display: 'flex',
-        gap:10,
-        flexDirection: 'column',
-        heigh: 'fit-content',
-        padding: '20px 40px',
-        borderRadius: 8,
-        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-        direction: 'rtl',
-        background: primaryBackgroundColorOne,
+    root: ({isMobile}: { isMobile: boolean }) => {
+        const style = {
+            position: 'relative',
+            display: 'flex',
+            gap: 10,
+            flexDirection: 'column',
+            height: 'unset',
+            width: 'unset',
+            boxSizing: 'border-box',
+            padding: '20px 40px',
+            borderRadius: 8,
+            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+            direction: 'rtl',
+            background: primaryBackgroundColorOne,
+        }
+        if (isMobile) {
+            style.width = '100%';
+            style.height = "100%";
+            style.boxSizing = 'border-box';
+        }
+        return style
     },
     closeIcon: {
         background: "transparent",
@@ -33,26 +48,26 @@ export default createUseStyles({
             transition: 'background 0.3s ease, transform 0.5s ease',
         }
     },
-    header:{
+    header: {
         marginBottom: 20
     },
-    title:{
+    title: {
         fontSize: '28px',
         fontWeight: 600,
-        color:secondaryTextColorTwo
+        color: secondaryTextColorTwo
     },
-    subtitle:{
+    subtitle: {
         fontSize: '22px',
         fontWeight: 400,
         margin: '10px 0',
-        color:secondaryTextColorTwo
+        color: secondaryTextColorTwo
     },
-    button:{
+    button: {
         width: '100%',
         fontSize: '16px',
         height: '40px',
         borderRadius: '20px',
-        background:primaryTextColorTwo,
+        background: primaryTextColorTwo,
         color: primaryBackgroundColorOne,
         '&:hover': {
             cursor: 'pointer',

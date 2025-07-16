@@ -23,8 +23,8 @@ export default createUseStyles({
                 zIndex: 2,
             })
         return ({
-            width: '90vw',
-            height: '90vh',
+            width: '100vw',
+            height: '100vh',
             zIndex: 2,
         })
 

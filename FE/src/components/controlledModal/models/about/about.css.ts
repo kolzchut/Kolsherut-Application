@@ -1,18 +1,32 @@
 import {createUseStyles} from 'react-jss';
-import {secondaryTextColorTwo, secondaryBackgroundColorOne, primaryBackgroundColorOne} from "../../../../services/theme";
+import {
+    secondaryTextColorTwo,
+    secondaryBackgroundColorOne,
+    primaryBackgroundColorOne
+} from "../../../../services/theme";
 
 export default createUseStyles({
-    root: {
-        position: 'relative',
-        display: 'flex',
-        gap:10,
-        flexDirection: 'column',
-        heigh: 'fit-content',
-        padding: '20px 40px',
-        borderRadius: 8,
-        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-        direction: 'rtl',
-        background: primaryBackgroundColorOne,
+    root: ({isMobile}: { isMobile: boolean }) => {
+        const style = {
+            position: 'relative',
+            display: 'flex',
+            gap: 10,
+            flexDirection: 'column',
+            height: 'fit-content',
+            width: 'fit-content',
+            boxSizing: 'border-box',
+            padding: '20px 40px',
+            borderRadius: 8,
+            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+            direction: 'rtl',
+            background: primaryBackgroundColorOne,
+        }
+        if (isMobile) {
+            style.width = '100%';
+            style.height="100%";
+            style.boxSizing='border-box';
+        }
+        return style
     },
     closeIcon: {
         background: "transparent",
@@ -33,36 +47,36 @@ export default createUseStyles({
             transition: 'background 0.3s ease, transform 0.5s ease',
         }
     },
-    header:{
-      marginBottom: 20
+    header: {
+        marginBottom: 20
     },
-    title:{
-      fontSize: '28px',
+    title: {
+        fontSize: '28px',
         fontWeight: 600,
-        color:secondaryTextColorTwo
+        color: secondaryTextColorTwo
     },
-    subtitle:{
-      fontSize: '22px',
+    subtitle: {
+        fontSize: '22px',
         fontWeight: 400,
         margin: '10px 0',
-        color:secondaryTextColorTwo
+        color: secondaryTextColorTwo
     },
-    boldStartText:{
+    boldStartText: {
         fontWeight: 700,
         fontSize: 18
     },
     inlineParagraph: {
-        display:'inline',
+        display: 'inline',
         fontSize: 18
 
     },
-    paragraph:{
-        display:'inline-block',
-        margin:'5px 0',
-        alignItems:'center',
+    paragraph: {
+        display: 'inline-block',
+        margin: '5px 0',
+        alignItems: 'center',
         fontSize: 18,
     },
-    blackRegularLink:{
+    blackRegularLink: {
         fontWeight: 500,
         color: secondaryTextColorTwo,
     }

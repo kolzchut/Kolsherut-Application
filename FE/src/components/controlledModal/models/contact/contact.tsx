@@ -2,9 +2,12 @@ import useStyle from "./contact.css"
 import {store} from "../../../../store/store";
 import {setModal} from "../../../../store/general/generalSlice";
 import closeIcon from "../../../../assets/icon-close-black.svg";
+import {useMediaQuery} from "@mui/material";
+import {widthOfMobile} from "../../../../constants/mediaQueryProps.ts";
 
 const Contact = () => {
-    const classes = useStyle();
+    const isMobile = useMediaQuery(widthOfMobile);
+    const classes = useStyle({isMobile});
     const close = () => store.dispatch(setModal(null));
     const strings = window.strings.staticModals.contact;
     return <div className={classes.root}>

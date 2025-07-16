@@ -2,17 +2,27 @@ import {createUseStyles} from 'react-jss';
 import {secondaryBackgroundColorOne, primaryBackgroundColorOne} from "../../../../services/theme";
 
 export default createUseStyles({
-    root: {
-        position: 'relative',
-        display: 'flex',
-        gap:10,
-        flexDirection: 'column',
-        heigh: 'fit-content',
-        padding: '20px 40px',
-        borderRadius: 8,
-        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-        direction: 'rtl',
-        background: primaryBackgroundColorOne,
+    root: ({isMobile}: { isMobile: boolean }) => {
+        const style = {
+            position: 'relative',
+            display: 'flex',
+            gap: 10,
+            flexDirection: 'column',
+            height: 'fit-content',
+            width: 'fit-content',
+            boxSizing: 'border-box',
+            padding: '20px 40px',
+            borderRadius: 8,
+            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+            direction: 'rtl',
+            background: primaryBackgroundColorOne
+        };
+        if (isMobile) {
+            style.width = '100%';
+            style.height = "100%";
+            style.boxSizing = 'border-box';
+        }
+        return style
     },
     closeIcon: {
         background: "transparent",

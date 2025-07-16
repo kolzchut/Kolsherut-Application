@@ -5,10 +5,13 @@ import {setModal} from "../../../../store/general/generalSlice";
 import JusticeLink from "../../../links/justiceLink";
 import DigitalLink from "../../../links/digitalLink";
 import KZLink from "../../../links/kzLink";
+import {useMediaQuery} from "@mui/material";
+import {widthOfMobile} from "../../../../constants/mediaQueryProps.ts";
 
 const About = () => {
     const strings = window.strings.staticModals.about;
-    const classes = useStyle();
+    const isMobile = useMediaQuery(widthOfMobile);
+    const classes = useStyle({isMobile});
     const close = () => store.dispatch(setModal(null));
     return <div className={classes.root}>
         <button className={classes.closeIcon} onClick={close}><img src={closeIcon} alt={"close icon"}/></button>
