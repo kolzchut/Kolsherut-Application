@@ -1,5 +1,6 @@
 import {useSelector} from "react-redux";
-import {getUrlParams} from "../store/general/general.selector";
+import {getUrlParams} from "../store/shared/urlSelector.ts";
+
 
 export const getRouteParams = () =>{
     const searchParams = new URLSearchParams(window.location.search);
