@@ -1,4 +1,4 @@
-import {interactionEvent, logEvent} from "./analytics.ts";
+import {interactionEvent, logEvent} from "./analytics";
 
 export const mapState = ({isOpen}: { isOpen: boolean }) => {
     logEvent({

@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {lightBlue} from "../../../services/theme";
+import {primaryTextColorTwo} from "../../../services/theme";
 
 export default createUseStyles({
     mainDiv: {
@@ -17,7 +17,7 @@ export default createUseStyles({
     },
     links: {
         textDecoration: 'none',
-        color: lightBlue,
+        color: primaryTextColorTwo,
         lineHeight: 1.25,
         fontSize: '16px',
         fontWeight: 300,

@@ -1,15 +1,15 @@
 import {createUseStyles} from 'react-jss';
-import {lightBlue, royalBlue, lightBlueOne} from "../../../../../services/theme";
+import {primaryTextColorTwo, primaryTextColorThree, secondaryBackgroundColorOne} from "../../../../../services/theme";
 
 const baseButtonStyles = {
     width: '100%',
     height:40,
-    color: lightBlue,
+    color: primaryTextColorTwo,
     fontSize: 16,
     backgroundColor: 'transparent',
-    border: `1px solid ${royalBlue}`,
+    border: `1px solid ${primaryTextColorThree}`,
     '&:hover':{
-        backgroundColor: lightBlueOne,
+        backgroundColor: secondaryBackgroundColorOne,
         cursor: 'pointer',
     }
 }

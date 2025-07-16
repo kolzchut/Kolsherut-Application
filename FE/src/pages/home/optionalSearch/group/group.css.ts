@@ -1,4 +1,4 @@
-import {blackOne, royalBlue, white} from "../../../../services/theme.ts";
+import {secondaryTextColorTwo, primaryTextColorThree, primaryBackgroundColorOne} from "../../../../services/theme";
 import {createUseStyles} from "react-jss";
 
 export default createUseStyles({
@@ -11,7 +11,7 @@ export default createUseStyles({
     groupTitle: {
         fontSize: 22,
         fontWeight: 500,
-        color: blackOne,
+        color: secondaryTextColorTwo,
         paddingRight: 10,
         margin: 0,
     },
@@ -20,7 +20,7 @@ export default createUseStyles({
         flexDirection: 'row',
         flexWrap: 'wrap',
         gap: 10,
-        backgroundColor: white,
+        backgroundColor: primaryBackgroundColorOne,
         borderRadius: 10,
         padding: 10,
     },
@@ -29,7 +29,7 @@ export default createUseStyles({
         alignItems:"center",
         height:'fit-content',
         width:"100%",
-        color:royalBlue,
+        color:primaryTextColorThree,
         "&:hover": {
             cursor:"pointer",
         }

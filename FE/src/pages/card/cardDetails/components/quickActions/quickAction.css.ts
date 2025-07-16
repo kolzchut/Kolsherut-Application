@@ -1,5 +1,11 @@
 import {createUseStyles} from 'react-jss';
-import {brightBlue, gray, lightYellow, white} from "../../../../../services/theme";
+import {
+    primaryTextColorOne,
+    primaryBorderColorOne,
+    tertiaryBackgroundColorTwo,
+    primaryBackgroundColorOne,
+    quaternaryBackgroundColorOne
+} from "../../../../../services/theme";
 
 
 const aTagGeneralStyle = {
@@ -44,7 +50,7 @@ export default createUseStyles({
         height:'56px',
         gap: '8px',
         boxSizing: 'border-box',
-        backgroundColor: lightYellow,
+        backgroundColor: tertiaryBackgroundColorTwo,
         '@media (max-width: 768px)': {
             padding: '8px 12px',
             gap: '4px',
@@ -53,8 +59,8 @@ export default createUseStyles({
     aTagTel:{
         ...aTagGeneralStyle,
         border: 'none',
-        backgroundColor: brightBlue ,
-        color:  white,
+        backgroundColor: quaternaryBackgroundColorOne ,
+        color:  primaryBackgroundColorOne,
         flex: 3,
         '@media (max-width: 768px)': {
             flex:4
@@ -62,9 +68,9 @@ export default createUseStyles({
     },
     aTagGeneral:{
         ...aTagGeneralStyle,
-        border:`1px solid ${gray}`,
-        backgroundColor: white,
-        color: brightBlue,
+        border:`1px solid ${primaryBorderColorOne}`,
+        backgroundColor: primaryBackgroundColorOne,
+        color: primaryTextColorOne,
         flex:2
     },
     aTagImage:{

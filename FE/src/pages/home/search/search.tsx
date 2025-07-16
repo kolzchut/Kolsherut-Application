@@ -5,9 +5,9 @@ import nationalDigitalLogo from '../../../assets/logo-digital-israel.png'
 import kolzchutLogo from "../../../assets/logo-kolzchut.png"
 import mojLogo from "../../../assets/logo-moj.png"
 import {useMediaQuery} from "@mui/material";
-import {widthOfMobile} from "../../../constants/mediaQueryProps.ts";
-import {store} from "../../../store/store.ts";
-import {setPage, setShowSidebar} from "../../../store/general/generalSlice.ts";
+import {widthOfMobile} from "../../../constants/mediaQueryProps";
+import {store} from "../../../store/store";
+import {setPage, setShowSidebar} from "../../../store/general/generalSlice";
 import hamburger from "../../../assets/icon-hamburger-gray-5.svg";
 import homepageBackground from '../../../assets/homepage-background.svg';
 

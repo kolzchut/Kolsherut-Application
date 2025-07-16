@@ -3,8 +3,8 @@ import {store} from "../../store/store";
 import closeIcon from "../../assets/icon-close-black.svg";
 import useStyles from "./sidebar.css";
 import {useSelector} from "react-redux";
-import {getShowSidebar} from "../../store/general/general.selector.ts";
-import SidebarButton from "./sidebarButton/sidebarButton.tsx";
+import {getShowSidebar} from "../../store/general/general.selector";
+import SidebarButton from "./sidebarButton/sidebarButton";
 import logo from "../../assets/logo.svg";
 const Sidebar = () => {
     const classes = useStyles();

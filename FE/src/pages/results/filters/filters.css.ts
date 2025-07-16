@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {royalBlue} from "../../../services/theme";
+import {primaryTextColorThree} from "../../../services/theme";
 
 export default createUseStyles({
     root: ({isMobile}: { isMobile: boolean }) => {
@@ -23,7 +23,7 @@ export default createUseStyles({
             justifyContent: "space-between",
             direction: "rtl",
             gap: 15,
-            borderBottom: `1px solid ${royalBlue}`,
+            borderBottom: `1px solid ${primaryTextColorThree}`,
         })
     }
 });

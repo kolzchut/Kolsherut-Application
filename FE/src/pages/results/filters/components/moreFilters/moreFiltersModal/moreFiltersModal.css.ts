@@ -1,5 +1,10 @@
 import {createUseStyles} from 'react-jss';
-import {brightBlue, lightBlue, lightBlueOne, white} from "../../../../../../services/theme";
+import {
+    primaryTextColorTwo,
+    secondaryBackgroundColorOne,
+    primaryBackgroundColorOne,
+    quaternaryBackgroundColorOne
+} from "../../../../../../services/theme";
 
 export default createUseStyles({
     mainDiv: {
@@ -7,7 +12,7 @@ export default createUseStyles({
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        backgroundColor: white,
+        backgroundColor: primaryBackgroundColorOne,
         borderRadius: 10,
         padding: 20,
         boxSizing: "border-box",
@@ -24,12 +29,12 @@ export default createUseStyles({
         border: 'none',
         borderRadius: 15,
         '&:hover': {
-            background: lightBlueOne,
+            background: secondaryBackgroundColorOne,
             transform: 'rotate(90deg)',
             transition: 'background 0.3s ease, transform 0.5s ease',
         }
     },
-    innerDiv:{
+    innerDiv: {
         height: 'calc(100% - 50px)',
         overflowY: 'auto',
         scrollbarWidth: 'none',
@@ -37,17 +42,17 @@ export default createUseStyles({
         flexDirection: "column",
         gap: 20,
     },
-    applyButton:{
-        background: lightBlue,
-        color: white,
+    applyButton: {
+        background: primaryTextColorTwo,
+        color: primaryBackgroundColorOne,
         fontWeight: 700,
         borderRadius: 15,
-        height:30,
+        height: 30,
         fontSize: 16,
-        border:0,
+        border: 0,
         transition: "background 0.5s ease",
         "&:hover": {
-            background: brightBlue,
+            background: quaternaryBackgroundColorOne,
             cursor: "pointer",
         }
     }

@@ -1,5 +1,5 @@
 import useStyle from "./optionalSearch.css";
-import {IGroup} from "../../../types/homepageType.ts";
+import {IGroup} from "../../../types/homepageType";
 import Group from "./group/group"
 
 const OptionalSearch = () => {

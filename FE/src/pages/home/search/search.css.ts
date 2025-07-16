@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {white} from "../../../services/theme.ts";
+import {primaryBackgroundColorOne} from "../../../services/theme";
 
 export default createUseStyles({
     root: {
@@ -38,7 +38,7 @@ export default createUseStyles({
         height: '72%',
     },
     aboveDivText: {
-        color: white,
+        color: primaryBackgroundColorOne,
         fontSize: 16,
         lineHeight: 1,
         fontWeight: 400,

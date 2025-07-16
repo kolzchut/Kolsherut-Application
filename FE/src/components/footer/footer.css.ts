@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {blackOne} from "../../services/theme";
+import {secondaryTextColorTwo} from "../../services/theme";
 
 export default  createUseStyles({
     disclaimer:{
@@ -13,7 +13,7 @@ export default  createUseStyles({
         fontSize:16,
         lineHeight: 1.25,
         fontWeight: 300,
-        color:blackOne
+        color:secondaryTextColorTwo
     },
     bolder:{
         fontWeight: 700
@@ -22,7 +22,7 @@ export default  createUseStyles({
         fontSize:13,
         lineHeight: 1.25,
         fontWeight: 300,
-        color: blackOne
+        color: secondaryTextColorTwo
     },
     icons:{
         height:13

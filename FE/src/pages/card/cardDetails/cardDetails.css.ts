@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {blackOne, darkGrayOne} from "../../../services/theme";
+import {secondaryTextColorTwo, tertiaryTextColorOne} from "../../../services/theme";
 
 export default createUseStyles({
     root: {
@@ -30,14 +30,14 @@ export default createUseStyles({
         fontSize: '24px',
         margin:0,
         lineHeight:1.15,
-        color: blackOne,
+        color: secondaryTextColorTwo,
         fontWeight: 600,
     },
     branchNameText:{
         fontWeight:400,
         fontSize: '20px',
         lineHeight: 1.4,
-        color: darkGrayOne,
+        color: tertiaryTextColorOne,
         margin:0
     },
     serviceDescriptionText: {
@@ -45,7 +45,7 @@ export default createUseStyles({
         fontSize: 16,
         fontWeight: 300,
         lineHeight: 1.5,
-        color: blackOne
+        color: secondaryTextColorTwo
     },
     quickActionContainer: {
         position: 'sticky',

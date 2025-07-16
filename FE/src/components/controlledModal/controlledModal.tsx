@@ -5,7 +5,7 @@ import {getModal} from "../../store/general/general.selector";
 import {setModal} from "../../store/general/generalSlice";
 import {store} from "../../store/store";
 import {useMediaQuery} from "@mui/material";
-import {widthOfMobile} from "../../constants/mediaQueryProps.ts";
+import {widthOfMobile} from "../../constants/mediaQueryProps";
 
 const ControlledModal = () => {
     const isMobile = useMediaQuery(widthOfMobile);

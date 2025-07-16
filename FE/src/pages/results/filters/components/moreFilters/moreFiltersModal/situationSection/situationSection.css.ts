@@ -1,11 +1,11 @@
 import {createUseStyles} from 'react-jss';
 import {
-    blackOne,
-    darkGrayOne,
-    lightBlue,
-    lightBlueOne,
-    lightGray, lightGrayOne,
-    lightYellow
+    secondaryTextColorTwo,
+    tertiaryTextColorOne,
+    primaryTextColorTwo,
+    secondaryBackgroundColorOne,
+    tertiaryTextColorThree, primaryBorderColorTwo,
+    tertiaryBackgroundColorTwo
 } from "../../../../../../../services/theme";
 
 export default createUseStyles({
@@ -18,7 +18,7 @@ export default createUseStyles({
         display:"flex",
         flexDirection:"column",
         direction:'rtl',
-        borderTop: `1px solid ${lightGrayOne}`,
+        borderTop: `1px solid ${primaryBorderColorTwo}`,
     },
     titleDiv:{
       width:"100%",
@@ -30,15 +30,15 @@ export default createUseStyles({
         fontWeight:600,
         lineHeight:1.3,
         fontSize:16,
-        color:blackOne
+        color:secondaryTextColorTwo
     },
     cleanup:{
         fontWeight:400,
         lineHeight:1.3,
         fontSize:13,
-        color: lightGray,
+        color: tertiaryTextColorThree,
         '&:hover': {
-            color:darkGrayOne,
+            color:tertiaryTextColorOne,
             cursor: 'pointer',
             textDecoration: 'underline',
         }
@@ -50,15 +50,15 @@ export default createUseStyles({
         alignItems:'center',
         justifyContent:'center',
         fontWeight:400,
-        backgroundColor: lightYellow,
+        backgroundColor: tertiaryBackgroundColorTwo,
         height:24,
         borderRadius: 3,
         padding: 6,
         boxSizing: 'border-box',
-        color: blackOne,
-        border: `1px solid ${lightGrayOne}`,
+        color: secondaryTextColorTwo,
+        border: `1px solid ${primaryBorderColorTwo}`,
         '&:hover': {
-            borderColor: lightGray,
+            borderColor: tertiaryTextColorThree,
             cursor: 'pointer',
         }
     },
@@ -90,9 +90,9 @@ export default createUseStyles({
         borderRadius: 3,
         padding: 6,
         boxSizing: 'border-box',
-        backgroundColor: lightBlueOne,
-        color: lightBlue,
-        border: `1px solid ${lightBlue}`,
+        backgroundColor: secondaryBackgroundColorOne,
+        color: primaryTextColorTwo,
+        border: `1px solid ${primaryTextColorTwo}`,
         '&:hover': {
             cursor: 'pointer',
         }

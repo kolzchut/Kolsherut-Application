@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {darkGrayTwo} from "../../../../../../../services/theme";
+import {tertiaryTextColorTwo} from "../../../../../../../services/theme";
 
 export default createUseStyles({
     mainDiv:{
@@ -23,7 +23,7 @@ export default createUseStyles({
         fontWeight:600,
         lineHeight:1.3,
         fontSize:18,
-        color: darkGrayTwo,
+        color: tertiaryTextColorTwo,
         '&:hover': {
             cursor: 'pointer',
             textDecoration: 'underline',

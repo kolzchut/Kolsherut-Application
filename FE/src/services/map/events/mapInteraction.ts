@@ -6,7 +6,7 @@ import onMapClick from "./onMapClick";
 import {IMapInteractions, ViewInteractionEventTypes} from "../../../types/InteractionsTypes";
 import logger from "../../logger/logger";
 import {handler as hoverOnPOIHandler} from "./hoverOnPOI";
-import {mapPointClick} from "../../gtag/mapEvents.ts";
+import {mapPointClick} from "../../gtag/mapEvents";
 
 export const mapInteractions: IMapInteractions = [
     {

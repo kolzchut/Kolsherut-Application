@@ -8,10 +8,10 @@ import {useDistanceFromTop} from "../context/contextFunctions";
 import {useMediaQuery} from "@mui/material";
 import {widthOfMobile} from "../../../constants/mediaQueryProps";
 import {useEffect} from "react";
-import {viewItemListEvent} from "../../../services/gtag/resultsEvents.ts";
+import {viewItemListEvent} from "../../../services/gtag/resultsEvents";
 import {useSelector} from "react-redux";
-import {getSearchQuery} from "../../../store/general/general.selector.ts";
-import {getFilteredResponseLength} from "../../../store/shared/shared.selector.ts";
+import {getSearchQuery} from "../../../store/general/general.selector";
+import {getFilteredResponseLength} from "../../../store/shared/shared.selector";
 
 
 const BranchList = ({organization}: { organization: IOrganization }) => {

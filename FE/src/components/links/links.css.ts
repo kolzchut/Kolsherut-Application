@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {black, brightMattYellow, lightBlueOne} from "../../services/theme";
+import {secondaryTextColorOne, tertiaryBackgroundColorOne, secondaryBackgroundColorOne} from "../../services/theme";
 
 export default createUseStyles({
     root:{
@@ -7,7 +7,7 @@ export default createUseStyles({
         height:'fit-content',
         fontSize: '18px',
         gap: 3,
-        color:black,
+        color:secondaryTextColorOne,
         fontWeight: 300,
         padding: 3,
         display: 'inline-flex',
@@ -25,13 +25,13 @@ export default createUseStyles({
         height:'18px'
     },
     justiceLink:{
-        background: lightBlueOne,
+        background: secondaryBackgroundColorOne,
     },
     digitalLink:{
-        background: lightBlueOne,
+        background: secondaryBackgroundColorOne,
     },
     kzLink:{
-        background:brightMattYellow,
+        background:tertiaryBackgroundColorOne,
     }
 
 });

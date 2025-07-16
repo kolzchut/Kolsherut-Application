@@ -3,7 +3,7 @@ import {useSelector} from "react-redux";
 import {getModal, getPage} from "./store/general/general.selector";
 import {useRouteUpdater} from "./services/route";
 import ControlledModal from "./components/controlledModal/controlledModal";
-import Sidebar from "./components/sidebar/sidebar.tsx";
+import Sidebar from "./components/sidebar/sidebar";
 
 function App() {
   useRouteUpdater();

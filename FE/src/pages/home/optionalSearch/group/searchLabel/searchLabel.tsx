@@ -1,6 +1,6 @@
-import useStyles from "./searchLabel.css.ts"
-import {ILabel} from "../../../../../types/homepageType.ts";
-import {settingToResults} from "../../../../../store/shared/sharedSlice.ts";
+import useStyles from "./searchLabel.css"
+import {ILabel} from "../../../../../types/homepageType";
+import {settingToResults} from "../../../../../store/shared/sharedSlice";
 
 const SearchLabel = ({value}:{value:ILabel}) => {
     const classes = useStyles();

@@ -2,7 +2,7 @@ import {IGroup, ILabel} from "../../../../types/homepageType";
 import useStyles from './group.css'
 import SearchLabel from "./searchLabel/searchLabel";
 import linkIcon from '../../../../assets/linkIcon.svg';
-import {settingToResults} from "../../../../store/shared/sharedSlice.ts";
+import {settingToResults} from "../../../../store/shared/sharedSlice";
 
 const Group = ({group}: { group: IGroup }) => {
     const showGroupLink = (group: IGroup) => group.group_link && (group.response_id || group.situation_id);

@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {blackOne, lightGray, royalBlue, white} from "../../services/theme";
+import {secondaryTextColorTwo, tertiaryTextColorThree, primaryTextColorThree, primaryBackgroundColorOne} from "../../services/theme";
 
 export default createUseStyles({
     aTag: {
@@ -14,7 +14,7 @@ export default createUseStyles({
         position: 'relative',
         padding: '10px',
         boxSizing: 'border-box',
-        backgroundColor: white,
+        backgroundColor: primaryBackgroundColorOne,
         borderRadius: 2,
     },
     emergencyIcon: {
@@ -24,7 +24,7 @@ export default createUseStyles({
         position: 'absolute',
     },
     bannerTitle: {
-        color: blackOne,
+        color: secondaryTextColorTwo,
         fontWeight:300,
         lineHeight: 1.4,
         fontSize: '20px',
@@ -46,7 +46,7 @@ export default createUseStyles({
         fontWeight:400,
         lineHeight:'normal',
         fontSize:'16px',
-        color:lightGray
+        color:tertiaryTextColorThree
     },
     bannerDescriptionLong:{
         display: '-webkit-box',
@@ -58,13 +58,13 @@ export default createUseStyles({
         fontWeight:400,
         lineHeight:'normal',
         fontSize:'16px',
-        color:lightGray
+        color:tertiaryTextColorThree
     },
     bannerDescriptionButton:{
         display:'flex',
         alignItems:'flex-end',
         background: "transparent",
-        color:royalBlue,
+        color:primaryTextColorThree,
         fontWeight:500,
         fontSize:'16px',
         border: "none",

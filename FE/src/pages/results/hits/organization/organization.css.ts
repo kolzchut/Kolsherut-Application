@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {brightOrange, lightBlue, lightGray, lightYellow} from "../../../../services/theme";
+import {tertiaryBackgroundColorThree, primaryTextColorTwo, tertiaryTextColorThree, tertiaryBackgroundColorTwo} from "../../../../services/theme";
 
 export default createUseStyles({
     organization:({isSelected}:{isSelected:boolean})=>({
@@ -8,7 +8,7 @@ export default createUseStyles({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor:isSelected ? brightOrange : lightYellow,
+        backgroundColor:isSelected ? tertiaryBackgroundColorThree : tertiaryBackgroundColorTwo,
         boxSizing: 'border-box',
         padding: '12px',
         border: '1px solid #E1DEDB',
@@ -27,11 +27,11 @@ export default createUseStyles({
         lineHeight: 1.3,
     }),
     numOfBranches:({isSelected}:{isSelected:boolean})=>({
-        color: lightBlue,
+        color: primaryTextColorTwo,
         textDecoration: isSelected ? 'underline' : 'none',
     }),
     nationalBranch:{
-        color: lightGray,
+        color: tertiaryTextColorThree,
         display:"flex"
     },
     nationalSpan:{

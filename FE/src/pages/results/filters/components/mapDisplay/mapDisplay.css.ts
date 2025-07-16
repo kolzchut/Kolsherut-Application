@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {brightBlueOne, lightBlue, royalBlue} from "../../../../../services/theme";
+import {secondaryBackgroundColorTwo, primaryTextColorTwo, primaryTextColorThree} from "../../../../../services/theme";
 const rootBaseStyles = {
     width: '100%',
 
@@ -7,9 +7,9 @@ const rootBaseStyles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: royalBlue,
+    backgroundColor: primaryTextColorThree,
     borderRadius: '8px',
-    border: `1px dotted ${royalBlue}`,
+    border: `1px dotted ${primaryTextColorThree}`,
 }
 const textBaseStyles = {
     position: 'absolute',
@@ -19,8 +19,8 @@ const textBaseStyles = {
     height:20,
     fontSize:16,
     fontWeight:500,
-    border: `1px solid ${royalBlue}`,
-    backgroundColor:brightBlueOne,
+    border: `1px solid ${primaryTextColorThree}`,
+    backgroundColor:secondaryBackgroundColorTwo,
     padding:'10px',
     borderRadius: '20px',
 }
@@ -51,12 +51,12 @@ export default createUseStyles({
     text:({isMobile}: { isMobile: boolean }) => {
         if(!isMobile)return ({
             ...textBaseStyles,
-            color: royalBlue,
+            color: primaryTextColorThree,
             gap:'5px',
         })
         return ({
             ...textBaseStyles,
-            color: lightBlue,
+            color: primaryTextColorTwo,
 
         })
     },

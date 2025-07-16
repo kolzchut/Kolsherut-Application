@@ -1,9 +1,9 @@
-import AutocompleteType from "../../../../../types/autocompleteType.ts";
+import AutocompleteType from "../../../../../types/autocompleteType";
 import useStyles from "./searchOption.css";
 import IconArrowTopRight from "../../../../../assets/icon-arrow-top-right-gray-4.svg";
 import lightIconSearch from "../../../../../assets/icon-search-gray-4.svg";
-import {settingToResults} from "../../../../../store/shared/sharedSlice.ts";
-import {ILabel} from "../../../../../types/homepageType.ts";
+import {settingToResults} from "../../../../../store/shared/sharedSlice";
+import {ILabel} from "../../../../../types/homepageType";
 
 const SearchOption = ({value}: { value: AutocompleteType }) => {
     const classes = useStyles();

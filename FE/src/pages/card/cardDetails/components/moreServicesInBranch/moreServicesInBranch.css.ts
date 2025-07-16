@@ -1,9 +1,9 @@
 import {createUseStyles} from 'react-jss';
-import {darkGrayOne, lightYellow} from "../../../../../services/theme";
+import {tertiaryTextColorOne, tertiaryBackgroundColorTwo} from "../../../../../services/theme";
 
 export default createUseStyles({
     title: {
-        color: darkGrayOne,
+        color: tertiaryTextColorOne,
         fontWeight:600,
         lineHeight: 1.25,
         fontSize:16
@@ -19,7 +19,7 @@ export default createUseStyles({
         width: '100%',
         padding: '25px 70px',
         boxSizing: 'border-box',
-        backgroundColor: lightYellow,
+        backgroundColor: tertiaryBackgroundColorTwo,
         boxShadow: '0 -4px 10px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.1)',
         display: 'flex',
         flexDirection: 'column',

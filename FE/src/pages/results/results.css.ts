@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {brightBlueOne} from "../../services/theme";
+import {secondaryBackgroundColorTwo} from "../../services/theme";
 
 export default createUseStyles({
     mainDiv: {
@@ -7,7 +7,7 @@ export default createUseStyles({
         flexDirection: 'row',
         width: '100%',
         height: 'calc(100vh - 80px)',
-        backgroundColor: brightBlueOne,
+        backgroundColor: secondaryBackgroundColorTwo,
         position: 'relative',
         direction: "rtl",
         "@media (max-width: 768px)": {

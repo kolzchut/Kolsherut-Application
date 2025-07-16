@@ -1,13 +1,13 @@
 import {createUseStyles} from 'react-jss';
-import {darkGrayTwo, gray, white} from "../../../../../services/theme";
+import {tertiaryTextColorTwo, primaryBorderColorOne, primaryBackgroundColorOne} from "../../../../../services/theme";
 
 export default createUseStyles({
     aTag:{
         width: '100%',
-        border: `1px solid ${gray}`,
+        border: `1px solid ${primaryBorderColorOne}`,
         textDecoration: 'none',
         height: '48px',
-        background:white,
+        background:primaryBackgroundColorOne,
         borderRadius: '4px',
         display: 'flex',
         alignItems: 'center',
@@ -18,6 +18,6 @@ export default createUseStyles({
         fontSize:16,
         fontWeight: 300,
         lineHeight: 1,
-        color: darkGrayTwo
+        color: tertiaryTextColorTwo
     }
 });

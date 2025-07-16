@@ -1,10 +1,10 @@
 import lightIconSearch from "../../../../assets/icon-search-blue-1.svg";
 import {ChangeEvent, useEffect, useRef, useState} from "react";
-import AutocompleteType from "../../../../types/autocompleteType.ts";
-import sendMessage from "../../../../services/sendMessage/sendMessage.ts";
+import AutocompleteType from "../../../../types/autocompleteType";
+import sendMessage from "../../../../services/sendMessage/sendMessage";
 import useStyles from "./searchInput.css";
 import closeIcon from "../../../../assets/icon-close-blue-3.svg";
-import SearchOption from "./searchOption/searchOption.tsx";
+import SearchOption from "./searchOption/searchOption";
 
 
 const SearchInput = () => {

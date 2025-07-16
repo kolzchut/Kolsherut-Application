@@ -1,6 +1,6 @@
-import {logEvent} from "./analytics.ts";
-import {IBranch} from "../../types/serviceType.ts";
-import {isLandingPage} from "./gtagUtilities.ts";
+import {logEvent} from "./analytics";
+import {IBranch} from "../../types/serviceType";
+import {isLandingPage} from "./gtagUtilities";
 
 interface ISearchEventProps {
     responseCount: number;

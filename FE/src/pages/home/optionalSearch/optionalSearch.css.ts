@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {white} from "../../../services/theme";
+import {primaryBackgroundColorOne} from "../../../services/theme";
 
 export default createUseStyles({
     root: {
@@ -10,7 +10,7 @@ export default createUseStyles({
         justifyContent: "center",
         gap: 20,
         padding: 20,
-        backgroundColor: white,
+        backgroundColor: primaryBackgroundColorOne,
         borderRadius: 10,
         direction: 'rtl'
     },

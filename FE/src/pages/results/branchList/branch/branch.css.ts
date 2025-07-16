@@ -1,10 +1,10 @@
 import {createUseStyles} from 'react-jss';
-import {black, darkGrayOne, lightGrayOne} from "../../../../services/theme";
+import {secondaryTextColorOne, tertiaryTextColorOne, primaryBorderColorTwo} from "../../../../services/theme";
 
 export default createUseStyles({
     mainDiv: {
         width: '100%',
-        border: `1px solid ${lightGrayOne}`,
+        border: `1px solid ${primaryBorderColorTwo}`,
         borderRadius: '4px',
         textDecoration: 'none',
         padding: 12,
@@ -24,18 +24,18 @@ export default createUseStyles({
         flexDirection: 'column',
     },
     branchName: {
-        color: black,
+        color: secondaryTextColorOne,
         fontWeight: 400,
         fontSize: 14,
     },
     branchAddress: {
-        color: darkGrayOne,
+        color: tertiaryTextColorOne,
         fontWeight: 400,
         fontSize: 12,
     },
     nationalBranch: {
         fontWeight: 700,
-        color: darkGrayOne,
+        color: tertiaryTextColorOne,
         fontSize: 14,
     },
     icon:{

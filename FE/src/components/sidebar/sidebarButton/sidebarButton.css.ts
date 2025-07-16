@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import { gray} from "../../../services/theme.ts";
+import { primaryBorderColorOne} from "../../../services/theme";
 
 export default createUseStyles({
     mainDiv:{
@@ -10,7 +10,7 @@ export default createUseStyles({
         boxSizing: 'border-box',
         padding: '20px',
         fontSize:'24px',
-        borderTop: `1px solid ${gray}`,
+        borderTop: `1px solid ${primaryBorderColorOne}`,
     }
 });
 

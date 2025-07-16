@@ -1,5 +1,10 @@
 import {createUseStyles} from 'react-jss';
-import {brightBlue, gray, white} from "../../services/theme";
+import {
+    primaryTextColorOne,
+    primaryBorderColorOne,
+    primaryBackgroundColorOne,
+    quaternaryBackgroundColorOne
+} from "../../services/theme";
 
 export default createUseStyles({
     root: {
@@ -18,10 +23,10 @@ export default createUseStyles({
         paddingLeft: '20px',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        border: !isTel ? `1px solid ${gray}` : 'none',
+        border: !isTel ? `1px solid ${primaryBorderColorOne}` : 'none',
         borderRadius: '10px',
-        backgroundColor: isTel ? brightBlue : white,
-        color: isTel ? white : brightBlue,
+        backgroundColor: isTel ? quaternaryBackgroundColorOne : primaryBackgroundColorOne,
+        color: isTel ? primaryBackgroundColorOne : primaryTextColorOne,
         height: '40px',
         flex: 1,
         textDecoration: 'none',
@@ -50,7 +55,7 @@ export default createUseStyles({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: white,
+        background: primaryBackgroundColorOne,
         border: '1px solid #ccc',
         height: '40px',
         width: '40px',
@@ -64,7 +69,7 @@ export default createUseStyles({
         },
 
         '&:focus': {
-            outline: `2px solid ${brightBlue}`,
+            outline: `2px solid ${quaternaryBackgroundColorOne}`,
             outlineOffset: '2px',
         },
     },

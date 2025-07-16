@@ -6,7 +6,7 @@ import { useRef, useState} from "react";
 import {setModal, setPage, setShowSidebar} from "../../store/general/generalSlice";
 import {store} from "../../store/store";
 import {useMediaQuery} from "@mui/material";
-import {widthOfMobile} from "../../constants/mediaQueryProps.ts";
+import {widthOfMobile} from "../../constants/mediaQueryProps";
 import hamburger from "../../assets/icon-hamburger.svg";
 
 const Header = ({showLogo=true,showSearchbar=true}:{showLogo?:boolean, showSearchbar?:boolean}) => {

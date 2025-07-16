@@ -1,15 +1,15 @@
 import {createUseStyles} from 'react-jss';
-import {darkGrayOne, lightYellow, royalBlue} from "../../../../../services/theme";
+import {tertiaryTextColorOne, tertiaryBackgroundColorTwo, primaryTextColorThree} from "../../../../../services/theme";
 
 export default createUseStyles({
     header:{
         boxSizing: 'border-box',
         padding: 20,
         width: '100%',
-        backgroundColor: lightYellow,
+        backgroundColor: tertiaryBackgroundColorTwo,
         boxShadow: "0 4px 8px #0000001a",
         fontSize: 16,
-        color: darkGrayOne,
+        color: tertiaryTextColorOne,
         display: 'flex',
         flexDirection: 'column',
     },
@@ -20,7 +20,7 @@ export default createUseStyles({
         fontWeight: 300
     },
     nationWideText:{
-      color: royalBlue,
+      color: primaryTextColorThree,
         fontWeight: 600
     }
 });

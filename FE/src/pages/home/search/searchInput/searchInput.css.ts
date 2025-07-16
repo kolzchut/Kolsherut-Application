@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {royalBlue, white} from "../../../../services/theme";
+import {primaryTextColorThree, primaryBackgroundColorOne} from "../../../../services/theme";
 
 export default createUseStyles({
     root: {
@@ -24,11 +24,11 @@ export default createUseStyles({
         width: '100%',
         padding: '10px 80px 10px 60px',
         boxSizing: 'border-box',
-        border: `1px solid ${royalBlue}`,
+        border: `1px solid ${primaryTextColorThree}`,
         borderRadius: 10,
         fontSize: 24,
         direction: 'rtl',
-        backgroundColor: white,
+        backgroundColor: primaryBackgroundColorOne,
         '&:focus': {
             outline: '2px solid royalblue',
         },
@@ -36,7 +36,7 @@ export default createUseStyles({
             outline: '2px solid royalblue',
         },
         '&::placeholder': {
-            color: royalBlue,
+            color: primaryTextColorThree,
         },
         "@media (max-width: 768px)": {
             fontSize: 18,
@@ -63,7 +63,7 @@ export default createUseStyles({
         display: 'flex',
         flexDirection: 'column',
         borderRadius: 10,
-        backgroundColor: white,
+        backgroundColor: primaryBackgroundColorOne,
     },
     mainTextDiv: {
         display: 'flex',
@@ -74,7 +74,7 @@ export default createUseStyles({
         fontWeight: 300,
         lineHeight: 1.3,
         paddingBottom:'10px',
-        color: white,
+        color: primaryBackgroundColorOne,
         whiteSpace: 'pre-line',
         "@media (max-width: 768px)": {
             fontSize: 18,

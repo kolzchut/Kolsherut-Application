@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {lightBlue, lightBlueOne, lightGrayOne, lightYellow} from "../../services/theme";
+import {primaryTextColorTwo, secondaryBackgroundColorOne, primaryBorderColorTwo, tertiaryBackgroundColorTwo} from "../../services/theme";
 
 export default createUseStyles({
     root: {
@@ -7,7 +7,7 @@ export default createUseStyles({
         backgroundColor: 'white',
         width: '100%',
         height: 80,
-        color: lightBlue,
+        color: primaryTextColorTwo,
         direction: 'rtl',
         alignItems: 'center',
         boxSizing: 'border-box',
@@ -45,10 +45,10 @@ export default createUseStyles({
         border: 0,
     },
     input: () => {
-        const firstBackground = lightYellow;
-        const firstBorderColor = lightGrayOne;
-        const secondBackground = lightBlueOne;
-        const secondBorderColor = lightBlue + '42';
+        const firstBackground = tertiaryBackgroundColorTwo;
+        const firstBorderColor = primaryBorderColorTwo;
+        const secondBackground = secondaryBackgroundColorOne;
+        const secondBorderColor = primaryTextColorTwo + '42';
         return ({
             height: "100%",
             width: '100%',
@@ -64,7 +64,7 @@ export default createUseStyles({
             },
             '&:focus': {
                 background: secondBackground,
-                border: `2px solid ${lightBlue}`,
+                border: `2px solid ${primaryTextColorTwo}`,
                 outline: 'none'
             }
         })

@@ -1,102 +1,46 @@
-import {createTheme} from '@mui/material/styles';
+// Backgrounds
+const primaryBackgroundColorOne = '#FFFFFF';
+const secondaryBackgroundColorOne = '#E9F0FE';
+const secondaryBackgroundColorTwo = '#F8FBFF';
+const tertiaryBackgroundColorOne = '#FFFFB7';
+const tertiaryBackgroundColorTwo = '#FFFDF5';
+const tertiaryBackgroundColorThree = '#FAF1E0';
+const quaternaryBackgroundColorOne = '#0012F0';
 
-const blue = 'rgb(69, 163, 219)';
-const Cyan = 'rgb(0, 255, 255)';
-const royalBlue = 'rgb(65, 105, 225)';
-const black = 'rgb(34, 28, 35)';
-const blackOne = 'rgb(51, 50, 49)'
-const red = 'rgb(238, 37, 47)';
-const lightRed = 'rgb(255, 0, 0)';
-const orange = 'rgb(238, 124, 37)';
-const darkOrange = 'rgb(112,72,0)';
-const green = 'rgb(34, 161, 123)';
-const white = 'rgb(255, 255, 255)'
-const lightGrayOne = '#F1EEEA'
-const lightGray = "#767573";
-const gray = 'rgb(135, 135, 135)';
-const darkGrayOne= 'rgb(85, 84, 82)';
-const darkGrayTwo = 'rgb(58, 52, 59)';
-const darkGrayThree = 'rgb(45, 40, 46)'
+// Text Colors
+const primaryTextColorOne = '#0012F0';
+const primaryTextColorTwo = '#1F37F6';
+const primaryTextColorThree = '#4169E1';
+const secondaryTextColorOne = '#221C23';
+const secondaryTextColorTwo = '#333231';
+const tertiaryTextColorOne = '#555452';
+const tertiaryTextColorTwo = '#3A343B';
+const tertiaryTextColorThree = '#767573';
+
+// Borders
+const primaryBorderColorOne = '#878787';
+const primaryBorderColorTwo = '#F1EEEA';
+
+// Transparent
 const transparent = 'rgba(0, 0, 0, 0)';
 
-const brightGreen = 'rgba(0,255,0,0.8)';
-const brightRed = 'rgba(255,0,0,0.8)';
-const brightPink = 'rgba(255, 0, 255, 0.8)';
-const brightYellow = 'rgba(255, 255, 0, 0.8)';
-const brightMattYellow = '#ffffb7';
-const brightBlue = '#0012F0';
-const lightBlue = '#1f37f6'
-const lightBlueOne = '#e9f0fe';
-const brightBlueOne ="#F8FBFF";
-const brightOrange = '#FAF1E0';
-const brightLime = 'rgba(0,255,140,0.8)';
-const lightYellow = '#FFFDF5';
-
-const mattGreen ='#5faf76';
-const mattPurple = '#895faf';
-const mattBlue = '#37a1bb';
-const mattYellow = '#96ad1d';
-const mattPink = '#eb96da';
-
-export const getColor = (color: string) => {
-    switch (color) {
-        case 'TRANSPARENT':
-            return 'primary';
-        case 'RED':
-            return 'error';
-        case 'ORANGE':
-            return 'warning';
-        case 'GREEN':
-            return 'success';
-        case 'BLUE':
-            return 'info';
-        case 'GRAY':
-            return 'secondary';
-        default:
-            return undefined;
-    }
+export {
+    primaryTextColorThree,
+    secondaryBackgroundColorOne,
+    primaryTextColorTwo,
+    primaryTextColorOne,
+    secondaryBackgroundColorTwo,
+    tertiaryTextColorThree,
+    primaryBorderColorTwo,
+    secondaryTextColorOne,
+    secondaryTextColorTwo,
+    tertiaryBackgroundColorThree,
+    primaryBackgroundColorOne,
+    primaryBorderColorOne,
+    tertiaryTextColorOne,
+    tertiaryTextColorTwo,
+    transparent,
+    tertiaryBackgroundColorTwo,
+    tertiaryBackgroundColorOne,
+    quaternaryBackgroundColorOne
 };
-
-const theme = createTheme({
-    palette: {
-        primary: {
-            main: transparent,
-        },
-        secondary: {
-            main: gray,
-        },
-        success: {
-            main: green,
-        },
-        info: {
-            main: blue,
-        },
-        error: {
-            main: red,
-        },
-        warning: {
-            main: orange,
-        },
-        background: {
-            default: black,
-            paper: black,
-        },
-    },
-});
-
-export const colorArray = [
-    mattGreen,
-    mattPurple,
-    mattBlue,
-    mattYellow,
-    mattPink,
-    brightGreen,
-    brightRed,
-    brightPink,
-    brightYellow,
-    brightBlue,
-    brightLime,
-    brightOrange,
-];
-export {blue,royalBlue,lightBlueOne, mattYellow,lightBlue,brightBlue,brightBlueOne,lightGray,lightGrayOne, black,blackOne, red,lightRed, orange,brightOrange, darkOrange, green, white, gray, darkGrayOne, darkGrayTwo,darkGrayThree, transparent,lightYellow, brightYellow,brightMattYellow, Cyan};
-export default theme;

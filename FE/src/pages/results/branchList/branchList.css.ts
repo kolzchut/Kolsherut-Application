@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {white} from "../../../services/theme";
+import {primaryBackgroundColorOne} from "../../../services/theme";
 
 export default createUseStyles({
     mainDiv:({distanceFromTop, isMobile}:{distanceFromTop:number, isMobile:boolean})=>({
@@ -13,7 +13,7 @@ export default createUseStyles({
         width: '100%',
         height: 60,
         boxSizing: 'border-box',
-        backgroundColor:white,
+        backgroundColor:primaryBackgroundColorOne,
         padding: '0 20px',
         fontSize: 19,
         fontWeight: 700,
@@ -33,7 +33,7 @@ export default createUseStyles({
     },
     branchList:{
         width: '100%',
-        backgroundColor:white,
+        backgroundColor:primaryBackgroundColorOne,
         maxHeight:'calc(100vh - 60px)',
         overflowY: 'auto',
     }

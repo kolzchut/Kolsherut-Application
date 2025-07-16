@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {lightBlue, lightBlueOne} from "../../../../../../services/theme";
+import {primaryTextColorTwo, secondaryBackgroundColorOne} from "../../../../../../services/theme";
 
 export default createUseStyles({
     optionDiv:{
@@ -10,11 +10,11 @@ export default createUseStyles({
         justifyContent: 'space-between',
         borderRadius: 3,
         '&:hover':{
-        backgroundColor: lightBlueOne
+        backgroundColor: secondaryBackgroundColorOne
         }
     },
     optionText:{
-        color: lightBlue,
+        color: primaryTextColorTwo,
         fontSize: 18,
         fontWeight: 400,
         lineHeight: 1.2
@@ -23,9 +23,9 @@ export default createUseStyles({
         fontSize: 16,
         fontWeight: 300,
         lineHeight: 1,
-        color: lightBlue,
+        color: primaryTextColorTwo,
         borderRadius: 12,
-        background: lightBlueOne,
+        background: secondaryBackgroundColorOne,
         padding:'2px 6px',
     },
     visuallyHidden: {
@@ -45,15 +45,15 @@ export default createUseStyles({
         WebkitAppearance: 'none',
         MozAppearance: 'none',
         boxSizing: 'border-box',
-        border: `4px solid ${lightBlueOne}`,
-        outline: `1px solid ${lightBlue}`,
+        border: `4px solid ${secondaryBackgroundColorOne}`,
+        outline: `1px solid ${primaryTextColorTwo}`,
         borderRadius: '50%',
         cursor: 'pointer',
         transition: 'all 0.2s ease',
         '&:checked': {
-            backgroundColor: lightBlue[500],
-            borderColor: lightBlue[500],
-            border: `4px solid ${lightBlue}`,
+            backgroundColor: primaryTextColorTwo[500],
+            borderColor: primaryTextColorTwo[500],
+            border: `4px solid ${primaryTextColorTwo}`,
         },
     },
 });

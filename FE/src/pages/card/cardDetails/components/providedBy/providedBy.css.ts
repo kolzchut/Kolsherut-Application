@@ -1,16 +1,16 @@
 import {createUseStyles} from 'react-jss';
-import {brightBlue, brightBlueOne, darkGrayOne, lightGray} from "../../../../../services/theme";
+import {primaryTextColorOne, secondaryBackgroundColorTwo, tertiaryTextColorOne, tertiaryTextColorThree} from "../../../../../services/theme";
 import ArrowDirection from "./arrowDirectionEnum";
 
 export default createUseStyles({
     title: {
-        color: darkGrayOne,
+        color: tertiaryTextColorOne,
         fontWeight:600,
         lineHeight: 1.3,
         fontSize:16
     },
     mainDiv:()=> {
-        const halfTransparentBrightBlue = `${brightBlue}40`;
+        const halfTransparentBrightBlue = `${primaryTextColorOne}40`;
         return({
             width: '100%',
             display: 'flex',
@@ -18,7 +18,7 @@ export default createUseStyles({
             position: 'relative',
             padding: '10px',
             boxSizing: 'border-box',
-            backgroundColor: brightBlueOne,
+            backgroundColor: secondaryBackgroundColorTwo,
             borderRadius: 10,
             border: `1px solid ${halfTransparentBrightBlue}`
         })},
@@ -31,7 +31,7 @@ export default createUseStyles({
         fontSize: '16px',
         lineHeight: 1.25,
         height: 'fit-content',
-        color: brightBlue,
+        color: primaryTextColorOne,
         textDecoration: 'none',
         '&:hover': {
             textDecoration: 'underline',
@@ -48,7 +48,7 @@ export default createUseStyles({
     hiddenLinks: {
         display: 'flex',
         gap: 5,
-        color: lightGray,
+        color: tertiaryTextColorThree,
         fontWeight: 400,
         lineHeight: 1,
         fontSize: '16px'

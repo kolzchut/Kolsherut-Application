@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {blackOne, lightBlueOne, white} from "../../../../services/theme";
+import {secondaryTextColorTwo, secondaryBackgroundColorOne, primaryBackgroundColorOne} from "../../../../services/theme";
 
 export default createUseStyles({
     root: {
@@ -12,7 +12,7 @@ export default createUseStyles({
         borderRadius: 8,
         boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
         direction: 'rtl',
-        background: white,
+        background: primaryBackgroundColorOne,
     },
     closeIcon: {
         background: "transparent",
@@ -28,7 +28,7 @@ export default createUseStyles({
         border: 'none',
         borderRadius: 15,
         '&:hover': {
-            background: lightBlueOne,
+            background: secondaryBackgroundColorOne,
             transform: 'rotate(90deg)',
             transition: 'background 0.3s ease, transform 0.5s ease',
         }
@@ -39,13 +39,13 @@ export default createUseStyles({
     title:{
       fontSize: '28px',
         fontWeight: 600,
-        color:blackOne
+        color:secondaryTextColorTwo
     },
     subtitle:{
       fontSize: '22px',
         fontWeight: 400,
         margin: '10px 0',
-        color:blackOne
+        color:secondaryTextColorTwo
     },
     boldStartText:{
         fontWeight: 700,
@@ -64,7 +64,7 @@ export default createUseStyles({
     },
     blackRegularLink:{
         fontWeight: 500,
-        color: blackOne,
+        color: secondaryTextColorTwo,
     }
 });
 

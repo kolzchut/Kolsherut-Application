@@ -6,7 +6,7 @@ import useStyles from "./geoFilter.css";
 import {store} from "../../../../../store/store";
 import {setModal} from "../../../../../store/general/generalSlice";
 import {useMediaQuery} from "@mui/material";
-import {widthOfMobile} from "../../../../../constants/mediaQueryProps.ts";
+import {widthOfMobile} from "../../../../../constants/mediaQueryProps";
 
 const GeoFilter = () => {
     const isMobile = useMediaQuery(widthOfMobile);

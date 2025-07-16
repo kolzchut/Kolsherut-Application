@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {darkGrayOne} from "../../../../../services/theme";
+import {tertiaryTextColorOne} from "../../../../../services/theme";
 
 export default createUseStyles({
     linkList:{
@@ -7,7 +7,7 @@ export default createUseStyles({
         flexWrap: 'wrap',
     },
     title: {
-        color: darkGrayOne,
+        color: tertiaryTextColorOne,
         fontWeight:600,
         lineHeight: 1.3,
         fontSize:16

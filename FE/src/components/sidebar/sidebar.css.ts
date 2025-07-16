@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {lightBlueOne, white} from "../../services/theme";
+import {secondaryBackgroundColorOne, primaryBackgroundColorOne} from "../../services/theme";
 
 export default createUseStyles({
     modalBackground: {
@@ -22,7 +22,7 @@ export default createUseStyles({
         height: '100vh',
         position:'relative',
         zIndex: 2,
-        background: white,
+        background: primaryBackgroundColorOne,
     },
     closeIcon: {
         background: "transparent",
@@ -38,7 +38,7 @@ export default createUseStyles({
         border: 'none',
         borderRadius: 15,
         '&:hover': {
-            background: lightBlueOne,
+            background: secondaryBackgroundColorOne,
             transform: 'rotate(90deg)',
             transition: 'background 0.3s ease, transform 0.5s ease',
         }

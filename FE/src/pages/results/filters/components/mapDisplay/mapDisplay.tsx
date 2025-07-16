@@ -5,8 +5,8 @@ import innerDeactivateMapIcon from '../../../../../assets/icon-close-blue-3.svg'
 import useStyles from "./mapDisplay.css";
 import {useDisplayResultsMap, useSetDisplayResultsMap} from "../../../context/contextFunctions";
 import {useMediaQuery} from "@mui/material";
-import {widthOfMobile} from "../../../../../constants/mediaQueryProps.ts";
-import {mapState} from "../../../../../services/gtag/mapEvents.ts";
+import {widthOfMobile} from "../../../../../constants/mediaQueryProps";
+import {mapState} from "../../../../../services/gtag/mapEvents";
 
 const MapDisplay = () => {
     const displayResultsMap = useDisplayResultsMap()

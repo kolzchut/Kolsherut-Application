@@ -1,9 +1,9 @@
 import {createUseStyles} from 'react-jss';
-import {gray} from "../../../../../services/theme";
+import {primaryBorderColorOne} from "../../../../../services/theme";
 
 export default createUseStyles({
     optionalSearchValue: {
-        borderBottom: `1px dotted ${gray}`,
+        borderBottom: `1px dotted ${primaryBorderColorOne}`,
         lineHeight: 1.1,
         padding: '10px 0',
         maxHeight: '50px',

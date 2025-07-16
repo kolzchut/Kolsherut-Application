@@ -21,7 +21,7 @@ import {removeAllPOIs} from "../../services/map/poiInteraction";
 import {getFilteredBranches, getFilteredResponseLength, getFilteredResults} from "../../store/shared/shared.selector";
 import { useMediaQuery } from '@mui/material';
 import {widthOfMobile} from "../../constants/mediaQueryProps";
-import {searchEvent} from "../../services/gtag/resultsEvents.ts";
+import {searchEvent} from "../../services/gtag/resultsEvents";
 
 const Results = () => {
 

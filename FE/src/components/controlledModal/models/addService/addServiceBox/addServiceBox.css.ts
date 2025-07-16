@@ -1,10 +1,11 @@
 import {createUseStyles} from 'react-jss';
-import {black, brightBlue, brightBlueOne} from "../../../../../services/theme";
+import ArrowDirection from "../../../../../pages/card/cardDetails/components/providedBy/arrowDirectionEnum";
+import {secondaryTextColorOne, primaryTextColorOne, secondaryBackgroundColorTwo} from "../../../../../services/theme";
 
 
 export default createUseStyles({
     root: () => {
-        const halfTransparentBrightBlue = `${brightBlue}40`;
+        const halfTransparentBrightBlue = `${primaryTextColorOne}40`;
         return ({
             width: '100%',
             display: 'flex',
@@ -12,7 +13,7 @@ export default createUseStyles({
             position: 'relative',
             padding: '10px',
             boxSizing: 'border-box',
-            backgroundColor: brightBlueOne,
+            backgroundColor: secondaryBackgroundColorTwo,
             borderRadius: 10,
             border: `1px solid ${halfTransparentBrightBlue}`
         })
@@ -43,7 +44,7 @@ export default createUseStyles({
         lineHeight: 1.3,
         fontSize: 20,
         margin: 0,
-        color: brightBlue,
+        color: primaryTextColorOne,
         width:'80%'
     },
     subtitle:{
@@ -51,14 +52,14 @@ export default createUseStyles({
         lineHeight: 1.3,
         fontSize: 18,
         margin:0,
-        color: black
+        color: secondaryTextColorOne
     },
     paragraph:{
         fontWeight: 300,
         lineHeight: 1.3,
         fontSize: 16,
         margin:0,
-        color: black
+        color: secondaryTextColorOne
     },
     link:{
         display:'flex',

@@ -1,7 +1,7 @@
 import {ILabel} from "../../types/homepageType";
 import {store} from "../store";
 import {settingURLParamsToResults} from "../general/generalSlice";
-import {setResponseAndSituationFilters} from "../filter/filterSlice.ts";
+import {setResponseAndSituationFilters} from "../filter/filterSlice";
 
 export const settingToResults = ({value}: { value: ILabel }) => {
     const situations = value.situation_id ? [value.situation_id] : [];

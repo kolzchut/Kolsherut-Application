@@ -4,7 +4,7 @@ import QuickFilters from "./components/quickFilters/quickFilters";
 import MoreFilters from "./components/moreFilters/moreFilters";
 import GeoFilter from "./components/geoFilter/geoFilter";
 import {useMediaQuery} from "@mui/material";
-import {widthOfMobile} from "../../../constants/mediaQueryProps.ts";
+import {widthOfMobile} from "../../../constants/mediaQueryProps";
 
 const Filters = () => {
     const isMobile = useMediaQuery(widthOfMobile);

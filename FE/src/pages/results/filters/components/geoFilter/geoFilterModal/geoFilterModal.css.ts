@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {lightBlue, lightBlueOne, lightYellow, royalBlue, white} from "../../../../../../services/theme";
+import {primaryTextColorTwo, secondaryBackgroundColorOne, tertiaryBackgroundColorTwo, primaryTextColorThree, primaryBackgroundColorOne} from "../../../../../../services/theme";
 
 export default createUseStyles({
     root: {
@@ -14,12 +14,12 @@ export default createUseStyles({
         borderRadius: 8,
         boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
         direction: 'rtl',
-        background: white,
+        background: primaryBackgroundColorOne,
     },
     searchDiv: {
         display: 'flex',
         flexDirection: 'row',
-        background: lightBlueOne,
+        background: secondaryBackgroundColorOne,
         borderRadius: 8,
         gap: 3,
         padding: '5px',
@@ -33,12 +33,12 @@ export default createUseStyles({
         direction: 'rtl',
         fontSize: '18px',
         border: 0,
-        color: lightBlue,
+        color: primaryTextColorTwo,
         padding: '5px',
         borderRadius: 4,
-        background: white,
+        background: primaryBackgroundColorOne,
         '&:focus': {
-            outline: `2px solid ${royalBlue}`,
+            outline: `2px solid ${primaryTextColorThree}`,
         }
     },
     closeIcon: {
@@ -52,14 +52,14 @@ export default createUseStyles({
         border: 'none',
         borderRadius: 15,
         '&:hover': {
-            background: white,
+            background: primaryBackgroundColorOne,
             transform: 'rotate(90deg)',
             transition: 'background 0.3s ease, transform 0.5s ease',
         }
     },
     count: () => {
-        const colorOfText = lightBlue;
-        const colorOfBackground = `${lightBlue}33`;
+        const colorOfText = primaryTextColorTwo;
+        const colorOfBackground = `${primaryTextColorTwo}33`;
         return ({
             fontSize: 18,
             fontWeight: 700,
@@ -78,9 +78,9 @@ export default createUseStyles({
         border: 0,
         padding: '5px',
         borderRadius: 4,
-        background: lightBlueOne,
+        background: secondaryBackgroundColorOne,
         fontWeight: 700,
-        color: lightBlue,
+        color: primaryTextColorTwo,
         flexDirection: 'row',
         alignItems: 'center',
         gap: 15,
@@ -92,18 +92,18 @@ export default createUseStyles({
         alignItems: 'center',
         justifyContent: 'flex-start',
         direction: 'rtl',
-        background: white,
+        background: primaryBackgroundColorOne,
         border: `1px solid transparent`,
         fontSize: '20px',
         boxSizing: 'border-box',
         fontWeight: 400,
         borderRadius: 8,
-        color: lightBlue,
+        color: primaryTextColorTwo,
         padding: '10px 20px',
         '&:hover': {
-            background: lightYellow,
+            background: tertiaryBackgroundColorTwo,
             cursor: 'pointer',
-            border: `1px solid ${lightBlueOne}`,
+            border: `1px solid ${secondaryBackgroundColorOne}`,
         }
     }
 });

@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {lightBlue, lightBlueOne} from "../../../../../services/theme";
+import {primaryTextColorTwo, secondaryBackgroundColorOne} from "../../../../../services/theme";
 
 const baseRootStyles = {
     display: 'flex',
@@ -12,7 +12,7 @@ const baseRootStyles = {
     borderRadius: 20,
     direction: "rtl",
     background: "#0000000A",
-    border: `1px solid ${lightBlue}`,
+    border: `1px solid ${primaryTextColorTwo}`,
     boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
     '&:hover': {
         background: "#FFFFFFFF",
@@ -37,7 +37,7 @@ export default createUseStyles({
         display: 'flex',
         fontSize: 16,
         fontWeight: 700,
-        color: lightBlue,
+        color: primaryTextColorTwo,
         height: '100%',
         flexDirection: 'row',
         alignItems: 'center',
@@ -48,9 +48,9 @@ export default createUseStyles({
         fontSize: 16,
         fontWeight: 700,
         lineHeight: 1,
-        color: lightBlue,
+        color: primaryTextColorTwo,
         borderRadius: 12,
-        background: lightBlueOne,
+        background: secondaryBackgroundColorOne,
         padding: '2px 6px',
     },
 });

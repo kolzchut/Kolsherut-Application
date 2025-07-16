@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {lightGray, lightYellow} from "../../../../services/theme";
+import {tertiaryTextColorThree, tertiaryBackgroundColorTwo} from "../../../../services/theme";
 
 export default createUseStyles({
     organization:{
@@ -8,7 +8,7 @@ export default createUseStyles({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor:lightYellow,
+        backgroundColor:tertiaryBackgroundColorTwo,
         boxSizing: 'border-box',
         padding: '12px',
         border: '1px solid #E1DEDB',
@@ -27,7 +27,7 @@ export default createUseStyles({
         lineHeight: 1.3,
     },
     nationalBranch:{
-        color: lightGray,
+        color: tertiaryTextColorThree,
         display:"flex"
     },
     nationalSpan:{
