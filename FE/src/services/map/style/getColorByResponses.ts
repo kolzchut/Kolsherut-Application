@@ -5,6 +5,7 @@ export default (responses: Response[]): { background: string, font: string } => 
     let color = {background: '#ff0000', font: '#000000'};
     if (!responses || !Array.isArray(responses) || responses.length === 0) return color;
     for (const response of responses) {
+        if(!response.id) return color;
         const categories = response.id.split(':').reverse();
         let breakable = false;
         for (const category of categories) {

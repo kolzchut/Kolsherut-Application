@@ -7,6 +7,7 @@ export interface ILabel {
 
 export interface IGroup {
     group: string
+    showBorder?: boolean,
     situation_id: string,
     response_id: string,
     group_link: string,

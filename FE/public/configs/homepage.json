@@ -1,6 +1,7 @@
 [
   {
     "group": "מצב החירום",
+    "showBorder": true,
     "group_link": null,
     "response_id": null,
     "labels": [
