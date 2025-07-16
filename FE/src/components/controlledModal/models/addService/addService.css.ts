@@ -54,8 +54,6 @@ export default createUseStyles({
         borderRadius: '20px',
         background:primaryTextColorTwo,
         color: primaryBackgroundColorOne,
-        background:primaryTextColorTwo,
-        color: primaryBackgroundColorOne,
         '&:hover': {
             cursor: 'pointer',
         }

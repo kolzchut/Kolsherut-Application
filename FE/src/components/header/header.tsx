@@ -1,5 +1,4 @@
 import useStyle from "./header.css";
-import logo from "../../../public/icons/logo.svg";
 import inactiveSearchIcon from "../../assets/icon-search-blue-1.svg";
 import activeSearchIcon from "../../assets/icon-search-blue-0.svg";
 import { useRef, useState} from "react";
@@ -8,6 +7,8 @@ import {store} from "../../store/store";
 import {useMediaQuery} from "@mui/material";
 import {widthOfMobile} from "../../constants/mediaQueryProps";
 import hamburger from "../../assets/icon-hamburger.svg";
+
+const logo = "/icons/logo.svg"
 
 const Header = ({showLogo=true,showSearchbar=true}:{showLogo?:boolean, showSearchbar?:boolean}) => {
     const isMobile = useMediaQuery(widthOfMobile);

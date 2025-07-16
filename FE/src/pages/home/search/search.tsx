@@ -1,15 +1,16 @@
 import useStyle from './search.css';
-import kolsherutLogo from "../../../../public/icons/logo-white.svg"
 import SearchInput from "./searchInput/searchInput";
-import nationalDigitalLogo from '../../../../public/icons/logo-digital-israel.png'
-import kolzchutLogo from "../../../../public/icons/logo-kolzchut.png"
-import mojLogo from "../../../../public/icons/logo-moj.png"
 import {useMediaQuery} from "@mui/material";
 import {widthOfMobile} from "../../../constants/mediaQueryProps";
 import {store} from "../../../store/store";
 import {setPage, setShowSidebar} from "../../../store/general/generalSlice";
 import hamburger from "../../../assets/icon-hamburger-gray-5.svg";
 import homepageBackground from '../../../assets/homepage-background.svg';
+
+const kolsherutLogo = "/icons/logo-white.svg"
+const nationalDigitalLogo = "/icons/logo-digital-israel.png"
+const kolzchutLogo = "/icons/logo-moj.png"
+const mojLogo = "/icons/logo-moj.png"
 
 const Search = () => {
     const classes = useStyle();

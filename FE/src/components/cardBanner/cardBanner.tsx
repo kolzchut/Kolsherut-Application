@@ -1,10 +1,11 @@
 import {ICard} from "../../types/cardType";
-import emergencyIcon from "../../../public/icons/emergency-icon.svg";
 import React, {useEffect, useRef, useState} from "react";
 import Label from "../label/label";
 import useStyle from "./cardBanner.css";
 import {isEmergency as checkIfEmergency} from "./cardBannerLogic";
 import {extendDescriptionEvent, shrinkDescriptionEvent} from "../../services/gtag/cardEvents";
+
+const emergencyIcon = "/icons/emergency-icon.svg"
 
 const CardBanner = ({card}: { card: ICard }) => {
     const [extendText, setExtendText] = useState<boolean>(false);

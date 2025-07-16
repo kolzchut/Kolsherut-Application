@@ -1,7 +1,8 @@
-import logoKZ from '../../../public/icons/icon-kz.svg';
-import israelIcon from '../../../public/icons/icon-state-of-israel.svg'
 import useStyle from './footer.css';
 import LinksMenu from "./linksMenu/linksMenu";
+
+const israelIcon = "/icons/icon-state-of-israel.svg"
+const logoKZ = "/icons/icon-kz.svg"
 
 const Footer = ({hideLinks=false}: {hideLinks?: boolean}) => {
 
