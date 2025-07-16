@@ -105,5 +105,10 @@ export default createUseStyles({
             cursor: 'pointer',
             border: `1px solid ${secondaryBackgroundColorOne}`,
         }
-    }
+    },
+    border:{
+        borderBottom: `2px dashed ${secondaryBackgroundColorOne}`,
+        width: '90%',
+        marginRight: '5%',
+    },
 });

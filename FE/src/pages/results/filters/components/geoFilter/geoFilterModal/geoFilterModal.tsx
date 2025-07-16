@@ -34,7 +34,10 @@ const GeoFilterModal = () => {
         }
         setLocations()
     }, [dynamicLocations]);
-    const close = () => store.dispatch(setModal(null));
+    const close = () => {
+        store.dispatch(setSearchLocation(""));
+        store.dispatch(setModal(null));
+    }
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         store.dispatch(setSearchLocation(e.target.value));
     }
@@ -53,16 +56,18 @@ const GeoFilterModal = () => {
             <button className={classes.closeIcon} onClick={close}><img src={closeIcon} alt={"close icon"}/></button>
         </div>
         <div>
+            <div className={classes.locationDiv} onClick={()=>onClick(israelLocation, window.config.map.zoom || 7.5)}>
+                <img src={wideLocationIcon} alt={"wide location icon"}/>
+                <span>{israelLocation.key}</span>
+            </div>
+            <div className={classes.border}/>
             {optionalLocations?.map((location, index) => (
                 <div key={index} className={classes.locationDiv} onClick={() => onClick(location)}>
                     <img src={locationIcon} alt={"location icon"}/>
                     <span>{location.key}</span>
                 </div>
             ))}
-            <div className={classes.locationDiv} onClick={()=>onClick(israelLocation, window.config.map.zoom || 7.5)}>
-                <img src={wideLocationIcon} alt={"wide location icon"}/>
-                <span>{israelLocation.key}</span>
-            </div>
+
         </div>
     </div>
 
