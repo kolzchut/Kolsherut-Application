@@ -24,6 +24,9 @@ export const filterSlice = createSlice({
             const responseId = action.payload;
             state.filters.responses = state.filters.responses.filter((id) => id !== responseId);
         },
+        setResponsesFilter(state: FilterStore, action) {
+            state.filters.responses = action.payload;
+        },
         removeMultipleResponseFilters(state: FilterStore, action) {
             const responseIds = action.payload;
             state.filters.responses = state.filters.responses.filter((id) => !responseIds.includes(id));
@@ -43,6 +46,11 @@ export const filterSlice = createSlice({
         setSituationsFilter(state: FilterStore, action) {
             state.filters.situations = action.payload;
         },
+        setResponseAndSituationFilters(state: FilterStore, action) {
+            const {responses, situations} = action.payload;
+            state.filters.responses = responses;
+            state.filters.situations = situations;
+        },
         setLocationFilter(state: FilterStore, action) {
             const {key, bounds} = action.payload;
             state.filters.location = {
@@ -58,6 +66,8 @@ export const {
     removeMultipleSituationFilters,
     addSituationFilter,
     setSituationsFilter,
+    setResponsesFilter,
+    setResponseAndSituationFilters,
     addResponseFilter,
     addMultipleResponseFilters,
     removeResponseFilter,

@@ -42,6 +42,9 @@ const Results = () => {
         addResultsPOIs(branches);
     }
     useEffect(() => {
+        newResults();
+    }, [filteredResults, searchQuery]);
+    useEffect(() => {
         const fetchResults = async () => {
             if (filteredResults.length === 0) {
                 //TODO: replace
@@ -50,8 +53,7 @@ const Results = () => {
             }
         };
         fetchResults();
-        newResults();
-    }, [filteredResults, searchQuery]);
+    }, []);
     useEffect(() => {
         searchEvent({searchQuery, responseCount,filtersCount});
     }, [searchQuery]);

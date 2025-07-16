@@ -1,4 +1,10 @@
 {
+  "home": {
+    "aboveDivText": "כל השירותים החברתיים\nלכל מצב, בכל מקום",
+    "mainTextPartOne": "לחפש ולמצוא ",
+    "mainTextMiddleBold":"כל שירות ",
+    "mainTextPartTwo": "חברתי\nמכל רשות, עמותה או ארגון בהתאמה אישית לצרכיך"
+  },
   "search": {
     "label": " כל שירות, כל קהל וכל מיקום..."
   },

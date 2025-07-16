@@ -1,79 +1,60 @@
-import { createUseStyles } from 'react-jss';
-import homepageBackground from '../../../assets/homepage-background.png';
-import {gray, royalBlue, white} from "../../../services/theme";
+import {createUseStyles} from 'react-jss';
+import {white} from "../../../services/theme.ts";
+
 export default createUseStyles({
     root: {
-        backgroundColor: '#8296AE',
-        backgroundImage: `url(${homepageBackground})`,
+        position: 'relative',
         height: '100%',
         flex: 4,
         fontSize: 24,
         maxWidth: 750,
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    searchContainer: {
-        position: 'relative',
-        width: '70%',
-        marginBottom:20
-    },
-    searchInput: {
-        width: '70%',
-        padding: '10px 80px 10px 15px',
-        border: `1px solid ${royalBlue}`,
-        borderRadius: 20,
-        fontSize: 24,
-        direction: 'rtl',
-        backgroundColor: white,
-        '&:focus': {
-            outline: '2px solid royalblue',
-        },
-        '&:hover': {
-            outline: '2px solid royalblue',
-        },
-        '&::placeholder': {
-            color: royalBlue,
-        },
-    },
-    searchButton: {
-        position: 'absolute',
-        top: '50%',
-        right: 30,
-        transform: 'translateY(-50%)',
-        color: white,
-        border: 'none',
-        padding: '5px 10px',
-        borderRadius: 10,
-    },
-    optionalSearchValuesWrapper:{
-        width:'70%',
-        display: 'flex',
-        flexDirection: 'column',
-        borderRadius: 10,
-        backgroundColor:white,
-    },
-    optionalSearchValue:{
-        borderBottom: `1px dotted ${gray}`,
-        lineHeight: 2,
-        width:'100%',
-        display: 'flex',
-        flexDirection: "row",
         justifyContent: 'space-between',
+        background: 'linear-gradient(rgba(0, 80, 255, 0.3), rgba(0, 80, 255, 0.2))',
         direction: 'rtl',
-        alignItems: 'center',
-        cursor: 'pointer',
+        overflow: 'hidden',
     },
-    searchIcon:{
-        height: '30px'
+    backgroundImage: {
+        position: 'absolute',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+        zIndex: -2,
     },
-    iconAndText:{
+    hamburger:{
+      height: '30px'
+    },
+    aboveDiv: {
         display: 'flex',
+        flexDirection: 'row',
         alignItems: 'center',
-        gap: 10,
-        paddingRight: 10,
+        height: '50px',
+        gap: '20px',
+        padding: '24px',
+    },
+    kolsherutLogo: {
+        height: '72%',
+    },
+    aboveDivText: {
+        color: white,
+        fontSize: 16,
+        lineHeight: 1,
+        fontWeight: 400,
+        whiteSpace: 'pre-line'
+    },
+    bottomDiv: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        height: 78,
+        gap: 24,
+        padding: '0 24px',
+    },
+    bottomLogos: {
+        height: '30px',
+        boxSizing: 'border-box',
     }
 });

@@ -2,7 +2,7 @@ import axios from 'axios';
 import logger from "./logger/logger";
 import {store} from "../store/store";
 import {setPage} from "../store/general/generalSlice";
-
+import {IGroup} from "../types/homepageType";
 
 declare global {
     interface Window {
@@ -10,12 +10,13 @@ declare global {
         strings: any;
         responseColors:any;
         filters:any;
+        homepage:Array<IGroup>;
         gtag:any;
         modules:any;
     }
 }
 
-type ConfigType = { type: string, fileName: string };
+type ConfigType = { type: keyof Window, fileName: string };
 
 const configs:Array<ConfigType> = [
     {"type":"config","fileName": `config.json`},
@@ -23,6 +24,7 @@ const configs:Array<ConfigType> = [
     {"type":"responseColors","fileName": `responseColors.json`},
     {"type":"filters","fileName": `filters.json`},
     {"type":"modules","fileName": `modules.json`},
+    {"type":"homepage", "fileName": `homepage.json`}
 ];
 
 export  default async () => {
@@ -31,11 +33,9 @@ export  default async () => {
             configs.map(async config => axios.get(`/configs/${config.fileName}?cacheBuster=${Date.now()}`))
         );
 
-        configs.map((config, index)=>{
+        configs.forEach((config:ConfigType, index:number) => {
             if(promises[index]['headers']["content-type"] !== "application/json") throw new Error(`${config.type} file is not JSON`);
-        })
-        configs.map((config:ConfigType, index:number) => {
-            window[config.type] =  promises[index].data;
+            (window[config.type] as unknown) =  promises[index].data;
             Object.freeze(window[config.type]);
         });
         return true;

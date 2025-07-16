@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {lightBlue, lightBlueOne, lightGrayOne, lightYellow, white} from "../../services/theme";
+import {lightBlue, lightBlueOne, lightGrayOne, lightYellow} from "../../services/theme";
 
 export default createUseStyles({
     root: {
@@ -11,19 +11,25 @@ export default createUseStyles({
         direction: 'rtl',
         alignItems: 'center',
         boxSizing: 'border-box',
-        padding: '10px'
+        padding: '10px',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.14)',
+        position: 'relative',
+        zIndex: 1
     },
     logo: {
-        flex:1,
+        flex: 1,
         height: 40,
+        '&:hover':{
+            cursor: 'pointer',
+        }
     },
-    inputDiv:{
-        flex:14,
-        position:'relative',
+    inputDiv: {
+        flex: 14,
+        position: 'relative',
         display: 'flex',
         alignItems: 'center',
     },
-    searchIcon:{
+    searchIcon: {
         position: 'absolute',
         left: 10,
     },
@@ -64,18 +70,17 @@ export default createUseStyles({
         })
     },
     linksDiv: {
-        background: white,
-        flex:6,
+        flex: 6,
         display: "flex",
         justifyContent: "space-around",
     },
-    link:{
+    link: {
         lineHeight: 4,
         fontSize: 20,
-        fontWeight:300,
+        fontWeight: 300,
         textDecoration: "none",
         '&:hover': {
-            fontWeight:400,
+            fontWeight: 400,
             textDecoration: 'underline',
             cursor: 'pointer',
         }

@@ -4,6 +4,7 @@ export default createUseStyles({
     container:{
         display:"flex",
         flexDirection: "row",
+        height:"fit-content",
         alignItems:'center',
         margin: 8
     },

@@ -1,4 +1,3 @@
-import './App.css'
 import pages, {Pages} from "./pages/pages";
 import {useSelector} from "react-redux";
 import {getModal, getPage} from "./store/general/general.selector";

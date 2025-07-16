@@ -14,6 +14,7 @@
     "linkToCard": "c/%%MACRO%%",
     "jotFormBaseLink": "https://form.jotform.com/222203528302038",
     "kolzchutLink": "https://www.kolzchut.org.il/he/כל-זכות:אודות_המיזם",
+    "kolzchutMainPageLink": "https://www.kolzchut.org.il/he/עמוד_ראשי",
     "justiceLink": "https://www.gov.il/he/departments/ministry_of_justice/govil-landing-page",
     "nationalDigitalLink": "https://www.gov.il/he/departments/national-digital-agency/govil-landing-page",
     "policyLink": "https://www.kolzchut.org.il/he/כל_שירות:מדיניות_השימוש",
@@ -35,8 +36,6 @@
   ],
   "situationsColors": "#CCCDF5",
   "logToServer": false,
-  "reloadWhenNotAuthenticated": true,
-  "reloadTimeIfNotAuthenticated": 10000,
   "routes": {
     "logs": "/logs",
     "test": "/test",

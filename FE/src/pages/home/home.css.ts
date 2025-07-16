@@ -7,6 +7,10 @@ export default createUseStyles({
         height: '100vh',
         width: '100%',
         justifyContent: 'space-between',
+        '@media (max-width: 768px)': {
+            height:'fit-content',
+            flexDirection: 'column-reverse',
+        }
     },
     main: {
         display: 'flex',

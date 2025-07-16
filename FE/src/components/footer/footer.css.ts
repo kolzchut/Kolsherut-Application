@@ -3,6 +3,7 @@ import {blackOne} from "../../services/theme";
 
 export default  createUseStyles({
     disclaimer:{
+        direction:'rtl',
         padding: "32px 56px",
         '@media (max-width: 768px)': {
             padding: '24px 16px'

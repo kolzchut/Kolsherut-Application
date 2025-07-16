@@ -1,0 +1,380 @@
+[
+  {
+    "group": "מצב החירום",
+    "group_link": null,
+    "response_id": null,
+    "labels": [
+      {
+        "response_id": "human_services:internal_emergency_services",
+        "title": "שירותים למצב החירום",
+        "situation_id": null,
+        "query": "שירותים_למצב_החירום"
+      },
+      {
+        "response_id": "human_services:emergency:emergency_mental_assistance",
+        "title": "סיוע נפשי בחירום",
+        "situation_id": null,
+        "query": "סיוע_נפשי_בחירום"
+      },
+      {
+        "response_id": "human_services:emergency:emergency_helpline",
+        "title": "הכוונה בחירום",
+        "situation_id": null,
+        "query": "הכוונה_בחירום"
+      },
+      {
+        "response_id": "human_services:emergency:emergency_food",
+        "title": "מזון בחירום",
+        "situation_id": null,
+        "query": "מזון_בחירום"
+      },
+      {
+        "response_id": "human_services:place:health:clinic:mental_health_clinic",
+        "title": "מרפאות בריאות הנפש",
+        "situation_id": null,
+        "query": "מרפאת_בריאות_הנפש"
+      }
+    ]
+  },
+  {
+    "group": "מיצוי זכויות",
+    "group_link": "לכל השירותים בנושא מיצוי זכויות",
+    "response_id": "human_services:legal:advocacy_legal_aid:understand_government_programs",
+    "labels": [
+      {
+        "situation_id": "human_situations:health",
+        "response_id": "human_services:legal:advocacy_legal_aid:understand_government_programs",
+        "title": "חולים",
+        "query": "מיצוי_זכויות_עבור_מצבים_בריאותיים"
+      },
+      {
+        "situation_id": "human_situations:deprivation:low_income",
+        "response_id": "human_services:legal:advocacy_legal_aid:understand_government_programs",
+        "title": "הכנסה נמוכה וקשיים כלכליים ",
+        "query": "מיצוי_זכויות_עבור_בעלי_הכנסה_נמוכה"
+      },
+      {
+        "situation_id": "human_situations:survivors:victims_of_terror",
+        "response_id": "human_services:legal:advocacy_legal_aid:understand_government_programs",
+        "title": "נפגעי פעולות איבה",
+        "query": "מיצוי_זכויות_עבור_נפגעי_פעולות_איבה"
+      }
+    ]
+  },
+  {
+    "group": "סיוע משפטי",
+    "response_id": "human_services:legal:advocacy_legal_aid",
+    "group_link": "לכל שירותי הסיוע המשפטי",
+    "labels": [
+      {
+        "situation_id": "human_situations:survivors:families_of_missing_persons",
+        "response_id": "human_services:legal:advocacy_legal_aid",
+        "query": "סיוע_משפטי_עבור_משפחות_של_נעדרים",
+        "title": "משפחות של נעדרים"
+      },
+      {
+        "situation_id": "human_situations:survivors:victims_of_terror",
+        "response_id": "human_services:legal:advocacy_legal_aid",
+        "title": "נפגעי פעולות איבה",
+        "query": "סיוע_משפטי_עבור_נפגעי_פעולות_איבה"
+      }
+    ]
+  },
+  {
+    "group": "מלחמת חרבות ברזל",
+    "response_id": "human_services:internal_emergency_services",
+    "group_link": "לכל השירותים למצב החירום",
+    "labels": [
+      {
+        "situation_id": "human_situations:survivors:evacuees",
+        "response_id": "human_services:internal_emergency_services",
+        "title": "מפונים",
+        "query": "שירותים_למצב_החירום_עבור_מפונים"
+      },
+      {
+        "situation_id": "human_situations:armed_forces:bereaved_families",
+        "response_id": "human_services:internal_emergency_services",
+        "title": "משפחות שכולות",
+        "query": "שירותים_למצב_החירום_עבור_משפחות_שכולות"
+      },
+      {
+        "situation_id": "human_situations:armed_forces",
+        "response_id": "human_services:internal_emergency_services",
+        "title": "אנשי צבא וביטחון",
+        "query": "שירותים_למצב_החירום_עבור_אנשי_צבא_וביטחון"
+      },
+      {
+        "response_id": "human_services:emergency:emergency_mental_assistance",
+        "title": "סיוע נפשי",
+        "situation_id": null,
+        "query": "סיוע_נפשי_בחירום"
+      },
+      {
+        "response_id": "human_services:emergency:financial_aid_in_emergencies",
+        "title": "סיוע כלכלי",
+        "situation_id": null,
+        "query": "סיוע_כספי_בחירום"
+      }
+    ]
+  },
+  {
+    "group": "דיור",
+    "response_id": "human_services:housing",
+    "group_link": "לכל השירותים בנושא דיור",
+    "labels": [
+      {
+        "situation_id": "human_situations:survivors:violence_survivors:domestic_violence_survivors",
+        "response_id": "human_services:housing",
+        "title": "נשים נפגעות אלימות ",
+        "query": "דיור_עבור_נפגעות_אלימות_במשפחה"
+      },
+      {
+        "situation_id": "human_situations:deprivation:at_risk:at_risk_youth",
+        "response_id": "human_services:housing",
+        "title": "צעירים בסיכון",
+        "query": "דיור_עבור_צעירים_בסיכון"
+      },
+      {
+        "situation_id": "human_situations:housing:homeless",
+        "response_id": "human_services:housing",
+        "title": "דרי רחוב",
+        "query": "דיור_עבור_מחוסרי_בית"
+      },
+      {
+        "situation_id": "human_situations:disability:mental_illness",
+        "response_id": "human_services:housing",
+        "title": "מתמודדי נפש",
+        "query": "דיור_עבור_מתמודדי_נפש"
+      }
+    ]
+  },
+  {
+    "group": "שירותי בריאות",
+    "response_id": "human_services:health",
+    "group_link": "לכל שירותי הבריאות",
+    "labels": [
+      {
+        "situation_id": "human_situations:disability:visual_impairment",
+        "response_id": "human_services:health",
+        "title": "בעלי ליקוי ראיה",
+        "query": "שירותי_בריאות_עבור_בעלי_ליקוי_ראיה"
+      },
+      {
+        "situation_id": "human_situations:substance_dependency",
+        "response_id": "human_services:health",
+        "title": "התמכרויות",
+        "query": "שירותי_בריאות_עבור_התמכרויות"
+      },
+      {
+        "response_id": "human_services:emergency:emergency_mental_assistance",
+        "title": "סיוע נפשי מיידי",
+        "situation_id": null,
+        "query": "סיוע_נפשי_בחירום"
+      },
+      {
+        "response_id": "human_services:health:medical_supplies",
+        "title": "ציוד רפואי",
+        "situation_id": null,
+        "query": "ציוד_רפואי"
+      }
+    ]
+  },
+  {
+    "group": "מתמודדי נפש",
+    "situation_id": "human_situations:disability:mental_illness",
+    "group_link": "לכל השירותים עבור מתמודדי נפש",
+    "labels": [
+      {
+        "situation_id": "human_situations:disability:mental_illness",
+        "response_id": "human_services:health",
+        "title": "שירותי בריאות",
+        "query": "שירותי_בריאות_עבור_מתמודדי_נפש"
+      },
+      {
+        "situation_id": "human_situations:disability:mental_illness",
+        "response_id": "human_services:health:mental_health_care:hospitalization:hospitalization_alternative:balancing_house",
+        "title": "בתים מאזנים",
+        "query": "בית_מאזן_עבור_מתמודדי_נפש"
+      },
+      {
+        "situation_id": "human_situations:disability:mental_illness",
+        "response_id": "human_services:care:guidance",
+        "title": "ייעוץ הדרכה וליווי",
+        "query": "ליווי_והדרכה_עבור_מתמודדי_נפש"
+      },
+      {
+        "situation_id": "human_situations:disability:mental_illness",
+        "response_id": "human_services:housing",
+        "title": "דיור",
+        "query": "דיור_עבור_מתמודדי_נפש"
+      },
+      {
+        "situation_id": "human_situations:disability:mental_illness",
+        "response_id": "human_services:work",
+        "title": "תעסוקה",
+        "query": "עבודה_עבור_מתמודדי_נפש"
+      },
+      {
+        "situation_id": "human_situations:benefit_holders:ministry_of_health:rehabilitation_basket",
+        "title": "סל שיקום",
+        "score": 35,
+        "query": "זכאי_סל_שיקום"
+      }
+    ]
+  },
+  {
+    "group": "אזרחים ותיקים",
+    "situation_id": "human_situations:age_group:seniors",
+    "group_link": "לכל השירותים עבור אזרחים ותיקים",
+    "labels": [
+      {
+        "situation_id": "human_situations:age_group:seniors",
+        "response_id": "human_services:health",
+        "title": "שירותי בריאות",
+        "query": "שירותי_בריאות_עבור_אזרחים_ותיקים"
+      },
+      {
+        "situation_id": "human_situations:age_group:seniors",
+        "response_id": "human_services:community_services:social_club",
+        "title": "מועדון ופנאי",
+        "query": "מועדון_חברתי_עבור_אזרחים_ותיקים"
+      },
+      {
+        "situation_id": "human_situations:age_group:seniors",
+        "response_id": "human_services:housing",
+        "title": "דיור",
+        "query": "דיור_עבור_אזרחים_ותיקים"
+      }
+    ]
+  },
+  {
+    "group": "הכנסה נמוכה וקשיים כלכליים ",
+    "situation_id": "human_situations:deprivation:low_income",
+    "group_link": "לכל השירותים בנושא הכנסה נמוכה וקשיים כלכליים",
+    "response_id": null,
+    "labels": [
+      {
+        "situation_id": "human_situations:deprivation:low_income",
+        "response_id": "human_services:food",
+        "title": "מזון",
+        "query": "מזון_עבור_בעלי_הכנסה_נמוכה"
+      },
+      {
+        "situation_id": "human_situations:deprivation:low_income",
+        "response_id": "human_services:legal:advocacy_legal_aid:understand_government_programs",
+        "title": "מיצוי זכויות",
+        "query": "מיצוי_זכויות_עבור_בעלי_הכנסה_נמוכה"
+      },
+      {
+        "situation_id": "human_situations:deprivation:low_income",
+        "response_id": "human_services:money",
+        "title": "סיוע כספי",
+        "query": "סיוע_כלכלי_עבור_בעלי_הכנסה_נמוכה"
+      },
+      {
+        "situation_id": "human_situations:deprivation:low_income",
+        "response_id": "human_services:goods",
+        "title": "ביגוד והנעלה",
+        "query": "ציוד_עבור_בעלי_הכנסה_נמוכה"
+      }
+    ]
+  },
+  {
+    "group": "ניצולי שואה",
+    "situation_id": "human_situations:benefit_holders:holocaust_survivors",
+    "group_link": "לכל השירותים עבור ניצולי שואה",
+    "labels": [
+      {
+        "situation_id": "human_situations:benefit_holders:holocaust_survivors",
+        "response_id": "human_services:legal",
+        "title": "מיצוי זכויות",
+        "query": "משפטי_עבור_ניצולי_שואה"
+      },
+      {
+        "situation_id": "human_situations:benefit_holders:holocaust_survivors",
+        "response_id": "human_services:community_services:social_club",
+        "title": "מועדון חברתי",
+        "query": "מועדון_חברתי_עבור_ניצולי_שואה"
+      },
+      {
+        "situation_id": "human_situations:benefit_holders:holocaust_survivors",
+        "response_id": "human_services:health",
+        "title": "שירותי בריאות",
+        "query": "שירותי_בריאות_עבור_ניצולי_שואה"
+      }
+    ]
+  },
+  {
+    "group": "צעירים וצעירות",
+    "situation_id": "human_situations:age_group:young_adults",
+    "group_link": "לכל השירותים עבור צעירים וצעירות",
+    "labels": [
+      {
+        "situation_id": "human_situations:age_group:young_adults",
+        "response_id": "human_services:care:mentoring",
+        "title": "מנטורינג לצעירים וצעירות",
+        "query": "מנטורינג_עבור_צעירים"
+      },
+      {
+        "situation_id": "human_situations:deprivation:at_risk:at_risk_youth",
+        "title": "צעירים וצעירות בסיכון",
+        "response_id": null,
+        "query": "צעירים_בסיכון"
+      }
+    ]
+  },
+  {
+    "group": "خدمات للمجتمع العربي",
+    "situation_id": "human_situations:language:arabic_speaking",
+    "group_link": "لكل الخدمات للمجتمع العربي",
+    "labels": [
+      {
+        "situation_id": "human_situations:language:arabic_speaking",
+        "response_id": "human_services:legal",
+        "title": "مساعدة قانونية",
+        "query": "משפטי_עבור_דוברי_ערבית"
+      },
+      {
+        "situation_id": "human_situations:language:arabic_speaking",
+        "response_id": "human_services:emergency",
+        "title": "خدمات طوارئ",
+        "query": "חירום_עבור_דוברי_ערבית"
+      },
+      {
+        "situation_id": "human_situations:language:arabic_speaking",
+        "response_id": "human_services:emergency:emergency_mental_assistance",
+        "title": "مساعدة نفسية خلال الطوارئ",
+        "query": "סיוע_נפשי_בחירום_עבור_דוברי_ערבית"
+      }
+    ]
+  },
+  {
+    "group": "אוכלוסיות נוספות",
+    "labels": [
+      {
+        "situation_id": "human_situations:survivors:prostition_survivors",
+        "title": "שורדות זנות",
+        "response_id": null,
+        "query": "קורבנות_זנות"
+      },
+      {
+        "situation_id": "human_situations:disability:autistic_spectrum",
+        "title": "אוטיזם",
+        "response_id": null,
+        "query": "אוטיסטים"
+      },
+      {
+        "situation_id": "human_situations:survivors:violence_survivors:domestic_violence_survivors",
+        "title": "נשים נפגעות אלימות",
+        "response_id": null,
+        "query": "נפגעות_אלימות_במשפחה"
+      },
+      {
+        "situation_id": "human_situations:education:students",
+        "title": "סטודנטים",
+        "response_id": null,
+        "query": "סטודנטים"
+      }
+    ]
+  }
+]

@@ -9,7 +9,7 @@ import {useMediaQuery} from "@mui/material";
 import {widthOfMobile} from "../../constants/mediaQueryProps.ts";
 import hamburger from "../../assets/icon-hamburger.svg";
 
-const Header = () => {
+const Header = ({showLogo=true,showSearchbar=true}:{showLogo?:boolean, showSearchbar?:boolean}) => {
     const isMobile = useMediaQuery(widthOfMobile);
     const classes = useStyle();
     const [isInputFocused, setIsInputFocused] = useState(false);
@@ -29,9 +29,9 @@ const Header = () => {
     const inputDescription = "Search for services, organizations, branches, and more"
 
     return <div className={classes.root}>
-        <img onClick={handleIconClick} className={classes.logo} src={isMobile ? hamburger : logo}
-             alt={"kolsherut logo"}/>
-        <div className={classes.inputDiv}>
+        {showLogo && <img onClick={handleIconClick} className={classes.logo} src={isMobile ? hamburger : logo}
+              alt={"kolsherut logo"}/>}
+        {showSearchbar && <div className={classes.inputDiv}>
             <img className={classes.searchIcon} alt={"search icon"} onClick={onSearch}
                  src={isInputFocused ? activeSearchIcon : inactiveSearchIcon}/>
             <label htmlFor="search-input" className={classes.visuallyHidden}>
@@ -47,7 +47,7 @@ const Header = () => {
                 onKeyDown={(e) => {if (e.key === "Enter") onSearch();}}
                 aria-label={inputDescription}
             />
-        </div>
+        </div>}
         {!isMobile && <div className={classes.linksDiv}>
             <span className={classes.link} onClick={() => store.dispatch(setModal("About"))}>{names.about}</span>
             <span className={classes.link} onClick={() => store.dispatch(setModal("AddService"))}>{names.addService}</span>

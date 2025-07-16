@@ -31,12 +31,12 @@ export default createUseStyles({
         }
     }),
     openDiv: {
-        marginTop:15,
+        marginTop:10,
         display: 'flex',
         flexDirection: 'column',
         paddingLeft: 30,
         boxSizing: 'border-box',
-        gap: 10,
+        gap: 4,
     },
     title: {
         fontWeight: 600,

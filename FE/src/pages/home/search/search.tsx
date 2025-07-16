@@ -1,46 +1,48 @@
 import useStyle from './search.css';
-import lightIconSearch from '../../../assets/icon-search-blue-1.svg'
-import IconArrowTopRight from '../../../assets/icon-arrow-top-right-gray-4.svg';
-import {ChangeEvent, useState} from "react";
-import sendMessage from "../../../services/sendMessage/sendMessage";
-import AutocompleteType from "../../../types/autocompleteType";
+import kolsherutLogo from "../../../assets/logo-white.svg"
+import SearchInput from "./searchInput/searchInput";
+import nationalDigitalLogo from '../../../assets/logo-digital-israel.png'
+import kolzchutLogo from "../../../assets/logo-kolzchut.png"
+import mojLogo from "../../../assets/logo-moj.png"
+import {useMediaQuery} from "@mui/material";
+import {widthOfMobile} from "../../../constants/mediaQueryProps.ts";
+import {store} from "../../../store/store.ts";
+import {setPage, setShowSidebar} from "../../../store/general/generalSlice.ts";
+import hamburger from "../../../assets/icon-hamburger-gray-5.svg";
+import homepageBackground from '../../../assets/homepage-background.svg';
 
 const Search = () => {
     const classes = useStyle();
-    const [searchTerm, setSearchTerm] = useState<string>('');
-    const [optionalSearchValues, setOptionalSearchValues] = useState<AutocompleteType[]>([]);
-    const inputChangeEvent = async(v: ChangeEvent<HTMLInputElement>,) => {
-        const value: string = v.target.value;
-        setSearchTerm(value)
-        if(value === '') return setOptionalSearchValues([]);
-        const requestURL = window.config.routes.autocomplete.replace('%%search%%', value)
-        const response = await sendMessage({method:'get', requestURL})
-        setOptionalSearchValues(response.data)
+    const isMobile = useMediaQuery(widthOfMobile);
+    const handleIconClick = () => {
+        if (!isMobile) return store.dispatch(setPage('home'))
+        return store.dispatch(setShowSidebar(true));
     }
     return (
         <section className={classes.root}>
-            <h2>{searchTerm}</h2>
-            <div className={classes.searchContainer}>
-                <img className={classes.searchButton} alt={"חיפוש"} src={lightIconSearch}/>
-                <input
-                    value={searchTerm}
-                    onChange={inputChangeEvent}
-                    className={classes.searchInput}
-                    placeholder={window.strings.search.label}
-                />
-
+            <img
+                src={homepageBackground}
+                alt="רקע ראשי"
+                className={classes.backgroundImage}
+                fetchPriority="high"
+            />
+            <div className={classes.aboveDiv}>
+                {isMobile && <img onClick={handleIconClick} className={classes.hamburger} src={hamburger}
+                                  alt={"hamburger button"}/>}
+                <img className={classes.kolsherutLogo} src={kolsherutLogo} alt={"kolsherut Logo"}/>
+                <span className={classes.aboveDivText}>{window.strings.home.aboveDivText}</span>
             </div>
-            <div className={classes.optionalSearchValuesWrapper}>
-                {optionalSearchValues.map((value: AutocompleteType, index:number) => (
-                    <div key={index} onClick={() => setSearchTerm(value.structured_query)} className={classes.optionalSearchValue}>
-                        <span className={classes.iconAndText}>
-                            <img className={classes.searchIcon} alt={"חיפוש"} src={lightIconSearch}/>
-                            <span key={index} >{value.query}</span>
-                        </span>
-                        <img className={classes.searchIcon} alt={"חיפוש"} src={IconArrowTopRight}/>
-
-                    </div>
-                ))}
+            <SearchInput/>
+            <div className={classes.bottomDiv}>
+                <a href={window.config.redirects.kolzchutMainPageLink} target={"_blank"}>
+                    <img className={classes.bottomLogos} src={kolzchutLogo} alt={"kolzchut logo"}/>
+                </a>
+                <a href={window.config.redirects.justiceLink} target={"_blank"}>
+                    <img className={classes.bottomLogos} src={mojLogo} alt={"ministry of justice logo"}/>
+                </a>
+                <a href={window.config.redirects.nationalDigitalLink} target={"_blank"}>
+                    <img className={classes.bottomLogos} src={nationalDigitalLogo} alt={"national digital department"}/>
+                </a>
             </div>
         </section>
     );

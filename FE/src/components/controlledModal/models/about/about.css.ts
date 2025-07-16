@@ -57,10 +57,10 @@ export default createUseStyles({
 
     },
     paragraph:{
-        display:'flex',
+        display:'inline-block',
+        margin:'5px 0',
         alignItems:'center',
         fontSize: 18,
-        gap:5
     },
     blackRegularLink:{
         fontWeight: 500,
