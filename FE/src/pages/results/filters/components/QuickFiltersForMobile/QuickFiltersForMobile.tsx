@@ -1,0 +1,39 @@
+import useStyles from './QuickFiltersForMobile.css'
+import IFilterOptions from "../../../../../types/filterOptions.ts";
+import {Response} from "../../../../../types/cardType.ts";
+
+import {useSelector} from "react-redux";
+import {
+    getQuickFilterResponseOptions,
+    getQuickFilterSituationOptions
+} from "../../../../../store/shared/shared.selector.ts";
+import {getFilters} from "../../../../../store/filter/filter.selector.ts";
+import ISituationsToFilter from "../../../../../types/SituationsToFilter.ts";
+import OccasionButtonForMobile from "./occasionButtonForMobile/occasionButtonForMobile.tsx";
+
+const QuickFiltersForMobile = () => {
+    const classes = useStyles();
+    const responseOptions: IFilterOptions = useSelector(getQuickFilterResponseOptions);
+    const situationOptions: ISituationsToFilter[] = useSelector(getQuickFilterSituationOptions);
+    const filters: { responses: string[], situations: string[] } = useSelector(getFilters);
+    const responseOptionsArr = Object.entries(responseOptions);
+
+    return <div className={classes.root}>
+        {responseOptionsArr.map(([id, value]) => {
+            const isSelected = filters.responses.includes(id);
+            const response: Response = {
+                id,
+                name: value.name,
+                synonyms:[]
+            }
+            if( value.count < 1) return <></>
+            return <OccasionButtonForMobile isSelected={isSelected} key={id} response={response} count={value.count}/>
+        })}
+        {situationOptions.map(situation => {
+            const isSelected = filters.situations.includes(situation.id);
+            return <OccasionButtonForMobile isSelected={isSelected} key={situation.id} situation={situation}/>
+        })}
+
+    </div>
+}
+export default QuickFiltersForMobile;

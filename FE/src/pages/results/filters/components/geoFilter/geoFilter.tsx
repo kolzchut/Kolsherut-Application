@@ -5,12 +5,9 @@ import mapIcon from '../../../../../assets/icon-map-region-blue-2.svg';
 import useStyles from "./geoFilter.css";
 import {store} from "../../../../../store/store";
 import {setModal} from "../../../../../store/general/generalSlice";
-import {useMediaQuery} from "@mui/material";
-import {widthOfMobile} from "../../../../../constants/mediaQueryProps";
 
 const GeoFilter = () => {
-    const isMobile = useMediaQuery(widthOfMobile);
-    const classes = useStyles({isMobile});
+    const classes = useStyles();
     const resultsLength = useSelector(getFilterResultsLength)
     const location = useSelector(getLocationFilter)
     return <div className={classes.root} onClick={()=> store.dispatch(setModal('GeoFilterModal'))}>

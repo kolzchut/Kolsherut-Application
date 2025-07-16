@@ -5,7 +5,7 @@ import {
 } from "../../store/data/data.selector";
 import {addResultsPOIs, getResultsFromServer} from "./resultsLogic";
 import useStyles from "./results.css";
-import Filters from "./filters/filters";
+import FiltersForDesktop from "./filters/filtersForDesktop.tsx";
 import {setResults as setResultsInStore, setSelectedOrganization} from "../../store/data/dataSlice";
 import {store} from "../../store/store";
 import Hits from "./hits/hits";
@@ -22,6 +22,7 @@ import {getFilteredBranches, getFilteredResponseLength, getFilteredResults} from
 import { useMediaQuery } from '@mui/material';
 import {widthOfMobile} from "../../constants/mediaQueryProps";
 import {searchEvent} from "../../services/gtag/resultsEvents";
+import FiltersForMobile from "./filters/filtersForMobile.tsx";
 
 const Results = () => {
 
@@ -60,7 +61,7 @@ const Results = () => {
     return <div>
         <Header/>
         <div className={classes.mainDiv}>
-            <Filters/>
+            {isMobile ? <FiltersForMobile/> : <FiltersForDesktop/>}
             <div className={classes.resultsContainer}>
                 <div className={classes.hits}>
                     {filteredResults.map((service: IService) => (

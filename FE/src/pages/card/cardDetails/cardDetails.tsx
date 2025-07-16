@@ -74,7 +74,7 @@ const CardDetails = ({card}: { card: ICard }) => {
 
         </div>
             <MoreServicesInBranch moreServicesInBranch={card.moreServicesInBranch}/>
-        <Footer/>
+        <Footer hideLinks={true}/>
         <div  className={`${classes.quickActionContainer} ${isScrollUp ? classes.hidden : ""}`}>
         <QuickAction email={email} phoneNumber={phoneNumbers[0]} websiteURL={websites[0]?.href}/>
         </div>

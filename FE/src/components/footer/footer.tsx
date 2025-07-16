@@ -3,7 +3,7 @@ import israelIcon from '../../assets/icon-state-of-israel.svg'
 import useStyle from './footer.css';
 import LinksMenu from "./linksMenu/linksMenu";
 
-const Footer = () => {
+const Footer = ({hideLinks=false}: {hideLinks?: boolean}) => {
 
     const nameOfWebsite = window.strings.footer.nameOfWebsite;
     const firstParagraph = window.strings.footer.firstParagraph;
@@ -47,7 +47,7 @@ const Footer = () => {
                 {thirdParagraph[1]}
             </p>
         </div>
-        <LinksMenu/>
+        {!hideLinks && <LinksMenu/>}
     </footer>)
 }
 export default Footer;
