@@ -1,4 +1,4 @@
 interface IFilterOptions {
-    [key: string]: { count: number, name: string }
+    [key: string]: { count: string| number, name: string }
 }
 export default IFilterOptions;

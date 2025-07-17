@@ -1,13 +1,13 @@
 import {useSelector} from "react-redux";
 import useStyles from "./quickFilters.css";
 import IFilterOptions from "../../../../../types/filterOptions";
-import {
-    getQuickFilterResponseOptions,
-    getQuickFilterSituationOptions
-} from "../../../../../store/shared/shared.selector";
 import {getFilters} from "../../../../../store/filter/filter.selector";
 import ResponseQuickFilter from "./responseQuickFilter";
 import SituationQuickFilter from "./situationQuickFilter";
+import {
+    getQuickFilterResponseOptions,
+    getQuickFilterSituationOptions
+} from "../../../../../store/shared/quickFilter.selector";
 
 const QuickFilters = () => {
     const classes = useStyles();

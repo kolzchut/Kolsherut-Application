@@ -14,7 +14,7 @@ const OccasionButtonForMobile = ({response, situation, isSelected, count=0}: {
     response?: Response,
     situation?: Situation,
     isSelected: boolean,
-    count?:number
+    count?:number | string
 }) => {
     const {isResponse, color} = getColor({response})
     const classes = useStyle({color, isSelected});
@@ -32,7 +32,7 @@ const OccasionButtonForMobile = ({response, situation, isSelected, count=0}: {
         <div className={classes.container} onClick={onClick}>
             <div className={classes.label} key={occasion.id}>
                 <span className={classes.dot}/>
-                <span>{`${occasion.name} ${count > 0 ? `(${count})` :""}`} </span>
+                <span>{`${occasion.name} ${count != 0 ? `(${count})` :""}`} </span>
                 <img alt="cancel or add icon" src={cancelOrAddIcon} className={classes.cancelOrAdd}/>
             </div>
         </div>);

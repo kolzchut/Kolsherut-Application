@@ -1,7 +1,7 @@
 import useStyles from "./geoFilterModal.css";
 import closeIcon from '../../../../../../assets/icon-close-black.svg'
 import {useSelector} from "react-redux";
-import {getFilterResultsLength, getOptionalLocations} from "../../../../../../store/shared/shared.selector"
+import {getFilterResultsLength} from "../../../../../../store/shared/shared.selector"
 import {getLocationFilter, getSearchLocation} from "../../../../../../store/filter/filter.selector";
 import {store} from "../../../../../../store/store";
 import {setLocationFilter, setSearchLocation} from "../../../../../../store/filter/filterSlice";
@@ -13,6 +13,7 @@ import israelLocation from "../../../../../../constants/israelLocation";
 import locationIcon from "../../../../../../assets/location.svg"
 import wideLocationIcon from "../../../../../../assets/wideLocation.svg"
 import {setModal} from "../../../../../../store/general/generalSlice";
+import {getOptionalLocations} from "../../../../../../store/shared/locationFilters.selector";
 
 const GeoFilterModal = () => {
     const classes = useStyles();

@@ -2,7 +2,7 @@ import {RootState} from '../store';
 import {createSelector} from '@reduxjs/toolkit';
 import {DataStore} from "./initialState";
 import {IService} from "../../types/serviceType";
-import {getBranches} from "../shared/utilities";
+import {getBranches} from "../shared/utilities/getBranches.ts";
 
 export const dataStore = (state: RootState) => state.data;
 

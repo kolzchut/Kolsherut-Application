@@ -1,22 +1,16 @@
 import {createSelector} from "@reduxjs/toolkit";
-import {getAllBranches, getLocations, getResults} from "../data/data.selector";
+import {getAllBranches, getResults} from "../data/data.selector";
 import {IBranch, IService} from "../../types/serviceType";
-import IFilterOptions from "../../types/filterOptions";
 import {Response, Situation} from "../../types/cardType";
-import {filterStore, getFilters, getSearchLocation} from "../filter/filter.selector";
-import {
-    filterServices,
-    getBranches,
-    getKeyForResponse,
-    getKeyForSituation,
-    runOverResponsesAndGetOptions,
-    translateKeyToTitle
-} from "./utilities";
+import {filterStore, getFilters} from "../filter/filter.selector";
 import {FilterStore} from "../filter/initialState";
 import ISituationsToFilter from "../../types/SituationsToFilter";
 import IResponseToFilter from "../../types/ResponseToFilter";
-import {checkIfCoordinatesInBounds} from "../../services/geoLogic";
-import ILocation from "../../types/locationType";
+import {filterServices} from "./utilities/filterServices.ts";
+import {getBranches} from "./utilities/getBranches.ts";
+import {getKeyForResponse} from "./utilities/getKeyForResponse.ts";
+import {getKeyForSituation} from "./utilities/getKeyForSituation.ts";
+import {translateKeyToTitle} from "./utilities/translateKeyToTitle.ts";
 
 export const getFilteredSituationIds = createSelector([filterStore], (filterStore: FilterStore) => {
     return filterStore.filters.situations;
@@ -25,11 +19,8 @@ export const getFilteredSituationIds = createSelector([filterStore], (filterStor
 export const getFilteredResponseIds = createSelector([filterStore], (filterStore: FilterStore) => {
     return filterStore.filters.responses;
 });
-export const getFiltersLength = createSelector([filterStore], (filterStore: FilterStore) => {
-    return filterStore.filters.responses.length + filterStore.filters.situations.length;
-});
 
-export const getFilteredResponseLength = createSelector([getFilteredResponseIds], (filterResponse:string[]) => {
+export const getFilteredResponseLength = createSelector([getFilteredResponseIds], (filterResponse: string[]) => {
     return filterResponse.length;
 });
 
@@ -44,36 +35,6 @@ export const getFilterResultsLength = createSelector([getFilteredBranches], (bra
     return branches.length;
 });
 
-export const getTopResponses = createSelector([getResults], (services: IService[]) => {
-    if (!services || services.length === 0) return [];
-    const responsesArray = services.flatMap((service: IService) =>
-        service.organizations.flatMap((organization) =>
-            organization.branches.flatMap(branch => branch.responses) || []));
-    const options = runOverResponsesAndGetOptions(responsesArray);
-    return Object.entries(options)
-        .sort(([, a], [, b]) => b.count - a.count) // Sort by count in descending order
-        .slice(0, 7) // Take the top 7
-});
-
-export const getQuickFilterResponseOptions = createSelector([getFilteredResults, getFilters, getTopResponses], (services: IService[], filters, topResponses) => {
-    const responses = services.flatMap((service: IService) =>
-        service.organizations.flatMap((organization) => organization.branches.filter(branch => checkIfCoordinatesInBounds({
-            bounds: filters.location.bounds,
-            coordinates: branch.geometry
-        })).flatMap(branch => branch.responses) || []));
-    const options: IFilterOptions = runOverResponsesAndGetOptions(responses);
-    const filteredOptions: IFilterOptions = {}
-    topResponses.forEach((response) => {
-        if (options[response[0]]) {
-            filteredOptions[response[0]] = options[response[0]];
-            return;
-        }
-        console.log(response)
-        filteredOptions[response[0]] = {count:0, name:response[1].name};
-
-    });
-    return filteredOptions;
-});
 
 export const getMoreFiltersResponseOptions = createSelector([getAllBranches, getFilteredResponseIds], (branches: IBranch[], filteredResponseIds: string[]) => {
     const responsesByTitle = new Map<string, IResponseToFilter[]>();
@@ -128,25 +89,4 @@ export const getAllSituationsToFilter = createSelector([getAllBranches, getFilte
         })
     );
     return Array.from(situationsByTitle.entries());
-});
-
-export const getQuickFilterSituationOptions = createSelector([getAllSituationsToFilter], (situationsToFilter) => {
-    return situationsToFilter.flatMap(([, situations]) =>
-        situations.filter(situation => situation.selected)
-    );
-});
-
-export const getOptionalLocations = createSelector([getSearchLocation, getLocations], (searchLocation: string, locations: ILocation[]) => {
-    const fixedSearchLocation = searchLocation.trim().replace(' ', "_");
-    if (!locations || locations.length === 0) return [];
-    if (fixedSearchLocation != '') return locations
-        .filter(location => location.key
-            .includes(fixedSearchLocation))
-        .map(location => {
-            return {
-                ...location,
-                key: location.key.replace(/_/g, ' ').trim()
-            };
-        }).slice(0, 5);
-    return [];
 });

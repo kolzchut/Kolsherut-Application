@@ -3,13 +3,13 @@ import IFilterOptions from "../../../../../types/filterOptions.ts";
 import {Response} from "../../../../../types/cardType.ts";
 
 import {useSelector} from "react-redux";
-import {
-    getQuickFilterResponseOptions,
-    getQuickFilterSituationOptions
-} from "../../../../../store/shared/shared.selector.ts";
 import {getFilters} from "../../../../../store/filter/filter.selector.ts";
 import ISituationsToFilter from "../../../../../types/SituationsToFilter.ts";
 import OccasionButtonForMobile from "./occasionButtonForMobile/occasionButtonForMobile.tsx";
+import {
+    getQuickFilterResponseOptions,
+    getQuickFilterSituationOptions
+} from "../../../../../store/shared/quickFilter.selector.ts";
 
 const QuickFiltersForMobile = () => {
     const classes = useStyles();
@@ -26,7 +26,7 @@ const QuickFiltersForMobile = () => {
                 name: value.name,
                 synonyms:[]
             }
-            if( value.count < 1) return <></>
+            if(!value.count) return <></>
             return <OccasionButtonForMobile isSelected={isSelected} key={id} response={response} count={value.count}/>
         })}
         {situationOptions.map(situation => {

@@ -4,7 +4,7 @@ import {store} from "../../../../../store/store";
 
 interface FilterProps {
     id: string;
-    value: { count: number, name: string };
+    value: { count: number | string, name: string };
     responseFilters: string[];
 }
 
