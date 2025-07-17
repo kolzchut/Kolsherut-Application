@@ -8,7 +8,7 @@ import {setSearchOptions} from "../store/data/dataSlice";
 import sortOptionalSearchValues from "./sortOptionalSearchValues";
 import mapService from './map/map'
 import {mapInteractions, viewInteractions} from "./map/events/mapInteraction";
-import {getRouteParams} from "./route";
+import {getRouteParams} from "./url/route.tsx";
 import  {setAllLocationsInStore} from "./geoLogic";
 import analytics from "./gtag/analytics";
 import {setFilterRouteParams} from "../store/filter/filterSlice.ts";

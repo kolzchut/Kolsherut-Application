@@ -1,5 +1,5 @@
 import {useSelector} from "react-redux";
-import {getUrlParams} from "../store/shared/urlSelector.ts";
+import {getUrlParams} from "../../store/shared/urlSelector.ts";
 
 
 export const getRouteParams = () =>{

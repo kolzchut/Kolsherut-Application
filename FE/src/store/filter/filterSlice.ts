@@ -1,12 +1,13 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {FilterStore, initialState} from './initialState';
+import {parseLocation} from "../../services/url/parseURL.ts";
 
 export const filterSlice = createSlice({
     name: 'filter',
     initialState,
     reducers: {
         setFilterRouteParams(state: FilterStore, action) {
-            const newLocation = action.payload.lf ? JSON.parse(action.payload.lf) : null;
+            const newLocation = !action.payload.lf ? null : parseLocation(action.payload.lf);
             const newSituations = action.payload.sf ? JSON.parse(action.payload.sf) : null;
             const newResponses = action.payload.rf ? JSON.parse(action.payload.rf) : null;
             state.filters.location = newLocation || state.filters.location;

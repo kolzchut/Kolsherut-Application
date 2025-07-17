@@ -1,7 +1,7 @@
 import pages, {Pages} from "./pages/pages";
 import {useSelector} from "react-redux";
 import {getModal, getPage} from "./store/general/general.selector";
-import {useRouteUpdater} from "./services/route";
+import {useRouteUpdater} from "./services/url/route.tsx";
 import ControlledModal from "./components/controlledModal/controlledModal";
 import Sidebar from "./components/sidebar/sidebar";
 
