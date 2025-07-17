@@ -35,11 +35,9 @@ const GeoFilterAndMapDisplayForMobile = () => {
             <img src={mapIcon} alt={"map icon"}/>
             {isNationwide && <span>{displayMapText}</span>}
         </button>
-        <button className={classes.searchButton} onClick={()=> store.dispatch(setModal('GeoFilterModal'))}>
-            <div className={classes.textAndMapDiv}>
+        <button className={`${classes.searchButton} ${classes.textAndMapDiv}`} onClick={()=> store.dispatch(setModal('GeoFilterModal'))}>
                 <img src={searchLocationIcon} alt={"search icon"}/>
                 <span>{searchText}</span>
-            </div>
             {!isNationwide && <span className={classes.count}>{resultsLength}</span>}
         </button>
     </div>

@@ -6,21 +6,24 @@ export const filterSlice = createSlice({
     initialState,
     reducers: {
         setFilterRouteParams(state: FilterStore, action) {
-            state.filters.location = JSON.parse(action.payload.lf) || state.filters.location;
-            state.filters.situations = JSON.parse(action.payload.sf) || state.filters.situations;
-            state.filters.responses = JSON.parse(action.payload.rf) || state.filters.responses;
+            const newLocation = action.payload.lf ? JSON.parse(action.payload.lf) : null;
+            const newSituations = action.payload.sf ? JSON.parse(action.payload.sf) : null;
+            const newResponses = action.payload.rf ? JSON.parse(action.payload.rf) : null;
+            state.filters.location = newLocation || state.filters.location;
+            state.filters.situations = newSituations || state.filters.situations;
+            state.filters.responses = newResponses || state.filters.responses;
         },
         setSearchLocation(state: FilterStore, action) {
             state.searchLocation = action.payload;
         },
         addResponseFilter(state: FilterStore, action) {
-            if(state.filters.responses.some((id) => id === action.payload)) return;
+            if (state.filters.responses.some((id) => id === action.payload)) return;
             state.filters.responses = [...state.filters.responses, action.payload];
         },
         addMultipleResponseFilters(state: FilterStore, action) {
-            const responseIds:string[] = action.payload;
+            const responseIds: string[] = action.payload;
             responseIds.forEach((id) => {
-                if(!state.filters.responses.includes(id)) {
+                if (!state.filters.responses.includes(id)) {
                     state.filters.responses = [...state.filters.responses, id];
                 }
             });
@@ -37,7 +40,7 @@ export const filterSlice = createSlice({
             state.filters.responses = state.filters.responses.filter((id) => !responseIds.includes(id));
         },
         addSituationFilter(state: FilterStore, action) {
-            if(state.filters.situations.some((id) => id === action.payload)) return;
+            if (state.filters.situations.some((id) => id === action.payload)) return;
             state.filters.situations = [...state.filters.situations, action.payload];
         },
         removeSituationFilter(state: FilterStore, action) {

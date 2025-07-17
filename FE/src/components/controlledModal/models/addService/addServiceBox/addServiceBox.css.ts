@@ -1,5 +1,4 @@
 import {createUseStyles} from 'react-jss';
-import ArrowDirection from "../../../../../pages/card/cardDetails/components/providedBy/arrowDirectionEnum";
 import {secondaryTextColorOne, primaryTextColorOne, secondaryBackgroundColorTwo} from "../../../../../services/theme";
 
 

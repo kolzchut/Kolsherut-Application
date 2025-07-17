@@ -16,8 +16,10 @@ import {setFilterRouteParams} from "../store/filter/filterSlice.ts";
 
 export default async (main: React.ReactNode) => {
     const routeParams = getRouteParams();
-    store.dispatch(setRouteParams(routeParams));
-    store.dispatch(setFilterRouteParams(routeParams));
+    if(routeParams) {
+        store.dispatch(setRouteParams(routeParams));
+        store.dispatch(setFilterRouteParams(routeParams));
+    }
     if (await loadConfig()) {
         mapService.init({mapInteractions, viewInteractions})
         setAllLocationsInStore();

@@ -8,7 +8,6 @@ import {
 const genericButton = (conditionToColor: boolean) => ({
     backgroundColor: conditionToColor ? primaryBackgroundColorOne : transparent,
     height: '100%',
-    gap: 5,
     border: 0,
     borderRadius: 20,
     display: 'flex',
@@ -27,7 +26,7 @@ export default createUseStyles({
         flexDirection: "row",
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '5px',
+        padding: '5px 10px',
         margin: '10px 5px',
         boxSizing: 'border-box',
         direction: "rtl",
