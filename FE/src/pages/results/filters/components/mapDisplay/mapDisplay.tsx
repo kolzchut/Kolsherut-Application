@@ -14,9 +14,9 @@ const MapDisplay = () => {
     const isMobile = useMediaQuery(widthOfMobile);
     const classes = useStyles({isMobile});
     const vals = {
-        text: displayResultsMap ? window.strings.results.hideMap : window.strings.results.showMap,
+        text: displayResultsMap ? window.strings.results.hideMapOnDesktop : window.strings.results.showMapOnDesktop,
         icon: displayResultsMap ? deactivateMapIcon : activateMapIcon,
-        altIcon: displayResultsMap ? window.strings.results.hideMap : window.strings.results.showMap,
+        altIcon: displayResultsMap ? window.strings.results.hideMapOnDesktop : window.strings.results.showMapOnDesktop,
         innerIcon: displayResultsMap ? innerDeactivateMapIcon : innerActivateMapIcon,
     }
 

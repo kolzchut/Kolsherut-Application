@@ -20,7 +20,7 @@ const GeoFilterAndMapDisplayForMobile = () => {
     const displayResultsMap = useDisplayResultsMap()
     const setDisplayResultsMap = useSetDisplayResultsMap()
     const classes = useStyles({isNationwide, displayResultsMap, isSearchOpen:!isNationwide});
-    const displayMapText = displayResultsMap ? window.strings.results.hideMap : window.strings.results.showMap;
+    const displayMapText = displayResultsMap ? window.strings.results.hideMapOnMobile : window.strings.results.showMapOnMobile;
     const searchText = isNationwide ? window.strings.results.searchLocationOnMobile : currentLocation.key;
     return <div className={classes.root}>
         <button className={classes.nationwideButton} onClick={onClickNationWide}>

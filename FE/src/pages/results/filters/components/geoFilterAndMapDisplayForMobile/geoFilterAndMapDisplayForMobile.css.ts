@@ -44,6 +44,8 @@ export default createUseStyles({
     searchButton: ({isSearchOpen}: { isNationwide: boolean, displayResultsMap: boolean, isSearchOpen: boolean }) => ({
         ...genericButton(isSearchOpen),
         width: isSearchOpen ? '100%' : 'fit-content',
+        gap: 5,
+        paddingLeft: '20px'
     }),
     icon: {
         height: '100%'
