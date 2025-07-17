@@ -19,10 +19,15 @@ export const generalSlice = createSlice({
         setShowSidebar(state: GeneralStore, action) {
             state.showSidebar = action.payload;
         },
-        setSearchQuery(state: GeneralStore, action) {
-            state.searchQuery = action.payload;
-        },
         settingURLParamsToResults(state: GeneralStore, action) {
+            state.searchQuery = action.payload;
+            state.page = 'results';
+        },
+        setCardIdAndCardPage(state: GeneralStore, action) {
+            state.cardId = action.payload;
+            state.page = 'card'
+        },
+        setSearchQueryAndResultsPage(state: GeneralStore, action) {
             state.searchQuery = action.payload;
             state.page = 'results';
         }
@@ -31,8 +36,8 @@ export const generalSlice = createSlice({
 
 export const {
     setRouteParams,
-    setPage,
-    setSearchQuery,
+    setPage, setSearchQueryAndResultsPage,
+    setCardIdAndCardPage,
     setModal,
     settingURLParamsToResults,
     setShowSidebar

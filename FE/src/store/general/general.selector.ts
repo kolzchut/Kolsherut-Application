@@ -12,7 +12,6 @@ export const getPage = createSelector([generalStore], (generalStore: GeneralStor
         case 'home':
             return 'home';
         case 'results': {
-            if (!generalStore.searchQuery) return 'home';
             return 'results';
         }
         case 'card': {
