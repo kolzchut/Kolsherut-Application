@@ -23,11 +23,11 @@ export const mockServices = [
         ],
         "organizations": [
                                 {
-                        "id": "e1064847",
+                        "id": "branchId343",
                         "name": "עמותת בריאות וחינוך למשפחות",
                                 "branches": [
                                         {
-                        "id": "e1064847",
+                        "id": "branchId4545",
                         "name": "מרכז בריאות וחינוך",
                         "address": "456 רחוב החינוך, עיר הבריאות, HC 45678",
                         "isNational": true,
@@ -82,7 +82,7 @@ export const mockServices = [
                 "name": "עמותת בריאות וחינוך לילדים",
                                 "branches": [
                     {
-                        "id": "e1064847",
+                        "id": "branchId56755",
                         "name": "מרכז בריאות וחינוך לילדים",
                         "address": "789 רחוב הילדים, עיר הבריאות, HC 45678",
                         "isNational": true,
@@ -138,7 +138,7 @@ export const mockServices = [
                 "name": "עמותת משפחות בטוחות",
                                 "branches": [
                     {
-                        "id": "e1064847",
+                        "id": "branchId7878",
                         "name": "מרכז תמיכה למשפחות בסיכון",
                         "address": "123 רחוב התקווה, עיר הבריאות, HC 45678",
                         "isNational": true,
@@ -188,7 +188,7 @@ export const mockServices = [
                 "name": "עמותת תקווה לנפגעי אסונות",
                                 "branches": [
                     {
-                        "id": "e1064847",
+                        "id": "branchId78787768",
                         "name": "מרכז טיפול תל אביב",
                         "address": "123 רחוב התקווה, תל אביב, HC 45678",
                         "isNational": false,
@@ -206,7 +206,7 @@ export const mockServices = [
                         ]
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId3454354354",
                         "name": "מרכז טיפול חיפה",
                         "address": "456 רחוב השלום, חיפה, HC 45678",
                         "isNational": false,
@@ -274,7 +274,7 @@ export const mockServices = [
                 "name": "ארגון שירותי בריאות",
                                 "branches": [
                     {
-                        "id": "e1064847",
+                        "id": "branchId87654",
                         "name": null,
                         "address": null,
                         "isNational": true,
@@ -308,7 +308,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId345",
                         "name": "מרכז קליני מרכזי",
                         "address": "456 שדרה טיפול, עיר הבריאות, HC 45678",
                         "isNational": true,
@@ -342,7 +342,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId234",
                         "name": "מרכז בריאות המטה",
                         "address": "789 שדרה ריפוי, עיר הבריאות, HC 45678",
                         "isNational": true,
@@ -376,7 +376,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId3453453",
                         "name": "מרפאת הבריאות הדרומית",
                         "address": "321 דרך התאוששות, עיר הבריאות, HC 45678",
                         "isNational": false,
@@ -410,7 +410,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId345345353",
                         "name": "מרכז רפואי צפון",
                         "address": "654 רחוב הרפוי, בטוח עיר, HC 45678",
                         "isNational": true,
@@ -450,7 +450,7 @@ export const mockServices = [
                 "name": "קבוצת בריאות שבין",
                                 "branches": [
                     {
-                        "id": "e1064847",
+                        "id": "branchId34543534543",
                         "name": "קליניקה מרכז",
                         "address": "432 רחוב התאמה, עיר הבריאות, HC 45678",
                         "isNational": true,
@@ -484,7 +484,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId54645654654",
                         "name": "מרפאה ראשית",
                         "address": "111 רחוב טוב, בריאות ברוג, HC 45678",
                         "isNational": false,
@@ -518,7 +518,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId45654654654",
                         "name": "מרפאת מזרח",
                         "address": "222 דרך הטוב, המלחנים, HC 45678",
                         "isNational": true,
@@ -552,7 +552,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId56464565466576587",
                         "name": "מרכז הבריאות",
                         "address": "333 שדרה הבריאות, האלטוואן, HC 45678",
                         "isNational": false,
@@ -586,7 +586,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId567657658977543",
                         "name": "שירותי בריאות מערבית",
                         "address": "444 סמטת ריפוי, בטוחוויל, HC 45678",
                         "isNational": true,
@@ -626,7 +626,7 @@ export const mockServices = [
                 "name": "בריאות עולמית קורפ",
                                 "branches": [
                     {
-                        "id": "e1064847",
+                        "id": "branchId7654321123",
                         "name": "מרכז בריאות צפון",
                         "address": "555 רחוב צפון, בריאותון, HC 45678",
                         "isNational": true,
@@ -660,7 +660,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId98765432",
                         "name": "מרכז טיפול דרומי",
                         "address": "666 רחוב דרום, לרפואה, HC 45678",
                         "isNational": false,
@@ -694,7 +694,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId0987654",
                         "name": "מרכז רפואי מערבי",
                         "address": "777 רחוב מערב, עיר רפואה, HC 45678",
                         "isNational": true,
@@ -728,7 +728,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId3456742341",
                         "name": "בריאות מחדש",
                         "address": "888 רחוב מזרח, עיר הבריאות, HC 45678",
                         "isNational": false,
@@ -762,7 +762,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId1232134",
                         "name": "מרכז הרפואה המרכזי",
                         "address": "999 שדירת המרכז, קרית הבריאות, HC 45678",
                         "isNational": true,
@@ -802,7 +802,7 @@ export const mockServices = [
                 "name": "רשת עירונית לבריאות",
                                 "branches": [
                     {
-                        "id": "e1064847",
+                        "id": "branchId63",
                         "name": "מרכז בריאות עירוני",
                         "address": "101 כיכר מרכז עיר, עיר הבריאות, HC 45678",
                         "isNational": true,
@@ -836,7 +836,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId343434",
                         "name": "מרכז רפואי פרברי",
                         "address": "102 רחוב פרבר, prmurb, HC 45678",
                         "isNational": false,
@@ -870,7 +870,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId11",
                         "name": "מכון בריאות מטרופוליטני",
                         "address": "103 שדירת מטרו, מטרופולין, HC 45678",
                         "isNational": true,
@@ -904,7 +904,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId12",
                         "name": "בריאות אזורית",
                         "address": "104 דרך אזורית, Rehwwi Health, HC 45678",
                         "isNational": false,
@@ -938,7 +938,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId13",
                         "name": "מרפאת בריאות הכפר",
                         "address": "105 רחוב הכפר, Villageville, HC 45678",
                         "isNational": true,
@@ -1019,7 +1019,7 @@ export const mockServices = [
                 "name": "מרכזי רפואי עולמי",
                                 "branches": [
                     {
-                        "id": "e1064847",
+                        "id": "branchId15",
                         "name": "עירוני מרכז בריאות",
                         "address": "106 כיכר מרכז עיר, עיר הבריאות, HC 45678",
                         "isNational": true,
@@ -1053,7 +1053,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId14",
                         "name": "מרכז רפואי חירום",
                         "address": "107 חירום שדרה, עיר הרפואה, HC 45678",
                         "isNational": false,
@@ -1087,7 +1087,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId16",
                         "name": "מרכז רפואי משפחתי",
                         "address": "108 משפחה רחוב, הרפואה, HC 45678",
                         "isNational": true,
@@ -1121,7 +1121,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId30",
                         "name": "מרכז תחזוקה העיר",
                         "address": "109 תחזוקה שדרה, הרפואה, HC 45678",
                         "isNational": false,
@@ -1155,7 +1155,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId31",
                         "name": "מרכז שירותי עירוני",
                         "address": "110 שירותים רחוב, הרפואה עיר, HC 45678",
                         "isNational": true,
@@ -1195,7 +1195,7 @@ export const mockServices = [
                 "name": "חברת שירותי בריאות",
                                 "branches": [
                     {
-                        "id": "e1064847",
+                        "id": "branchId32",
                         "name": "מערכת בריאות ביניימית",
                         "address": "111 בריאות שדרה, עיר הבריאות, HC 45678",
                         "isNational": true,
@@ -1229,7 +1229,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId33",
                         "name": "מרכז תחזוקה בריאותית",
                         "address": "112 תחזוקה רחוב, עיר הבריאות, HC 45678",
                         "isNational": false,
@@ -1263,7 +1263,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId34",
                         "name": "מרכזי בריאות עולמי",
                         "address": "113 עולמי שדרה, עיר הבריאות, HC 45678",
                         "isNational": true,
@@ -1297,7 +1297,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId35",
                         "name": "מערכת רפואית שיתוף",
                         "address": "114 שיתוף רחוב, בריאותון, HC 45678",
                         "isNational": false,
@@ -1331,7 +1331,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId36",
                         "name": "מרכז שיתוף פעולה",
                         "address": "115 שיתוף פעולה רחוב, עיר הבריאות, HC 45678",
                         "isNational": true,
@@ -1392,13 +1392,13 @@ export const mockServices = [
                         ],
                         "situations": [
                                                 {
-                        "id": "e1064847",
+                        "id": "branchId37",
                         "name": "ההליך רפואי"},
                             {"id": "MedicalKits", "name": "ערכות רפואיות"},
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId48",
                         "name": "מרכז חירום צפוני",
                         "address": "200 חירום שדרה, עיר בריאות, HC 45679",
                         "isNational": false,
@@ -1432,7 +1432,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId39",
                         "name": "יחידת סיוע רפואית",
                         "address": "201 סיוע רחוב, בריאותון, HC 45680",
                         "isNational": false,
@@ -1528,7 +1528,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId40",
                         "name": "תחנת חילוץ מהירה",
                         "address": "202 חילוץ רחוב, אזור בריאות, HC 45681",
                         "isNational": false,
@@ -1562,7 +1562,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId41",
                         "name": "מרכז טיפולים מתקדמים",
                         "address": "203 טיפולים שדרה, בריאות העיר, HC 45682",
                         "isNational": false,
@@ -1627,7 +1627,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId42",
                         "name": "מרפאת לילה אזורית",
                         "address": "204 לילה רחוב, מרכז העיר, HC 45683",
                         "isNational": false,
@@ -1661,7 +1661,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId53",
                         "name": "מוקד בריאות נייד",
                         "address": "205 נייד שדרה, ניידון, HC 45684",
                         "isNational": false,
@@ -1757,7 +1757,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId43",
                         "name": "תחנת חיסון מקומית",
                         "address": "206 חיסון רחוב, מרכז העיר, HC 45685",
                         "isNational": false,
@@ -1791,7 +1791,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId534",
                         "name": "תחנת מיון רפואי",
                         "address": "207 מיון שדרה, עיר הבריאות, HC 45686",
                         "isNational": false,
@@ -1856,7 +1856,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId444",
                         "name": "מרכז טיפול בשטח",
                         "address": "208 שטח רחוב, מרחב בריאות, HC 45687",
                         "isNational": false,
@@ -1921,7 +1921,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId22212",
                         "name": "יחידת עזרה ראשונה",
                         "address": "209 עזרה רחוב, עיר בריאות, HC 45688",
                         "isNational": false,
@@ -1986,7 +1986,7 @@ export const mockServices = [
                         ],
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId876",
                         "name": "תחנת טיפול מיידי",
                         "address": "210 מיידי שדרה, בריאותון, HC 45689",
                         "isNational": false,
@@ -2060,7 +2060,7 @@ export const mockServices = [
                 "name": "מרכזי רפואי עולמי",
                                 "branches": [
                     {
-                        "id": "e1064847",
+                        "id": "branchId687",
                         "name": "חלוקת אוכל לבדואים",
                         "address": "106 כיכר מרכז עיר, ערד, HC 45678",
                         "isNational": true,
@@ -2125,7 +2125,7 @@ export const mockServices = [
                 "name": "עמותת תקווה לנפגעי טראומה",
                                 "branches": [
                     {
-                        "id": "e1064847",
+                        "id": "branchId573",
                         "name": "מרכז טיפול תל אביב",
                         "address": "123 רחוב התקווה, תל אביב, HC 45678",
                         "isNational": false,
@@ -2143,7 +2143,7 @@ export const mockServices = [
                         ]
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId9766",
                         "name": "מרכז טיפול חיפה",
                         "address": "456 רחוב השלום, חיפה, HC 45678",
                         "isNational": false,
@@ -2161,7 +2161,7 @@ export const mockServices = [
                         ]
                     },
                                         {
-                        "id": "e1064847",
+                        "id": "branchId4545",
                         "name": "מרכז טיפול ירושלים",
                         "address": "789 רחוב האמונה, ירושלים, HC 45678",
                         "isNational": true,
@@ -2209,7 +2209,7 @@ export const mockServices = [
                 "name": "עמותת נוער בטוח",
                                 "branches": [
                     {
-                        "id": "e1064847",
+                        "id": "branchId2526",
                         "name": "מרכז תמיכה לנוער",
                         "address": "123 רחוב הנוער, עיר התקווה, HC 45678",
                         "isNational": true,
@@ -2258,7 +2258,7 @@ export const mockServices = [
                 "name": "עמותת נכים למען נכים",
                                 "branches": [
                     {
-                        "id": "e1064847",
+                        "id": "branchId367",
                         "name": "מרכז סיוע לנכים",
                         "address": "456 רחוב הנכים, עיר הבריאות, HC 45678",
                         "isNational": true,
@@ -2307,7 +2307,7 @@ export const mockServices = [
                 "name": "עמותת משפחות חזקות",
                 "branches": [
                                         {
-                        "id": "e1064847",
+                        "id": "branchId9999",
                         "name": "מרכז תמיכה למשפחות",
                         "address": "789 רחוב המשפחה, עיר הבריאות, HC 45678",
                         "isNational": true,
