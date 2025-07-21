@@ -23,11 +23,12 @@ services:
     ports:
       - 5173:80
     volumes:
-      - ./volumes/fe/config.json:/usr/share/nginx/html/config.json
-      - ./volumes/fe/strings.json:/usr/share/nginx/html/strings.json
-      - ./volumes/fe/responseColors.json:/usr/share/nginx/html/responseColors.json
-      - ./volumes/fe/filters.json:/usr/share/nginx/html/filters.json
-      - ./volumes/fe/homepage.json:/usr/share/nginx/html/homepage.json
+      - ./volumes/fe/configs/config.json:/usr/share/nginx/html/configs/config.json
+      - ./volumes/fe/configs/strings.json:/usr/share/nginx/html/configs/strings.json
+      - ./volumes/fe/configs/responseColors.json:/usr/share/nginx/html/configs/responseColors.json
+      - ./volumes/fe/configs/filters.json:/usr/share/nginx/html/configs/filters.json
+      - ./volumes/fe/configs/homepage.json:/usr/share/nginx/html/configs/homepage.json
+      - ./volumes/fe/configs/modules.json:/usr/share/nginx/html/configs/modules.json
       - ./volumes/fe/sitemap.txt:/usr/share/nginx/html/sitemap.txt
     depends_on:
       - be
