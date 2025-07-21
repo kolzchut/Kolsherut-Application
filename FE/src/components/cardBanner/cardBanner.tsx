@@ -40,9 +40,9 @@ const CardBanner = ({card}: { card: ICard }) => {
     return (
             <div className={classes.cardBanner}>
                 {isEmergency && <img src={emergencyIcon} alt={"Emergency Icon"} className={classes.emergencyIcon}/>}
-                <h4 className={classes.bannerTitle}>
+                <h2 className={classes.bannerTitle}>
                     {card.service_name}
-                </h4>
+                </h2>
                 <div className={classes.bannerDescriptionDiv}>
                     <span ref={el} className={buttonClass}>{card.service_description}</span>
                     {isOverflowing && <button onClick={handleExtendOrMinimizeClick}
