@@ -7,14 +7,13 @@ export const removeMacro = ({stringWithMacro, macro, replacement}: {
     return stringWithMacro.replace(macro, replacement);
 }
 
-export const getHref = (occasion: string, hrefWithMacro: string): string => {
-    const macro = window.config.redirects.macro
-    return removeMacro({stringWithMacro: hrefWithMacro, macro, replacement: occasion})
-}
-
-export const getLinkToCard = (cardId: string) => {
-    const macro = window.config.redirects.macro;
-    return window.config.redirects.linkToCard.replace(macro, cardId);
+export const replaceMacros = ({stringWithMacros, macrosAndReplacements}: {stringWithMacros: string, macrosAndReplacements:{[key:string]: string}}): string => {
+    if (!stringWithMacros || !macrosAndReplacements) return stringWithMacros;
+    let result = stringWithMacros;
+    Object.entries(macrosAndReplacements).forEach(([macro, replacement]) => {
+        result = result.replace(macro, replacement);
+    });
+    return result;
 }
 
 export const checkIfAllFirstArrayValuesExistsInSecondArrayValues = ({mustBe, data}:{mustBe: string[], data: string[]}): boolean => {
@@ -27,3 +26,5 @@ export const checkIfAnyFirstArrayValueExistsInSecondArrayValues = ({options, dat
     const filteredOptions = options.filter(value => value !== 'human_services');
     return filteredOptions.some(value => setData.has(value));
 }
+
+

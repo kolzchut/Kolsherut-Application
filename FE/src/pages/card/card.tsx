@@ -8,11 +8,14 @@ import {ICard} from "../../types/cardType";
 import CardDetails from "./cardDetails/cardDetails";
 import {cardEvent} from "../../services/gtag/cardEvents";
 import Header from "../../components/header/header.tsx";
+import getCardMetaTags from "./getCardMetaTags.ts";
+import MetaTags from "../../services/metaTags.tsx";
 
 const Card = () => {
     const classes = useStyle();
     const [fullCard, setFullCard] = useState<ICard | null>(null)
     const cardId = useSelector(getCardId)
+    const metaTagsData = fullCard ? getCardMetaTags(fullCard) : null;
     useEffect(() => {
         const fetchCard = async () => {
             const cardData = await getFullCard(cardId); // TODO: Fix this
@@ -29,15 +32,19 @@ const Card = () => {
             setMapBackToDefault();
         }
     }, [cardId])
-    return (<main>
-            <Header/>
-            <section className={classes.root}>
-                <div className={classes.mapContainer}>
-                    <Map/>
-                </div>
-                {fullCard && <CardDetails card={fullCard}/>}
-            </section>
-        </main>
+    return (
+        <>
+            {metaTagsData && <MetaTags {...metaTagsData}/>}
+            <main>
+                <Header/>
+                <section className={classes.root}>
+                    <div className={classes.mapContainer}>
+                        <Map/>
+                    </div>
+                    {fullCard && <CardDetails card={fullCard}/>}
+                </section>
+            </main>
+        </>
     );
 }
 export default Card;

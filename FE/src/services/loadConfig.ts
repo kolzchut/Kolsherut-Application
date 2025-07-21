@@ -13,6 +13,7 @@ declare global {
         homepage:Array<IGroup>;
         gtag:any;
         modules:any;
+        metaTags:any
     }
 }
 
@@ -24,6 +25,7 @@ const configs:Array<ConfigType> = [
     {"type":"responseColors","fileName": `responseColors.json`},
     {"type":"filters","fileName": `filters.json`},
     {"type":"modules","fileName": `modules.json`},
+    {"type":"metaTags","fileName": `metaTags.json`}
 ];
 
 export  default async () => {

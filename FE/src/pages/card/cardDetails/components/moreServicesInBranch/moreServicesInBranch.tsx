@@ -2,6 +2,7 @@ import {ICard} from "../../../../../types/cardType";
 import useStyle from "./moreServicesInBranch.css";
 import CardBanner from "../../../../../components/cardBanner/cardBanner";
 import {reRouteToCard} from "../../../../../services/routes/reRoute.ts";
+import {getHrefForCard} from "../../../../../services/href.ts";
 
 const MoreServicesInBranch = ({moreServicesInBranch}: { moreServicesInBranch: ICard[] }) => {
     const moreServicesInBranchTitle = window.strings.cardDetails.moreServicesInBranchTitle;
@@ -10,11 +11,16 @@ const MoreServicesInBranch = ({moreServicesInBranch}: { moreServicesInBranch: IC
     return (
         <div className={classes.mainDiv}>
             <span className={classes.title}>{moreServicesInBranchTitle}</span>
-            {moreServicesInBranch.map((service: ICard) => (
-                <a key={service.card_id} onClick={() => ()=> reRouteToCard({cardId:service.card_id})} className={classes.aTag}>
+            {moreServicesInBranch.map((service: ICard) => {
+                const href = getHrefForCard(service.card_id);
+                const onClick = () => {
+                    reRouteToCard({cardId: service.card_id})
+                    return false;
+                };
+                return (<a href={href} key={service.card_id} onClick={onClick} className={classes.aTag}>
                     <CardBanner key={service.card_id} card={service}/>
-                </a>
-            ))}
+                </a>);
+            })}
         </div>
     )
 }

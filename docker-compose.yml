@@ -29,6 +29,7 @@ services:
       - ./volumes/fe/configs/filters.json:/usr/share/nginx/html/configs/filters.json
       - ./volumes/fe/configs/homepage.json:/usr/share/nginx/html/configs/homepage.json
       - ./volumes/fe/configs/modules.json:/usr/share/nginx/html/configs/modules.json
+      - ./volumes/fe/configs/metaTags.json:/usr/share/nginx/html/configs/metaTags.json
       - ./volumes/fe/sitemap.txt:/usr/share/nginx/html/sitemap.txt
     depends_on:
       - be

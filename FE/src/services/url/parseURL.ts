@@ -4,7 +4,7 @@ export const stringifyLocation = (location: {key: string, bounds: number[]}) => 
 
 export const parseLocation = (location: string) =>{
     const [key, boundsString] = location.split('|');
-    const bounds = boundsString.split(',').map(Number);
+    const bounds = boundsString.split(',').map(Number) as [number,number,number,number];
     return ({key, bounds});
 };
 

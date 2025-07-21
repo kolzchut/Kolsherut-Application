@@ -5,19 +5,25 @@ import OptionalSearch from "./optionalSearch/optionalSearch";
 import Footer from "../../components/footer/footer";
 import {useMediaQuery} from "@mui/material";
 import {widthOfMobile} from "../../constants/mediaQueryProps";
+import getHomeMetaTags from "./getHomeMetaTags.ts";
+import MetaTags from "../../services/metaTags.tsx";
 
 const Home = () => {
     const isMobile = useMediaQuery(widthOfMobile);
+    const metaTagsData = getHomeMetaTags();
     const classes = useStyle();
-    return <main className={classes.root}>
-        <section className={classes.main}>
+    return <>
+        {metaTagsData && <MetaTags {...metaTagsData}/>}
+        <main className={classes.root}>
+            <section className={classes.main}>
 
-            {!isMobile && <Header showSearchbar={false} showLogo={false}/>}
-            <OptionalSearch/>
-            <Footer/>
-        </section>
-        <Search/>
-    </main>
+                {!isMobile && <Header showSearchbar={false} showLogo={false}/>}
+                <OptionalSearch/>
+                <Footer/>
+            </section>
+            <Search/>
+        </main>
+    </>
 }
 
 export default Home;

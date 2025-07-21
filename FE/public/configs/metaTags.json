@@ -1,0 +1,155 @@
+{
+  "card": {
+    "title": "כרטיס שירות %%serviceName%%",
+    "properties": [
+      {
+        "property": "og:title",
+        "content": "כרטיס שירות %%serviceName%%"
+      },
+      {
+        "property": "og:description",
+        "content": "%%serviceDescription%%"
+      },
+      {
+        "property": "og:image",
+        "content": "https://www.kolsherut.org.il/icons/logo.svg"
+      },
+      {
+        "property": "og:url",
+        "content": "https://www.kolsherut.org.il/?p=card&c=%%serviceId%%"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      },
+      {
+        "property": "og:site_name",
+        "content": "כל-שירות"
+      },
+      {
+        "property": "og:locale",
+        "content": "he_IL"
+      }
+    ],
+    "names": [
+      {
+        "name": "description",
+        "content": "מידע על שירות %%serviceName%%, כולל מיקום, קטגוריה ופרטי יצירת קשר."
+      },
+      {
+        "name": "robots",
+        "content": "index, follow"
+      },
+      {
+        "name": "viewport",
+        "content": "width=device-width, initial-scale=1"
+      },
+      {
+        "name": "theme-color",
+        "content": "#ffffff"
+      }
+    ]
+  },
+  "results": {
+    "title": "תוצאות חיפוש %%search%%",
+    "properties": [
+      {
+        "property": "og:title",
+        "content": "תוצאות חיפוש %%search%%"
+      },
+      {
+        "property": "og:description",
+        "content": "תוצאות חיפוש %%search%%"
+      },
+      {
+        "property": "og:image",
+        "content": "https://www.kolsherut.org.il/icons/logo.svg"
+      },
+      {
+        "property": "og:url",
+        "content": "%%currentUrl%%"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      },
+      {
+        "property": "og:site_name",
+        "content": "כל-שירות"
+      },
+      {
+        "property": "og:locale",
+        "content": "he_IL"
+      }
+    ],
+    "names": [
+      {
+        "name": "description",
+        "content": "תוצאות חיפוש %%search%%"
+      },
+      {
+        "name": "robots",
+        "content": "index, follow"
+      },
+      {
+        "name": "viewport",
+        "content": "width=device-width, initial-scale=1"
+      },
+      {
+        "name": "theme-color",
+        "content": "#ffffff"
+      }
+    ]
+  },
+  "home": {
+    "title": "כל-שירות - הבית",
+    "properties": [
+      {
+        "property": "og:title",
+        "content": "כל-שירות - הבית"
+      },
+      {
+        "property": "og:description",
+        "content": "כל-שירות הוא מאגר מידע פתוח על שירותים ציבוריים בישראל."
+      },
+      {
+        "property": "og:image",
+        "content": "https://www.kolsherut.org.il/icons/logo.svg"
+      },
+      {
+        "property": "og:url",
+        "content": "https://www.kolsherut.org.il/"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      },
+      {
+        "property": "og:site_name",
+        "content": "כל-שירות"
+      },
+      {
+        "property": "og:locale",
+        "content": "he_IL"
+      }
+    ],
+    "names": [
+      {
+        "name": "description",
+        "content": "כל-שירות הוא מאגר מידע פתוח על שירותים ציבוריים בישראל."
+      },
+      {
+        "name": "robots",
+        "content": "index, follow"
+      },
+      {
+        "name": "viewport",
+        "content": "width=device-width, initial-scale=1"
+      },
+      {
+        "name": "theme-color",
+        "content": "#ffffff"
+      }
+    ]
+  }
+}
