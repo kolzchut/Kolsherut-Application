@@ -26,7 +26,7 @@ const MapDisplay = () => {
     }
 
     return <div onClick={onClick} className={classes.root}>
-                <img className={classes.icon} src={vals.icon} alt={vals.altIcon} />
+                <img fetchPriority={'high'} className={classes.icon} src={vals.icon} alt={vals.altIcon} />
                 <span className={classes.text}>
                     <img className={classes.innerIcon} src={vals.innerIcon} alt={vals.altIcon}/>
                     {vals.text}
