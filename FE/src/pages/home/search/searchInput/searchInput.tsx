@@ -7,6 +7,7 @@ import closeIcon from "../../../../assets/icon-close-blue-3.svg";
 import SearchOption from "./searchOption/searchOption";
 import {searchInputFocusEvent} from "../../../../services/gtag/homepageEvents.ts";
 
+const inputDescription = "Search for services, organizations, branches, and more"
 
 const SearchInput = () => {
 
@@ -35,16 +36,23 @@ const SearchInput = () => {
     }, [searchInputRef]);
     const [optionalSearchValues, setOptionalSearchValues] = useState<AutocompleteType[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const moveUp =  isSearchInputFocused || searchTerm !== '' || optionalSearchValues.length > 0;
+    const moveUp = isSearchInputFocused || searchTerm !== '' || optionalSearchValues.length > 0;
     const classes = useStyles({moveUp});
-    const inputChangeEvent = async (v: ChangeEvent<HTMLInputElement>,) => {
+    const timeoutId = useRef<number | null>(null);
+
+    const inputChangeEvent = (v: ChangeEvent<HTMLInputElement>) => {
         const value: string = v.target.value;
-        setSearchTerm(value)
-        if (value === '') return setOptionalSearchValues([]);
-        const requestURL = window.config.routes.autocomplete.replace('%%search%%', value);
-        const response = await sendMessage({method: 'get', requestURL});
-        setOptionalSearchValues(response.data);
-    }
+        setSearchTerm(value);
+
+        if (timeoutId.current !== null) clearTimeout(timeoutId.current);
+
+        timeoutId.current = window.setTimeout(async () => {
+            if (value === '') return setOptionalSearchValues([]);
+            const requestURL = window.config.routes.autocomplete.replace('%%search%%', value);
+            const response = await sendMessage({method: 'get', requestURL});
+            setOptionalSearchValues(response.data);
+        }, 1000);
+    };
     const onClose = () => {
         setSearchTerm("");
         setOptionalSearchValues([]);
@@ -64,6 +72,7 @@ const SearchInput = () => {
                 onChange={inputChangeEvent}
                 className={classes.searchInput}
                 placeholder={window.strings.search.label}
+                aria-label={inputDescription}
             />
             {searchTerm &&
                 <button className={classes.closeIconButton} onClick={onClose}>

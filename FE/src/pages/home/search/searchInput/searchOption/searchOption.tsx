@@ -5,7 +5,7 @@ import lightIconSearch from "../../../../../assets/icon-search-gray-4.svg";
 import {settingToResults} from "../../../../../store/shared/sharedSlice";
 import {ILabel} from "../../../../../types/homepageType";
 
-const SearchOption = ({value}: { value: AutocompleteType }) => {
+const SearchOption = ({value, onCloseSearchOptions}: { value: AutocompleteType, onCloseSearchOptions: () => void }) => {
     const classes = useStyles();
     const onClick = () => {
         const customValueAsLabel: ILabel = {
@@ -14,7 +14,8 @@ const SearchOption = ({value}: { value: AutocompleteType }) => {
             situation_id: value.situation || undefined,
             response_id: value.response || undefined,
         }
-        settingToResults({value: customValueAsLabel})
+        settingToResults({value: customValueAsLabel});
+        onCloseSearchOptions();
     };
     return <div onClick={onClick}
                 className={classes.optionalSearchValue}>

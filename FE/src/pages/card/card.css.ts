@@ -4,7 +4,7 @@ export default createUseStyles({
     root: {
         display: 'flex',
         flexDirection: 'row',
-        height: '100vh',
+        height: 'calc(100vh - 80px)',
         width: '100%',
         justifyContent: 'space-between',
         '@media (max-width: 768px)': {
@@ -23,7 +23,7 @@ export default createUseStyles({
     },
     mapContainer: {
         width: '50%',
-        height: '100vh',
+        height: 'calc(100vh - 80px)',
         flex: 3,
         '@media (max-width: 768px)': {
             width: '100%',

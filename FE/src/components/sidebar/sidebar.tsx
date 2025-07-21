@@ -11,13 +11,16 @@ const logo = "/icons/logo.svg"
 const Sidebar = () => {
     const classes = useStyles();
     const showSidebar = useSelector(getShowSidebar)
-    if(!showSidebar) return <></>
+    if (!showSidebar) return <></>
     const {names} = window.strings.staticModals
     const onClose = () => store.dispatch(setShowSidebar(false));
     return <div className={classes.modalBackground} onClick={onClose}>
         <div className={classes.modalContent} onClick={(e) => e.stopPropagation()}>
             <button className={classes.closeIcon} onClick={onClose}><img src={closeIcon} alt={"close icon"}/></button>
-            <img onClick={() => store.dispatch(setPage('home'))} className={classes.logo} src={logo} alt={"kolsherut logo"}/>
+            <img className={classes.logo} src={logo} alt={"kolsherut logo"} onClick={() => {
+                store.dispatch(setPage('home'));
+                onClose();
+            }}/>
             <SidebarButton text={names.about} modalName={"About"}/>
             <SidebarButton text={names.addService} modalName={"AddService"}/>
             <SidebarButton text={names.partners} modalName={"Partners"}/>

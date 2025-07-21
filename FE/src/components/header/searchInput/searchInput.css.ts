@@ -1,30 +1,17 @@
 import {createUseStyles} from 'react-jss';
-import {primaryTextColorTwo, secondaryBackgroundColorOne, primaryBorderColorTwo, tertiaryBackgroundColorTwo} from "../../services/theme";
+import {
+    primaryTextColorTwo,
+    secondaryBackgroundColorOne,
+    primaryBorderColorTwo,
+    tertiaryBackgroundColorTwo,
+    primaryBackgroundColorOne
+} from "../../../services/theme";
 
 export default createUseStyles({
     root: {
-        display: 'flex',
-        backgroundColor: 'white',
-        width: '100%',
-        height: 80,
-        color: primaryTextColorTwo,
-        direction: 'rtl',
-        alignItems: 'center',
-        boxSizing: 'border-box',
-        padding: '10px',
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.14)',
-        position: 'relative',
-        zIndex: 1
-    },
-    logo: {
-        flex: 1,
-        height: 40,
-        '&:hover':{
-            cursor: 'pointer',
-        }
+        flex: 14,
     },
     inputDiv: {
-        flex: 14,
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
@@ -69,25 +56,22 @@ export default createUseStyles({
             }
         })
     },
-    linksDiv: {
-        flex: 6,
-        display: "flex",
-        justifyContent: "space-around",
-    },
-    link: {
-        lineHeight: 4,
-        fontSize: 20,
-        fontWeight: 300,
-        textDecoration: "none",
-        '&:hover': {
-            fontWeight: 400,
-            textDecoration: 'underline',
-            cursor: 'pointer',
+    searchOptionsDiv: ({isMobile}: { isMobile: boolean }) => {
+        const style = {
+            position: 'absolute',
+            width:'66%',
+            top: 80,
+            right: 'unset',
+            boxSizing: 'border-box',
+            padding: '10px',
+            borderBottomLeftRadius: '5px',
+            borderBottomRightRadius: '5px',
+            background: primaryBackgroundColorOne,
         }
-    },
-    searchOptionsDiv:{
-        width: '100%',
-        position: 'absolute',
-        top: 80,
+        if(isMobile) {
+            style.width = '100%';
+            style.right = '0';
+        }
+        return style;
     }
 });

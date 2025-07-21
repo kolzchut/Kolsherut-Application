@@ -7,6 +7,7 @@ import {getCardId} from "../../store/general/general.selector";
 import {ICard} from "../../types/cardType";
 import CardDetails from "./cardDetails/cardDetails";
 import {cardEvent} from "../../services/gtag/cardEvents";
+import Header from "../../components/header/header.tsx";
 
 const Card = () => {
     const classes = useStyle();
@@ -28,12 +29,14 @@ const Card = () => {
             setMapBackToDefault();
         }
     }, [cardId])
-    return (
-        <main className={classes.root}>
-            <section className={classes.mapContainer}>
-                <Map/>
+    return (<main>
+            <Header/>
+            <section className={classes.root}>
+                <div className={classes.mapContainer}>
+                    <Map/>
+                </div>
+                {fullCard && <CardDetails card={fullCard}/>}
             </section>
-            {fullCard && <CardDetails card={fullCard}/>}
         </main>
     );
 }
