@@ -1,11 +1,9 @@
 import {useEffect} from "react";
 import {useSelector} from "react-redux";
-import {
-    getSelectedOrganization
-} from "../../store/data/data.selector";
+import {getSelectedOrganization} from "../../store/data/data.selector";
 import {addResultsPOIs, getResultsFromServer} from "./resultsLogic";
 import useStyles from "./results.css";
-import FiltersForDesktop from "./filters/filtersForDesktop.tsx";
+import FiltersForDesktop from "./filters/filtersForDesktop";
 import {setResults as setResultsInStore, setSelectedOrganization} from "../../store/data/dataSlice";
 import {store} from "../../store/store";
 import Hits from "./hits/hits";
@@ -14,15 +12,15 @@ import BranchList from "./branchList/branchList";
 import Header from "../../components/header/header";
 import {getSearchQuery} from "../../store/general/general.selector";
 import Map from "../../components/map/map";
-import {
-    useDisplayResultsMap,
-} from "./context/contextFunctions";
+import {useDisplayResultsMap} from "./context/contextFunctions";
 import {removeAllPOIs} from "../../services/map/poiInteraction";
 import {getFilteredBranches, getFilteredResponseLength, getFilteredResults} from "../../store/shared/shared.selector";
 import { useMediaQuery } from '@mui/material';
 import {widthOfMobile} from "../../constants/mediaQueryProps";
 import {searchEvent} from "../../services/gtag/resultsEvents";
-import FiltersForMobile from "./filters/filtersForMobile.tsx";
+import FiltersForMobile from "./filters/filtersForMobile";
+import {useOnce} from "../../hooks/useOnce";
+
 
 const Results = () => {
 
@@ -37,6 +35,7 @@ const Results = () => {
     const isMobile = useMediaQuery(widthOfMobile);
     const classes = useStyles({displayResultsMap, isSelectedOrganization: !!selectedOrganization, isMobile});
 
+    const reportOnce = useOnce(()=> window.alert('replace me'));
     const newResults = () => {
         store.dispatch(setSelectedOrganization(null));
         removeAllPOIs();
@@ -62,7 +61,7 @@ const Results = () => {
         <Header/>
         <div className={classes.mainDiv}>
             {isMobile ? <FiltersForMobile/> : <FiltersForDesktop/>}
-            <div className={classes.resultsContainer}>
+            <div className={classes.resultsContainer} onScroll={reportOnce}>
                 <div className={classes.hits}>
                     {filteredResults.map((service: IService) => (
                         <Hits key={service.id} service={service}/>
