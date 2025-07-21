@@ -5,6 +5,7 @@ import linkIcon from '../../../../assets/linkIcon.svg';
 import {settingToResults} from "../../../../store/shared/sharedSlice";
 import {Response} from "../../../../types/cardType.ts";
 import {getColor} from "../../../../services/colorLogic.ts";
+import {clickOnOptionalSearch} from "../../../../services/gtag/homepageEvents.ts";
 
 const Group = ({group}: { group: IGroup }) => {
     const showGroupLink = (group: IGroup) => group.group_link && (group.response_id || group.situation_id);
@@ -18,6 +19,7 @@ const Group = ({group}: { group: IGroup }) => {
             title: group.group,
             query: group.group_link
         }
+        clickOnOptionalSearch(group)
         settingToResults({value: groupAsLabel});
     }
 

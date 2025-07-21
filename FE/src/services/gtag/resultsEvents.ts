@@ -1,6 +1,8 @@
-import {logEvent} from "./analytics";
+import {interactionEvent, logEvent} from "./analytics";
 import {IBranch} from "../../types/serviceType";
 import {isLandingPage} from "./gtagUtilities";
+import ILocation from "../../types/locationType.ts";
+import israelLocation from "../../constants/israelLocation.ts";
 
 interface ISearchEventProps {
     responseCount: number;
@@ -64,4 +66,19 @@ export const viewItemListEvent = ({
         params: eventParams,
     });
 }
+export const geoFilterLocationSelect = (location: ILocation) => {
+    let where = 'select-place';
+    if (location.key == window.config.defaultLocations[0].key)
+        where = 'geo_my_location';
+    if (location.key == israelLocation.key)
+        where = 'geo_nation_wide';
+    interactionEvent('geo-widget', where, location.key);
+}
+export const moreFiltersModalEvent = () =>{
+    interactionEvent('open-filters', window.location.href);
+}
+export const gotoCardFromBranchList = (cardId:string) =>{
+    interactionEvent(cardId, 'branch-services');
+}
+
 

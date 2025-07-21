@@ -6,7 +6,7 @@ import addressIcon from "../../assets/icon-nav-blue.svg";
 
 import useStyle from "./connection.css";
 import {ICard} from "../../types/cardType";
-import {executeAddToCartAndCardAction} from "../../services/gtag/cardEvents";
+import {copyToClipboard} from "../../services/gtag/cardEvents";
 
 type ConnectionType = 'tel' | 'mailto' | 'address' | 'website';
 type ActionType = 'phone' | 'email' | 'url' | 'nav';
@@ -22,7 +22,7 @@ interface IProps {
 const Connection = ({text, type, link, card, actionType}: IProps) => {
     const gtag = () => {
         if (!card || !actionType) return;
-        executeAddToCartAndCardAction({action_url: window.location.href, action:actionType, card})
+        copyToClipboard({action_url: window.location.href, action:actionType, card})
     }
     const handleCopy = async () => {
         await navigator.clipboard.writeText(text);

@@ -5,6 +5,7 @@ import sendMessage from "../../../../services/sendMessage/sendMessage";
 import useStyles from "./searchInput.css";
 import closeIcon from "../../../../assets/icon-close-blue-3.svg";
 import SearchOption from "./searchOption/searchOption";
+import {searchInputFocusEvent} from "../../../../services/gtag/homepageEvents.ts";
 
 
 const SearchInput = () => {
@@ -13,7 +14,10 @@ const SearchInput = () => {
     const [isSearchInputFocused, setIsSearchInputFocused] = useState(false);
 
     useEffect(() => {
-        const handleFocus = () => setIsSearchInputFocused(true);
+        const handleFocus = () => {
+            setIsSearchInputFocused(true);
+            searchInputFocusEvent();
+        }
         const handleBlur = () => setIsSearchInputFocused(false);
 
         const inputElement = searchInputRef.current;

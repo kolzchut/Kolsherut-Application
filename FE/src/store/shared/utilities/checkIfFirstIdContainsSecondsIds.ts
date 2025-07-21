@@ -4,7 +4,6 @@ export const checkIfFirstIdContainsSecondsIds = ({firstIds, secondIds}: { firstI
     if (!firstIds || !secondIds) return false;
     const firstIdsArray = firstIds.split(':').slice(1,).map(id => id.trim());
     const secondIdsArray = secondIds.split(':').slice(1).map(id => id.trim());
-    console.log("firstIdsArray", firstIdsArray, "secondIdsArray", secondIdsArray, "firstIds", firstIds, "secondIds", secondIds);
     return checkIfAnyFirstArrayValueExistsInSecondArrayValues({
         options: firstIdsArray,
         data: secondIdsArray

@@ -14,6 +14,7 @@ import locationIcon from "../../../../../../assets/location.svg"
 import wideLocationIcon from "../../../../../../assets/wideLocation.svg"
 import {setModal} from "../../../../../../store/general/generalSlice";
 import {getOptionalLocations} from "../../../../../../store/shared/locationFilters.selector";
+import {geoFilterLocationSelect} from "../../../../../../services/gtag/resultsEvents.ts";
 
 const GeoFilterModal = () => {
     const classes = useStyles();
@@ -25,7 +26,7 @@ const GeoFilterModal = () => {
     const placeholder = window.strings.results.geoFilterModalPlaceHolder;
     const focusRef = useRef<HTMLInputElement>(null);
     useEffect(() => {
-        if(!focusRef.current) return;
+        if (!focusRef.current) return;
         focusRef.current.focus()
     }, []);
     useEffect(() => {
@@ -42,14 +43,16 @@ const GeoFilterModal = () => {
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         store.dispatch(setSearchLocation(e.target.value));
     }
-    const onClick = (location: ILocation, zoom=12) => {
+    const onClick = (location: ILocation, zoom = 12) => {
         store.dispatch(setLocationFilter(location))
         centerByLocation(location.bounds, zoom);
+        geoFilterLocationSelect(location);
         close();
     }
     return <div className={classes.root}>
         <div className={classes.searchDiv}>
-            <input type={"text"} placeholder={placeholder} ref={focusRef} className={classes.input} value={searchLocations} onChange={onChange}/>
+            <input type={"text"} placeholder={placeholder} ref={focusRef} className={classes.input}
+                   value={searchLocations} onChange={onChange}/>
             <div className={classes.currentLocationDiv}>
                 <span>{location.key}</span>
                 <span className={classes.count}>{resultsLength}</span>
@@ -57,7 +60,7 @@ const GeoFilterModal = () => {
             <button className={classes.closeIcon} onClick={close}><img src={closeIcon} alt={"close icon"}/></button>
         </div>
         <div>
-            <div className={classes.locationDiv} onClick={()=>onClick(israelLocation, window.config.map.zoom || 7.5)}>
+            <div className={classes.locationDiv} onClick={() => onClick(israelLocation, window.config.map.zoom || 7.5)}>
                 <img src={wideLocationIcon} alt={"wide location icon"}/>
                 <span>{israelLocation.key}</span>
             </div>

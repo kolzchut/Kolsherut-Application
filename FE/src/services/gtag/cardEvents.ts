@@ -73,7 +73,7 @@ const cardActionEvent = (card: ICard, action: string, action_url: string) => {
     });
 };
 
-export const executeAddToCartAndCardAction = ({card, action, action_url}:{ card: ICard, action: 'email' | 'phone' | 'url' | 'nav', action_url: string }
+export const copyToClipboard = ({card, action, action_url}:{ card: ICard, action: 'email' | 'phone' | 'url' | 'nav', action_url: string }
 ) => {
     addToCartEvent(card, action, action_url);
     cardActionEvent(card, action, action_url);
