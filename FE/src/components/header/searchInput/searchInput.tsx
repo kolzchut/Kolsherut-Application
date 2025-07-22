@@ -9,6 +9,7 @@ import {useMediaQuery} from "@mui/material";
 import {widthOfMobile} from "../../../constants/mediaQueryProps";
 import {onFocusOnSearchInput} from "../../../services/gtag/resultsEvents";
 import {useDebounce} from "../../../hooks/useDebounce";
+import useOnClickedOutside from "../../../hooks/useOnClickedOutside";
 
 const inputDescription = "Search for services, organizations, branches, and more"
 
@@ -19,6 +20,7 @@ const SearchInput = () => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [optionalSearchValues, setOptionalSearchValues] = useState<AutocompleteType[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
+    const {ref} = useOnClickedOutside(()=>setOptionalSearchValues([]));
     const debouncedGetAutoComplete = useDebounce(async (value) => {
         if (value === '') return setOptionalSearchValues([]);
         const requestURL = window.config.routes.autocomplete.replace('%%search%%', value);
@@ -34,13 +36,9 @@ const SearchInput = () => {
         setIsInputFocused(true);
         onFocusOnSearchInput();
     }
-    const onInputBlur = () => {
-        setIsInputFocused(false);
-        setOptionalSearchValues([]);
-    }
-    const onCloseSearchOptions = () => setOptionalSearchValues([])
+    const onCloseSearchOptions = () => setOptionalSearchValues([]);
 
-    return <div className={classes.root}>
+    return <div className={classes.root} ref={ref}>
         <div className={classes.inputDiv}>
             <img className={classes.searchIcon} alt={"search icon"}
                  src={isInputFocused ? activeSearchIcon : inactiveSearchIcon}/>
@@ -51,7 +49,6 @@ const SearchInput = () => {
                 type={"text"}
                 value={searchTerm}
                 onFocus={onInputFocus}
-                onBlur={onInputBlur}
                 onChange={inputChangeEvent}
                 aria-label={inputDescription}
             />
