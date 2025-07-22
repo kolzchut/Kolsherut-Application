@@ -4,7 +4,7 @@ import {store} from "../../store/store";
 import {useMediaQuery} from "@mui/material";
 import {widthOfMobile} from "../../constants/mediaQueryProps";
 import hamburger from "../../assets/icon-hamburger.svg";
-import SearchInput from "./searchInput/searchInput.tsx";
+import SearchInput from "./searchInput/searchInput";
 
 const logo = "/icons/logo.svg"
 

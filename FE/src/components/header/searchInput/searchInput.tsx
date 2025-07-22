@@ -1,14 +1,14 @@
 import inactiveSearchIcon from "../../../assets/icon-search-blue-1.svg";
 import activeSearchIcon from "../../../assets/icon-search-blue-0.svg";
 import {ChangeEvent, useRef, useState} from "react";
-import AutocompleteType from "../../../types/autocompleteType.ts";
-import sendMessage from "../../../services/sendMessage/sendMessage.ts";
-import SearchOption from "../../../pages/home/search/searchInput/searchOption/searchOption.tsx";
+import AutocompleteType from "../../../types/autocompleteType";
+import sendMessage from "../../../services/sendMessage/sendMessage";
+import SearchOption from "../../../pages/home/search/searchInput/searchOption/searchOption";
 import useStyles from "./searchInput.css"
 import {useMediaQuery} from "@mui/material";
-import {widthOfMobile} from "../../../constants/mediaQueryProps.ts";
-import {onFocusOnSearchInput} from "../../../services/gtag/resultsEvents.ts";
-import {useDebounce} from "../../../hooks/useDebounce.ts";
+import {widthOfMobile} from "../../../constants/mediaQueryProps";
+import {onFocusOnSearchInput} from "../../../services/gtag/resultsEvents";
+import {useDebounce} from "../../../hooks/useDebounce";
 
 const inputDescription = "Search for services, organizations, branches, and more"
 

@@ -70,7 +70,8 @@ export default createUseStyles({
         })
     },
     linksDiv: {
-        flex: 6,
+        flex: 14,
+        maxWidth: 500,
         display: "flex",
         justifyContent: "space-around",
     },
