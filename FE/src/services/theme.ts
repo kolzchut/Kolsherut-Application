@@ -10,12 +10,12 @@ const quaternaryBackgroundColorOne = '#0012F0';
 // Text Colors
 const primaryTextColorOne = '#0012F0';
 const primaryTextColorTwo = '#1F37F6';
-const primaryTextColorThree = '#4169E1';
+const primaryTextColorThree = '#4764FA';
 const secondaryTextColorOne = '#221C23';
 const secondaryTextColorTwo = '#333231';
 const tertiaryTextColorOne = '#555452';
 const tertiaryTextColorTwo = '#3A343B';
-const tertiaryTextColorThree = '#767573';
+const tertiaryTextColorThree = '#333231';
 
 // Borders
 const primaryBorderColorOne = '#878787';
