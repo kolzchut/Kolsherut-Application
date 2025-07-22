@@ -81,4 +81,8 @@ export const gotoCardFromBranchList = (cardId:string) =>{
     interactionEvent(cardId, 'branch-services');
 }
 
+export const scrollOnceEvent = () =>{
+    interactionEvent('scroll-in-results', window.location.href);
+}
+
 

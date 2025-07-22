@@ -4,6 +4,7 @@ import nationalIcon from "../../../../assets/icon-headset.svg";
 import linkIcon from "../../../../assets/icon-arrow-top-right-gray-4.svg";
 import {getHrefForCard} from "../../../../services/href.ts";
 import {reRouteToCard} from "../../../../services/routes/reRoute.ts";
+import {gotoCardFromBranchList} from "../../../../services/gtag/resultsEvents.ts";
 
 const Branch = ({branch}: { branch: IBranch }) => {
     const classes = useStyles();
@@ -12,6 +13,7 @@ const Branch = ({branch}: { branch: IBranch }) => {
     const showNational = branch.isNational && !branch.address
     const href = getHrefForCard(branch.id)
     const onClick = () => {
+        gotoCardFromBranchList(branch.id)
         reRouteToCard({cardId: branch.id})
         return false;
     }

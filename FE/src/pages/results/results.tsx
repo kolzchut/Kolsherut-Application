@@ -19,7 +19,7 @@ import {removeAllPOIs} from "../../services/map/poiInteraction";
 import {getFilteredBranches, getFilteredResponseLength, getFilteredResults} from "../../store/shared/shared.selector";
 import {useMediaQuery} from '@mui/material';
 import {widthOfMobile} from "../../constants/mediaQueryProps";
-import {searchEvent} from "../../services/gtag/resultsEvents";
+import {scrollOnceEvent, searchEvent} from "../../services/gtag/resultsEvents";
 import FiltersForMobile from "./filters/filtersForMobile.tsx";
 import {getLocationFilter} from "../../store/filter/filter.selector.ts";
 import MetaTags from "../../services/metaTags.tsx";
@@ -42,7 +42,7 @@ const Results = () => {
     const classes = useStyles({displayResultsMap, isSelectedOrganization: !!selectedOrganization, isMobile});
     const metaTagsData = getResultsMetaTags({searchQuery, location})
 
-    const reportOnce = useOnce(()=> window.alert('replace me'));
+    const reportOnce = useOnce(()=> scrollOnceEvent());
     const newResults = () => {
         store.dispatch(setSelectedOrganization(null));
         removeAllPOIs();

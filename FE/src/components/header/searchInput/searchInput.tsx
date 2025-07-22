@@ -7,6 +7,7 @@ import SearchOption from "../../../pages/home/search/searchInput/searchOption/se
 import useStyles from "./searchInput.css"
 import {useMediaQuery} from "@mui/material";
 import {widthOfMobile} from "../../../constants/mediaQueryProps.ts";
+import {useDebounce} from "../../../hooks/useDebounce.ts";
 
 const inputDescription = "Search for services, organizations, branches, and more"
 
@@ -17,19 +18,16 @@ const SearchInput = () => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [optionalSearchValues, setOptionalSearchValues] = useState<AutocompleteType[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const timeoutId = useRef<number | null>(null);
+    const debouncedGetAutoComplete = useDebounce(async (value) => {
+        if (value === '') return setOptionalSearchValues([]);
+        const requestURL = window.config.routes.autocomplete.replace('%%search%%', value);
+        const response = await sendMessage({method: 'get', requestURL});
+        setOptionalSearchValues(response.data);
+    }, 1000);
     const inputChangeEvent = (v: ChangeEvent<HTMLInputElement>) => {
         const value: string = v.target.value;
         setSearchTerm(value);
-
-        if (timeoutId.current !== null) clearTimeout(timeoutId.current);
-
-        timeoutId.current = window.setTimeout(async () => {
-            if (value === '') return setOptionalSearchValues([]);
-            const requestURL = window.config.routes.autocomplete.replace('%%search%%', value);
-            const response = await sendMessage({method: 'get', requestURL});
-            setOptionalSearchValues(response.data);
-        }, 1000);
+        debouncedGetAutoComplete(value);
     };
 
     const onCloseSearchOptions = () => setOptionalSearchValues([])

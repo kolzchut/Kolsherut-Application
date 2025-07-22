@@ -6,6 +6,7 @@ import useStyles from "./searchInput.css";
 import closeIcon from "../../../../assets/icon-close-blue-3.svg";
 import SearchOption from "./searchOption/searchOption";
 import {searchInputFocusEvent} from "../../../../services/gtag/homepageEvents.ts";
+import {useDebounce} from "../../../../hooks/useDebounce.ts";
 
 const inputDescription = "Search for services, organizations, branches, and more"
 
@@ -38,20 +39,16 @@ const SearchInput = () => {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const moveUp = isSearchInputFocused || searchTerm !== '' || optionalSearchValues.length > 0;
     const classes = useStyles({moveUp});
-    const timeoutId = useRef<number | null>(null);
-
+    const debouncedGetAutoComplete = useDebounce(async (value) => {
+        if (value === '') return setOptionalSearchValues([]);
+        const requestURL = window.config.routes.autocomplete.replace('%%search%%', value);
+        const response = await sendMessage({method: 'get', requestURL});
+        setOptionalSearchValues(response.data);
+    }, 1000);
     const inputChangeEvent = (v: ChangeEvent<HTMLInputElement>) => {
         const value: string = v.target.value;
         setSearchTerm(value);
-
-        if (timeoutId.current !== null) clearTimeout(timeoutId.current);
-
-        timeoutId.current = window.setTimeout(async () => {
-            if (value === '') return setOptionalSearchValues([]);
-            const requestURL = window.config.routes.autocomplete.replace('%%search%%', value);
-            const response = await sendMessage({method: 'get', requestURL});
-            setOptionalSearchValues(response.data);
-        }, 1000);
+        debouncedGetAutoComplete(value);
     };
     const onClose = () => {
         setSearchTerm("");
@@ -80,7 +77,7 @@ const SearchInput = () => {
                 </button>}
             <div className={classes.optionalSearchValuesWrapper}>
                 {optionalSearchValues.map((value: AutocompleteType, index: number) => (
-                    <SearchOption value={value} key={index}/>
+                    <SearchOption value={value} onCloseSearchOptions={onClose} key={index}/>
                 ))}
             </div>
         </div>
