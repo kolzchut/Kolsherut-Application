@@ -6,7 +6,7 @@ import useStyles from "./mapDisplay.css";
 import {useDisplayResultsMap, useSetDisplayResultsMap} from "../../../context/contextFunctions";
 import {useMediaQuery} from "@mui/material";
 import {widthOfMobile} from "../../../../../constants/mediaQueryProps";
-import {mapState} from "../../../../../services/gtag/mapEvents";
+import {mapStateEvent} from "../../../../../services/gtag/mapEvents";
 
 const MapDisplay = () => {
     const displayResultsMap = useDisplayResultsMap()
@@ -22,7 +22,7 @@ const MapDisplay = () => {
 
     const onClick = () => {
         setDisplayResultsMap(!displayResultsMap)
-        mapState({isOpen: !displayResultsMap});
+        mapStateEvent({isOpen: !displayResultsMap});
     }
 
     return <div onClick={onClick} className={classes.root}>

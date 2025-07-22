@@ -81,6 +81,14 @@ export const gotoCardFromBranchList = (cardId:string) =>{
     interactionEvent(cardId, 'branch-services');
 }
 
+export const onFocusOnSearchInput = () => {
+    interactionEvent('regular-searchbar', window.location.href);
+}
+
+export const enterServiceFromSearchAutocomplete = (cardId: string) => {
+    interactionEvent(cardId, 'search-autocomplete-direct');
+};
+
 export const scrollOnceEvent = () =>{
     interactionEvent('scroll-in-results', window.location.href);
 }

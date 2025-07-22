@@ -7,6 +7,7 @@ import SearchOption from "../../../pages/home/search/searchInput/searchOption/se
 import useStyles from "./searchInput.css"
 import {useMediaQuery} from "@mui/material";
 import {widthOfMobile} from "../../../constants/mediaQueryProps.ts";
+import {onFocusOnSearchInput} from "../../../services/gtag/resultsEvents.ts";
 import {useDebounce} from "../../../hooks/useDebounce.ts";
 
 const inputDescription = "Search for services, organizations, branches, and more"
@@ -29,7 +30,14 @@ const SearchInput = () => {
         setSearchTerm(value);
         debouncedGetAutoComplete(value);
     };
-
+    const onInputFocus = () => {
+        setIsInputFocused(true);
+        onFocusOnSearchInput();
+    }
+    const onInputBlur = () => {
+        setIsInputFocused(false);
+        setOptionalSearchValues([]);
+    }
     const onCloseSearchOptions = () => setOptionalSearchValues([])
 
     return <div className={classes.root}>
@@ -42,8 +50,8 @@ const SearchInput = () => {
                 className={classes.input}
                 type={"text"}
                 value={searchTerm}
-                onFocus={() => setIsInputFocused(true)}
-                onBlur={() => setIsInputFocused(false)}
+                onFocus={onInputFocus}
+                onBlur={onInputBlur}
                 onChange={inputChangeEvent}
                 aria-label={inputDescription}
             />
