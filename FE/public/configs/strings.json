@@ -9,7 +9,8 @@
     "label": " כל שירות, כל קהל וכל מיקום..."
   },
   "map": {
-    "serviceGivenNationWide": "השירות ניתן בכל הארץ"
+    "serviceGivenNationWide": "השירות ניתן בכל הארץ",
+    "locationByBoundingBox": "איזור המפה"
   },
   "cardDetails": {
     "serviceGivenNationWide": "השירות ניתן בכל הארץ",
