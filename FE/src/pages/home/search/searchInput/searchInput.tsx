@@ -7,6 +7,7 @@ import closeIcon from "../../../../assets/icon-close-blue-3.svg";
 import SearchOption from "./searchOption/searchOption";
 import {searchInputFocusEvent} from "../../../../services/gtag/homepageEvents.ts";
 import {useDebounce} from "../../../../hooks/useDebounce.ts";
+import useOnClickedOutside from "../../../../hooks/useOnClickedOutside.ts";
 
 const inputDescription = "Search for services, organizations, branches, and more"
 
@@ -14,6 +15,7 @@ const SearchInput = () => {
 
     const searchInputRef = useRef<HTMLInputElement>(null);
     const [isSearchInputFocused, setIsSearchInputFocused] = useState(false);
+    const {ref} = useOnClickedOutside(() => setOptionalSearchValues([]));
 
     useEffect(() => {
         const handleFocus = () => {
@@ -54,14 +56,14 @@ const SearchInput = () => {
         setSearchTerm("");
         setOptionalSearchValues([]);
     }
-    return <div className={classes.root}>
+    return <div className={classes.root} >
         <div className={classes.mainTextDiv}>
             <span className={classes.mainText}>{window.strings.home.mainTextPartOne}
                 <span
                     className={`${classes.mainText} ${classes.mainTextBold}`}>{window.strings.home.mainTextMiddleBold}</span>
                 {window.strings.home.mainTextPartTwo}</span>
         </div>
-        <div className={classes.searchContainer}>
+        <div className={classes.searchContainer} ref={ref}>
             <img className={classes.searchButton} alt={"חיפוש"} src={lightIconSearch}/>
             <input
                 ref={searchInputRef}

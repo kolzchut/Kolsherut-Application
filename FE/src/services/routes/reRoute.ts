@@ -12,12 +12,7 @@ export const reRouteToCard = ({cardId}: { cardId: string }) => {
     store.dispatch(setCardIdAndCardPage(cardId));
 }
 
-export const reRouteToResults = ({
-                                     searchQuery,
-                                     locationFilter = israelLocation,
-                                     situationFilter = [],
-                                     responseFilter = []
-                                 }: {
+export const reRouteToResults = ({searchQuery, locationFilter = israelLocation, situationFilter = [], responseFilter = []}: {
     searchQuery?: string,
     locationFilter?: ILocation,
     situationFilter?: string[],
