@@ -11,7 +11,6 @@ const MetaTags = ({metaTags, macrosAndReplacements}: {metaTags:any, macrosAndRep
         content: replaceMacros({stringWithMacros: name.content, macrosAndReplacements})
     }))
     const title = replaceMacros({stringWithMacros: metaTags.title, macrosAndReplacements})
-    console.log('MetaTags', {title, fixedNames, fixedProperties});
     return (
         <>
             <title>{title}</title>

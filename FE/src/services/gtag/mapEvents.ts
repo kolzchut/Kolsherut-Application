@@ -29,7 +29,6 @@ export const mapElementClickEvent = (layerId: string) => {
 };
 
 export const mapDragEvent = (zoomLevel: number) => {
-    console.log('mapDragEvent', zoomLevel);
     interactionEvent('map-drag', 'map', Math.round(zoomLevel).toString());
 };
 
