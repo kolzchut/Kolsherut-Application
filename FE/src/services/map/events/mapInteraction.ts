@@ -14,10 +14,11 @@ import {transformExtent} from 'ol/proj';
 
 const globals = {
     draggedBefore: false,
-    lastSetNewLocationTimeOutId: 0
+    lastSetNewLocationTimeOutId: 0,
+    allowChangeStoreLocation: false,
 }
 
-const debounce = ({cb,delay}:{cb:()=>void,delay:number}) => {
+const debounce = ({cb, delay}: { cb: () => void, delay: number }) => {
     clearTimeout(globals.lastSetNewLocationTimeOutId);
     globals.lastSetNewLocationTimeOutId = setTimeout(cb, delay);
 }
@@ -28,6 +29,7 @@ const startDragEventIfNotHappenedBefore = (map: MapSingleton) => {
     mapDragEvent(map.view.getZoom() || -1)
 }
 const handleNewBounds = (map: MapSingleton) => {
+    if(!globals.allowChangeStoreLocation) return;
     debounce({
         cb: () => {
             setNewLocationToStoreByBoundingBox(map);
@@ -95,3 +97,6 @@ export const viewInteractions: Array<{
         }
     }
 ];
+
+export const allowChangeStoreLocation = (allow: boolean) => globals.allowChangeStoreLocation = allow;
+

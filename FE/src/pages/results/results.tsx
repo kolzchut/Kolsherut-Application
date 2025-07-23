@@ -25,6 +25,7 @@ import {getLocationFilter} from "../../store/filter/filter.selector.ts";
 import MetaTags from "../../services/metaTags.tsx";
 import getResultsMetaTags from "./getResultsMetaTags.ts";
 import {useOnce} from "../../hooks/useOnce";
+import {allowChangeStoreLocation} from "../../services/map/events/mapInteraction.ts";
 
 
 const Results = () => {
@@ -42,7 +43,7 @@ const Results = () => {
     const classes = useStyles({displayResultsMap, isSelectedOrganization: !!selectedOrganization, isMobile});
     const metaTagsData = getResultsMetaTags({searchQuery, location})
 
-    const reportOnce = useOnce(()=> scrollOnceEvent());
+    const reportOnce = useOnce(() => scrollOnceEvent());
     const newResults = () => {
         store.dispatch(setSelectedOrganization(null));
         removeAllPOIs();
@@ -52,6 +53,9 @@ const Results = () => {
         newResults();
     }, [filteredResults, searchQuery]);
     useEffect(() => {
+        searchEvent({searchQuery, responseCount, filtersCount});
+    }, [searchQuery]);
+    useEffect(() => {
         const fetchResults = async () => {
             if (filteredResults.length === 0) {
                 //TODO: replace
@@ -60,10 +64,13 @@ const Results = () => {
             }
         };
         fetchResults();
+        allowChangeStoreLocation(true)
+        return () => {
+            allowChangeStoreLocation(false);
+            removeAllPOIs();
+            store.dispatch(setSelectedOrganization(null));
+        }
     }, []);
-    useEffect(() => {
-        searchEvent({searchQuery, responseCount, filtersCount});
-    }, [searchQuery]);
     return <>
         <MetaTags {...metaTagsData}/>
         <div>
