@@ -15,6 +15,7 @@ export default createUseStyles({
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
+        direction:'rtl'
     },
     searchIcon: {
         position: 'absolute',
@@ -41,7 +42,7 @@ export default createUseStyles({
             width: '100%',
             fontSize: '22px',
             boxSizing: 'border-box',
-            padding: '10px',
+            padding: '10px 5px 10px 40px',
             borderRadius: '5px',
             background: firstBackground,
             border: `2px solid ${firstBorderColor}`,

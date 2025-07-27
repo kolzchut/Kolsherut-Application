@@ -30,6 +30,9 @@ export const generalSlice = createSlice({
         setSearchQueryAndResultsPage(state: GeneralStore, action) {
             state.searchQuery = action.payload;
             state.page = 'results';
+        },
+        setAccessibility(state: GeneralStore, action) {
+            state.accessibilityActive = action.payload;
         }
     },
 });
@@ -40,7 +43,8 @@ export const {
     setCardIdAndCardPage,
     setModal,
     settingURLParamsToResults,
-    setShowSidebar
+    setShowSidebar,
+    setAccessibility,
 } = generalSlice.actions;
 
 export default generalSlice.reducer;

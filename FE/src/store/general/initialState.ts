@@ -4,5 +4,6 @@ export const initialState = {
     cardId: "",
     searchQuery:"",
     showSidebar: false,
+    accessibilityActive: false
 };
 export type GeneralStore = typeof initialState;

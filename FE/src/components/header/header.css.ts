@@ -1,14 +1,35 @@
 import {createUseStyles} from 'react-jss';
-import {primaryTextColorTwo, secondaryBackgroundColorOne, primaryBorderColorTwo, tertiaryBackgroundColorTwo} from "../../services/theme";
+import {
+    primaryTextColorTwo,
+    secondaryBackgroundColorOne,
+    primaryBorderColorTwo,
+    tertiaryBackgroundColorTwo
+} from "../../services/theme";
+
+const buttonStyles = {
+    height: 50,
+    margin: 15,
+    padding: 5,
+    cursor: "pointer",
+    borderRadius: 30,
+    border : 'none',
+    boxShadow: 'inset 2px 2px 5px rgba(0, 0, 0, 0.3)',
+}
+const linkStyles = {
+    lineHeight: 4,
+    fontSize: 20,
+    textDecoration: "none",
+}
 
 export default createUseStyles({
     root: {
         display: 'flex',
         backgroundColor: 'white',
         width: '100%',
+        gap: 10,
         height: 80,
         color: primaryTextColorTwo,
-        direction: 'rtl',
+        direction: 'ltr',
         alignItems: 'center',
         boxSizing: 'border-box',
         padding: '10px',
@@ -19,12 +40,11 @@ export default createUseStyles({
     logo: {
         flex: 1,
         height: 40,
-        '&:hover':{
+        '&:hover': {
             cursor: 'pointer',
         }
     },
     inputDiv: {
-        flex: 14,
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
@@ -69,26 +89,56 @@ export default createUseStyles({
             }
         })
     },
+    linksAndAcc: {
+        display: 'flex',
+        justifyContent: 'space-between'
+    },
     linksDiv: {
-        flex: 14,
-        maxWidth: 500,
         display: "flex",
         justifyContent: "space-around",
+        gap: 12,
+    },
+    linksAndButtonsDiv: {
+        display: 'flex',
+        justifyContent: 'space-between'
     },
     link: {
-        lineHeight: 4,
-        fontSize: 20,
+        ...linkStyles,
         fontWeight: 300,
-        textDecoration: "none",
         '&:hover': {
+            lineHeight: 4,
             fontWeight: 400,
             textDecoration: 'underline',
             cursor: 'pointer',
         }
     },
-    searchOptionsDiv:{
+    accessibilityLink: {
+        ...linkStyles,
+        fontWeight: 700,
+
+        '&:hover': {
+            lineHeight: 3.5,
+            fontWeight: 700,
+            textDecoration: 'underline',
+            cursor: 'pointer',
+        }
+    },
+    searchOptionsDiv: {
         width: '100%',
         position: 'absolute',
         top: 80,
+    },
+    button: {
+        ...buttonStyles,
+        background: "transparent",
+        boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)',
+    },
+    accessibilityButton: {
+        ...buttonStyles,
+        background: '#208Ff3',
+        boxShadow: 'inset 2px 2px 5px rgba(0, 0, 0, 0.6)',
+    },
+    accIcon: {
+        height: '100%'
     }
 });

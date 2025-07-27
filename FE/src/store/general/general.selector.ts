@@ -44,3 +44,6 @@ export const getUrlParams = createSelector([getPage, getCardId, getSearchQuery],
 export const getShowSidebar = createSelector([generalStore], (generalStore: GeneralStore) => {
     return generalStore.showSidebar;
 });
+export const isAccessibilityActive = createSelector([generalStore], (generalStore: GeneralStore) => {
+    return generalStore.accessibilityActive;
+})
