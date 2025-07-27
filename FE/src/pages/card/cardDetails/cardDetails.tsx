@@ -51,7 +51,8 @@ const CardDetails = ({card}: { card: ICard }) => {
     const phoneNumbers: string[] = [card.branch_phone_numbers, card.organization_phone_numbers, card.service_phone_numbers].find(arr => arr.length > 0) || [];
     const address = {text: card.branch_address, geom: card.branch_geometry};
     return <section ref={scrollRef} className={classes.root}>
-        <Header organizationName={card.organization_name} isNational={card.national_service} branchLocationAccurate={card.branch_location_accurate}
+        <Header organizationName={card.organization_name} isNational={card.national_service}
+                branchLocationAccurate={card.branch_location_accurate}
                 branchAddress={card.branch_address}/>
         <div className={classes.content}>
             <h1 className={classes.serviceNameText}>{card.service_name}</h1>
@@ -64,19 +65,20 @@ const CardDetails = ({card}: { card: ICard }) => {
             <ServiceEligibility serviceDetails={card.service_details}
                                 servicePaymentDetails={card.service_payment_details}
                                 branchDescription={card.branch_description}/>
-            <ProvidedBy  organizationNameParts={card.organization_name_parts}
-                         organizationName={card.organization_name}
-                         organizationUrls={card.organization_urls}
+            <ProvidedBy organizationNameParts={card.organization_name_parts}
+                        organizationName={card.organization_name}
+                        organizationUrls={card.organization_urls}
                         organizationEmailAddress={card.organization_email_address}
                         organizationPhoneNumbers={card.organization_phone_numbers}/>
             <DataSource dataSource={card.data_sources}/>
-            <JotForm cardId={card.card_id} serviceName={card.service_name ||""}/>
+            <JotForm cardId={card.card_id} serviceName={card.service_name || ""}/>
 
         </div>
-            <MoreServicesInBranch moreServicesInBranch={card.moreServicesInBranch}/>
+        {card.servicesInSameBranch.length > 0 &&
+            <MoreServicesInBranch moreServicesInBranch={card.servicesInSameBranch}/>}
         <Footer hideLinks={true}/>
-        <div  className={`${classes.quickActionContainer} ${isScrollUp ? classes.hidden : ""}`}>
-        <QuickAction email={email} phoneNumber={phoneNumbers[0]} websiteURL={websites[0]?.href}/>
+        <div className={`${classes.quickActionContainer} ${isScrollUp ? classes.hidden : ""}`}>
+            <QuickAction email={email} phoneNumber={phoneNumbers[0]} websiteURL={websites[0]?.href}/>
         </div>
     </section>
 

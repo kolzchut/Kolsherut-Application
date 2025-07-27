@@ -1,4 +1,4 @@
-import {ICard} from "../../types/cardType";
+import {ICardForBanner} from "../../types/cardType";
 import React, {useEffect, useRef, useState} from "react";
 import Label from "../label/label";
 import useStyle from "./cardBanner.css";
@@ -7,7 +7,7 @@ import {extendDescriptionEvent, shrinkDescriptionEvent} from "../../services/gta
 
 const emergencyIcon = "/icons/emergency-icon.svg"
 
-const CardBanner = ({card}: { card: ICard }) => {
+const CardBanner = ({card}: { card: ICardForBanner }) => {
     const [extendText, setExtendText] = useState<boolean>(false);
     const classes = useStyle();
     const isEmergency = checkIfEmergency(card.responses);
@@ -38,21 +38,21 @@ const CardBanner = ({card}: { card: ICard }) => {
     const displayLinks = !isOverflowing || (extendText && (responsesAmount > 0 || situationsAmount > 0));
 
     return (
-            <div className={classes.cardBanner}>
-                {isEmergency && <img src={emergencyIcon} alt={"Emergency Icon"} className={classes.emergencyIcon}/>}
-                <h2 className={classes.bannerTitle}>
-                    {card.service_name}
-                </h2>
-                <div className={classes.bannerDescriptionDiv}>
-                    <span ref={el} className={buttonClass}>{card.service_description}</span>
-                    {isOverflowing && <button onClick={handleExtendOrMinimizeClick}
-                             className={classes.bannerDescriptionButton}>{buttonText}</button>}
-                </div>
-                {displayLinks && <div className={classes.linksDiv}>
-                    {responsesAmount !== 0 && (<Label response={card.responses[0]} extra={responsesAmount - 1}/>)}
-                    {situationsAmount !== 0 && (<Label situation={card.situations[0]} extra={situationsAmount - 1}/>)}
-                </div>}
+        <div className={classes.cardBanner}>
+            {isEmergency && <img src={emergencyIcon} alt={"Emergency Icon"} className={classes.emergencyIcon}/>}
+            <h2 className={classes.bannerTitle}>
+                {card.service_name}
+            </h2>
+            <div className={classes.bannerDescriptionDiv}>
+                <span ref={el} className={buttonClass}>{card.service_description}</span>
+                {isOverflowing && <button onClick={handleExtendOrMinimizeClick}
+                                          className={classes.bannerDescriptionButton}>{buttonText}</button>}
             </div>
+            {displayLinks && <div className={classes.linksDiv}>
+                {responsesAmount !== 0 && (<Label response={card.responses[0]} extra={responsesAmount - 1}/>)}
+                {situationsAmount !== 0 && (<Label situation={card.situations[0]} extra={situationsAmount - 1}/>)}
+            </div>}
+        </div>
     );
 };
 

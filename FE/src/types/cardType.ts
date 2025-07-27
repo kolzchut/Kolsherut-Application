@@ -31,13 +31,19 @@ export interface BranchUrl {
     title: string;
 }
 
+export interface ICardForBanner {
+    card_id:string,
+    service_name: string,
+    service_description: string,
+    responses: Response[],
+    situations: Situation[],
+}
+
 export interface ICard {
     // Unique identifiers
     card_id: string;
     point_id: string;
-
-    // Not exist in DB
-    moreServicesInBranch: ICard[]
+    servicesInSameBranch: ICardForBanner[]
 
     // Location
     address_parts: AddressParts | null;
