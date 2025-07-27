@@ -15,15 +15,7 @@
     "kolzchutMainPageLink": "https://www.kolzchut.org.il/he/עמוד_ראשי",
     "justiceLink": "https://www.gov.il/he/departments/ministry_of_justice/govil-landing-page",
     "nationalDigitalLink": "https://www.gov.il/he/departments/national-digital-agency/govil-landing-page",
-    "policyLink": "https://www.kolzchut.org.il/he/כל_שירות:מדיניות_השימוש",
-    "linksMenu": {
-      "about": "about/kolsherut",
-      "missing": "about/missing",
-      "partners": "about/partners",
-      "contact": "about/contact",
-      "map": "about/index",
-      "a11yStatement": "https://www.kolzchut.org.il/he/כל_שירות:נגישות"
-    }
+    "policyLink": "https://www.kolzchut.org.il/he/כל_שירות:מדיניות_השימוש"
   },
   "emergencyConditionsByResponseId": [
     "human_services:internal_emergency_services",

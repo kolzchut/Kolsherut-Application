@@ -1,0 +1,26 @@
+[
+  {
+    "title": "מפת אתר",
+    "modal": "SiteMap"
+  },
+  {
+    "title": "הוסיפו שירות חסר",
+    "modal": "AddService"
+  },
+  {
+    "title": "שותפים",
+    "modal": "Partners"
+  },
+  {
+    "title": "הצהרת נגישות",
+    "url": "https://www.kolzchut.org.il/he/כל_שירות:נגישות"
+  },
+  {
+    "title": "צור קשר",
+    "modal": "Contact"
+  },
+  {
+    "title": "אודות",
+    "modal": "About"
+  }
+]

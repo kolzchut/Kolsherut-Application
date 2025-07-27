@@ -4,6 +4,7 @@ import Partners from "./partners/partners";
 import Contact from "./contact/contact";
 import MoreFiltersModal from "../../../pages/results/filters/components/moreFilters/moreFiltersModal/moreFiltersModal";
 import GeoFilterModal from "../../../pages/results/filters/components/geoFilter/geoFilterModal/geoFilterModal";
+import SiteMap from "./siteMap/siteMap";
 
 
 const modals =  {
@@ -13,6 +14,7 @@ const modals =  {
     AddService,
     Partners,
     Contact,
+    SiteMap,
 }
 
 export default modals
