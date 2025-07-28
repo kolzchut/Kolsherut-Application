@@ -3,6 +3,9 @@ export interface ILabel {
     response_id?: string,
     title?: string,
     query?: string
+    cityName?:string,
+    bounds?: [number, number, number, number]
+
 }
 
 export interface IGroup {

@@ -4,7 +4,7 @@ import {settingToResults} from "../../../../../store/shared/sharedSlice";
 
 const SearchLabel = ({value}:{value:ILabel}) => {
     const classes = useStyles();
-    const onClick = () => settingToResults({value})
+    const onClick = () => settingToResults({value, removeOldFilters:true})
     return <button
         className={classes.optionalSearchValue}
         onClick={onClick}>

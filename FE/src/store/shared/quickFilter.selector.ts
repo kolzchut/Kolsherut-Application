@@ -3,9 +3,7 @@ import {getAllBranchesInBounds, getFilteredBranchesInBounds} from "./locationFil
 import IFilterOptions from "../../types/filterOptions.ts";
 import {getFilters} from "../filter/filter.selector.ts";
 import {getAllSituationsToFilter} from "./shared.selector.ts";
-import {
-    runOverResponsesAndGetOptionsNoResponseFilterApplied
-} from "./utilities/runOverResponsesAndGetOptionsNoResponseFilterApplied.ts";
+import {runOverResponsesAndGetOptionsNoResponseFilterApplied} from "./utilities/runOverResponsesAndGetOptionsNoResponseFilterApplied.ts";
 import {sortAndLimitOptions} from "./utilities/sortAndLimitOptions.ts";
 import {countAdditionalBranches} from "./utilities/countAdditionalBranches.ts";
 import {deduplicateById} from "./utilities/deduplicateById.ts";
@@ -44,7 +42,6 @@ const getQuickFilterResponseOptionsIfResponseFilterApplied = createSelector(
         return filteredOptions;
     }
 );
-
 const getQuickFilterList = createSelector([getQuickFilterResponseOptionsIfResponseFilterApplied], (filterList) => {
     const quickFilterList: IFilterOptions = {};
     Object.entries(filterList).forEach(([id, data]) => {
@@ -74,6 +71,7 @@ export const getQuickFilterResponseOptions = createSelector(
                     };
                 }
             });
+
 
             return {
                 ...selectedResponsesOptions,

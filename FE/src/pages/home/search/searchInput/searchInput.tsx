@@ -1,6 +1,6 @@
 import lightIconSearch from "../../../../assets/icon-search-blue-1.svg";
 import {ChangeEvent, KeyboardEvent, useEffect, useRef, useState} from "react";
-import AutocompleteType from "../../../../types/autocompleteType";
+import AutocompleteType, {IStructureAutocomplete} from "../../../../types/autocompleteType";
 import sendMessage from "../../../../services/sendMessage/sendMessage";
 import useStyles from "./searchInput.css";
 import closeIcon from "../../../../assets/icon-close-blue-3.svg";
@@ -11,12 +11,13 @@ import useOnClickedOutside from "../../../../hooks/useOnClickedOutside.ts";
 import {settingToResults} from "../../../../store/shared/sharedSlice.ts";
 
 const inputDescription = "Search for services, organizations, branches, and more"
+const emptyAutocomplete: AutocompleteType = {structured: [], unstructured: []};
 
 const SearchInput = () => {
 
     const searchInputRef = useRef<HTMLInputElement>(null);
     const [isSearchInputFocused, setIsSearchInputFocused] = useState(false);
-    const {ref} = useOnClickedOutside(() => setOptionalSearchValues([]));
+    const {ref} = useOnClickedOutside(() => setOptionalSearchValues(emptyAutocomplete));
 
     useEffect(() => {
         const handleFocus = () => {
@@ -38,12 +39,12 @@ const SearchInput = () => {
             }
         };
     }, [searchInputRef]);
-    const [optionalSearchValues, setOptionalSearchValues] = useState<AutocompleteType[]>([]);
+    const [optionalSearchValues, setOptionalSearchValues] = useState<AutocompleteType>(emptyAutocomplete);
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const moveUp = isSearchInputFocused || searchTerm !== '' || optionalSearchValues.length > 0;
+    const moveUp = isSearchInputFocused || searchTerm !== '' || optionalSearchValues.structured.length > 0 || optionalSearchValues.unstructured.length > 0;
     const classes = useStyles({moveUp});
     const debouncedGetAutoComplete = useDebounce(async (value) => {
-        if (value === '') return setOptionalSearchValues([]);
+        if (value === '') return setOptionalSearchValues(emptyAutocomplete);
         const requestURL = window.config.routes.autocomplete.replace('%%search%%', value);
         const response = await sendMessage({method: 'get', requestURL});
         setOptionalSearchValues(response.data);
@@ -55,11 +56,11 @@ const SearchInput = () => {
     };
     const onClose = () => {
         setSearchTerm("");
-        setOptionalSearchValues([]);
+        setOptionalSearchValues(emptyAutocomplete);
     }
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            settingToResults({value: {title: searchTerm}})
+            settingToResults({value: {title: searchTerm}, removeOldFilters: true});
             onClose()
         }
     };
@@ -87,9 +88,13 @@ const SearchInput = () => {
                     <img className={classes.closeIconImg} src={closeIcon} alt={"close list"}/>
                 </button>}
             <div className={classes.optionalSearchValuesWrapper}>
-                {optionalSearchValues.map((value: AutocompleteType, index: number) => (
-                    <SearchOption value={value} onCloseSearchOptions={onClose} key={index}/>
-                ))}
+                {optionalSearchValues.structured.length > 0 &&
+                    optionalSearchValues.structured.map((value: IStructureAutocomplete, index: number) => (
+                        <SearchOption value={value} isStructured={true} key={index} onCloseSearchOptions={onClose}/>
+                    ))}
+                    {optionalSearchValues.unstructured.map((value, index) => (
+                        <SearchOption value={value} isStructured={false} key={index} onCloseSearchOptions={onClose}/>
+                    ))}
             </div>
         </div>
     </div>

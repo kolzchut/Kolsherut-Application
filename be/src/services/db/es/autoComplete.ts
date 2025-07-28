@@ -2,14 +2,14 @@ import {executeESQuery} from './es';
 import vars from "../../../vars";
 
 //TODO: update after refactor
-export default async (search:string) => {
+export default async (search: string) => {
     const query = {
         index: vars.serverSetups.elastic.indices.autocomplete,
         body: {
             size: 5,
             query: {
                 bool: {
-                    must:{
+                    must: {
                         match: {
                             query: {
                                 query: search,

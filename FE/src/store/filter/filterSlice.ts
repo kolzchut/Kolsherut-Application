@@ -22,12 +22,11 @@ export const filterSlice = createSlice({
             state.filters.situations = situations || state.filters.situations;
             state.filters.responses = responses || state.filters.responses;
         },
-        removeFilters(state: FilterStore) {
-            state.filters = {
-                location: israelLocation,
-                situations: [],
-                responses: []
-            };
+        resetFilters(state: FilterStore,action) {
+            const {location, situations, responses} = action.payload;
+            state.filters.location = location || israelLocation;
+            state.filters.situations = situations || [];
+            state.filters.responses = responses || [];
         },
         setSearchLocation(state: FilterStore, action) {
             state.searchLocation = action.payload;
@@ -78,7 +77,7 @@ export const filterSlice = createSlice({
 
 export const {
     setFilters,
-    removeFilters,
+    resetFilters,
     removeSituationFilter,
     removeMultipleSituationFilters,
     addSituationFilter,

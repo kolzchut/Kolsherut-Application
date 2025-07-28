@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     getSelectedOrganization
 } from "../../store/data/data.selector";
-import {addResultsPOIs} from "./resultsLogic";
+import {addResultsPOIs, setMapOnLocation} from "./resultsLogic";
 import useStyles from "./results.css";
 import FiltersForDesktop from "./filters/filtersForDesktop.tsx";
 import {setSelectedOrganization} from "../../store/data/dataSlice";
@@ -46,14 +46,20 @@ const Results = () => {
         dispatch(setSelectedOrganization(null));
         removeAllPOIs();
         addResultsPOIs(branches);
+        allowChangeStoreLocation(false);
+        if (location.key !== window.strings.map.locationByBoundingBox)
+            setMapOnLocation(location.bounds);
+        allowChangeStoreLocation(true)
+
     }
     useEffect(() => {
         newResults();
     }, [filteredResults, searchQuery]);
     useEffect(() => {
         allowChangeStoreLocation(true)
-        if(!filteredResults || filteredResults.length === 0)
-            settingToResults({value:{title: searchQuery}})
+        if (!filteredResults || filteredResults.length === 0) {
+            settingToResults({value: {title: searchQuery}, removeOldFilters: false})
+        }
         return () => {
             allowChangeStoreLocation(false);
             removeAllPOIs();

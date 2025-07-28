@@ -20,7 +20,7 @@ const Group = ({group}: { group: IGroup }) => {
             query: group.group_link
         }
         clickOnOptionalSearch(group)
-        settingToResults({value: groupAsLabel});
+        settingToResults({value: groupAsLabel, removeOldFilters: true});
     }
 
     return <div className={classes.group} key={group.group}>

@@ -1,29 +1,38 @@
-import AutocompleteType from "../../../../../types/autocompleteType";
+import {
+    IStructureAutocomplete, IUnStructuredAutocomplete,
+} from "../../../../../types/autocompleteType";
 import useStyles from "./searchOption.css";
-import IconArrowTopRight from "../../../../../assets/icon-arrow-top-right-gray-4.svg";
+import structuredSearchIcon from "../../../../../assets/icon-arrow-top-right-gray-4.svg";
 import lightIconSearch from "../../../../../assets/icon-search-gray-4.svg";
+import unstructuredSearchIcon from "../../../../../assets/icon-chevron-left-gray-4.svg";
 import {settingToResults} from "../../../../../store/shared/sharedSlice";
 import {ILabel} from "../../../../../types/homepageType";
 
-const SearchOption = ({value, onCloseSearchOptions}: { value: AutocompleteType, onCloseSearchOptions: () => void }) => {
+const SearchOption = ({value, onCloseSearchOptions, isStructured}: { value: IStructureAutocomplete | IUnStructuredAutocomplete, onCloseSearchOptions: () => void, isStructured:boolean}) => {
     const classes = useStyles();
     const onClick = () => {
         const customValueAsLabel: ILabel = {
-            query: value.id,
-            title: value.query,
-            situation_id: value.situation || undefined,
-            response_id: value.response || undefined,
+            query: value.query,
+            title: value.label,
         }
-        settingToResults({value: customValueAsLabel});
+        if(isStructured) {
+            const structuredValue = value as IStructureAutocomplete;
+            customValueAsLabel.situation_id = structuredValue.situationId;
+            customValueAsLabel.response_id = structuredValue.responseId;
+            customValueAsLabel.cityName = structuredValue.cityName;
+            customValueAsLabel.bounds = structuredValue.bounds;
+        }
+        settingToResults({value: customValueAsLabel, removeOldFilters:true});
         onCloseSearchOptions();
     };
+    const icon = isStructured ? structuredSearchIcon : unstructuredSearchIcon;
     return <div onClick={onClick}
                 className={classes.optionalSearchValue}>
                         <span className={classes.iconAndText}>
                             <img className={classes.searchIcon} alt={"חיפוש"} src={lightIconSearch}/>
-                            {value.query}
+                            {value.label}
                         </span>
-        <img className={classes.searchIcon} alt={"חיפוש"} src={IconArrowTopRight}/>
+        <img className={classes.searchIcon} alt={"חיפוש"} src={icon}/>
     </div>
 }
 export default SearchOption;
