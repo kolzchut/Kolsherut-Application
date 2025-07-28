@@ -1,4 +1,4 @@
-export const removeMacro = ({stringWithMacro, macro, replacement}: {
+export const replaceMacro = ({stringWithMacro, macro, replacement}: {
     stringWithMacro: string,
     macro: string,
     replacement: string

@@ -26,12 +26,12 @@ const QuickFiltersForMobile = () => {
                 name: value.name,
                 synonyms:[]
             }
-            if(!value.count) return <></>
-            return <OccasionButtonForMobile isSelected={isSelected} key={id} response={response} count={value.count}/>
+            if(!value.count) return;
+            return <OccasionButtonForMobile isSelected={isSelected} key={value.name+id} response={response} count={value.count}/>
         })}
-        {situationOptions.map(situation => {
+        {situationOptions.map((situation) => {
             const isSelected = filters.situations.includes(situation.id);
-            return <OccasionButtonForMobile isSelected={isSelected} key={situation.id} situation={situation}/>
+            return <OccasionButtonForMobile isSelected={isSelected} key={situation.name+situation.id} situation={situation}/>
         })}
 
     </div>

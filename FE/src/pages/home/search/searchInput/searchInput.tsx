@@ -1,5 +1,5 @@
 import lightIconSearch from "../../../../assets/icon-search-blue-1.svg";
-import {ChangeEvent, useEffect, useRef, useState} from "react";
+import {ChangeEvent, KeyboardEvent, useEffect, useRef, useState} from "react";
 import AutocompleteType from "../../../../types/autocompleteType";
 import sendMessage from "../../../../services/sendMessage/sendMessage";
 import useStyles from "./searchInput.css";
@@ -8,6 +8,7 @@ import SearchOption from "./searchOption/searchOption";
 import {searchInputFocusEvent} from "../../../../services/gtag/homepageEvents.ts";
 import {useDebounce} from "../../../../hooks/useDebounce.ts";
 import useOnClickedOutside from "../../../../hooks/useOnClickedOutside.ts";
+import {settingToResults} from "../../../../store/shared/sharedSlice.ts";
 
 const inputDescription = "Search for services, organizations, branches, and more"
 
@@ -56,7 +57,14 @@ const SearchInput = () => {
         setSearchTerm("");
         setOptionalSearchValues([]);
     }
-    return <div className={classes.root} >
+    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            settingToResults({value: {title: searchTerm}})
+            onClose()
+        }
+    };
+
+    return <div className={classes.root}>
         <div className={classes.mainTextDiv}>
             <span className={classes.mainText}>{window.strings.home.mainTextPartOne}
                 <span
@@ -69,6 +77,7 @@ const SearchInput = () => {
                 ref={searchInputRef}
                 value={searchTerm}
                 onChange={inputChangeEvent}
+                onKeyDown={handleKeyDown}
                 className={classes.searchInput}
                 placeholder={window.strings.search.label}
                 aria-label={inputDescription}

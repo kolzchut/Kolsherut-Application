@@ -49,6 +49,7 @@
       ]
     }
   },
+  "baseMaxOfOrganizationsDisplayed": 5,
   "defaultLocations": [
     {
       "key": "קרוב למיקום הנוכחי שלי"

@@ -1,6 +1,7 @@
 import {useState} from "react";
 import useStyles from "./situationSection.css";
 import ISituationsToFilter from "../../../../../../../types/SituationsToFilter";
+import {uniqueBy} from "../../../../../../../services/arr.ts";
 
 interface IProps {
     title: string,
@@ -13,17 +14,18 @@ const SituationSection = ({title, situations, onClick, onClear}: IProps) => {
     const cleanup = window.strings.results.cleanup
     const showMore = window.strings.results.showMore
     const classes = useStyles();
-    const [amountOfSituationsToDisplay, setAmountOfSituationsToDisplay] = useState(Math.min(situations.length, 5));
-    const situationsToDisplay = situations.slice(0, amountOfSituationsToDisplay);
+    const fixedSituations = uniqueBy({arr:situations, key: "id"})
+    const [amountOfSituationsToDisplay, setAmountOfSituationsToDisplay] = useState(Math.min(fixedSituations.length, 5));
+    const situationsToDisplay = fixedSituations.slice(0, amountOfSituationsToDisplay);
     const inputDescription = "Filter by: ";
     return <div className={classes.mainDiv}>
         <div className={classes.titleDiv}>
             <span className={classes.title}>{title}</span>
-            <span className={classes.cleanup} onClick={() => onClear({situations})}>{cleanup}</span>
+            <span className={classes.cleanup} onClick={() => onClear({situations:fixedSituations})}>{cleanup}</span>
         </div>
         <div className={classes.labelContainer}>
-            {situationsToDisplay.map((situation) => (
-                <div className={classes.label} key={situation.id} onClick={() => onClick({situation})}>
+            {situationsToDisplay.map((situation: ISituationsToFilter, index:number) => (
+                <div className={classes.label} key={index} onClick={() => onClick({situation})}>
                     <label
                         htmlFor={`checkbox-${situation.id}`}
                         className={classes.visuallyHidden}
@@ -40,9 +42,9 @@ const SituationSection = ({title, situations, onClick, onClear}: IProps) => {
                     <span>{situation.name}</span>
                 </div>
             ))}
-            {amountOfSituationsToDisplay < situations.length &&
-                <span className={classes.showMore} onClick={() => setAmountOfSituationsToDisplay(situations.length)}>
-                {showMore} ({situations.length - amountOfSituationsToDisplay})</span>}
+            {amountOfSituationsToDisplay < fixedSituations.length &&
+                <span className={classes.showMore} onClick={() => setAmountOfSituationsToDisplay(fixedSituations.length)}>
+                {showMore} ({fixedSituations.length - amountOfSituationsToDisplay})</span>}
         </div>
     </div>
 }

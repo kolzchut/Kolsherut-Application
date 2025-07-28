@@ -25,6 +25,7 @@ export default createUseStyles({
         fontWeight:isSelected? 700 : 300,
         fontSize: '16px',
         lineHeight: 1.3,
+        width: '100%',
     }),
     numOfBranches:({isSelected}:{isSelected:boolean})=>({
         color: primaryTextColorTwo,

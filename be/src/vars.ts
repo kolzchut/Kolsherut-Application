@@ -7,6 +7,7 @@ export default {
         port: process.env.PORT || 3000,
         elastic: {
             connection: {
+                compression: true,
                 node: process.env.ELASTIC_URL || 'http://localhost:9200',
                 auth: {
                     username: process.env.ELASTIC_USERNAME || 'elastic',

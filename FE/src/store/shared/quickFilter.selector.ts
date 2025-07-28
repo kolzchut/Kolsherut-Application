@@ -1,62 +1,97 @@
 import {createSelector} from "@reduxjs/toolkit";
-import {getResults} from "../data/data.selector.ts";
-import {IService} from "../../types/serviceType.ts";
-import {getAllResponsesInBounds, getFilteredResponsesInBounds} from "./locationFilters.selector.ts";
-import {Response} from "../../types/cardType.ts";
+import {getAllBranchesInBounds, getFilteredBranchesInBounds} from "./locationFilters.selector.ts";
 import IFilterOptions from "../../types/filterOptions.ts";
 import {getFilters} from "../filter/filter.selector.ts";
 import {getAllSituationsToFilter} from "./shared.selector.ts";
-import {checkIfFirstIdContainsSecondsIds} from "./utilities/checkIfFirstIdContainsSecondsIds.ts";
 import {
     runOverResponsesAndGetOptionsNoResponseFilterApplied
 } from "./utilities/runOverResponsesAndGetOptionsNoResponseFilterApplied.ts";
+import {sortAndLimitOptions} from "./utilities/sortAndLimitOptions.ts";
+import {countAdditionalBranches} from "./utilities/countAdditionalBranches.ts";
+import {deduplicateById} from "./utilities/deduplicateById.ts";
 
-export const getTopResponses = createSelector([getResults], (services: IService[]) => {
-    if (!services || services.length === 0) return [];
-    const responsesArray = services.flatMap((service: IService) =>
-        service.organizations.flatMap((organization) =>
-            organization.branches.flatMap(branch => branch.responses) || []));
+export const getTopResponses = createSelector([getAllBranchesInBounds], (branches) => {
+    if (!branches || branches.length === 0) return [];
+    const responsesArray = branches.flatMap(branch => branch.responses);
     const options = runOverResponsesAndGetOptionsNoResponseFilterApplied(responsesArray);
-    return Object.entries(options)
-        .sort(([, a], [, b]) => Number(b.count) - Number(a.count)) // Sort by count in descending order
-        .slice(0, 7) // Take the top 7
+    return sortAndLimitOptions(options);
 });
 
-
-export const getQuickFilterResponseOptionsIfResponseFilterApplied = createSelector(
-    [getAllResponsesInBounds, getFilteredResponsesInBounds, getTopResponses],
-    (allResponsesInBounds: Response[], getFilteredResponsesInBounds: Response[], topResponses) => {
+const getQuickFilterResponseOptionsIfResponseFilterApplied = createSelector(
+    [getAllBranchesInBounds, getFilteredBranchesInBounds, getFilters],
+    (allBranchesInBounds, filteredBranchesInBounds, filters) => {
         const filteredOptions: IFilterOptions = {};
-        topResponses.forEach(([id, {name}]) => {
-            const countInAll = allResponsesInBounds.filter(response => checkIfFirstIdContainsSecondsIds({firstIds:response.id, secondIds:id})).length;
-            const countInFiltered = getFilteredResponsesInBounds.filter(response => checkIfFirstIdContainsSecondsIds({firstIds:response.id, secondIds:id})).length;
-            const count = countInAll - countInFiltered > 0 ? (countInAll - countInFiltered)+ "+": "0";
+        const filteredBranchIds = new Set(filteredBranchesInBounds.map(branch => branch.id));
+
+        const responsesArray = allBranchesInBounds.flatMap(branch => branch.responses);
+        const options = runOverResponsesAndGetOptionsNoResponseFilterApplied(responsesArray);
+        const topResponsesFromSameBranches = sortAndLimitOptions(options);
+
+        topResponsesFromSameBranches.forEach(([id, {name}]) => {
+            const additionalBranchCount = countAdditionalBranches(
+                allBranchesInBounds,
+                filteredBranchIds,
+                id,
+                filters
+            );
+
             filteredOptions[id] = {
-                count,
+                count: additionalBranchCount,
                 name,
             };
+        });
+
+        return filteredOptions;
+    }
+);
+
+const getQuickFilterList = createSelector([getQuickFilterResponseOptionsIfResponseFilterApplied], (filterList) => {
+    const quickFilterList: IFilterOptions = {};
+    Object.entries(filterList).forEach(([id, data]) => {
+        quickFilterList[id] = {
+            ...data,
+            count: `${data.count}${!data.count ? '' : '+'}`
+        };
+    });
+    return quickFilterList;
+});
+
+export const getQuickFilterResponseOptions = createSelector(
+    [getFilters, getTopResponses, getQuickFilterList, getAllBranchesInBounds],
+    (filters, topResponses, filterOptionsIfFilterApplied, allBranches) => {
+        if (filters.responses.length > 0 || filters.situations.length > 0) {
+            const selectedResponsesOptions: IFilterOptions = {};
+
+            // Add selected responses to quick filters
+            filters.responses.forEach(selectedResponseId => {
+                const responsesArray = allBranches.flatMap(branch => branch.responses);
+                const selectedResponse = responsesArray.find(response => response.id === selectedResponseId);
+
+                if (selectedResponse) {
+                    selectedResponsesOptions[selectedResponseId] = {
+                        count: 0,
+                        name: selectedResponse.name,
+                    };
+                }
+            });
+
+            return {
+                ...selectedResponsesOptions,
+                ...filterOptionsIfFilterApplied
+            };
+        }
+
+        const filteredOptions: IFilterOptions = {}
+        topResponses.forEach(([id, data]) => {
+            filteredOptions[id] = data;
         });
         return filteredOptions;
     }
 );
-export const getQuickFilterResponseOptions = createSelector([getFilters, getTopResponses, getAllResponsesInBounds, getQuickFilterResponseOptionsIfResponseFilterApplied], (filters, topResponses, responsesInBound, filterOptionsIfFilterApplied) => {
-
-    if (filters.responses.length > 0) return filterOptionsIfFilterApplied;
-    const options: IFilterOptions = runOverResponsesAndGetOptionsNoResponseFilterApplied(responsesInBound);
-    const filteredOptions: IFilterOptions = {}
-    topResponses.forEach((response) => {
-        if (options[response[0]]) {
-            filteredOptions[response[0]] = options[response[0]];
-            return;
-        }
-        filteredOptions[response[0]] = {count: 0, name: response[1].name};
-    });
-    return filteredOptions;
-});
 
 export const getQuickFilterSituationOptions = createSelector([getAllSituationsToFilter], (situationsToFilter) => {
-    return situationsToFilter.flatMap(([, situations]) =>
+    const allSelectedSituations = situationsToFilter.flatMap(([, situations]) =>
         situations.filter(situation => situation.selected)
     );
+    return deduplicateById(allSelectedSituations);
 });
-

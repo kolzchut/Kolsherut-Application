@@ -1,13 +1,12 @@
 import {useEffect} from "react";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {
     getSelectedOrganization
 } from "../../store/data/data.selector";
-import {addResultsPOIs, getResultsFromServer} from "./resultsLogic";
+import {addResultsPOIs} from "./resultsLogic";
 import useStyles from "./results.css";
 import FiltersForDesktop from "./filters/filtersForDesktop.tsx";
-import {setResults as setResultsInStore, setSelectedOrganization} from "../../store/data/dataSlice";
-import {store} from "../../store/store";
+import {setSelectedOrganization} from "../../store/data/dataSlice";
 import Hits from "./hits/hits";
 import {IService} from "../../types/serviceType";
 import BranchList from "./branchList/branchList";
@@ -16,16 +15,17 @@ import {getSearchQuery} from "../../store/general/general.selector";
 import Map from "../../components/map/map";
 import {useDisplayResultsMap} from "./context/contextFunctions";
 import {removeAllPOIs} from "../../services/map/poiInteraction";
-import {getFilteredBranches, getFilteredResponseLength, getFilteredResults} from "../../store/shared/shared.selector";
+import {getFilteredBranches, getFilteredResults} from "../../store/shared/shared.selector";
 import {useMediaQuery} from '@mui/material';
 import {widthOfMobile} from "../../constants/mediaQueryProps";
-import {scrollOnceEvent, searchEvent} from "../../services/gtag/resultsEvents";
+import {scrollOnceEvent} from "../../services/gtag/resultsEvents";
 import FiltersForMobile from "./filters/filtersForMobile.tsx";
 import {getLocationFilter} from "../../store/filter/filter.selector.ts";
 import MetaTags from "../../services/metaTags.tsx";
 import getResultsMetaTags from "./getResultsMetaTags.ts";
 import {useOnce} from "../../hooks/useOnce";
 import {allowChangeStoreLocation} from "../../services/map/events/mapInteraction.ts";
+import {settingToResults} from "../../store/shared/sharedSlice.ts";
 
 
 const Results = () => {
@@ -35,17 +35,15 @@ const Results = () => {
     const branches = useSelector(getFilteredBranches);
     //TODO: change name to better one
     const searchQuery = useSelector(getSearchQuery);
-    const filtersCount = useSelector(getFilteredResponseLength);
-    const responseCount = useSelector(getFilteredResponseLength);
     const displayResultsMap = useDisplayResultsMap();
     const location = useSelector(getLocationFilter)
     const isMobile = useMediaQuery(widthOfMobile);
     const classes = useStyles({displayResultsMap, isSelectedOrganization: !!selectedOrganization, isMobile});
     const metaTagsData = getResultsMetaTags({searchQuery, location})
-
+    const dispatch = useDispatch();
     const reportOnce = useOnce(() => scrollOnceEvent());
     const newResults = () => {
-        store.dispatch(setSelectedOrganization(null));
+        dispatch(setSelectedOrganization(null));
         removeAllPOIs();
         addResultsPOIs(branches);
     }
@@ -53,22 +51,13 @@ const Results = () => {
         newResults();
     }, [filteredResults, searchQuery]);
     useEffect(() => {
-        searchEvent({searchQuery, responseCount, filtersCount});
-    }, [searchQuery]);
-    useEffect(() => {
-        const fetchResults = async () => {
-            if (filteredResults.length === 0) {
-                //TODO: replace
-                const fetchedResults = await getResultsFromServer({serviceName: searchQuery});
-                store.dispatch(setResultsInStore(fetchedResults));
-            }
-        };
-        fetchResults();
         allowChangeStoreLocation(true)
+        if(!filteredResults || filteredResults.length === 0)
+            settingToResults({value:{title: searchQuery}})
         return () => {
             allowChangeStoreLocation(false);
             removeAllPOIs();
-            store.dispatch(setSelectedOrganization(null));
+            dispatch(setSelectedOrganization(null));
         }
     }, []);
     return <>

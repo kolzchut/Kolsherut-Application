@@ -1,25 +1,32 @@
 import {createSelector} from "@reduxjs/toolkit";
-import {getFilters, getSearchLocation} from "../filter/filter.selector.ts";
+import {getFilters, getLocationFilter, getSearchLocation} from "../filter/filter.selector.ts";
 import {getFilteredBranches} from "./shared.selector.ts";
 import {getLocations, getResults} from "../data/data.selector.ts";
 import ILocation from "../../types/locationType.ts";
 import {IBranch, IService} from "../../types/serviceType.ts";
 import {checkIfCoordinatesInBounds} from "../../services/geoLogic.ts";
+import israelLocation from "../../constants/israelLocation.ts";
 
-export const getFilteredBranchesInBounds = createSelector([getFilteredBranches, getFilters], (branches: IBranch[], filters) => {
-    return branches.filter(branch => checkIfCoordinatesInBounds({
-        bounds: filters.location.bounds,
-        coordinates: branch.geometry
-    }));
+export const getFilteredBranchesInBounds = createSelector([getFilteredBranches, getFilters, getLocationFilter], (branches: IBranch[], filters, location) => {
+    const isDefaultLocation = location.key === israelLocation.key;
+
+    return branches.filter(branch =>
+        (isDefaultLocation && branch.isNational) || checkIfCoordinatesInBounds({
+            bounds: filters.location.bounds,
+            coordinates: branch.geometry
+        })
+    );
 });
 
 export const getFilteredResponsesInBounds = createSelector([getFilteredBranchesInBounds], (branches: IBranch[]) => {
     return branches.flatMap(branch => branch.responses) || [];
 });
 
-export const getAllBranchesInBounds = createSelector([getResults, getFilters], (services: IService[], filters) => {
+export const getAllBranchesInBounds = createSelector([getResults, getFilters,getLocationFilter], (services: IService[], filters,location) => {
+    const isDefaultLocation = location.key === israelLocation.key;
+
     return services.flatMap((service: IService) =>
-        service.organizations.flatMap((organization) => organization.branches.filter(branch => checkIfCoordinatesInBounds({
+        service.organizations.flatMap((organization) => organization.branches.filter(branch =>(isDefaultLocation && branch.isNational) || checkIfCoordinatesInBounds({
             bounds: filters.location.bounds,
             coordinates: branch.geometry
         }))));

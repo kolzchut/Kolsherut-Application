@@ -2,9 +2,9 @@ import useStyles from "./branch.css";
 import {IBranch} from "../../../../types/serviceType";
 import nationalIcon from "../../../../assets/icon-headset.svg";
 import linkIcon from "../../../../assets/icon-arrow-top-right-gray-4.svg";
-import {getHrefForCard} from "../../../../services/href.ts";
-import {reRouteToCard} from "../../../../services/routes/reRoute.ts";
-import {gotoCardFromBranchList} from "../../../../services/gtag/resultsEvents.ts";
+import {getHrefForCard} from "../../../../services/href";
+import {gotoCardFromBranchList} from "../../../../services/gtag/resultsEvents";
+import {reRouteToCard} from "../../../../services/routes/reRoute";
 
 const Branch = ({branch}: { branch: IBranch }) => {
     const classes = useStyles();
@@ -12,10 +12,10 @@ const Branch = ({branch}: { branch: IBranch }) => {
     const addressText: string = branch.address + " " + accurateLocation;
     const showNational = branch.isNational && !branch.address
     const href = getHrefForCard(branch.id)
-    const onClick = () => {
+    const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault();
         gotoCardFromBranchList(branch.id)
         reRouteToCard({cardId: branch.id})
-        return false;
     }
     return <a href={href} onClick={onClick} className={classes.mainDiv}>
         <div className={classes.textDiv}>

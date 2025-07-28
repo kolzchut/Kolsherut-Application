@@ -54,7 +54,8 @@
     "cleanup": "ניקוי",
     "showMore": "עוד",
     "resultsAmount": " %%MACRO%% תוצאות",
-    "geoFilterModalPlaceHolder": "ניתן לחפש ישוב או מקום מוגדר"
+    "geoFilterModalPlaceHolder": "ניתן לחפש ישוב או מקום מוגדר",
+    "showMoreOrganizations": "הצג עוד %%MACRO%% ארגונים"
   },
   "staticModals": {
     "names": {

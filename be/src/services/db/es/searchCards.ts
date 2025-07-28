@@ -1,49 +1,34 @@
-import { executeESQuery } from './es';
+import {executeESQuery} from './es';
 import vars from "../../../vars";
+import transformCardIdToNewFormat from "../../../utilities/transformCardIdToNewFormat";
 
-export default async (serviceName?: string, responseId?: string, situationId?: string) => {
+export default async (fixedSearchQuery?:string) => {
     const mustConditions = [];
-    const filterConditions = [];
+    const shouldConditions = [];
 
-    if (serviceName) {
+    if (fixedSearchQuery) {
         mustConditions.push({
-            match: {
-                service_name: {
-                    query: serviceName,
-                    fuzziness: "AUTO"
-                }
+            multi_match: {
+                query: fixedSearchQuery,
+                fields: ["service_name", "service_description", "organization_name", "branch_name", "branch_address","branch_city", "responses.id","situations.id"],
+                fuzziness: "AUTO"
             }
         });
     }
 
-    if (responseId) {
-        filterConditions.push({
-            term: {
-                "responses.id": responseId
-            }
-        });
-    }
-
-    if (situationId) {
-        filterConditions.push({
-            term: {
-                "situations.id": situationId
-            }
-        });
-    }
 
     const query = {
         index: vars.serverSetups.elastic.indices.card,
         body: {
-            size: 30,
+            size: 300,
             query: {
                 bool: {
                     must: mustConditions,
-                    filter: filterConditions
+                    minimum_should_match: shouldConditions.length > 0 ? 1 : 0
                 }
             },
             collapse: {
-                field: "collapse_key",
+                field: "service_id",
                 inner_hits: {
                     name: "collapse_hits",
                     size: 1000,
@@ -104,7 +89,8 @@ export default async (serviceName?: string, responseId?: string, situationId?: s
     };
 
     try {
-        return await executeESQuery(query);
+        const response = await executeESQuery(query);
+        return transformCardIdToNewFormat(response);
     } catch (error) {
         console.error('Error executing query:', error);
         throw error;

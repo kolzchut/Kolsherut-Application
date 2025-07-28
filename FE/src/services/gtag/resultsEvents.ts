@@ -6,14 +6,14 @@ import israelLocation from "../../constants/israelLocation.ts";
 
 interface ISearchEventProps {
     responseCount: number;
-    searchQuery: string;
+    searchQuery?: string;
     filtersCount: number;
 }
 
 interface IViewItemListEventProps {
     responsesCount: number;
     filtersCount: number;
-    searchQuery: string;
+    searchQuery?: string;
     branches: IBranch[];
     organizationName: string
 }

@@ -1,6 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {FilterStore, initialState} from './initialState';
 import {parseLocation} from "../../services/url/parseURL.ts";
+import israelLocation from "../../constants/israelLocation.ts";
 
 export const filterSlice = createSlice({
     name: 'filter',
@@ -14,11 +15,19 @@ export const filterSlice = createSlice({
             state.filters.situations = newSituations || state.filters.situations;
             state.filters.responses = newResponses || state.filters.responses;
         },
+
         setFilters(state: FilterStore, action) {
             const {location, situations, responses} = action.payload;
             state.filters.location = location || state.filters.location;
             state.filters.situations = situations || state.filters.situations;
             state.filters.responses = responses || state.filters.responses;
+        },
+        removeFilters(state: FilterStore) {
+            state.filters = {
+                location: israelLocation,
+                situations: [],
+                responses: []
+            };
         },
         setSearchLocation(state: FilterStore, action) {
             state.searchLocation = action.payload;
@@ -27,6 +36,10 @@ export const filterSlice = createSlice({
             if (state.filters.responses.some((id) => id === action.payload)) return;
             state.filters.responses = [...state.filters.responses, action.payload];
         },
+        removeResponseFilter(state: FilterStore, action) {
+            const responseId = action.payload;
+            state.filters.responses = state.filters.responses.filter((id) => id !== responseId);
+        },
         addMultipleResponseFilters(state: FilterStore, action) {
             const responseIds: string[] = action.payload;
             responseIds.forEach((id) => {
@@ -34,13 +47,8 @@ export const filterSlice = createSlice({
                     state.filters.responses = [...state.filters.responses, id];
                 }
             });
-        },
-        removeResponseFilter(state: FilterStore, action) {
             const responseId = action.payload;
             state.filters.responses = state.filters.responses.filter((id) => id !== responseId);
-        },
-        setResponsesFilter(state: FilterStore, action) {
-            state.filters.responses = action.payload;
         },
         removeMultipleResponseFilters(state: FilterStore, action) {
             const responseIds = action.payload;
@@ -58,14 +66,6 @@ export const filterSlice = createSlice({
             const situationIds = action.payload;
             state.filters.situations = state.filters.situations.filter((id) => !situationIds.includes(id));
         },
-        setSituationsFilter(state: FilterStore, action) {
-            state.filters.situations = action.payload;
-        },
-        setResponseAndSituationFilters(state: FilterStore, action) {
-            const {responses, situations} = action.payload;
-            state.filters.responses = responses;
-            state.filters.situations = situations;
-        },
         setLocationFilter(state: FilterStore, action) {
             const {key, bounds} = action.payload;
             state.filters.location = {
@@ -78,15 +78,13 @@ export const filterSlice = createSlice({
 
 export const {
     setFilters,
+    removeFilters,
     removeSituationFilter,
     removeMultipleSituationFilters,
     addSituationFilter,
-    setSituationsFilter,
-    setResponsesFilter,
-    setResponseAndSituationFilters,
     addResponseFilter,
-    addMultipleResponseFilters,
     removeResponseFilter,
+    addMultipleResponseFilters,
     removeMultipleResponseFilters,
     setLocationFilter,
     setSearchLocation,

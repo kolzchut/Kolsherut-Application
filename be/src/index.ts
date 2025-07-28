@@ -28,7 +28,7 @@ app.get('/homepage', homePageRoute)
 app.get('/autocomplete/:search', autoCompleteRoute)
 app.get('/card/:card_id', cardRoute);
 app.get('/locations', locationsRoute)
-app.post('/search', searchRoute)
+app.get('/search/:searchQuery', searchRoute)
 app.post('/logs/:provider', logRoute)
 
 app.use(errorHandler);

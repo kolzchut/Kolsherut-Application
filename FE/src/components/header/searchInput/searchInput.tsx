@@ -1,6 +1,6 @@
 import inactiveSearchIcon from "../../../assets/icon-search-blue-1.svg";
 import activeSearchIcon from "../../../assets/icon-search-blue-0.svg";
-import {ChangeEvent, useRef, useState} from "react";
+import {ChangeEvent, useEffect, useRef, useState, KeyboardEvent} from "react";
 import AutocompleteType from "../../../types/autocompleteType";
 import sendMessage from "../../../services/sendMessage/sendMessage";
 import SearchOption from "../../../pages/home/search/searchInput/searchOption/searchOption";
@@ -10,6 +10,9 @@ import {widthOfMobile} from "../../../constants/mediaQueryProps";
 import {onFocusOnSearchInput} from "../../../services/gtag/resultsEvents";
 import {useDebounce} from "../../../hooks/useDebounce";
 import useOnClickedOutside from "../../../hooks/useOnClickedOutside";
+import {useSelector} from "react-redux";
+import {getSearchQuery} from "../../../store/general/general.selector.ts";
+import {settingToResults} from "../../../store/shared/sharedSlice.ts";
 
 const inputDescription = "Search for services, organizations, branches, and more"
 
@@ -20,7 +23,7 @@ const SearchInput = () => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [optionalSearchValues, setOptionalSearchValues] = useState<AutocompleteType[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const {ref} = useOnClickedOutside(()=>setOptionalSearchValues([]));
+    const {ref} = useOnClickedOutside(() => setOptionalSearchValues([]));
     const debouncedGetAutoComplete = useDebounce(async (value) => {
         if (value === '') return setOptionalSearchValues([]);
         const requestURL = window.config.routes.autocomplete.replace('%%search%%', value);
@@ -37,6 +40,19 @@ const SearchInput = () => {
         onFocusOnSearchInput();
     }
     const onCloseSearchOptions = () => setOptionalSearchValues([]);
+    const searchQuery = useSelector(getSearchQuery);
+
+    useEffect(() => {
+        if (!searchQuery) return;
+        setSearchTerm(searchQuery);
+    }, [searchQuery]);
+
+    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            settingToResults({value:{title:searchTerm}})
+            onCloseSearchOptions()
+        }
+    };
 
     return <div className={classes.root} ref={ref}>
         <div className={classes.inputDiv}>
@@ -50,6 +66,7 @@ const SearchInput = () => {
                 value={searchTerm}
                 onFocus={onInputFocus}
                 onChange={inputChangeEvent}
+                onKeyDown={handleKeyDown}
                 aria-label={inputDescription}
             />
         </div>

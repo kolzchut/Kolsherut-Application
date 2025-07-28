@@ -5,7 +5,7 @@ import {
     getAllSituationsToFilter,
     getFilterResultsLength
 } from "../../../../../../store/shared/shared.selector";
-import {removeMacro} from "../../../../../../services/str";
+import {replaceMacro} from "../../../../../../services/str";
 import {onSituationClear, onSituationClick} from "./moreFiltersModalLogic";
 import ResponseSection from "./responseSection/responseSection";
 import {store} from "../../../../../../store/store";
@@ -17,7 +17,7 @@ const MoreFiltersModal = () => {
     const classes = useStyles()
     const resultsLength = useSelector(getFilterResultsLength)
     const situationsToFilter= useSelector(getAllSituationsToFilter)
-    const numOfResults = removeMacro({
+    const numOfResults = replaceMacro({
         stringWithMacro: window.strings.results.resultsAmount,
         macro: "%%MACRO%%",
         replacement: String(resultsLength)

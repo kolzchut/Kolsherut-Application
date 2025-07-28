@@ -1,11 +1,21 @@
 import {ILabel} from "../../types/homepageType";
 import {store} from "../store";
 import {settingURLParamsToResults} from "../general/generalSlice";
-import {setResponseAndSituationFilters} from "../filter/filterSlice";
+import {setResults} from "../data/dataSlice.ts";
+import fetchResults from "../../services/searchUtilities/fetchResults.ts";
+import {addResponseFilter, addSituationFilter, removeFilters} from "../filter/filterSlice.ts";
 
-export const settingToResults = ({value}: { value: ILabel }) => {
-    const situations = value.situation_id ? [value.situation_id] : [];
-    const responses = value.response_id ?  [value.response_id] : [];
-    store.dispatch(settingURLParamsToResults(value.query))
-    store.dispatch(setResponseAndSituationFilters({situations, responses}))
-} //TODO: ENHANCE THE LOGIC TO HANDLE MORE COMPLEX SCENARIOS
+export const settingToResults = async ({value}: { value: ILabel }) => {
+    store.dispatch(settingURLParamsToResults(value.title))
+    const fetchedResults = await fetchResults({
+        responseId: value.response_id,
+        situationId: value.situation_id,
+        searchQuery: value.title
+    });
+    if (!fetchedResults || fetchedResults.length === 0) return;
+    store.dispatch(setResults(fetchedResults));
+    store.dispatch(removeFilters())
+    if (value.response_id) store.dispatch(addResponseFilter(value.response_id));
+    if (value.situation_id) store.dispatch(addSituationFilter(value.situation_id));
+}
+
