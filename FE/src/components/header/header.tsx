@@ -1,6 +1,5 @@
 import useStyle from "./header.css";
 import {setAccessibility, setModal, setPage, setShowSidebar} from "../../store/general/generalSlice";
-import {store} from "../../store/store";
 import {useMediaQuery} from "@mui/material";
 import {widthOfMobile} from "../../constants/mediaQueryProps";
 import hamburger from "../../assets/icon-hamburger.svg";
@@ -19,8 +18,8 @@ const Header = ({showLogo = true, showSearchbar = true}: { showLogo?: boolean, s
     const dispatch = useDispatch();
 
     const handleIconClick = () => {
-        if (!isMobile) return store.dispatch(setPage('home'))
-        return store.dispatch(setShowSidebar(true));
+        if (!isMobile) return dispatch(setPage('home'))
+        return dispatch(setShowSidebar(true));
     }
     const {names} = window.strings.staticModals
     const toggleAccessibility = ()=>{
@@ -37,13 +36,13 @@ const Header = ({showLogo = true, showSearchbar = true}: { showLogo?: boolean, s
                     <img src={accessibilityIcon} alt={'activate accessibility'} className={classes.accIcon}/>
                 </button>
                 <div  className={classes.linksDiv}>
-                    <span className={linkStyle} onClick={() => store.dispatch(setModal("About"))}>{names.about}</span>
+                    <span className={linkStyle} onClick={() => dispatch(setModal("About"))}>{names.about}</span>
                     <span className={linkStyle}
-                          onClick={() => store.dispatch(setModal("AddService"))}>{names.addService}</span>
+                          onClick={() => dispatch(setModal("AddService"))}>{names.addService}</span>
                     <span className={linkStyle}
-                          onClick={() => store.dispatch(setModal("Partners"))}>{names.partners}</span>
+                          onClick={() => dispatch(setModal("Partners"))}>{names.partners}</span>
                     <span className={linkStyle}
-                          onClick={() => store.dispatch(setModal("Contact"))}>{names.contact}</span>
+                          onClick={() => dispatch(setModal("Contact"))}>{names.contact}</span>
                 </div>
 
             </div>}
