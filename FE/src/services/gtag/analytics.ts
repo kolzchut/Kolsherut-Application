@@ -5,12 +5,12 @@ import logger from "../logger/logger";
 
 
 const init = ()=>{
-    ReactGA.initialize(window.config.analytics.id);
-    logger.log({message:'Initializing Google Analytics'});
+    const analyticsId = window.config.environment === EnvironmentEnum.Production ? window.config.analytics.id : window.config.analytics.testId;
+    ReactGA.initialize(analyticsId);
+    logger.log({message:`Initializing Google Analytics on ${analyticsId}`});
 }
 
-export const logEvent = ({event, params}: LogEventArgs) => {
-    if (window.config.environment !== EnvironmentEnum.Production) return;
+const logEvent = ({event, params}: LogEventArgs) => {
     const url = window.location.href;
     ReactGA.event(event, {
         url,
@@ -18,7 +18,7 @@ export const logEvent = ({event, params}: LogEventArgs) => {
     });
 };
 
-export const interactionEvent = (what: string, where: string, content?: string) => {
+const interactionEvent = (what: string, where: string, content?: string) => {
     const event = {
         event: 'srm:interaction',
         interaction_where: where,
@@ -28,8 +28,11 @@ export const interactionEvent = (what: string, where: string, content?: string) 
     logEvent({event: event.event, params: event});
 };
 
+const onPageView = (page:string) => ReactGA.send({ hitType: "pageview", page});
+
 export default {
     init,
     logEvent,
     interactionEvent,
+    onPageView,
 }

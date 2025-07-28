@@ -1,5 +1,5 @@
 import {ICard} from "../../types/cardType";
-import {interactionEvent, logEvent} from "./analytics";
+import analytics from "./analytics";
 import {cardToItem} from "./gtagUtilities";
 
 export const cardEvent = (
@@ -9,7 +9,7 @@ export const cardEvent = (
     from: string | null = null
 ) => {
     if (select) {
-        logEvent({
+        analytics.logEvent({
             event: 'select_item',
             params: {
                 ecommerce: {
@@ -23,18 +23,18 @@ export const cardEvent = (
             card_name: card.service_name,
             card_org: card.organization_id,
         };
-        logEvent({
+        analytics.logEvent({
             event: 'srm:card',
             params: eventParams,
         });
-        logEvent({
+        analytics.logEvent({
             event: 'view_item',
             params: {
                 ...eventParams,
                 items: [cardToItem(card, index)],
             },
         });
-        interactionEvent('card', from || 'unknown', undefined);
+        analytics.interactionEvent('card', from || 'unknown', undefined);
     }
 };
 
@@ -49,7 +49,7 @@ const addToCartEvent = (card: ICard, action: string, action_url: string) => {
         landing_page: 'no',
         items: [cardToItem(card, 0)],
     };
-    logEvent({
+    analytics.logEvent({
         event: 'add_to_cart',
         params: {
             conversion: true,
@@ -67,7 +67,7 @@ const cardActionEvent = (card: ICard, action: string, action_url: string) => {
         card_org: card.organization_id,
         landing_page: 'no',
     };
-    logEvent({
+    analytics.logEvent({
         event: 'card_action',
         params: eventParams,
     });
@@ -80,14 +80,14 @@ export const copyToClipboard = ({card, action, action_url}:{ card: ICard, action
 };
 
 export const extendDescriptionEvent = (card_id: string) => {
-    logEvent({
+    analytics.logEvent({
         event: 'srm:extend_description',
         params: { card_id },
     });
 };
 
 export const shrinkDescriptionEvent = (card_id: string) => {
-    logEvent({
+    analytics.logEvent({
         event: 'srm:shrink_description',
         params: { card_id },
     });

@@ -1,8 +1,8 @@
-import {interactionEvent, logEvent} from "./analytics";
+import analytics from "./analytics";
 import {IBranch} from "../../types/serviceType";
 import {isLandingPage} from "./gtagUtilities";
-import ILocation from "../../types/locationType.ts";
-import israelLocation from "../../constants/israelLocation.ts";
+import ILocation from "../../types/locationType";
+import israelLocation from "../../constants/israelLocation";
 
 interface ISearchEventProps {
     responseCount: number;
@@ -26,7 +26,7 @@ export const searchEvent = ({responseCount, searchQuery, filtersCount}: ISearchE
         filter_responses_count: responseCount,
         landing_page: isFirstPage ? 'yes' : 'no',
     };
-    logEvent({
+    analytics.logEvent({
         event: 'search',
         params: eventParams,
     });
@@ -61,7 +61,7 @@ export const viewItemListEvent = ({
 
         })
     };
-    logEvent({
+    analytics.logEvent({
         event: 'view_item_list',
         params: eventParams,
     });
@@ -72,25 +72,25 @@ export const geoFilterLocationSelect = (location: ILocation) => {
         where = 'geo_my_location';
     if (location.key == israelLocation.key)
         where = 'geo_nation_wide';
-    interactionEvent('geo-widget', where, location.key);
+    analytics.interactionEvent('geo-widget', where, location.key);
 }
 export const moreFiltersModalEvent = () =>{
-    interactionEvent('open-filters', window.location.href);
+    analytics.interactionEvent('open-filters', window.location.href);
 }
 export const gotoCardFromBranchList = (cardId:string) =>{
-    interactionEvent(cardId, 'branch-services');
+    analytics.interactionEvent(cardId, 'branch-services');
 }
 
 export const onFocusOnSearchInput = () => {
-    interactionEvent('regular-searchbar', window.location.href);
+    analytics.interactionEvent('regular-searchbar', window.location.href);
 }
 
 export const enterServiceFromSearchAutocomplete = (cardId: string) => {
-    interactionEvent(cardId, 'search-autocomplete-direct');
+    analytics.interactionEvent(cardId, 'search-autocomplete-direct');
 };
 
 export const scrollOnceEvent = () =>{
-    interactionEvent('scroll-in-results', window.location.href);
+    analytics.interactionEvent('scroll-in-results', window.location.href);
 }
 
 

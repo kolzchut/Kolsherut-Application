@@ -8,10 +8,10 @@ import {setSearchOptions} from "../store/data/dataSlice";
 import sortOptionalSearchValues from "./sortOptionalSearchValues";
 import mapService from './map/map'
 import {mapInteractions, viewInteractions} from "./map/events/mapInteraction";
-import {getRouteParams} from "./url/route.tsx";
+import {getRouteParams} from "./url/route";
 import  {setAllLocationsInStore} from "./geoLogic";
 import analytics from "./gtag/analytics";
-import {setFilterRouteParams} from "../store/filter/filterSlice.ts";
+import {setFilterRouteParams} from "../store/filter/filterSlice";
 
 
 export default async (main: React.ReactNode) => {
@@ -21,12 +21,12 @@ export default async (main: React.ReactNode) => {
         store.dispatch(setFilterRouteParams(routeParams));
     }
     if (await loadConfig()) {
+        analytics.init();
         mapService.init({mapInteractions, viewInteractions})
         setAllLocationsInStore();
         const searchOptions = await sendMessage({method: 'get', requestURL: window.config.routes.homepage})
         const sortedSearchOptions = sortOptionalSearchValues(searchOptions.data || []);
         if (searchOptions.success) store.dispatch(setSearchOptions(sortedSearchOptions))
     }
-    analytics.init();
     ReactDOM.createRoot(document.getElementById('root')!).render(main);
 };
