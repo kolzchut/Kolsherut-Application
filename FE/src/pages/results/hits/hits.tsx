@@ -1,6 +1,6 @@
 import CardBanner from "../../../components/cardBanner/cardBanner";
 import {IService} from "../../../types/serviceType";
-import {ICard} from "../../../types/cardType";
+import {ICardForBanner} from "../../../types/cardType";
 import useStyles from "./hits.css";
 import Organization from "./organization/organization";
 import OrganizationWithSingleBranch from "./organization/organizationWithSingleBranch";
@@ -21,7 +21,7 @@ const Hits = ({service}: { service: IService }) => {
     }
     const organizationsToDisplay = service.organizations.slice(0, maxOfOrganizationsDisplayed);
     return <div className={classes.mainDiv} key={service.id}>
-        <CardBanner card={service as unknown as ICard}/>
+        <CardBanner card={service as unknown as ICardForBanner}/>
         <div>
             {organizationsToDisplay.map((organization) => {
                 const singleBranch = organization.branches?.length == 1;

@@ -76,5 +76,35 @@ export default createUseStyles({
             top: 0,
             left: 0,
         })
-    }
+    },
+    noResults:{
+        display:'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%',
+        height: '100%',
+        position:'relative'
+    },
+    noResultsIcon:{
+        width: '50%',
+        height: '50%',
+        marginTop: '20px',
+    },
+    noResultsText:{
+        fontSize:30,
+        fontWeight: 700,
+    },
+    loading:{
+        display:'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%',
+        height: '100%',
+        position:'relative'
+    },
+    loadingIcon:{
+        width: '50%',
+        height: '50%',
+        marginTop: '20px',
+    },
 });

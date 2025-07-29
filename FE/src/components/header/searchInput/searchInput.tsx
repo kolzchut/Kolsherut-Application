@@ -50,7 +50,7 @@ const SearchInput = () => {
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            settingToResults({value:{title:searchTerm}, removeOldFilters:true})
+            settingToResults({value:{query:searchTerm}, removeOldFilters:true})
             onCloseSearchOptions()
         }
     };

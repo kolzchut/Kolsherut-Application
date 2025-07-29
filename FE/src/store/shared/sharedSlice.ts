@@ -1,6 +1,6 @@
 import {ILabel} from "../../types/homepageType";
 import {store} from "../store";
-import {setPage, settingURLParamsToResults} from "../general/generalSlice";
+import {setLoading, setPage, settingURLParamsToResults} from "../general/generalSlice";
 import {setResults} from "../data/dataSlice.ts";
 import fetchResults from "../../services/searchUtilities/fetchResults.ts";
 import {
@@ -9,11 +9,12 @@ import {
 import ILocation from "../../types/locationType.ts";
 
 export const settingToResults = async ({value, removeOldFilters}: { value: ILabel, removeOldFilters: boolean }) => {
-    store.dispatch(settingURLParamsToResults(value.title))
+    store.dispatch(setLoading(true));
+    store.dispatch(settingURLParamsToResults(value.query))
     const fetchedResults = await fetchResults({
         responseId: value.response_id,
         situationId: value.situation_id,
-        searchQuery: value.title
+        searchQuery: value.query
     });
     store.dispatch(setResults(fetchedResults || []));
 
@@ -21,8 +22,10 @@ export const settingToResults = async ({value, removeOldFilters}: { value: ILabe
     if (value.situation_id) newFilters.situations = [value.situation_id];
     if (value.response_id) newFilters.responses = [value.response_id];
     if (value.cityName && value.bounds) newFilters.location = {key: value.cityName, bounds: value.bounds};
-    if (removeOldFilters) return store.dispatch(resetFilters(newFilters))
-    store.dispatch(setFilters(newFilters));
+    if (removeOldFilters) store.dispatch(resetFilters(newFilters))
+    if (!removeOldFilters) store.dispatch(setFilters(newFilters));
+    store.dispatch(setLoading(false));
+
 }
 
 export const backToResults = () => {

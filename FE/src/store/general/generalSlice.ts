@@ -33,6 +33,11 @@ export const generalSlice = createSlice({
         },
         setAccessibility(state: GeneralStore, action) {
             state.accessibilityActive = action.payload;
+        },
+        setLoading(state: GeneralStore, action) {
+            if (typeof action.payload != 'boolean') return;
+            state.loading = action.payload;
+
         }
     },
 });
@@ -45,6 +50,7 @@ export const {
     settingURLParamsToResults,
     setShowSidebar,
     setAccessibility,
+    setLoading,
 } = generalSlice.actions;
 
 export default generalSlice.reducer;

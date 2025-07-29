@@ -3,6 +3,7 @@ export const initialState = {
     modal: null,
     cardId: "",
     searchQuery:"",
+    loading: false,
     showSidebar: false,
     accessibilityActive: false
 };

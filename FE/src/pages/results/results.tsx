@@ -11,7 +11,7 @@ import Hits from "./hits/hits";
 import {IService} from "../../types/serviceType";
 import BranchList from "./branchList/branchList";
 import Header from "../../components/header/header";
-import {getSearchQuery} from "../../store/general/general.selector";
+import {getSearchQuery, isLoading} from "../../store/general/general.selector";
 import Map from "../../components/map/map";
 import {useDisplayResultsMap} from "./context/contextFunctions";
 import {removeAllPOIs} from "../../services/map/poiInteraction";
@@ -26,10 +26,11 @@ import getResultsMetaTags from "./getResultsMetaTags.ts";
 import {useOnce} from "../../hooks/useOnce";
 import {allowChangeStoreLocation} from "../../services/map/events/mapInteraction.ts";
 import {settingToResults} from "../../store/shared/sharedSlice.ts";
-
+import noResultsIcon from "../../assets/noResults.svg";
+import loadingIcon from '../../assets/searchAnimation.svg';
 
 const Results = () => {
-
+    const isResultsLoading = useSelector(isLoading);
     const filteredResults = useSelector(getFilteredResults);
     const selectedOrganization = useSelector(getSelectedOrganization);
     const branches = useSelector(getFilteredBranches);
@@ -58,7 +59,7 @@ const Results = () => {
     useEffect(() => {
         allowChangeStoreLocation(true)
         if (!filteredResults || filteredResults.length === 0) {
-            settingToResults({value: {title: searchQuery}, removeOldFilters: false})
+            settingToResults({value: {query: searchQuery}, removeOldFilters: false})
         }
         return () => {
             allowChangeStoreLocation(false);
@@ -66,6 +67,9 @@ const Results = () => {
             dispatch(setSelectedOrganization(null));
         }
     }, []);
+    const conditionToShowResults = filteredResults.length > 0;
+    const conditionToShowLoading = isResultsLoading && !conditionToShowResults;
+    const conditionToShowNoResults = !isResultsLoading && filteredResults.length === 0;
     return <>
         <MetaTags {...metaTagsData}/>
         <div>
@@ -74,9 +78,20 @@ const Results = () => {
                 {isMobile ? <FiltersForMobile/> : <FiltersForDesktop/>}
                 <div className={classes.resultsContainer} onScroll={reportOnce}>
                     <div className={classes.hits}>
-                        {filteredResults.map((service: IService) => (
+                        {conditionToShowResults&& filteredResults.map((service: IService) => (
                             <Hits key={service.id} service={service}/>
                         ))}
+                        {conditionToShowNoResults&& (
+                            <div className={classes.noResults}>
+                                <img className={classes.noResultsIcon} src={noResultsIcon} alt={"no results"}/>
+                                <span className={classes.noResultsText}>{window.strings.results.noResults}</span>
+                            </div>
+                        )}
+                        {conditionToShowLoading && (
+                            <div className={classes.loading}>
+                                <img className={classes.loadingIcon} src={loadingIcon} alt={"loading..."} />
+                            </div>
+                        )}
                     </div>
                     <div className={classes.branchList}>
                         {selectedOrganization && (<BranchList organization={selectedOrganization}/>)}

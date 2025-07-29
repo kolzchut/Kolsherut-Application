@@ -42,6 +42,7 @@
   "quickActionWebsite": "אתר",
   "results": {
     "numOfBranches": "סניפים",
+    "noResults": "אין תוצאות",
     "nationalBranch": "שירות ארצי",
     "notAccurateLocation": "(במיקום לא מדויק)",
     "hideMapOnDesktop": "הסתר מפה",

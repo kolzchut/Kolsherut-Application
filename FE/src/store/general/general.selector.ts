@@ -48,3 +48,6 @@ export const getShowSidebar = createSelector([generalStore], (generalStore: Gene
 export const isAccessibilityActive = createSelector([generalStore], (generalStore: GeneralStore) => {
     return generalStore.accessibilityActive;
 })
+export const isLoading = createSelector([generalStore], (generalStore: GeneralStore) => {
+    return generalStore.loading;
+});
