@@ -8,6 +8,7 @@ import {
     removeSituationFilter
 } from "../../../../../../store/filter/filterSlice.ts";
 import {getColor} from "../../../../../../components/label/labelLogic.ts";
+import resultsAnalytics from "../../../../../../services/gtag/resultsEvents.ts";
 
 
 const OccasionButtonForMobile = ({response, situation, isSelected, count = 0}: {
@@ -21,6 +22,7 @@ const OccasionButtonForMobile = ({response, situation, isSelected, count = 0}: {
     const occasion = response || situation;
     if (!occasion) return <></>;
     const onClick = () => {
+        resultsAnalytics.quickFilterActivatedEvent();
         if (isResponse) {
             if (isSelected) return store.dispatch(removeResponseFilter(occasion.id));
             return store.dispatch(addResponseFilter(occasion.id));

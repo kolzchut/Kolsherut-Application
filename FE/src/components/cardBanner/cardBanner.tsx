@@ -3,7 +3,7 @@ import React, {useEffect, useRef, useState} from "react";
 import Label from "../label/label";
 import useStyle from "./cardBanner.css";
 import {isEmergency as checkIfEmergency} from "./cardBannerLogic";
-import {extendDescriptionEvent, shrinkDescriptionEvent} from "../../services/gtag/cardEvents";
+import cardAnalytics from "../../services/gtag/cardEvents";
 
 const emergencyIcon = "/icons/emergency-icon.svg"
 
@@ -28,8 +28,8 @@ const CardBanner = ({card}: { card: ICardForBanner }) => {
     const handleExtendOrMinimizeClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation();
         event.preventDefault();
-        if (extendText) shrinkDescriptionEvent(card.card_id);
-        else extendDescriptionEvent(card.card_id);
+        if (extendText) cardAnalytics.shrinkDescriptionEvent(card.card_id);
+        else cardAnalytics.extendDescriptionEvent(card.card_id);
         setExtendText((prev) => !prev);
     };
 

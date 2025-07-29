@@ -1,16 +1,15 @@
 import {ObjectEvent} from "ol/Object";
-import {Feature, MapBrowserEvent} from "ol";
-import {Geometry} from "ol/geom";
+import {MapBrowserEvent} from "ol";
 import {MapSingleton} from "../map";
-import onMapClick from "./onMapClick";
+import onMapClickGetFeature from "./onMapClickGetFeature.ts";
 import {IMapInteractions, ViewInteractionEventTypes} from "../../../types/InteractionsTypes";
-import logger from "../../logger/logger";
 import {handler as hoverOnPOIHandler} from "./hoverOnPOI";
-import {mapDragEvent} from "../../gtag/mapEvents";
+import mapAnalytics from "../../gtag/mapEvents";
 import ILocation from "../../../types/locationType.ts";
 import {store} from "../../../store/store.ts";
 import {setLocationFilter} from "../../../store/filter/filterSlice.ts";
 import {transformExtent} from 'ol/proj';
+import onMapClickHandler from "./onMapClickHandler.ts";
 
 const globals = {
     draggedBefore: false,
@@ -26,7 +25,7 @@ const debounce = ({cb, delay}: { cb: () => void, delay: number }) => {
 const startDragEventIfNotHappenedBefore = (map: MapSingleton) => {
     if (globals.draggedBefore) return;
     globals.draggedBefore = true;
-    mapDragEvent(map.view.getZoom() || -1)
+    mapAnalytics.mapDragEvent(map.view.getZoom() || -1)
 }
 const handleNewBounds = (map: MapSingleton) => {
     if(!globals.allowChangeStoreLocation) return;
@@ -59,12 +58,7 @@ export const mapInteractions: IMapInteractions = [
     {
         event: 'click',
         handler: (map: MapSingleton) => (event: MapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>) => {
-            onMapClick(event, map.ol, (selectedFeature: Feature<Geometry>) => {
-                logger.log({
-                    message: "replace with Show only selected feature to display the selected feature (poi or route)",
-                    payload: selectedFeature
-                });
-            });
+            onMapClickGetFeature(event, map.ol, onMapClickHandler);
         }
     },
     {

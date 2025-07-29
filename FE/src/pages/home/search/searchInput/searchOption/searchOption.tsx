@@ -7,6 +7,7 @@ import lightIconSearch from "../../../../../assets/icon-search-gray-4.svg";
 import unstructuredSearchIcon from "../../../../../assets/icon-chevron-left-gray-4.svg";
 import {settingToResults} from "../../../../../store/shared/sharedSlice";
 import {ILabel} from "../../../../../types/homepageType";
+import generalAnalytics from "../../../../../services/gtag/generalEvents.ts";
 
 const SearchOption = ({value, onCloseSearchOptions, isStructured}: { value: IStructureAutocomplete | IUnStructuredAutocomplete, onCloseSearchOptions: () => void, isStructured:boolean}) => {
     const classes = useStyles();
@@ -22,6 +23,7 @@ const SearchOption = ({value, onCloseSearchOptions, isStructured}: { value: IStr
             customValueAsLabel.cityName = structuredValue.cityName;
             customValueAsLabel.bounds = structuredValue.bounds;
         }
+        generalAnalytics.enterServiceFromSearchAutocomplete(value.query)
         settingToResults({value: customValueAsLabel, removeOldFilters:true});
         onCloseSearchOptions();
     };

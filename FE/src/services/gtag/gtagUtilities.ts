@@ -22,5 +22,3 @@ export const cardToItem = (card: ICard, idx: number, item_list_name?: string | n
     });
     return item;
 };
-
-export const isLandingPage = () => window.location.href === document.referrer || document.referrer === '';

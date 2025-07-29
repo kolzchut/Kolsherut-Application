@@ -2,7 +2,7 @@ import {ICard} from "../../types/cardType";
 import analytics from "./analytics";
 import {cardToItem} from "./gtagUtilities";
 
-export const cardEvent = (
+const cardEvent = (
     card: ICard,
     index: number,
     select: boolean,
@@ -73,22 +73,35 @@ const cardActionEvent = (card: ICard, action: string, action_url: string) => {
     });
 };
 
-export const copyToClipboard = ({card, action, action_url}:{ card: ICard, action: 'email' | 'phone' | 'url' | 'nav', action_url: string }
+const copyToClipboard = ({card, action, action_url}: {
+                             card: ICard,
+                             action: 'email' | 'phone' | 'url' | 'nav',
+                             action_url: string
+                         }
 ) => {
     addToCartEvent(card, action, action_url);
     cardActionEvent(card, action, action_url);
 };
 
-export const extendDescriptionEvent = (card_id: string) => {
+const extendDescriptionEvent = (card_id: string) => {
     analytics.logEvent({
         event: 'srm:extend_description',
-        params: { card_id },
+        params: {card_id},
     });
 };
 
-export const shrinkDescriptionEvent = (card_id: string) => {
+const shrinkDescriptionEvent = (card_id: string) => {
     analytics.logEvent({
         event: 'srm:shrink_description',
-        params: { card_id },
+        params: {card_id},
     });
 };
+
+export default {
+    cardEvent,
+    addToCartEvent,
+    cardActionEvent,
+    copyToClipboard,
+    extendDescriptionEvent,
+    shrinkDescriptionEvent,
+}

@@ -2,10 +2,13 @@ import analytics from "./analytics";
 
 export const mapStateEvent = ({isOpen}: { isOpen: boolean }) => {
     analytics.logEvent({
-        params: { map_state: isOpen ? 'open' : 'close'},
+        params: {map_state: isOpen ? 'open' : 'close'},
         event: 'map_state',
 
     });
+}
+export const onMapBranchClicked = ({cardId, branchName}: { cardId: string, branchName: string }) => {
+    analytics.interactionEvent('map-branch-clicked', cardId, branchName);
 }
 
 export const enterServiceFromMapPopupHoverEvent = (cardId: string) => {
@@ -21,23 +24,12 @@ export const enterServiceFromMapPopupMultiBranchEvent = (cardId: string) => {
 };
 
 export const enterServiceFromPointViewMobileEvent = (cardId: string) => {
-    analytics.interactionEvent(cardId, 'point-view');
+    analytics.interactionEvent(cardId, 'map-point-view');
 };
 
-export const mapElementClickEvent = (layerId: string) => {
-    analytics.interactionEvent('point-click', 'map', layerId);
-};
 
 export const mapDragEvent = (zoomLevel: number) => {
     analytics.interactionEvent('map-drag', 'map', Math.round(zoomLevel).toString());
-};
-
-export const mapClickEvent = (zoomLevel: number) => {
-    analytics.interactionEvent('map-click', 'map', Math.round(zoomLevel).toString());
-};
-
-export const placeNameClickEvent = (placeName: string) => {
-    analytics.interactionEvent('place-name-click', 'map', placeName);
 };
 
 export const popupCardClickFromHoverEvent = (cardId: string) => {
@@ -47,3 +39,15 @@ export const popupCardClickFromHoverEvent = (cardId: string) => {
 export const popupCardClickFromStableEvent = (cardId: string) => {
     analytics.interactionEvent('popup-card-click', 'map-popup-stable', cardId);
 };
+
+export default {
+    mapStateEvent,
+    onMapBranchClicked,
+    enterServiceFromMapPopupHoverEvent,
+    enterServiceFromMapPopupSingleBranchEvent,
+    enterServiceFromMapPopupMultiBranchEvent,
+    enterServiceFromPointViewMobileEvent,
+    mapDragEvent,
+    popupCardClickFromHoverEvent,
+    popupCardClickFromStableEvent
+}

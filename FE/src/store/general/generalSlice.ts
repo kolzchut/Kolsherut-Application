@@ -34,6 +34,11 @@ export const generalSlice = createSlice({
         setAccessibility(state: GeneralStore, action) {
             state.accessibilityActive = action.payload;
         },
+        setFirstVisitedUrl(state: GeneralStore, action) {
+            if (state.firstVisitedUrl === null) {
+                state.firstVisitedUrl = action.payload;
+            }
+        },
         setLoading(state: GeneralStore, action) {
             if (typeof action.payload != 'boolean') return;
             state.loading = action.payload;
@@ -50,6 +55,7 @@ export const {
     settingURLParamsToResults,
     setShowSidebar,
     setAccessibility,
+    setFirstVisitedUrl,
     setLoading,
 } = generalSlice.actions;
 

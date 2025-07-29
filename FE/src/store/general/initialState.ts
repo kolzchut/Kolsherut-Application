@@ -5,6 +5,7 @@ export const initialState = {
     searchQuery:"",
     loading: false,
     showSidebar: false,
-    accessibilityActive: false
+    accessibilityActive: false,
+    firstVisitedUrl: null as string | null
 };
 export type GeneralStore = typeof initialState;

@@ -6,7 +6,7 @@ import {useSelector} from "react-redux";
 import {getCardId} from "../../store/general/general.selector";
 import {ICard} from "../../types/cardType";
 import CardDetails from "./cardDetails/cardDetails";
-import {cardEvent} from "../../services/gtag/cardEvents";
+import cardAnalytics from "../../services/gtag/cardEvents";
 import Header from "../../components/header/header.tsx";
 import getCardMetaTags from "./getCardMetaTags.ts";
 import MetaTags from "../../services/metaTags.tsx";
@@ -22,7 +22,7 @@ const Card = () => {
             if (cardData !== null) {
                 setFullCard(cardData);
                 setCardOnMap(cardData)
-                cardEvent(cardData, 0, false, 'card');
+                cardAnalytics.cardEvent(cardData, 0, false, 'card');
                 return;
             }
             backToHome();

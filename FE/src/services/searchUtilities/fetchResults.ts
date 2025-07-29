@@ -1,5 +1,5 @@
 import sendMessage from "../sendMessage/sendMessage.ts";
-import {searchEvent} from "../gtag/resultsEvents.ts";
+import resultsAnalytics from "../gtag/resultsEvents.ts";
 
 
 const getResultsFromServer = async (searchQuery: string) => {
@@ -16,7 +16,7 @@ const fetchResults = async ({searchQuery="",responseId="",situationId=""}:{searc
     const fetchedResults = await getResultsFromServer(searchQuery);
     const responseCount = responseId ? 1 : 0;
     const filtersCount = responseCount + (situationId ? 1 : 0) + (searchQuery ? 1 : 0);
-    searchEvent({searchQuery, responseCount, filtersCount});
+    resultsAnalytics.searchEvent({searchQuery, responseCount, filtersCount});
     return fetchedResults;
 };
 export default fetchResults;

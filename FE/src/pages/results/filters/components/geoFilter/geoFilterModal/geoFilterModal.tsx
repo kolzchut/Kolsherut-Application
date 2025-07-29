@@ -14,7 +14,7 @@ import locationIcon from "../../../../../../assets/location.svg"
 import wideLocationIcon from "../../../../../../assets/wideLocation.svg"
 import {setModal} from "../../../../../../store/general/generalSlice";
 import {getOptionalLocations} from "../../../../../../store/shared/locationFilters.selector";
-import {geoFilterLocationSelect} from "../../../../../../services/gtag/resultsEvents.ts";
+import resultsAnalytics from "../../../../../../services/gtag/resultsEvents.ts";
 
 const GeoFilterModal = () => {
     const classes = useStyles();
@@ -46,7 +46,7 @@ const GeoFilterModal = () => {
     const onClick = (location: ILocation, zoom = 12) => {
         store.dispatch(setLocationFilter(location))
         centerByLocation(location.bounds, zoom);
-        geoFilterLocationSelect(location);
+        resultsAnalytics.geoFilterLocationSelect(location);
         close();
     }
     return <div className={classes.root}>

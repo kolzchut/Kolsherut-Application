@@ -51,3 +51,13 @@ export const isAccessibilityActive = createSelector([generalStore], (generalStor
 export const isLoading = createSelector([generalStore], (generalStore: GeneralStore) => {
     return generalStore.loading;
 });
+
+export const getFirstVisitedUrl = createSelector([generalStore], (generalStore: GeneralStore) => {
+    return generalStore.firstVisitedUrl;
+})
+
+export const getIsLandingPage = createSelector([generalStore], (generalStore: GeneralStore) => {
+    const firstUrl = generalStore.firstVisitedUrl;
+    const currentUrl = window.location.href;
+    return firstUrl === currentUrl;
+})

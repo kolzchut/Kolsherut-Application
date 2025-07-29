@@ -1,6 +1,7 @@
 import SingleFilter from "./singleFilter/singleFilter";
 import {addSituationFilter, removeSituationFilter} from "../../../../../store/filter/filterSlice";
 import {store} from "../../../../../store/store";
+import resultsAnalytics from "../../../../../services/gtag/resultsEvents.ts";
 
 interface FilterProps {
     id: string;
@@ -12,6 +13,7 @@ const SituationQuickFilter= ({id, value, situationFilters}:FilterProps) => {
     const isFilterActive = situationFilters.some(filter => filter === id)
 
     const handleClick = () => {
+        resultsAnalytics.quickFilterActivatedEvent();
         if (isFilterActive) return store.dispatch(removeSituationFilter(id));
         return store.dispatch(addSituationFilter(id));
     };

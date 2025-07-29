@@ -3,7 +3,7 @@ import {IBranch} from "../../../../types/serviceType";
 import nationalIcon from "../../../../assets/icon-headset.svg";
 import linkIcon from "../../../../assets/icon-arrow-top-right-gray-4.svg";
 import {getHrefForCard} from "../../../../services/href";
-import {gotoCardFromBranchList} from "../../../../services/gtag/resultsEvents";
+import resultsAnalytics from "../../../../services/gtag/resultsEvents";
 import {reRouteToCard} from "../../../../services/routes/reRoute";
 
 const Branch = ({branch}: { branch: IBranch }) => {
@@ -14,7 +14,7 @@ const Branch = ({branch}: { branch: IBranch }) => {
     const href = getHrefForCard(branch.id)
     const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
-        gotoCardFromBranchList(branch.id)
+        resultsAnalytics.gotoCardFromBranchList(branch.id)
         reRouteToCard({cardId: branch.id})
     }
     return <a href={href} onClick={onClick} className={classes.mainDiv}>

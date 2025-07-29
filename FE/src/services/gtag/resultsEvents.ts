@@ -1,6 +1,7 @@
 import analytics from "./analytics";
 import {IBranch} from "../../types/serviceType";
-import {isLandingPage} from "./gtagUtilities";
+import {store} from "../../store/store";
+import {getIsLandingPage} from "../../store/general/general.selector";
 import ILocation from "../../types/locationType";
 import israelLocation from "../../constants/israelLocation";
 
@@ -19,7 +20,7 @@ interface IViewItemListEventProps {
 }
 
 export const searchEvent = ({responseCount, searchQuery, filtersCount}: ISearchEventProps) => {
-    const isFirstPage =isLandingPage();
+    const isFirstPage = getIsLandingPage(store.getState());
     const eventParams = {
         search_term: searchQuery,
         filter_count: filtersCount,
@@ -39,7 +40,7 @@ export const viewItemListEvent = ({
                                       searchQuery,
                                       branches
                                   }: IViewItemListEventProps) => {
-    const isFirstPage = isLandingPage();
+    const isFirstPage = getIsLandingPage(store.getState());
     const eventParams = {
         search_term: searchQuery,
         filter_count: filtersCount,
@@ -74,10 +75,10 @@ export const geoFilterLocationSelect = (location: ILocation) => {
         where = 'geo_nation_wide';
     analytics.interactionEvent('geo-widget', where, location.key);
 }
-export const moreFiltersModalEvent = () =>{
+export const moreFiltersModalEvent = () => {
     analytics.interactionEvent('open-filters', window.location.href);
 }
-export const gotoCardFromBranchList = (cardId:string) =>{
+export const gotoCardFromBranchList = (cardId: string) => {
     analytics.interactionEvent(cardId, 'branch-services');
 }
 
@@ -85,12 +86,25 @@ export const onFocusOnSearchInput = () => {
     analytics.interactionEvent('regular-searchbar', window.location.href);
 }
 
-export const enterServiceFromSearchAutocomplete = (cardId: string) => {
-    analytics.interactionEvent(cardId, 'search-autocomplete-direct');
-};
-
-export const scrollOnceEvent = () =>{
+export const scrollOnceEvent = () => {
     analytics.interactionEvent('scroll-in-results', window.location.href);
 }
+export const quickFilterActivatedEvent = () => {
+    analytics.logEvent({
+        event: 'srm:quick_filter', params: {
+            landing_page: getIsLandingPage(store.getState()) ? 'yes' : 'no'
+        }
+    })
+}
 
+export default {
+    searchEvent,
+    viewItemListEvent,
+    geoFilterLocationSelect,
+    moreFiltersModalEvent,
+    gotoCardFromBranchList,
+    onFocusOnSearchInput,
+    scrollOnceEvent,
+    quickFilterActivatedEvent
+}
 

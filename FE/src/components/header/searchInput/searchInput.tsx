@@ -7,17 +7,20 @@ import SearchOption from "../../../pages/home/search/searchInput/searchOption/se
 import useStyles from "./searchInput.css"
 import {useMediaQuery} from "@mui/material";
 import {widthOfMobile} from "../../../constants/mediaQueryProps";
-import {onFocusOnSearchInput} from "../../../services/gtag/resultsEvents";
+import resultsAnalytics from "../../../services/gtag/resultsEvents";
 import {useDebounce} from "../../../hooks/useDebounce";
 import useOnClickedOutside from "../../../hooks/useOnClickedOutside";
 import {useSelector} from "react-redux";
-import {getSearchQuery} from "../../../store/general/general.selector.ts";
+import {getPage, getSearchQuery} from "../../../store/general/general.selector.ts";
 import {settingToResults} from "../../../store/shared/sharedSlice.ts";
+import generalAnalytics from "../../../services/gtag/generalEvents.ts";
 
 const inputDescription = "Search for services, organizations, branches, and more"
 const emptyAutocomplete: AutocompleteType = {structured: [], unstructured: []};
 
 const SearchInput = () => {
+    const searchQuery = useSelector(getSearchQuery);
+    const page = useSelector(getPage);
     const isMobile = useMediaQuery(widthOfMobile);
     const classes = useStyles({isMobile});
     const [isInputFocused, setIsInputFocused] = useState(false);
@@ -38,10 +41,10 @@ const SearchInput = () => {
     };
     const onInputFocus = () => {
         setIsInputFocused(true);
-        onFocusOnSearchInput();
+        generalAnalytics.internalSearchClickedEvent({query: searchQuery, where: page});
+        resultsAnalytics.onFocusOnSearchInput();
     }
     const onCloseSearchOptions = () => setOptionalSearchValues(emptyAutocomplete);
-    const searchQuery = useSelector(getSearchQuery);
 
     useEffect(() => {
         if (!searchQuery) return;
@@ -73,10 +76,12 @@ const SearchInput = () => {
         </div>
         {optionalSearchValues.structured.length > 0 && <div className={classes.searchOptionsDiv}>
             {optionalSearchValues.structured.map((value: IStructureAutocomplete, index: number) => (
-                <SearchOption value={value} isStructured={true} key={index} onCloseSearchOptions={onCloseSearchOptions}/>
+                <SearchOption value={value} isStructured={true} key={index}
+                              onCloseSearchOptions={onCloseSearchOptions}/>
             ))}
             {optionalSearchValues.unstructured.map((value, index) => (
-                <SearchOption value={value} isStructured={false} key={index} onCloseSearchOptions={onCloseSearchOptions}/>
+                <SearchOption value={value} isStructured={false} key={index}
+                              onCloseSearchOptions={onCloseSearchOptions}/>
             ))}
         </div>}
     </div>
