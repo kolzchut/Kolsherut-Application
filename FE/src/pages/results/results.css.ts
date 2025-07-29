@@ -86,13 +86,18 @@ export default createUseStyles({
         position:'relative'
     },
     noResultsIcon:{
-        width: '50%',
-        height: '50%',
+        width: '20%',
         marginTop: '20px',
     },
-    noResultsText:{
-        fontSize:30,
+    noResultsTitle:{
+        fontSize:34,
         fontWeight: 700,
+    },
+    noResultsSubtitle:{
+        marginTop:10,
+        fontSize: 28,
+        fontWeight: 500,
+        textAlign: 'center',
     },
     loading:{
         display:'flex',

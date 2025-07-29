@@ -43,6 +43,7 @@
   "results": {
     "numOfBranches": "סניפים",
     "noResults": "אין תוצאות",
+    "noResultsDescription": "אפשר לחפש באזורים נוספים או לשנות את מילות החיפוש או הסננים.",
     "nationalBranch": "שירות ארצי",
     "notAccurateLocation": "(במיקום לא מדויק)",
     "hideMapOnDesktop": "הסתר מפה",

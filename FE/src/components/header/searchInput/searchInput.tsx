@@ -53,11 +53,12 @@ const SearchInput = () => {
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            settingToResults({value:{query:searchTerm}, removeOldFilters:true})
+            settingToResults({value: {query: searchTerm}, removeOldFilters: true})
             onCloseSearchOptions()
         }
     };
-
+    const inputValue = searchTerm.replace(/_/g, ' ')
+    console.log(inputValue, "inputValue");
     return <div className={classes.root} ref={ref}>
         <div className={classes.inputDiv}>
             <img className={classes.searchIcon} alt={"search icon"}
@@ -67,7 +68,7 @@ const SearchInput = () => {
                 ref={inputRef}
                 className={classes.input}
                 type={"text"}
-                value={searchTerm}
+                value={inputValue}
                 onFocus={onInputFocus}
                 onChange={inputChangeEvent}
                 onKeyDown={handleKeyDown}

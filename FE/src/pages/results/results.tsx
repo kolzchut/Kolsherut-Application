@@ -84,7 +84,8 @@ const Results = () => {
                         {conditionToShowNoResults&& (
                             <div className={classes.noResults}>
                                 <img className={classes.noResultsIcon} src={noResultsIcon} alt={"no results"}/>
-                                <span className={classes.noResultsText}>{window.strings.results.noResults}</span>
+                                <span className={classes.noResultsTitle}>{window.strings.results.noResults}</span>
+                                <span className={classes.noResultsSubtitle}>{window.strings.results.noResultsDescription}</span>
                             </div>
                         )}
                         {conditionToShowLoading && (
