@@ -1,12 +1,10 @@
 import {ILabel} from "../../types/homepageType";
 import {store} from "../store";
 import {setLoading, setPage, settingURLParamsToResults} from "../general/generalSlice";
-import {setResults} from "../data/dataSlice.ts";
-import fetchResults from "../../services/searchUtilities/fetchResults.ts";
-import {
-    resetFilters, setFilters,
-} from "../filter/filterSlice.ts";
-import setupNewFilters from "./utilities/setupNewFilters.ts";
+import {setResults} from "../data/dataSlice";
+import fetchResults from "../../services/searchUtilities/fetchResults";
+import { resetFilters, setFilters } from "../filter/filterSlice";
+import setupNewFilters from "./utilities/setupNewFilters";
 
 export const settingToResults = async ({value, removeOldFilters}: { value: ILabel, removeOldFilters: boolean }) => {
     store.dispatch(setResults([]))

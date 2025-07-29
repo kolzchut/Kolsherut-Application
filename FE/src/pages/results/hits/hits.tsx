@@ -4,7 +4,7 @@ import {ICardForBanner} from "../../../types/cardType";
 import useStyles from "./hits.css";
 import Organization from "./organization/organization";
 import OrganizationWithSingleBranch from "./organization/organizationWithSingleBranch";
-import ShowMore from "./showMore/showMore.tsx";
+import ShowMore from "./showMore/showMore";
 import {useState} from "react";
 
 const Hits = ({service}: { service: IService }) => {

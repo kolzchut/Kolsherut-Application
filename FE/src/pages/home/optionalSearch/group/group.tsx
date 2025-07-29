@@ -3,9 +3,9 @@ import useStyles from './group.css'
 import SearchLabel from "./searchLabel/searchLabel";
 import linkIcon from '../../../../assets/linkIcon.svg';
 import {settingToResults} from "../../../../store/shared/sharedSlice";
-import {Response} from "../../../../types/cardType.ts";
-import {getColor} from "../../../../services/colorLogic.ts";
-import homepageAnalytics from "../../../../services/gtag/homepageEvents.ts";
+import {Response} from "../../../../types/cardType";
+import {getColor} from "../../../../services/colorLogic";
+import homepageAnalytics from "../../../../services/gtag/homepageEvents";
 
 const Group = ({group}: { group: IGroup }) => {
     const showGroupLink = (group: IGroup) => group.group_link && (group.response_id || group.situation_id);

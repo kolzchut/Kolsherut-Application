@@ -1,8 +1,8 @@
 import {Situation} from "../../../../../types/cardType";
 import useStyle from "./targetAudience.css";
 import Label from "../../../../../components/label/label";
-import {reRouteToResults} from "../../../../../services/routes/reRoute.ts";
-import {getHrefForResults} from "../../../../../services/href.ts";
+import {reRouteToResults} from "../../../../../services/routes/reRoute";
+import {getHrefForResults} from "../../../../../services/href";
 
 const TargetAudience = ({situations}: { situations: Situation[] }) => {
     const targetAudienceTitle = window.strings.cardDetails.targetAudience;

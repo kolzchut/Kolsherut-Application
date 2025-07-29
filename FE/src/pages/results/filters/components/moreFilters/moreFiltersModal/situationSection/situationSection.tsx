@@ -1,7 +1,7 @@
 import {useState} from "react";
 import useStyles from "./situationSection.css";
 import ISituationsToFilter from "../../../../../../../types/SituationsToFilter";
-import {uniqueBy} from "../../../../../../../services/arr.ts";
+import {uniqueBy} from "../../../../../../../services/arr";
 
 interface IProps {
     title: string,

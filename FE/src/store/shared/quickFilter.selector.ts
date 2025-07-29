@@ -1,12 +1,12 @@
 import {createSelector} from "@reduxjs/toolkit";
-import {getAllBranchesInBounds, getFilteredBranchesInBounds} from "./locationFilters.selector.ts";
-import IFilterOptions from "../../types/filterOptions.ts";
-import {getFilters} from "../filter/filter.selector.ts";
-import {getAllSituationsToFilter} from "./shared.selector.ts";
-import {runOverResponsesAndGetOptionsNoResponseFilterApplied} from "./utilities/runOverResponsesAndGetOptionsNoResponseFilterApplied.ts";
-import {sortAndLimitOptions} from "./utilities/sortAndLimitOptions.ts";
-import {countAdditionalBranches} from "./utilities/countAdditionalBranches.ts";
-import {deduplicateById} from "./utilities/deduplicateById.ts";
+import {getAllBranchesInBounds, getFilteredBranchesInBounds} from "./locationFilters.selector";
+import IFilterOptions from "../../types/filterOptions";
+import {getFilters} from "../filter/filter.selector";
+import {getAllSituationsToFilter} from "./shared.selector";
+import {runOverResponsesAndGetOptionsNoResponseFilterApplied} from "./utilities/runOverResponsesAndGetOptionsNoResponseFilterApplied";
+import {sortAndLimitOptions} from "./utilities/sortAndLimitOptions";
+import {countAdditionalBranches} from "./utilities/countAdditionalBranches";
+import {deduplicateById} from "./utilities/deduplicateById";
 
 export const getTopResponses = createSelector([getAllBranchesInBounds], (branches) => {
     if (!branches || branches.length === 0) return [];

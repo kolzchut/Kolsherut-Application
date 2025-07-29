@@ -3,7 +3,7 @@ import {store} from "../../../../store/store";
 import {setModal} from "../../../../store/general/generalSlice";
 import closeIcon from "../../../../assets/icon-close-black.svg";
 import {useMediaQuery} from "@mui/material";
-import {widthOfMobile} from "../../../../constants/mediaQueryProps.ts";
+import {widthOfMobile} from "../../../../constants/mediaQueryProps";
 
 const Contact = () => {
     const isMobile = useMediaQuery(widthOfMobile);

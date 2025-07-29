@@ -1,8 +1,8 @@
 import {Response} from "../../../../../types/cardType";
 import useStyle from "./serviceEssence.css";
 import Label from "../../../../../components/label/label";
-import {reRouteToResults} from "../../../../../services/routes/reRoute.ts";
-import {getHrefForResults} from "../../../../../services/href.ts";
+import {reRouteToResults} from "../../../../../services/routes/reRoute";
+import {getHrefForResults} from "../../../../../services/href";
 
 const ServiceEssence = ({responses}: { responses: Response[] }) => {
     const serviceEssenceTitle = window.strings.cardDetails.serviceEssence

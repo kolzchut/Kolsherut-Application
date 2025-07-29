@@ -7,9 +7,9 @@ import {getCardId} from "../../store/general/general.selector";
 import {ICard} from "../../types/cardType";
 import CardDetails from "./cardDetails/cardDetails";
 import cardAnalytics from "../../services/gtag/cardEvents";
-import Header from "../../components/header/header.tsx";
-import getCardMetaTags from "./getCardMetaTags.ts";
-import MetaTags from "../../services/metaTags.tsx";
+import Header from "../../components/header/header";
+import getCardMetaTags from "./getCardMetaTags";
+import MetaTags from "../../services/metaTags";
 
 const Card = () => {
     const classes = useStyle();
@@ -18,7 +18,7 @@ const Card = () => {
     const metaTagsData = fullCard ? getCardMetaTags(fullCard) : null;
     useEffect(() => {
         const fetchCard = async () => {
-            const cardData = await getFullCard(cardId); // TODO: Fix this
+            const cardData = await getFullCard(cardId);
             if (cardData !== null) {
                 setFullCard(cardData);
                 setCardOnMap(cardData)

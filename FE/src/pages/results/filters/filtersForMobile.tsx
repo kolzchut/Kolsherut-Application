@@ -1,8 +1,8 @@
 import useStyles from './filtersForMobile.css';
 import MoreFilters from "./components/moreFilters/moreFilters";
-import QuickFiltersForMobile from "./components/QuickFiltersForMobile/QuickFiltersForMobile.tsx";
+import QuickFiltersForMobile from "./components/QuickFiltersForMobile/QuickFiltersForMobile";
 import GeoFilterAndMapDisplayForMobile
-    from "./components/geoFilterAndMapDisplayForMobile/geoFilterAndMapDisplayForMobile.tsx";
+    from "./components/geoFilterAndMapDisplayForMobile/geoFilterAndMapDisplayForMobile";
 
 const FiltersForMobile = () => {
     const classes = useStyles();

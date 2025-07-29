@@ -1,9 +1,6 @@
-import {
-    setCardIdAndCardPage,
-    setSearchQueryAndResultsPage
-} from "../../store/general/generalSlice.ts";
-import {store} from "../../store/store.ts";
-import ILocation from "../../types/locationType.ts";
+import { setCardIdAndCardPage, setSearchQueryAndResultsPage } from "../../store/general/generalSlice";
+import {store} from "../../store/store";
+import ILocation from "../../types/locationType";
 import {setFilters} from "../../store/filter/filterSlice.ts";
 import israelLocation from "../../constants/israelLocation.ts";
 

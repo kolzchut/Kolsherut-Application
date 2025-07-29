@@ -1,15 +1,15 @@
 import useStyles from './geoFilterAndMapDisplayForMobile.css'
 import israelLocation from "../../../../../constants/israelLocation";
 import {useSelector} from "react-redux";
-import {getLocationFilter} from "../../../../../store/filter/filter.selector.ts";
-import {getFilterResultsLength} from "../../../../../store/shared/shared.selector.ts";
+import {getLocationFilter} from "../../../../../store/filter/filter.selector";
+import {getFilterResultsLength} from "../../../../../store/shared/shared.selector";
 import mapIcon from "../../../../../assets/icon-map-region-blue-2.svg";
 import nationWideIcon from "../../../../../assets/wideLocation.svg";
 import searchLocationIcon from "../../../../../assets/icon-search-blue-1.svg"
-import {store} from "../../../../../store/store.ts";
-import {setLocationFilter} from "../../../../../store/filter/filterSlice.ts";
-import {useDisplayResultsMap, useSetDisplayResultsMap} from "../../../context/contextFunctions.ts";
-import {setModal} from "../../../../../store/general/generalSlice.ts";
+import {store} from "../../../../../store/store";
+import {setLocationFilter} from "../../../../../store/filter/filterSlice";
+import {useDisplayResultsMap, useSetDisplayResultsMap} from "../../../context/contextFunctions";
+import {setModal} from "../../../../../store/general/generalSlice";
 
 const GeoFilterAndMapDisplayForMobile = () => {
     const currentLocation = useSelector(getLocationFilter);

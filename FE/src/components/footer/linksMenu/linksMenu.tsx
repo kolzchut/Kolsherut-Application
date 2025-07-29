@@ -1,9 +1,9 @@
 import useStyles from './linksMenu.css';
 import {useEffect, useState} from "react";
 import axios from "axios";
-import logger from "../../../services/logger/logger.ts";
+import logger from "../../../services/logger/logger";
 import {useDispatch} from "react-redux";
-import {setModal} from "../../../store/general/generalSlice.ts";
+import {setModal} from "../../../store/general/generalSlice";
 
 interface ILinks {
     title: string,

@@ -1,11 +1,11 @@
 import {createSelector} from "@reduxjs/toolkit";
-import {getFilters, getLocationFilter, getSearchLocation} from "../filter/filter.selector.ts";
-import {getFilteredBranches} from "./shared.selector.ts";
-import {getLocations, getResults} from "../data/data.selector.ts";
-import ILocation from "../../types/locationType.ts";
-import {IBranch, IService} from "../../types/serviceType.ts";
-import {checkIfCoordinatesInBounds} from "../../services/geoLogic.ts";
-import israelLocation from "../../constants/israelLocation.ts";
+import {getFilters, getLocationFilter, getSearchLocation} from "../filter/filter.selector";
+import {getFilteredBranches} from "./shared.selector";
+import {getLocations, getResults} from "../data/data.selector";
+import ILocation from "../../types/locationType";
+import {IBranch, IService} from "../../types/serviceType";
+import {checkIfCoordinatesInBounds} from "../../services/geoLogic";
+import israelLocation from "../../constants/israelLocation";
 
 export const getFilteredBranchesInBounds = createSelector([getFilteredBranches, getFilters, getLocationFilter], (branches: IBranch[], filters, location) => {
     const isDefaultLocation = location.key === israelLocation.key;

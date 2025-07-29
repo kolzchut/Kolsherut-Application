@@ -1,7 +1,7 @@
 import {
     checkIfAllFirstArrayValuesExistsInSecondArrayValues,
     checkIfAnyFirstArrayValueExistsInSecondArrayValues
-} from "../../../services/str.ts";
+} from "../../../services/str";
 
 export const checkTags = ({ids, filters, checkAll}: { ids: string[], filters: string[], checkAll: boolean }) => {
     if (filters.length === 0) return true;

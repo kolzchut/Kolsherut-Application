@@ -1,8 +1,8 @@
-import {IBranch, IOrganization, IService} from "../../../types/serviceType.ts";
-import ILocation from "../../../types/locationType.ts";
-import {checkIfCoordinatesInBounds} from "../../../services/geoLogic.ts";
-import {checkTags} from "./checkTags.ts";
-import israelLocation from "../../../constants/israelLocation.ts";
+import {IBranch, IOrganization, IService} from "../../../types/serviceType";
+import ILocation from "../../../types/locationType";
+import {checkIfCoordinatesInBounds} from "../../../services/geoLogic";
+import {checkTags} from "./checkTags";
+import israelLocation from "../../../constants/israelLocation";
 
 interface IFilterServicesProps {
     services: IService[];

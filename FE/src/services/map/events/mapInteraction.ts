@@ -1,7 +1,7 @@
 import {ObjectEvent} from "ol/Object";
 import {MapBrowserEvent} from "ol";
 import {MapSingleton} from "../map";
-import onMapClickGetFeature from "./onMapClickGetFeature.ts";
+import onMapClickGetFeature from "./onMapClickGetFeature";
 import {IMapInteractions, ViewInteractionEventTypes} from "../../../types/InteractionsTypes";
 import {handler as hoverOnPOIHandler} from "./hoverOnPOI";
 import mapAnalytics from "../../gtag/mapEvents";

@@ -6,11 +6,11 @@ import {filterStore, getFilters} from "../filter/filter.selector";
 import {FilterStore} from "../filter/initialState";
 import ISituationsToFilter from "../../types/SituationsToFilter";
 import IResponseToFilter from "../../types/ResponseToFilter";
-import {filterServices} from "./utilities/filterServices.ts";
-import {getBranches} from "./utilities/getBranches.ts";
-import {getKeyForResponse} from "./utilities/getKeyForResponse.ts";
-import {getKeyForSituation} from "./utilities/getKeyForSituation.ts";
-import {translateKeyToTitle} from "./utilities/translateKeyToTitle.ts";
+import {filterServices} from "./utilities/filterServices";
+import {getBranches} from "./utilities/getBranches";
+import {getKeyForResponse} from "./utilities/getKeyForResponse";
+import {getKeyForSituation} from "./utilities/getKeyForSituation";
+import {translateKeyToTitle} from "./utilities/translateKeyToTitle";
 
 export const getFilteredSituationIds = createSelector([filterStore], (filterStore: FilterStore) => {
     return filterStore.filters.situations;

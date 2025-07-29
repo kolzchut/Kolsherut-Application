@@ -1,14 +1,14 @@
 import cancelOrAddIcon from '../../../../../../assets/icon-close-black.svg';
-import {Situation, Response} from "../../../../../../types/cardType.ts";
+import {Situation, Response} from "../../../../../../types/cardType";
 import useStyle from "./occasionButtonForMobile.css";
-import {store} from "../../../../../../store/store.ts";
+import {store} from "../../../../../../store/store";
 import {
     addResponseFilter,
     removeResponseFilter,
     removeSituationFilter
-} from "../../../../../../store/filter/filterSlice.ts";
-import {getColor} from "../../../../../../components/label/labelLogic.ts";
-import resultsAnalytics from "../../../../../../services/gtag/resultsEvents.ts";
+} from "../../../../../../store/filter/filterSlice";
+import {getColor} from "../../../../../../components/label/labelLogic";
+import resultsAnalytics from "../../../../../../services/gtag/resultsEvents";
 
 
 const OccasionButtonForMobile = ({response, situation, isSelected, count = 0}: {

@@ -1,4 +1,4 @@
-import {IBranch, IOrganization, IService} from "../../../types/serviceType.ts";
+import {IBranch, IOrganization, IService} from "../../../types/serviceType";
 
 export const getBranches = (services: IService[]) => {
     const branches: IBranch[] = [];

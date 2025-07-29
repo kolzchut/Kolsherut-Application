@@ -6,7 +6,7 @@ import hamburger from "../../assets/icon-hamburger.svg";
 import accessibilityInactive from "../../assets/accessability.svg";
 import accessibilityActive from "../../assets/accessabilityActive.svg";
 import SearchInput from "./searchInput/searchInput";
-import {isAccessibilityActive} from "../../store/general/general.selector.ts";
+import {isAccessibilityActive} from "../../store/general/general.selector";
 import {useDispatch, useSelector} from "react-redux";
 
 const logo = "/icons/logo.svg"

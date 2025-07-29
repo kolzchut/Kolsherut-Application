@@ -1,5 +1,5 @@
-import {Response} from "../../../types/cardType.ts";
-import IFilterOptions from "../../../types/filterOptions.ts";
+import {Response} from "../../../types/cardType";
+import IFilterOptions from "../../../types/filterOptions";
 
 export const runOverResponsesAndGetOptionsNoResponseFilterApplied = (responses: Response[]) => {
     const options: IFilterOptions = {};

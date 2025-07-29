@@ -1,4 +1,4 @@
-import {ICard} from "../../types/cardType.ts";
+import {ICard} from "../../types/cardType";
 
 const getCardMetaTags = (card:ICard)=>{
     const metaTags = window.metaTags.card;

@@ -1,15 +1,15 @@
 import useStyles from './QuickFiltersForMobile.css'
-import IFilterOptions from "../../../../../types/filterOptions.ts";
-import {Response} from "../../../../../types/cardType.ts";
+import IFilterOptions from "../../../../../types/filterOptions";
+import {Response} from "../../../../../types/cardType";
 
 import {useSelector} from "react-redux";
-import {getFilters} from "../../../../../store/filter/filter.selector.ts";
-import ISituationsToFilter from "../../../../../types/SituationsToFilter.ts";
-import OccasionButtonForMobile from "./occasionButtonForMobile/occasionButtonForMobile.tsx";
+import {getFilters} from "../../../../../store/filter/filter.selector";
+import ISituationsToFilter from "../../../../../types/SituationsToFilter";
+import OccasionButtonForMobile from "./occasionButtonForMobile/occasionButtonForMobile";
 import {
     getQuickFilterResponseOptions,
     getQuickFilterSituationOptions
-} from "../../../../../store/shared/quickFilter.selector.ts";
+} from "../../../../../store/shared/quickFilter.selector";
 
 const QuickFiltersForMobile = () => {
     const classes = useStyles();

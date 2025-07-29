@@ -1,8 +1,8 @@
 import {createSelector} from "@reduxjs/toolkit";
-import UrlParams from "../../types/urlParams.ts";
-import {getCardId, getPage, getSearchQuery} from "../general/general.selector.ts";
-import {getLocationFilter, getResponsesFilter, getSituationsFilter} from "../filter/filter.selector.ts";
-import {stringifyLocation} from "../../services/url/parseURL.ts";
+import UrlParams from "../../types/urlParams";
+import {getCardId, getPage, getSearchQuery} from "../general/general.selector";
+import {getLocationFilter, getResponsesFilter, getSituationsFilter} from "../filter/filter.selector";
+import {stringifyLocation} from "../../services/url/parseURL";
 
 export const getUrlParams = createSelector([getPage, getCardId, getSearchQuery, getLocationFilter, getSituationsFilter, getResponsesFilter],
     (page, cardId, searchQuery, locationFilter, situationFilter, responseFilter) => {

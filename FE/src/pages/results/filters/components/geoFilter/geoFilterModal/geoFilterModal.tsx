@@ -14,7 +14,7 @@ import locationIcon from "../../../../../../assets/location.svg"
 import wideLocationIcon from "../../../../../../assets/wideLocation.svg"
 import {setModal} from "../../../../../../store/general/generalSlice";
 import {getOptionalLocations} from "../../../../../../store/shared/locationFilters.selector";
-import resultsAnalytics from "../../../../../../services/gtag/resultsEvents.ts";
+import resultsAnalytics from "../../../../../../services/gtag/resultsEvents";
 
 const GeoFilterModal = () => {
     const classes = useStyles();

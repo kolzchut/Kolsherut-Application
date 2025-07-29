@@ -4,7 +4,7 @@ import {setModal} from "../../../../../store/general/generalSlice";
 import {useMediaQuery} from "@mui/material";
 import {widthOfMobile} from "../../../../../constants/mediaQueryProps";
 import filtersIcon from '../../../../../assets/icon-filter-blue-1.svg';
-import resultsAnalytics from "../../../../../services/gtag/resultsEvents.ts";
+import resultsAnalytics from "../../../../../services/gtag/resultsEvents";
 
 const MoreFilters = () => {
     const isMobile = useMediaQuery(widthOfMobile);

@@ -5,10 +5,10 @@ import sendMessage from "../../../../services/sendMessage/sendMessage";
 import useStyles from "./searchInput.css";
 import closeIcon from "../../../../assets/icon-close-blue-3.svg";
 import SearchOption from "./searchOption/searchOption";
-import homepageAnalytics from "../../../../services/gtag/homepageEvents.ts";
-import {useDebounce} from "../../../../hooks/useDebounce.ts";
-import useOnClickedOutside from "../../../../hooks/useOnClickedOutside.ts";
-import {settingToResults} from "../../../../store/shared/sharedSlice.ts";
+import homepageAnalytics from "../../../../services/gtag/homepageEvents";
+import {useDebounce} from "../../../../hooks/useDebounce";
+import useOnClickedOutside from "../../../../hooks/useOnClickedOutside";
+import {settingToResults} from "../../../../store/shared/sharedSlice";
 
 const inputDescription = "Search for services, organizations, branches, and more"
 const emptyAutocomplete: AutocompleteType = {structured: [], unstructured: []};

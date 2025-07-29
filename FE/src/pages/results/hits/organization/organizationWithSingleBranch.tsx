@@ -2,8 +2,8 @@ import nationalBranchIcon from "../../../../assets/icon-headset.svg";
 import link from "../../../../assets/icon-arrow-top-right-gray-4.svg";
 import useStyles from "./organizationWithSingleBranch.css";
 import {IBranch} from "../../../../types/serviceType";
-import {getHrefForCard} from "../../../../services/href.ts";
-import {reRouteToCard} from "../../../../services/routes/reRoute.ts";
+import {getHrefForCard} from "../../../../services/href";
+import {reRouteToCard} from "../../../../services/routes/reRoute";
 
 const OrganizationWithSingleBranch = ({branch, orgName}: { branch: IBranch, orgName: string }) => {
     const classes = useStyles();

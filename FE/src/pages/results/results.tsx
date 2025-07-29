@@ -5,7 +5,7 @@ import {
 } from "../../store/data/data.selector";
 import {addResultsPOIs, setMapOnLocation} from "./resultsLogic";
 import useStyles from "./results.css";
-import FiltersForDesktop from "./filters/filtersForDesktop.tsx";
+import FiltersForDesktop from "./filters/filtersForDesktop";
 import {setSelectedOrganization} from "../../store/data/dataSlice";
 import Hits from "./hits/hits";
 import {IService} from "../../types/serviceType";
@@ -19,13 +19,13 @@ import {getFilteredBranches, getFilteredResults} from "../../store/shared/shared
 import {useMediaQuery} from '@mui/material';
 import {widthOfMobile} from "../../constants/mediaQueryProps";
 import resultsAnalytics from "../../services/gtag/resultsEvents";
-import FiltersForMobile from "./filters/filtersForMobile.tsx";
-import {getLocationFilter} from "../../store/filter/filter.selector.ts";
-import MetaTags from "../../services/metaTags.tsx";
-import getResultsMetaTags from "./getResultsMetaTags.ts";
+import FiltersForMobile from "./filters/filtersForMobile";
+import {getLocationFilter} from "../../store/filter/filter.selector";
+import MetaTags from "../../services/metaTags";
+import getResultsMetaTags from "./getResultsMetaTags";
 import {useOnce} from "../../hooks/useOnce";
-import {allowChangeStoreLocation} from "../../services/map/events/mapInteraction.ts";
-import {settingToResults} from "../../store/shared/sharedSlice.ts";
+import {allowChangeStoreLocation} from "../../services/map/events/mapInteraction";
+import {settingToResults} from "../../store/shared/sharedSlice";
 import noResultsIcon from "../../assets/noResults.svg";
 import loadingIcon from '../../assets/searchAnimation.svg';
 
@@ -34,7 +34,6 @@ const Results = () => {
     const filteredResults = useSelector(getFilteredResults);
     const selectedOrganization = useSelector(getSelectedOrganization);
     const branches = useSelector(getFilteredBranches);
-    //TODO: change name to better one
     const searchQuery = useSelector(getSearchQuery);
     const displayResultsMap = useDisplayResultsMap();
     const location = useSelector(getLocationFilter)

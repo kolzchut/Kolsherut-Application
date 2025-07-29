@@ -1,4 +1,4 @@
-import useStyles from './filtersForDesktop.css.ts';
+import useStyles from './filtersForDesktop.css';
 import MapDisplay from "./components/mapDisplay/mapDisplay";
 import QuickFilters from "./components/quickFilters/quickFilters";
 import MoreFilters from "./components/moreFilters/moreFilters";

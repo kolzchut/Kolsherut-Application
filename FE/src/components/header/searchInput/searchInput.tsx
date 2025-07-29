@@ -11,9 +11,9 @@ import resultsAnalytics from "../../../services/gtag/resultsEvents";
 import {useDebounce} from "../../../hooks/useDebounce";
 import useOnClickedOutside from "../../../hooks/useOnClickedOutside";
 import {useSelector} from "react-redux";
-import {getPage, getSearchQuery} from "../../../store/general/general.selector.ts";
-import {settingToResults} from "../../../store/shared/sharedSlice.ts";
-import generalAnalytics from "../../../services/gtag/generalEvents.ts";
+import {getPage, getSearchQuery} from "../../../store/general/general.selector";
+import {settingToResults} from "../../../store/shared/sharedSlice";
+import generalAnalytics from "../../../services/gtag/generalEvents";
 
 const inputDescription = "Search for services, organizations, branches, and more"
 const emptyAutocomplete: AutocompleteType = {structured: [], unstructured: []};

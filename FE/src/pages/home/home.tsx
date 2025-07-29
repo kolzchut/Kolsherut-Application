@@ -5,8 +5,8 @@ import OptionalSearch from "./optionalSearch/optionalSearch";
 import Footer from "../../components/footer/footer";
 import {useMediaQuery} from "@mui/material";
 import {widthOfMobile} from "../../constants/mediaQueryProps";
-import getHomeMetaTags from "./getHomeMetaTags.ts";
-import MetaTags from "../../services/metaTags.tsx";
+import getHomeMetaTags from "./getHomeMetaTags";
+import MetaTags from "../../services/metaTags";
 
 const Home = () => {
     const isMobile = useMediaQuery(widthOfMobile);

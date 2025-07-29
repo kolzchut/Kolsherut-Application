@@ -1,6 +1,6 @@
 import useStyle from "./header.css";
 import backIcon from "../../../../../assets/icon-arrow-right.svg";
-import {backToResults} from "../../../../../store/shared/sharedSlice.ts";
+import {backToResults} from "../../../../../store/shared/sharedSlice";
 const Header = ({organizationName, branchAddress, branchLocationAccurate, isNational}: {
     organizationName: string,
     branchAddress: string,

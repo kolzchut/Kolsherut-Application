@@ -1,7 +1,7 @@
 import SingleFilter from "./singleFilter/singleFilter";
 import {addResponseFilter, removeResponseFilter} from "../../../../../store/filter/filterSlice";
 import {store} from "../../../../../store/store";
-import resultsAnalytics from "../../../../../services/gtag/resultsEvents.ts";
+import resultsAnalytics from "../../../../../services/gtag/resultsEvents";
 
 interface FilterProps {
     id: string;

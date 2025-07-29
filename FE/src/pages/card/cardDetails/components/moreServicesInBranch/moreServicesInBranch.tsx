@@ -1,8 +1,8 @@
 import {ICardForBanner} from "../../../../../types/cardType";
 import useStyle from "./moreServicesInBranch.css";
 import CardBanner from "../../../../../components/cardBanner/cardBanner";
-import {reRouteToCard} from "../../../../../services/routes/reRoute.ts";
-import {getHrefForCard} from "../../../../../services/href.ts";
+import {reRouteToCard} from "../../../../../services/routes/reRoute";
+import {getHrefForCard} from "../../../../../services/href";
 
 const MoreServicesInBranch = ({moreServicesInBranch}: { moreServicesInBranch: ICardForBanner[] }) => {
     const moreServicesInBranchTitle = window.strings.cardDetails.moreServicesInBranchTitle;

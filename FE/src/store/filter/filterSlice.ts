@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {FilterStore, initialState} from './initialState';
-import {parseLocation} from "../../services/url/parseURL.ts";
-import israelLocation from "../../constants/israelLocation.ts";
+import {parseLocation} from "../../services/url/parseURL";
+import israelLocation from "../../constants/israelLocation";
 
 export const filterSlice = createSlice({
     name: 'filter',

@@ -6,7 +6,7 @@ import JusticeLink from "../../../links/justiceLink";
 import DigitalLink from "../../../links/digitalLink";
 import KZLink from "../../../links/kzLink";
 import {useMediaQuery} from "@mui/material";
-import {widthOfMobile} from "../../../../constants/mediaQueryProps.ts";
+import {widthOfMobile} from "../../../../constants/mediaQueryProps";
 
 const About = () => {
     const strings = window.strings.staticModals.about;
