@@ -12,12 +12,7 @@ export const dataSlice = createSlice({
             state.searchOptions = action.payload;
         },
         setSelectedOrganization(state: DataStore, action) {
-            const organization = action.payload;
-            if (organization) {
-                state.selectedOrganization = organization;
-            } else {
-                state.selectedOrganization = null;
-            }
+            state.selectedOrganization = action.payload || null;
         },
         setLocations(state: DataStore, action) {
             state.locations = action.payload;

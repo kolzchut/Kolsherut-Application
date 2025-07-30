@@ -46,7 +46,7 @@ export const viewItemListEvent = ({
         filter_count: filtersCount,
         filter_responses_count: responsesCount,
         landing_page: isFirstPage ? 'yes' : 'no',
-        items: branches.map((branch, index) => {
+        items: (branches || []).map((branch, index) => {
             const itemCategories: { [key: string]: string } = {}
             const arrOfCategories = [...branch.responses, ...branch.situations].map((category) => category.id)
             arrOfCategories.forEach((category, idx) => {
@@ -107,4 +107,3 @@ export default {
     scrollOnceEvent,
     quickFilterActivatedEvent
 }
-

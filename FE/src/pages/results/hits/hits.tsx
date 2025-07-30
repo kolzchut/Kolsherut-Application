@@ -26,7 +26,7 @@ const Hits = ({service}: { service: IService }) => {
             {organizationsToDisplay.map((organization) => {
                 const singleBranch = organization.branches?.length == 1;
                 if(singleBranch) return <OrganizationWithSingleBranch key={organization.id} branch={organization.branches[0]} orgName={organization.name}/>
-                return <Organization key={organization.id} organization={organization}/>;
+                return <Organization key={organization.id} organization={organization} serviceId={service.id}/>;
             })}
             {displayShowMore && <ShowMore onClick={showMoreClicked} count={service.organizations.length - maxOfOrganizationsDisplayed}/>}
         </div>

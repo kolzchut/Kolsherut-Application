@@ -31,9 +31,9 @@ const BranchList = ({organization}: { organization: IOrganization }) => {
             <img className={classes.closeIcon} src={closeIcon} onClick={onClose} alt={"Close branch list"}/>
         </div>
         <div className={classes.branchList}>
-            {organization.branches.map(branch => (
+            {organization.branches?.map(branch => (
                 <Branch key={branch.id} branch={branch}/>
-            ))}
+            )) || <div>No branches available</div>}
         </div>
     </div>
 }

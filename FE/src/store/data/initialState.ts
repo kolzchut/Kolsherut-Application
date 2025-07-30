@@ -4,7 +4,10 @@ import ILocation from "../../types/locationType";
 export const initialState = {
     searchOptions: {},
     results: [] as IService[],
-    selectedOrganization: null as null | IOrganization,
+    selectedOrganization: {
+        organization: null as null | IOrganization,
+        serviceId: null as null | string
+    },
     locations: [] as ILocation[]
 };
 export type DataStore = typeof initialState;
