@@ -22,27 +22,33 @@ const Header = ({showLogo = true, showSearchbar = true}: { showLogo?: boolean, s
         return dispatch(setShowSidebar(true));
     }
     const {names} = window.strings.staticModals
-    const toggleAccessibility = ()=>{
+    const toggleAccessibility = () => {
         dispatch(setAccessibility(!accessibility));
     }
     const accessibilityIcon = accessibility ? accessibilityActive : accessibilityInactive;
-    const btnStyles = accessibility ? classes.accessibilityButton: classes.button;
+    const btnStyles = accessibility ? classes.accessibilityButton : classes.button;
     const linkStyle = accessibility ? classes.accessibilityLink : classes.link
+    const onClick = (e: React.MouseEvent<HTMLAnchorElement>, modalName: string) => {
+        e.preventDefault();
+        dispatch(setModal(modalName))
+    }
+
     return <>
         <div className={classes.root}>
 
             {!isMobile && <div className={classes.linksAndButtonsDiv}>
-                <button className={btnStyles} onClick={toggleAccessibility} >
+                <button className={btnStyles} onClick={toggleAccessibility}>
                     <img src={accessibilityIcon} alt={'activate accessibility'} className={classes.accIcon}/>
                 </button>
-                <div  className={classes.linksDiv}>
-                    <span className={linkStyle} onClick={() => dispatch(setModal("About"))}>{names.about}</span>
-                    <span className={linkStyle}
-                          onClick={() => dispatch(setModal("AddService"))}>{names.addService}</span>
-                    <span className={linkStyle}
-                          onClick={() => dispatch(setModal("Partners"))}>{names.partners}</span>
-                    <span className={linkStyle}
-                          onClick={() => dispatch(setModal("Contact"))}>{names.contact}</span>
+                <div className={classes.linksDiv}>
+                    <a href={`?p=home&m=About`} className={linkStyle}
+                       onClick={(e: React.MouseEvent<HTMLAnchorElement>) => onClick(e, "About")}>{names.about}</a>
+                    <a href={`?p=home&m=AddService`} className={linkStyle}
+                       onClick={(e: React.MouseEvent<HTMLAnchorElement>) => onClick(e, "AddService")}>{names.addService}</a>
+                    <a href={`?p=home&m=Partners`} className={linkStyle}
+                       onClick={(e: React.MouseEvent<HTMLAnchorElement>) => onClick(e, "Partners")}>{names.partners}</a>
+                    <a href={`?p=home&m=Contact`} className={linkStyle}
+                       onClick={(e: React.MouseEvent<HTMLAnchorElement>) => onClick(e, "Contact")}>{names.contact}</a>
                 </div>
 
             </div>}
