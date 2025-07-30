@@ -7,6 +7,11 @@ import {
     primaryBackgroundColorOne
 } from "../../../services/theme";
 
+interface IProps {
+    isMobile: boolean,
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
     root: {
         flex: 14,
@@ -32,7 +37,7 @@ export default createUseStyles({
         whiteSpace: 'nowrap',
         border: 0,
     },
-    input: () => {
+    input: ({accessibilityActive}: IProps) => {
         const firstBackground = tertiaryBackgroundColorTwo;
         const firstBorderColor = primaryBorderColorTwo;
         const secondBackground = secondaryBackgroundColorOne;
@@ -40,7 +45,7 @@ export default createUseStyles({
         return ({
             height: "100%",
             width: '100%',
-            fontSize: '22px',
+            fontSize: accessibilityActive ? '26px' : '22px',
             boxSizing: 'border-box',
             padding: '10px 5px 10px 40px',
             borderRadius: '5px',
@@ -57,7 +62,7 @@ export default createUseStyles({
             }
         })
     },
-    searchOptionsDiv: ({isMobile}: { isMobile: boolean }) => {
+    searchOptionsDiv: ({isMobile}: IProps) => {
         const style = {
             position: 'absolute',
             width:'66%',

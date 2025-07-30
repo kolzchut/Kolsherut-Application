@@ -8,9 +8,11 @@ import {
     getQuickFilterResponseOptions,
     getQuickFilterSituationOptions
 } from "../../../../../store/shared/quickFilter.selector";
+import {isAccessibilityActive} from "../../../../../store/general/general.selector.ts";
 
 const QuickFilters = () => {
-    const classes = useStyles();
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyles({accessibilityActive});
     const quickFilterText = window.strings.results.quickFilters;
     const responseOptions: IFilterOptions = useSelector(getQuickFilterResponseOptions)
     const situationOptions = useSelector(getQuickFilterSituationOptions);

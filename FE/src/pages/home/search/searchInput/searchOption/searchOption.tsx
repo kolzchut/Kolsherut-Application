@@ -8,9 +8,12 @@ import unstructuredSearchIcon from "../../../../../assets/icon-chevron-left-gray
 import {settingToResults} from "../../../../../store/shared/sharedSlice";
 import {ILabel} from "../../../../../types/homepageType";
 import generalAnalytics from "../../../../../services/gtag/generalEvents";
+import { useSelector } from 'react-redux';
+import { isAccessibilityActive } from "../../../../../store/general/general.selector";
 
 const SearchOption = ({value, onCloseSearchOptions, isStructured}: { value: IStructureAutocomplete | IUnStructuredAutocomplete, onCloseSearchOptions: () => void, isStructured:boolean}) => {
-    const classes = useStyles();
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyles({ accessibilityActive });
     const onClick = () => {
         const customValueAsLabel: ILabel = {
             query: value.query,

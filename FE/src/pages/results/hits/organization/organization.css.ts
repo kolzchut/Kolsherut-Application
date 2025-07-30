@@ -1,14 +1,19 @@
 import {createUseStyles} from 'react-jss';
 import {tertiaryBackgroundColorThree, primaryTextColorTwo, tertiaryTextColorThree, tertiaryBackgroundColorTwo} from "../../../../services/theme";
 
+interface IProps {
+    isSelected: boolean,
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
-    organization:({isSelected}:{isSelected:boolean})=>({
+    organization: ({isSelected}: IProps) => ({
         width: '100%',
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor:isSelected ? tertiaryBackgroundColorThree : tertiaryBackgroundColorTwo,
+        backgroundColor: isSelected ? tertiaryBackgroundColorThree : tertiaryBackgroundColorTwo,
         boxSizing: 'border-box',
         padding: '12px',
         border: '1px solid #E1DEDB',
@@ -21,15 +26,15 @@ export default createUseStyles({
             boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
         }
     }),
-    text:({isSelected}:{isSelected:boolean})=>({
-        fontWeight:isSelected? 700 : 300,
-        fontSize: '16px',
-        lineHeight: 1.3,
-        width: '100%',
-    }),
-    numOfBranches:({isSelected}:{isSelected:boolean})=>({
+    text: ({accessibilityActive}: IProps) => ({
+        fontSize: accessibilityActive ? 22 : 18,
+        fontWeight: 400,
         color: primaryTextColorTwo,
-        textDecoration: isSelected ? 'underline' : 'none',
+        textAlign: 'right'
+    }),
+    numOfBranches: ({accessibilityActive}: IProps) => ({
+        fontSize: accessibilityActive ? 18 : 14,
+        fontWeight: 300,
     }),
     nationalBranch:{
         color: tertiaryTextColorThree,

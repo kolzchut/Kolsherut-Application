@@ -1,5 +1,7 @@
 import openIcon from "../../../../../assets/icon-chevron-down-blue.svg";
 import useStyle from "./addServiceBox.css";
+import { useSelector } from 'react-redux';
+import {isAccessibilityActive} from "../../../../../store/general/general.selector.ts";
 
 const AddServiceBox = ({title, content, isExtendedBox, onClick}: {
     title: string,
@@ -7,7 +9,8 @@ const AddServiceBox = ({title, content, isExtendedBox, onClick}: {
     isExtendedBox: boolean,
     onClick: () => void
 }) => {
-    const classes = useStyle({isExtendedBox});
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyle({isExtendedBox, accessibilityActive});
 
     return <div className={classes.root}>
         <img src={openIcon} className={classes.arrow} alt={"Toggle Details"} onClick={onClick}/>

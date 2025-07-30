@@ -1,14 +1,18 @@
 import {createUseStyles} from 'react-jss';
 import {tertiaryTextColorThree, tertiaryBackgroundColorTwo} from "../../../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
-    organization:{
+    organization: {
         width: '100%',
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor:tertiaryBackgroundColorTwo,
+        backgroundColor: tertiaryBackgroundColorTwo,
         boxSizing: 'border-box',
         padding: '12px',
         border: '1px solid #E1DEDB',
@@ -21,16 +25,19 @@ export default createUseStyles({
             boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
         }
     },
-    text:{
-        fontWeight:300,
-        fontSize: '16px',
+    text: ({accessibilityActive}: IProps) => ({
+        fontWeight: 300,
+        fontSize: accessibilityActive ? '20px' : '16px',
         lineHeight: 1.3,
-    },
-    nationalBranch:{
+    }),
+    nationalBranch: ({accessibilityActive}: IProps) => ({
         color: tertiaryTextColorThree,
-        display:"flex"
-    },
-    nationalSpan:{
-        display:'ruby'
+        display: "flex",
+        fontWeight: 300,
+        fontSize: accessibilityActive ? '20px' : '16px',
+        lineHeight: 1.3,
+    }),
+    nationalSpan: {
+        display: 'ruby'
     }
 });

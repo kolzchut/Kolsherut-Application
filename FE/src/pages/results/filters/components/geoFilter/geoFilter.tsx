@@ -5,9 +5,11 @@ import mapIcon from '../../../../../assets/icon-map-region-blue-2.svg';
 import useStyles from "./geoFilter.css";
 import {store} from "../../../../../store/store";
 import {setModal} from "../../../../../store/general/generalSlice";
+import {isAccessibilityActive} from "../../../../../store/general/general.selector.ts";
 
 const GeoFilter = () => {
-    const classes = useStyles();
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyles({accessibilityActive});
     const resultsLength = useSelector(getFilterResultsLength)
     const location = useSelector(getLocationFilter)
     return <div className={classes.root} onClick={()=> store.dispatch(setModal('GeoFilterModal'))}>

@@ -7,12 +7,14 @@ import {getSelectedOrganizationIdAndServiceId} from "../../../../store/data/data
 import {useSelector} from "react-redux";
 import {useSetDistanceFromTop} from "../../context/contextFunctions";
 import React from "react";
+import {isAccessibilityActive} from "../../../../store/general/general.selector.ts";
 
 const Organization = ({organization, serviceId}: { organization: IOrganization, serviceId: string }) => {
     const numOfBranchesText = organization.branches.length + " " + window.strings.results.numOfBranches;
     const selectedOrgIdAndServiceId = useSelector(getSelectedOrganizationIdAndServiceId)
     const isSelected = selectedOrgIdAndServiceId.orgId === organization.id && selectedOrgIdAndServiceId.serviceId === serviceId;
-    const classes = useStyles({isSelected});
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyles({isSelected, accessibilityActive});
     const setDistanceFromTop = useSetDistanceFromTop();
     const onSelectOrganization = (event: React.MouseEvent<HTMLDivElement>) => {
         if (isSelected) return store.dispatch(setSelectedOrganization(null));

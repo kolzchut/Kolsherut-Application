@@ -1,6 +1,8 @@
 import Connection from "../../../../../components/connection/connection";
 import {BranchUrl, ICard} from "../../../../../types/cardType";
 import useStyles from "./contact.css";
+import { useSelector } from 'react-redux';
+import {isAccessibilityActive} from "../../../../../store/general/general.selector";
 
 interface IProps {
     card:ICard,
@@ -18,7 +20,9 @@ const Contact = ({email, phoneNumbers, websites, address,card}: IProps) => {
     const {macro, addressLink} = window.config.redirects;
     const addressFullLink = addressLink.replace(macro, address?.geom?.reverse().join(','));
     const addressCondition: boolean = !!(address && address.text && Array.isArray(address.geom) && address.geom.length === 2)
-    const classes = useStyles();
+
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyles({accessibilityActive});
 
     return (
         <div>

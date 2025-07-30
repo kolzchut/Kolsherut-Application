@@ -1,6 +1,9 @@
 import useStyle from "./header.css";
 import backIcon from "../../../../../assets/icon-arrow-right.svg";
 import {backToResults} from "../../../../../store/shared/sharedSlice";
+import { useSelector } from 'react-redux';
+import {isAccessibilityActive} from "../../../../../store/general/general.selector";
+
 const Header = ({organizationName, branchAddress, branchLocationAccurate, isNational}: {
     organizationName: string,
     branchAddress: string,
@@ -13,7 +16,8 @@ const Header = ({organizationName, branchAddress, branchLocationAccurate, isNati
     const onBackButtonClick = () =>{
         backToResults();
     }
-    const classes = useStyle();
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyle({accessibilityActive});
     return <div className={classes.root}>
         <div className={classes.backButtonDiv}>
             <button onClick={onBackButtonClick} className={classes.backButton}><img className={classes.backButtonImg} src={backIcon} alt={"go back to results"}/></button>

@@ -1,8 +1,12 @@
 import {createUseStyles} from 'react-jss';
 import {primaryTextColorTwo, secondaryBackgroundColorOne, primaryBorderColorTwo, tertiaryBackgroundColorTwo} from "../../../../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean;
+}
+
 export default createUseStyles({
-    optionalSearchValue: {
+    optionalSearchValue: ({ accessibilityActive }: IProps) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -14,11 +18,11 @@ export default createUseStyles({
         background: tertiaryBackgroundColorTwo,
         cursor: 'pointer',
         color: primaryTextColorTwo,
-        fontSize: 18,
+        fontSize: accessibilityActive ? 22 : 18,
         fontWeight: 300,
         '&:hover': {
             cursor: 'pointer',
             background: secondaryBackgroundColorOne,
         }
-    },
+    }),
 });

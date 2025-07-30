@@ -5,6 +5,13 @@ import {
     transparent
 } from "../../../../../services/theme";
 
+interface IProps {
+    isNationwide: boolean,
+    displayResultsMap: boolean,
+    isSearchOpen: boolean,
+    accessibilityActive: boolean
+}
+
 const genericButton = (conditionToColor: boolean) => ({
     backgroundColor: conditionToColor ? primaryBackgroundColorOne : transparent,
     height: '100%',
@@ -31,17 +38,13 @@ export default createUseStyles({
         boxSizing: 'border-box',
         direction: "rtl",
     },
-    nationwideButton: ({isNationwide}: {
-        isNationwide: boolean,
-        displayResultsMap: boolean,
-        isSearchOpen: boolean
-    }) => ({
+    nationwideButton: ({isNationwide}: IProps) => ({
         ...genericButton(isNationwide)
     }),
-    mapButton: ({displayResultsMap}: { isNationwide: boolean, displayResultsMap: boolean, isSearchOpen: boolean }) => ({
+    mapButton: ({displayResultsMap}: IProps) => ({
         ...genericButton(displayResultsMap)
     }),
-    searchButton: ({isSearchOpen}: { isNationwide: boolean, displayResultsMap: boolean, isSearchOpen: boolean }) => ({
+    searchButton: ({isSearchOpen}: IProps) => ({
         ...genericButton(isSearchOpen),
         width: isSearchOpen ? '100%' : 'fit-content',
         gap: 5,
@@ -50,9 +53,9 @@ export default createUseStyles({
     icon: {
         height: '100%'
     },
-    textAndMapDiv: {
+    textAndMapDiv: ({accessibilityActive}: IProps) => ({
         display: 'flex',
-        fontSize: 16,
+        fontSize: accessibilityActive ? 20 : 16,
         fontWeight: 600,
         color: primaryTextColorTwo,
         height: '100%',
@@ -60,14 +63,14 @@ export default createUseStyles({
         alignItems: 'center',
         gap: 3,
         justifyContent: 'center'
-    },
-    count: {
-        fontSize: 16,
+    }),
+    count: ({accessibilityActive}: IProps) => ({
+        fontSize: accessibilityActive ? 20 : 16,
         fontWeight: 600,
         lineHeight: 1,
         color: primaryTextColorTwo,
         borderRadius: 12,
         background: secondaryBackgroundColorOne,
         padding: '2px 6px',
-    },
+    }),
 });

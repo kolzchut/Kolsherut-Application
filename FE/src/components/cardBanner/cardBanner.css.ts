@@ -23,20 +23,20 @@ export default createUseStyles({
         top: '5px',
         position: 'absolute',
     },
-    bannerTitle: {
+    bannerTitle:({accessibilityActive}: { accessibilityActive: boolean }) => ({
         color: secondaryTextColorTwo,
         fontWeight:300,
         lineHeight: 1.4,
-        fontSize: '20px',
+        fontSize: accessibilityActive ? '24px' : '20px',
         margin: 0,
         width: 'calc(100% - 30px)',
-    },
+    }),
     bannerDescriptionDiv:{
         display:"flex",
         width: '100%',
         flexDirection: 'row',
     },
-    bannerDescriptionShort:{
+    bannerDescriptionShort:({accessibilityActive}: { accessibilityActive: boolean }) => ({
         display: '-webkit-box',
         WebkitLineClamp: 3,
         WebkitBoxOrient: 'vertical',
@@ -45,10 +45,10 @@ export default createUseStyles({
         whiteSpace:'pre-wrap',
         fontWeight:400,
         lineHeight:'normal',
-        fontSize:'16px',
+        fontSize: accessibilityActive ? '20px': '16px',
         color:tertiaryTextColorThree
-    },
-    bannerDescriptionLong:{
+    }),
+    bannerDescriptionLong:({accessibilityActive}: { accessibilityActive: boolean }) => ({
         display: '-webkit-box',
         WebkitLineClamp: 20,
         WebkitBoxOrient: 'vertical',
@@ -57,22 +57,22 @@ export default createUseStyles({
         whiteSpace:'pre-wrap',
         fontWeight:400,
         lineHeight:'normal',
-        fontSize:'16px',
+        fontSize: accessibilityActive ? '20px': '16px',
         color:tertiaryTextColorThree
-    },
-    bannerDescriptionButton:{
+    }),
+    bannerDescriptionButton:({accessibilityActive}: { accessibilityActive: boolean }) => ({
         display:'flex',
         alignItems:'flex-end',
         background: "transparent",
         color:primaryTextColorThree,
         fontWeight:500,
-        fontSize:'16px',
+        fontSize: accessibilityActive? '20px':'16px',
         border: "none",
         cursor:'pointer',
         '&:hover': {
             textDecoration: 'underline',
         }
-    },
+    }),
     linksDiv:{
         display: 'flex',
         flexWrap: 'wrap',

@@ -6,7 +6,7 @@ import {
 } from "../../../../services/theme";
 
 export default createUseStyles({
-    root: ({isMobile}: { isMobile: boolean }) => {
+    root: ({isMobile}: { isMobile: boolean, accessibilityActive:boolean }) => {
         const style = {
             position: 'relative',
             display: 'flex',
@@ -50,35 +50,33 @@ export default createUseStyles({
     header: {
         marginBottom: 20
     },
-    title: {
-        fontSize: '28px',
+    title: ({ accessibilityActive }: { accessibilityActive: boolean }) => ({
+        fontSize: accessibilityActive ? '32px' : '28px',
         fontWeight: 600,
         color: secondaryTextColorTwo
-    },
-    subtitle: {
-        fontSize: '22px',
+    }),
+    subtitle: ({ accessibilityActive }: { accessibilityActive: boolean }) => ({
+        fontSize: accessibilityActive ? '26px' : '22px',
         fontWeight: 400,
         margin: '10px 0',
         color: secondaryTextColorTwo
-    },
-    boldStartText: {
+    }),
+    boldStartText: ({ accessibilityActive }: { accessibilityActive: boolean }) => ({
         fontWeight: 700,
-        fontSize: 18
-    },
-    inlineParagraph: {
+        fontSize: accessibilityActive ? 22 : 18
+    }),
+    inlineParagraph: ({ accessibilityActive }: { accessibilityActive: boolean }) => ({
         display: 'inline',
-        fontSize: 18
-
-    },
-    paragraph: {
+        fontSize: accessibilityActive ? 22 : 18
+    }),
+    paragraph: ({ accessibilityActive }: { accessibilityActive: boolean }) => ({
         display: 'inline-block',
         margin: '5px 0',
         alignItems: 'center',
-        fontSize: 18,
-    },
+        fontSize: accessibilityActive ? 22 : 18,
+    }),
     blackRegularLink: {
         fontWeight: 500,
         color: secondaryTextColorTwo,
     }
 });
-

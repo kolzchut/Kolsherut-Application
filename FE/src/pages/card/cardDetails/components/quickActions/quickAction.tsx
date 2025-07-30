@@ -2,9 +2,12 @@ import useStyle from "./quickAction.css";
 import telIcon from "../../../../../assets/icon-call-white.svg"
 import mailIcon from "../../../../../assets/icon-mail-blue.svg"
 import websiteIcon from "../../../../../assets/icon-external-link-blue.svg";
+import { useSelector } from 'react-redux';
+import {isAccessibilityActive} from "../../../../../store/general/general.selector";
 
 const QuickAction = ({phoneNumber, email, websiteURL}:{phoneNumber?: string, email?: string, websiteURL?:string}) =>{
-    const classes = useStyle();
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyle({accessibilityActive});
     if(!phoneNumber && !email && !websiteURL) return <></>;
     const websiteText = window.strings.quickActionWebsite;
     const mailText = window.strings.quickActionMail

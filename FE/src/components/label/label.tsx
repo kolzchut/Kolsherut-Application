@@ -3,10 +3,13 @@ import situationSvg from "../../assets/icon-person-blue-5.svg";
 import linkSvg from "../../assets/icon-arrow-top-right-gray-4.svg";
 import {Response, Situation} from "../../types/cardType";
 import useStyle from "./label.css";
+import { useSelector } from 'react-redux';
+import {isAccessibilityActive} from "../../store/general/general.selector.ts";
 
 const Label = ({response, situation, extra = 0}: { response?: Response, situation?: Situation, extra?: number }) => {
     const {isResponse, color} = getColor({response})
-    const classes = useStyle({color, isResponse});
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyle({color, isResponse, accessibilityActive});
     const occasion = response || situation;
     
     if (!occasion) return <></>;

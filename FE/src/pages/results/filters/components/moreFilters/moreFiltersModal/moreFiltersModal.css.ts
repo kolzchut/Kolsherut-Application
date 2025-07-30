@@ -6,6 +6,10 @@ import {
     quaternaryBackgroundColorOne
 } from "../../../../../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
     mainDiv: {
         width: "100%",
@@ -42,18 +46,17 @@ export default createUseStyles({
         flexDirection: "column",
         gap: 20,
     },
-    applyButton: {
+    applyButton: ({accessibilityActive}: IProps) => ({
         background: primaryTextColorTwo,
         color: primaryBackgroundColorOne,
         fontWeight: 700,
         borderRadius: 15,
         height: 30,
-        fontSize: 16,
-        border: 0,
-        transition: "background 0.5s ease",
-        "&:hover": {
+        fontSize: accessibilityActive ? 20 : 16,
+        border: 'none',
+        cursor: 'pointer',
+        '&:hover': {
             background: quaternaryBackgroundColorOne,
-            cursor: "pointer",
         }
-    }
+    })
 });

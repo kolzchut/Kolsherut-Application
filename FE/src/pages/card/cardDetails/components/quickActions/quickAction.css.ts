@@ -7,8 +7,11 @@ import {
     quaternaryBackgroundColorOne
 } from "../../../../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean
+}
 
-const aTagGeneralStyle = {
+const aTagGeneralStyle = ({accessibilityActive}: IProps) => ({
     display: 'flex',
     alignItems: 'center',
     paddingRight: '10px',
@@ -20,7 +23,7 @@ const aTagGeneralStyle = {
     height: '40px',
     flex: 1,
     textDecoration: 'none',
-    fontSize: '16px',
+    fontSize: accessibilityActive ? '20px' : '16px',
     fontWeight: 600,
     cursor: 'pointer',
     transition: 'background-color 0.2s, box-shadow 0.2s',
@@ -33,10 +36,10 @@ const aTagGeneralStyle = {
         outlineOffset: '2px',
     },
     '@media (max-width: 768px)': {
-        fontSize: '14px',
+        fontSize: accessibilityActive ? '18px' : '14px',
         gap: '4px',
     }
-}
+});
 
 
 export default createUseStyles({
@@ -56,8 +59,8 @@ export default createUseStyles({
             gap: '4px',
         }
     },
-    aTagTel:{
-        ...aTagGeneralStyle,
+    aTagTel: ({accessibilityActive}: IProps) => ({
+        ...aTagGeneralStyle({accessibilityActive}),
         border: 'none',
         backgroundColor: quaternaryBackgroundColorOne ,
         color:  primaryBackgroundColorOne,
@@ -65,14 +68,14 @@ export default createUseStyles({
         '@media (max-width: 768px)': {
             flex:4
         }
-    },
-    aTagGeneral:{
-        ...aTagGeneralStyle,
+    }),
+    aTagGeneral: ({accessibilityActive}: IProps) => ({
+        ...aTagGeneralStyle({accessibilityActive}),
         border:`1px solid ${primaryBorderColorOne}`,
         backgroundColor: primaryBackgroundColorOne,
         color: primaryTextColorOne,
         flex:2
-    },
+    }),
     aTagImage:{
         height:'60%'
     },

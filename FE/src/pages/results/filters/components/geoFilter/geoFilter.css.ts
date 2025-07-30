@@ -1,6 +1,10 @@
 import {createUseStyles} from 'react-jss';
 import {primaryTextColorTwo, secondaryBackgroundColorOne} from "../../../../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
     root: {
         display: 'flex',
@@ -22,9 +26,9 @@ export default createUseStyles({
             boxShadow: '0px 6px 8px rgba(0, 0, 0, 0.2)',
         }
     },
-    textAndMapDiv: {
+    textAndMapDiv: ({accessibilityActive}: IProps) => ({
         display: 'flex',
-        fontSize: 16,
+        fontSize: accessibilityActive ? 20 : 16,
         fontWeight: 700,
         color: primaryTextColorTwo,
         height: '100%',
@@ -32,14 +36,14 @@ export default createUseStyles({
         alignItems: 'center',
         gap: 3,
         justifyContent: 'center'
-    },
-    count: {
-        fontSize: 16,
+    }),
+    count: ({accessibilityActive}: IProps) => ({
+        fontSize: accessibilityActive ? 20 : 16,
         fontWeight: 700,
         lineHeight: 1,
         color: primaryTextColorTwo,
         borderRadius: 12,
         background: secondaryBackgroundColorOne,
         padding: '2px 6px',
-    },
+    }),
 });

@@ -7,6 +7,8 @@ import {widthOfMobile} from "../../../../constants/mediaQueryProps.ts";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import logger from "../../../../services/logger/logger.ts";
+import { useSelector } from 'react-redux';
+import {isAccessibilityActive} from "../../../../store/general/general.selector.ts";
 
 interface ILink {
     title: string;
@@ -23,7 +25,8 @@ interface IGUISiteMap {
 
 const SiteMap = () => {
     const isMobile = useMediaQuery(widthOfMobile);
-    const classes = useStyle({isMobile});
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyle({isMobile, accessibilityActive});
     const close = () => store.dispatch(setModal(null));
     const [siteMapData, setSiteMapData] = useState<IGUISiteMap | null>(null);
     useEffect(() => {

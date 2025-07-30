@@ -6,12 +6,15 @@ import {settingToResults} from "../../../../store/shared/sharedSlice";
 import {Response} from "../../../../types/cardType";
 import {getColor} from "../../../../services/colorLogic";
 import homepageAnalytics from "../../../../services/gtag/homepageEvents";
+import { useSelector } from 'react-redux';
+import { isAccessibilityActive } from "../../../../store/general/general.selector";
 
 const Group = ({group}: { group: IGroup }) => {
+    const accessibilityActive = useSelector(isAccessibilityActive);
     const showGroupLink = (group: IGroup) => group.group_link && (group.response_id || group.situation_id);
     const response: Response = {id: group.response_id,name: "", synonyms:[]}
     const wrapColor = getColor({response}).color
-    const classes = useStyles({wrapColor, showBorder: !!group.showBorder});
+    const classes = useStyles({wrapColor, showBorder: !!group.showBorder, accessibilityActive});
     const onClick = () => {
         const groupAsLabel: ILabel = {
             situation_id: group.situation_id,

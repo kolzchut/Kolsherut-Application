@@ -8,9 +8,11 @@ import {
     addMultipleResponseFilters,
     removeMultipleResponseFilters
 } from "../../../../../../../store/filter/filterSlice";
+import {isAccessibilityActive} from "../../../../../../../store/general/general.selector.ts";
 
 const ResponseSection = () => {
-    const classes = useStyles();
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyles({accessibilityActive});
     const responseOptions = useSelector(getMoreFiltersResponseOptions);
     const onClick = (responses: IResponseToFilter[]) => {
         const isSelected = responses.some((response) => response.selected);

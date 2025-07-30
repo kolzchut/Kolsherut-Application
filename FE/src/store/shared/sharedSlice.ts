@@ -7,28 +7,6 @@ import {resetFilters, setFilters} from "../filter/filterSlice";
 import setupNewFilters from "./utilities/setupNewFilters";
 import {IService} from "../../types/serviceType.ts";
 
-export const settingToResults = async ({value, removeOldFilters}: { value: ILabel, removeOldFilters: boolean }) => {
-    store.dispatch(setResults([]))
-    store.dispatch(setLoading(true));
-    store.dispatch(settingURLParamsToResults(value.query))
-
-    const fetchBaseData = {
-        responseId: value.response_id,
-        situationId: value.situation_id,
-        searchQuery: value.query,
-    }
-
-    const startResults = fetchResults({...fetchBaseData, isFast: true,});
-    const restResults = fetchResults({...fetchBaseData, isFast: false,});
-    updateFirstResults({startResults, value, removeOldFilters});
-    updateAllResults({startResults, restResults, value, removeOldFilters});
-
-}
-
-export const backToResults = () => {
-    store.dispatch(setPage('results'));
-}
-
 
 const updateFirstResults = async ({startResults, value, removeOldFilters}: {
     startResults: Promise<IService[]>,
@@ -57,3 +35,27 @@ const updateAllResults = async ({startResults, restResults, value, removeOldFilt
     if (!removeOldFilters) store.dispatch(setFilters(newFilters));
     store.dispatch(setLoading(false));
 };
+
+
+export const settingToResults = async ({value, removeOldFilters}: { value: ILabel, removeOldFilters: boolean }) => {
+    store.dispatch(setResults([]))
+    store.dispatch(setLoading(true));
+    store.dispatch(settingURLParamsToResults(value.query))
+
+    const fetchBaseData = {
+        responseId: value.response_id,
+        situationId: value.situation_id,
+        searchQuery: value.query,
+    }
+
+    const startResults = fetchResults({...fetchBaseData, isFast: true,});
+    const restResults = fetchResults({...fetchBaseData, isFast: false,});
+    updateFirstResults({startResults, value, removeOldFilters});
+    updateAllResults({startResults, restResults, value, removeOldFilters});
+
+}
+
+export const backToResults = () => {
+    store.dispatch(setPage('results'));
+}
+

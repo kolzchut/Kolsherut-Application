@@ -1,12 +1,16 @@
 import {createUseStyles} from 'react-jss';
 import {primaryBackgroundColorOne} from "../../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
-    root: {
+    root: ({accessibilityActive}: IProps) => ({
         position: 'relative',
         height: '100%',
         flex: 4,
-        fontSize: 24,
+        fontSize: accessibilityActive ? 28 : 24,
         maxWidth: 750,
         display: 'flex',
         flexDirection: 'column',
@@ -14,7 +18,7 @@ export default createUseStyles({
         background: 'linear-gradient(rgba(0, 80, 255, 0.3), rgba(0, 80, 255, 0.2))',
         direction: 'rtl',
         overflow: 'hidden',
-    },
+    }),
     backgroundImage: {
         position: 'absolute',
         inset: 0,
@@ -37,13 +41,13 @@ export default createUseStyles({
     kolsherutLogo: {
         height: '72%',
     },
-    aboveDivText: {
+    aboveDivText: ({accessibilityActive}: IProps) => ({
         color: primaryBackgroundColorOne,
-        fontSize: 16,
+        fontSize: accessibilityActive ? 20 : 16,
         lineHeight: 1,
         fontWeight: 400,
         whiteSpace: 'pre-line'
-    },
+    }),
     bottomDiv: {
         display: 'flex',
         flexDirection: 'row',

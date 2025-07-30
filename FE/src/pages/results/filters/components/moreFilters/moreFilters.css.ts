@@ -6,28 +6,32 @@ import {
     primaryTextColorOne
 } from "../../../../../services/theme";
 
-const baseButtonStyles = {
+interface IProps {
+    isMobile: boolean,
+    accessibilityActive: boolean
+}
+
+const baseButtonStyles = (accessibilityActive: boolean) => ({
     width: '100%',
     color: primaryTextColorTwo,
-    fontSize: 16,
+    fontSize: accessibilityActive ? 20 : 16,
     backgroundColor: 'transparent',
     '&:hover':{
         backgroundColor: secondaryBackgroundColorOne,
         cursor: 'pointer',
     }
-}
+})
 
 export default createUseStyles({
-    button:({isMobile}: {isMobile:boolean})=>{
+    button:({isMobile, accessibilityActive}: IProps)=>{
         if(!isMobile)return{
-            ...baseButtonStyles,
+            ...baseButtonStyles(accessibilityActive),
             height:40,
             borderRadius: 3,
             border: `1px solid ${primaryTextColorThree}`,
-
         }
         return {
-            ...baseButtonStyles,
+            ...baseButtonStyles(accessibilityActive),
             borderRadius:3,
             display: 'flex',
             alignItems: 'center',

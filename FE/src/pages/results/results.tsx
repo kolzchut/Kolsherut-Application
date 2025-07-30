@@ -11,7 +11,7 @@ import Hits from "./hits/hits";
 import {IService} from "../../types/serviceType";
 import BranchList from "./branchList/branchList";
 import Header from "../../components/header/header";
-import {getSearchQuery, isLoading} from "../../store/general/general.selector";
+import {getSearchQuery, isAccessibilityActive, isLoading} from "../../store/general/general.selector";
 import Map from "../../components/map/map";
 import {useDisplayResultsMap} from "./context/contextFunctions";
 import {removeAllPOIs} from "../../services/map/poiInteraction";
@@ -38,7 +38,8 @@ const Results = () => {
     const displayResultsMap = useDisplayResultsMap();
     const location = useSelector(getLocationFilter)
     const isMobile = useMediaQuery(widthOfMobile);
-    const classes = useStyles({displayResultsMap, isSelectedOrganization: !!selectedOrganization, isMobile});
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyles({displayResultsMap, isSelectedOrganization: !!selectedOrganization, isMobile, accessibilityActive});
     const metaTagsData = getResultsMetaTags({searchQuery, location})
     const dispatch = useDispatch();
     const reportOnce = useOnce(() => resultsAnalytics.scrollOnceEvent());

@@ -3,10 +3,12 @@ import telIcon from "../../assets/icon-call-white.svg"
 import mailIcon from "../../assets/icon-mail-blue.svg";
 import websiteIcon from "../../assets/icon-external-link-blue.svg";
 import addressIcon from "../../assets/icon-nav-blue.svg";
+import { useSelector } from 'react-redux';
 
 import useStyle from "./connection.css";
 import {ICard} from "../../types/cardType";
 import cardAnalytics from "../../services/gtag/cardEvents";
+import {isAccessibilityActive} from "../../store/general/general.selector.ts";
 
 type ConnectionType = 'tel' | 'mailto' | 'address' | 'website';
 type ActionType = 'phone' | 'email' | 'url' | 'nav';
@@ -20,6 +22,7 @@ interface IProps {
 }
 
 const Connection = ({text, type, link, card, actionType}: IProps) => {
+    const accessibilityActive = useSelector(isAccessibilityActive);
     const gtag = () => {
         if (!card || !actionType) return;
         cardAnalytics.copyToClipboard({action_url: window.location.href, action:actionType, card})
@@ -29,7 +32,7 @@ const Connection = ({text, type, link, card, actionType}: IProps) => {
         gtag();
     }
     const isTel = type === 'tel';
-    const classes = useStyle({isTel})
+    const classes = useStyle({isTel, accessibilityActive})
     const iconMap: Record<ConnectionType, string> = {
         tel: telIcon,
         mailto: mailIcon,

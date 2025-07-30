@@ -3,11 +3,14 @@ import useStyle from "./targetAudience.css";
 import Label from "../../../../../components/label/label";
 import {getHrefForResults} from "../../../../../services/href";
 import {settingToResults} from "../../../../../store/shared/sharedSlice.ts";
+import { useSelector } from 'react-redux';
+import {isAccessibilityActive} from "../../../../../store/general/general.selector.ts";
 
 const TargetAudience = ({situations}: { situations: Situation[] }) => {
     const targetAudienceTitle = window.strings.cardDetails.targetAudience;
 
-    const classes = useStyle();
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyle({accessibilityActive});
     if (situations.length < 1) return <></>
     return <div>
         <span className={classes.title}>{targetAudienceTitle}</span>

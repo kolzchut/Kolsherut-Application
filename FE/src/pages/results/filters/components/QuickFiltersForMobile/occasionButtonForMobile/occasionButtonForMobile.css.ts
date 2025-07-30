@@ -1,5 +1,11 @@
 import {createUseStyles} from 'react-jss';
 
+interface IProps {
+    color: string,
+    isSelected: boolean,
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
     container: {
         display: "flex",
@@ -9,7 +15,7 @@ export default createUseStyles({
         width: 'fit-content',
         margin: 0,
     },
-    label: ({color, isSelected}: { color: string, isSelected: boolean }) => {
+    label: ({color, isSelected, accessibilityActive}: IProps) => {
         const backgroundColor = `${color}10`;
         const borderColor = `${color}80`;
         const selectOrHoverBackgroundColor = `${color}30`;
@@ -27,12 +33,12 @@ export default createUseStyles({
             borderRadius: 4,
             width: 'fit-content',
             margin: 0,
-            fontSize: 16,
+            fontSize: accessibilityActive ? 20 : 16,
             fontWeight: 500,
             whiteSpace: 'nowrap',
         })
     },
-    dot: ({color}: { color: string }) => ({
+    dot: ({color}: IProps) => ({
         width: 8,
         height: 8,
         borderRadius: '50%',
@@ -40,7 +46,7 @@ export default createUseStyles({
         flexShrink: 0,
         display: 'inline-block',
     }),
-    cancelOrAdd: ({isSelected}: { color: string, isSelected: boolean }) => ({
+    cancelOrAdd: ({isSelected}: IProps) => ({
         width: 14,
         height: 14,
         filter: 'brightness(50%) saturate(100%)',

@@ -11,10 +11,12 @@ import ResponseSection from "./responseSection/responseSection";
 import {store} from "../../../../../../store/store";
 import {setModal} from "../../../../../../store/general/generalSlice";
 import closeIcon from "../../../../../../assets/icon-close-black.svg";
+import {isAccessibilityActive} from "../../../../../../store/general/general.selector.ts";
 
 
 const MoreFiltersModal = () => {
-    const classes = useStyles()
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyles({accessibilityActive})
     const resultsLength = useSelector(getFilterResultsLength)
     const situationsToFilter= useSelector(getAllSituationsToFilter)
     const numOfResults = replaceMacro({

@@ -1,4 +1,6 @@
 import useStyle from "./serviceEligibility.css";
+import { useSelector } from 'react-redux';
+import {isAccessibilityActive} from "../../../../../store/general/general.selector";
 
 const ServiceEligibility = ({serviceDetails, servicePaymentDetails, branchDescription}: {
     serviceDetails: string | null,
@@ -6,7 +8,8 @@ const ServiceEligibility = ({serviceDetails, servicePaymentDetails, branchDescri
     branchDescription: string | null
 }) => {
     const serviceEligibilityTitle = window.strings.cardDetails.serviceEligibility;
-    const classes = useStyle();
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyle({accessibilityActive});
     return <div>
         <span className={classes.title}>{serviceEligibilityTitle}</span>
         {serviceDetails && <p className={classes.paragraphText}>{serviceDetails}</p>}

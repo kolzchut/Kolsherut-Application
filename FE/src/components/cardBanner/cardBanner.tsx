@@ -3,13 +3,16 @@ import React, {useEffect, useRef, useState} from "react";
 import Label from "../label/label";
 import useStyle from "./cardBanner.css";
 import {isEmergency as checkIfEmergency} from "./cardBannerLogic";
+import {useSelector} from "react-redux";
+import {isAccessibilityActive} from "../../store/general/general.selector.ts";
 import cardAnalytics from "../../services/gtag/cardEvents";
 
 const emergencyIcon = "/icons/emergency-icon.svg"
 
 const CardBanner = ({card}: { card: ICardForBanner }) => {
+    const accessibilityActive = useSelector(isAccessibilityActive)
     const [extendText, setExtendText] = useState<boolean>(false);
-    const classes = useStyle();
+    const classes = useStyle({accessibilityActive});
     const isEmergency = checkIfEmergency(card.responses);
     const buttonText = extendText ? window.strings.cardBanner.less : window.strings.cardBanner.more;
     const buttonClass = extendText ? classes.bannerDescriptionLong : classes.bannerDescriptionShort;

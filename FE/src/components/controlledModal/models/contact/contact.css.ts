@@ -1,8 +1,13 @@
 import {createUseStyles} from 'react-jss';
 import {secondaryBackgroundColorOne, primaryBackgroundColorOne} from "../../../../services/theme";
 
+interface IProps {
+    isMobile: boolean,
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
-    root: ({isMobile}: { isMobile: boolean }) => {
+    root: ({isMobile}: IProps) => {
         const style = {
             position: 'relative',
             display: 'flex',
@@ -43,9 +48,8 @@ export default createUseStyles({
             transition: 'background 0.3s ease, transform 0.5s ease',
         }
     },
-    text: {
-        fontSize: 18,
+    text: ({accessibilityActive}: IProps) => ({
+        fontSize: accessibilityActive ? 22 : 18,
         fontWeight: 300
-    }
+    })
 });
-

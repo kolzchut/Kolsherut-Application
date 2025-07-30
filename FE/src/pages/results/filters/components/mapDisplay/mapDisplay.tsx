@@ -7,12 +7,15 @@ import {useDisplayResultsMap, useSetDisplayResultsMap} from "../../../context/co
 import {useMediaQuery} from "@mui/material";
 import {widthOfMobile} from "../../../../../constants/mediaQueryProps";
 import mapAnalytics from "../../../../../services/gtag/mapEvents";
+import { useSelector } from 'react-redux';
+import {isAccessibilityActive} from "../../../../../store/general/general.selector.ts";
 
 const MapDisplay = () => {
     const displayResultsMap = useDisplayResultsMap()
     const setDisplayResultsMap = useSetDisplayResultsMap()
     const isMobile = useMediaQuery(widthOfMobile);
-    const classes = useStyles({isMobile});
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyles({isMobile, accessibilityActive});
     const vals = {
         text: displayResultsMap ? window.strings.results.hideMapOnDesktop : window.strings.results.showMapOnDesktop,
         icon: displayResultsMap ? deactivateMapIcon : activateMapIcon,

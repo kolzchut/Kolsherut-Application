@@ -18,15 +18,7 @@ const ResponseQuickFilter= ({id, value, responseFilters}:FilterProps) => {
         return store.dispatch(addResponseFilter(id));
     };
 
-
-    return (
-        <SingleFilter
-            onClick={handleClick}
-            isFilterActive={isFilterActive}
-            value={value}
-            key={id}
-        />
-    );
-};
+    return <SingleFilter value={value} onClick={handleClick} isFilterActive={isFilterActive}/>
+}
 
 export default ResponseQuickFilter;

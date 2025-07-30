@@ -6,6 +6,8 @@ import AddServiceBox from "./addServiceBox/addServiceBox";
 import {useState} from "react";
 import {useMediaQuery} from "@mui/material";
 import {widthOfMobile} from "../../../../constants/mediaQueryProps.ts";
+import { useSelector } from 'react-redux';
+import {isAccessibilityActive} from "../../../../store/general/general.selector.ts";
 
 interface Service {
     title: string;
@@ -14,7 +16,8 @@ interface Service {
 
 const AddService = () => {
     const isMobile = useMediaQuery(widthOfMobile);
-    const classes = useStyle({isMobile});
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyle({isMobile, accessibilityActive});
     const [selectedService, setSelectedService] = useState<number>(-1);
     const strings = window.strings.staticModals.addService;
     const [services] = useState(window.modules);

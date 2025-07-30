@@ -15,9 +15,11 @@ import wideLocationIcon from "../../../../../../assets/wideLocation.svg"
 import {setModal} from "../../../../../../store/general/generalSlice";
 import {getOptionalLocations} from "../../../../../../store/shared/locationFilters.selector";
 import resultsAnalytics from "../../../../../../services/gtag/resultsEvents";
+import {isAccessibilityActive} from "../../../../../../store/general/general.selector.ts";
 
 const GeoFilterModal = () => {
-    const classes = useStyles();
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyles({accessibilityActive});
     const searchLocations = useSelector(getSearchLocation);
     const dynamicLocations = useSelector(getOptionalLocations);
     const [optionalLocations, setOptionalLocations] = useState<ILocation[]>([]);

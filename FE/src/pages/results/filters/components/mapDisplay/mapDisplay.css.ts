@@ -1,5 +1,11 @@
 import {createUseStyles} from 'react-jss';
 import {secondaryBackgroundColorTwo, primaryTextColorTwo, primaryTextColorThree} from "../../../../../services/theme";
+
+interface IProps {
+    isMobile: boolean,
+    accessibilityActive: boolean
+}
+
 const rootBaseStyles = {
     width: '100%',
 
@@ -11,21 +17,23 @@ const rootBaseStyles = {
     borderRadius: '8px',
     border: `1px dotted ${primaryTextColorThree}`,
 }
-const textBaseStyles = {
+
+const textBaseStyles = (accessibilityActive:boolean) => ({
     position: 'absolute',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     height:20,
-    fontSize:16,
+    fontSize: accessibilityActive ? 20 : 16,
     fontWeight:500,
     border: `1px solid ${primaryTextColorThree}`,
     backgroundColor:secondaryBackgroundColorTwo,
     padding:'10px',
     borderRadius: '20px',
-}
+})
+
 export default createUseStyles({
-    root:({isMobile}: { isMobile: boolean }) => {
+    root:({isMobile}: IProps) => {
         if(!isMobile) return ({
        ...rootBaseStyles,
         height:120,
@@ -48,19 +56,18 @@ export default createUseStyles({
             opacity: 1,
         }
     },
-    text:({isMobile}: { isMobile: boolean }) => {
-        if(!isMobile)return ({
-            ...textBaseStyles,
-            color: primaryTextColorThree,
-            gap:'5px',
+    text: ({isMobile, accessibilityActive}: IProps) => {
+        if(!isMobile) return ({
+            ...textBaseStyles(accessibilityActive),
+            gap:5,
+            color:primaryTextColorTwo,
         })
-        return ({
-            ...textBaseStyles,
-            color: primaryTextColorTwo,
-
+        return({
+            display:'none'
         })
     },
     innerIcon:{
-        height: '100%'
+        height:18,
+        width:18
     }
 });

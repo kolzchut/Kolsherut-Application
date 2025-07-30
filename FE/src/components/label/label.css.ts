@@ -1,5 +1,11 @@
 import {createUseStyles} from 'react-jss';
 
+interface IProps {
+    color: string;
+    isResponse: boolean;
+    accessibilityActive: boolean;
+}
+
 export default createUseStyles({
     container:{
         display:"flex",
@@ -8,7 +14,7 @@ export default createUseStyles({
         alignItems:'center',
         margin: 8
     },
-    label: ({color}: { color: string; isResponse: boolean }) =>{
+    label: ({color, accessibilityActive}: IProps) =>{
         const backgroundColor = `${color}10`;
         const borderColor = `${color}80`;
         const hoverBackgroundColor = `${color}30`;
@@ -24,14 +30,14 @@ export default createUseStyles({
             borderRadius: 4,
             width: 'fit-content',
             margin: 0,
-            fontSize: 14,
+            fontSize: accessibilityActive ? 18 : 14,
             '&:hover': {
                 backgroundColor: hoverBackgroundColor,
                 borderColor: hoverBorderColor,
             }
         })
     },
-    dot: ({color}: { color: string }) => ({
+    dot: ({color}: IProps) => ({
         width: 8,
         height: 8,
         borderRadius: '50%',
@@ -39,7 +45,7 @@ export default createUseStyles({
         flexShrink: 0,
         display: 'inline-block',
     }),
-    linkIcon: ({isResponse}: {color: string; isResponse: boolean}) => ({
+    linkIcon: ({isResponse}: IProps) => ({
         width: 14,
         height: 14,
         marginLeft: 4,
@@ -49,16 +55,17 @@ export default createUseStyles({
         width: 16,
         height: 16,
     },
-    extra:({color}: {color: string; isResponse: boolean}) =>{
+    extra: ({color, accessibilityActive}: IProps) =>{
         const backgroundColor = `${color}10`;
         const borderColor = `${color}80`;
         return ({
-        backgroundColor: backgroundColor,
-        borderTop: `1px solid ${borderColor}`,
-        borderLeft: `1px solid ${borderColor}`,
-        borderBottom: `1px solid ${borderColor}`,
-        padding: '4px 2px',
-        fontSize:14,
-        borderRadius: '4px 0px 0px 4px',
-    })}
+            backgroundColor: backgroundColor,
+            borderTop: `1px solid ${borderColor}`,
+            borderLeft: `1px solid ${borderColor}`,
+            borderBottom: `1px solid ${borderColor}`,
+            padding: '4px 2px',
+            fontSize: accessibilityActive ? 18 : 14,
+            borderRadius: '4px 0px 0px 4px',
+        })
+    }
 });

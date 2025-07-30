@@ -1,10 +1,14 @@
 import useStyle from './footer.css';
 import LinksMenu from "./linksMenu/linksMenu";
+import { useSelector } from 'react-redux';
+import {isAccessibilityActive} from "../../store/general/general.selector.ts";
 
 const israelIcon = "/icons/icon-state-of-israel.svg"
 const logoKZ = "/icons/icon-kz.svg"
 
 const Footer = ({hideLinks=false}: {hideLinks?: boolean}) => {
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyle({accessibilityActive});
 
     const nameOfWebsite = window.strings.footer.nameOfWebsite;
     const firstParagraph = window.strings.footer.firstParagraph;
@@ -19,7 +23,6 @@ const Footer = ({hideLinks=false}: {hideLinks?: boolean}) => {
     const justiceLink = window.config.redirects.justiceLink;
     const nationalDigitalLink = window.config.redirects.nationalDigitalLink;
     const policyLink = window.config.redirects.policyLink;
-    const classes = useStyle();
 
     return (<footer>
         <div className={classes.disclaimer}>

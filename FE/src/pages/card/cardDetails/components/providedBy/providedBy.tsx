@@ -6,6 +6,8 @@ import emailIcon from "../../../../../assets/icon-mail-blue.svg"
 import {useEffect, useState} from "react";
 import openIcon from "../../../../../assets/icon-chevron-down-blue.svg";
 import ArrowDirection from "./arrowDirectionEnum";
+import { useSelector } from 'react-redux';
+import {isAccessibilityActive} from "../../../../../store/general/general.selector";
 
 interface IProps {
     organizationNameParts: OrganizationNameParts;
@@ -27,13 +29,16 @@ const ProvidedBy = ({
     const isOrgUrlAvailable: boolean = !!(organizationUrls && organizationUrls.length > 0 && organizationUrls[0].href)
     const noEmailAndNoPhone: boolean = !organizationEmailAddress && (!organizationPhoneNumbers || organizationPhoneNumbers.length < 1)
     const [arrowDirection, setArrowDirection] = useState<ArrowDirection>(ArrowDirection.Close);
+
+    const accessibilityActive = useSelector(isAccessibilityActive);
+
     useEffect(() => {
     if (noEmailAndNoPhone) setArrowDirection(ArrowDirection.NotDisplayed);
     }, []);
 
     const handleToggle = () => setArrowDirection((prevState) => prevState === ArrowDirection.Open ? ArrowDirection.Close : ArrowDirection.Open)
 
-    const classes = useStyle({arrow: arrowDirection});
+    const classes = useStyle({arrow: arrowDirection, accessibilityActive});
     return <div>
         <span className={classes.title}>{providedByTitle}</span>
         <div className={classes.mainDiv}>

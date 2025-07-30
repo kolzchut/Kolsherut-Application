@@ -1,6 +1,13 @@
 import {createUseStyles} from 'react-jss';
 import {secondaryBackgroundColorTwo} from "../../services/theme";
 
+interface IProps {
+    displayResultsMap: boolean,
+    isSelectedOrganization: boolean,
+    isMobile: boolean,
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
     mainDiv: {
         display: 'flex',
@@ -24,11 +31,7 @@ export default createUseStyles({
         flexDirection: 'row',
         scrollbarWidth: "none"
     },
-    hits: ({displayResultsMap, isSelectedOrganization, isMobile}: {
-        displayResultsMap: boolean,
-        isSelectedOrganization: boolean,
-        isMobile: boolean
-    }) => {
+    hits: ({displayResultsMap, isSelectedOrganization, isMobile}: IProps) => {
         if (!isMobile) return ({
             width: displayResultsMap && !isSelectedOrganization ? "100%" : "55%",
         })
@@ -89,16 +92,16 @@ export default createUseStyles({
         width: '20%',
         marginTop: '20px',
     },
-    noResultsTitle:{
-        fontSize:34,
+    noResultsTitle: ({accessibilityActive}: IProps) => ({
+        fontSize: accessibilityActive ? 38 : 34,
         fontWeight: 700,
-    },
-    noResultsSubtitle:{
+    }),
+    noResultsSubtitle: ({accessibilityActive}: IProps) => ({
         marginTop:10,
-        fontSize: 28,
+        fontSize: accessibilityActive ? 32 : 28,
         fontWeight: 500,
         textAlign: 'center',
-    },
+    }),
     loading:{
         display:'flex',
         flexDirection: 'column',

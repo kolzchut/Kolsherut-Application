@@ -1,6 +1,10 @@
 import {createUseStyles} from 'react-jss';
 import {tertiaryTextColorTwo, primaryBorderColorOne, primaryBackgroundColorOne} from "../../../../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
     aTag:{
         width: '100%',
@@ -14,10 +18,10 @@ export default createUseStyles({
         justifyContent: "center",
         gap: '4px'
     },
-    title:{
-        fontSize:16,
+    title: ({accessibilityActive}: IProps) => ({
+        fontSize: accessibilityActive ? 20 : 16,
         fontWeight: 300,
         lineHeight: 1,
         color: tertiaryTextColorTwo
-    }
+    })
 });

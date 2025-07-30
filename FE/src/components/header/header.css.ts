@@ -6,6 +6,10 @@ import {
     tertiaryBackgroundColorTwo
 } from "../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean
+}
+
 const buttonStyles = {
     height: 50,
     margin: 15,
@@ -15,11 +19,12 @@ const buttonStyles = {
     border : 'none',
     boxShadow: 'inset 2px 2px 5px rgba(0, 0, 0, 0.3)',
 }
-const linkStyles = {
+
+const linkStyles = ({accessibilityActive}: IProps) => ({
     lineHeight: 4,
-    fontSize: 20,
+    fontSize: accessibilityActive ? 24 : 20,
     textDecoration: "none",
-}
+})
 
 export default createUseStyles({
     root: {
@@ -102,8 +107,8 @@ export default createUseStyles({
         display: 'flex',
         justifyContent: 'space-between'
     },
-    link: {
-        ...linkStyles,
+    link: ({accessibilityActive}: IProps) => ({
+        ...linkStyles({accessibilityActive}),
         fontWeight: 300,
         '&:hover': {
             lineHeight: 4,
@@ -111,18 +116,17 @@ export default createUseStyles({
             textDecoration: 'underline',
             cursor: 'pointer',
         }
-    },
-    accessibilityLink: {
-        ...linkStyles,
+    }),
+    accessibilityLink: ({accessibilityActive}: IProps) => ({
+        ...linkStyles({accessibilityActive}),
         fontWeight: 700,
-
         '&:hover': {
             lineHeight: 3.5,
             fontWeight: 700,
             textDecoration: 'underline',
             cursor: 'pointer',
         }
-    },
+    }),
     searchOptionsDiv: {
         width: '100%',
         position: 'absolute',

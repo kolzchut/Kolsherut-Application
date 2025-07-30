@@ -1,6 +1,10 @@
 import {createUseStyles} from 'react-jss';
 import {tertiaryTextColorTwo} from "../../../../../../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
     mainDiv:{
         display:"flex",
@@ -19,14 +23,14 @@ export default createUseStyles({
         flexDirection:'row',
         flexWrap:'wrap',
     },
-    title:{
+    title: ({accessibilityActive}: IProps) => ({
         fontWeight:600,
         lineHeight:1.3,
-        fontSize:18,
+        fontSize: accessibilityActive ? 22 : 18,
         color: tertiaryTextColorTwo,
         '&:hover': {
             cursor: 'pointer',
             textDecoration: 'underline',
         }
-    }
+    })
 });

@@ -1,11 +1,15 @@
 import useStyles from './links.css'
+import { useSelector } from 'react-redux';
+import {isAccessibilityActive} from "../../store/general/general.selector.ts";
+
 const LINK = 'https://www.gov.il/he/departments/ministry_of_justice/govil-landing-page'
 const LINK_TEXT =  'משרד המשפטים'
 
 const justiceLogo = "/icons/icon-state-of-israel.svg"
 
 const JusticeLink =() => {
-    const classes = useStyles();
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyles({accessibilityActive});
 
     return <a href={LINK} className={`${classes.root} ${classes.justiceLink}`}>
         <img className={`${classes.icon}`} src={justiceLogo} alt={"justice logo"}/>

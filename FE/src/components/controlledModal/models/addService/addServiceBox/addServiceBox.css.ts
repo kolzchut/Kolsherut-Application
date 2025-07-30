@@ -1,6 +1,10 @@
 import {createUseStyles} from 'react-jss';
 import {secondaryTextColorOne, primaryTextColorOne, secondaryBackgroundColorTwo} from "../../../../../services/theme";
 
+interface IProps {
+    isExtendedBox: boolean;
+    accessibilityActive: boolean;
+}
 
 export default createUseStyles({
     root: () => {
@@ -17,7 +21,7 @@ export default createUseStyles({
             border: `1px solid ${halfTransparentBrightBlue}`
         })
     },
-    arrow: ({isExtendedBox}: { isExtendedBox: boolean }) => ({
+    arrow: ({isExtendedBox}: IProps) => ({
         height: '25px',
         width: '25px',
         position: 'absolute',
@@ -38,34 +42,34 @@ export default createUseStyles({
         boxSizing: 'border-box',
         gap: 4,
     },
-    title: {
+    title: ({ accessibilityActive }: IProps) => ({
         fontWeight: 600,
         lineHeight: 1.3,
-        fontSize: 20,
+        fontSize: accessibilityActive ? 24 : 20,
         margin: 0,
         color: primaryTextColorOne,
         width:'80%'
-    },
-    subtitle:{
+    }),
+    subtitle: ({ accessibilityActive }: IProps) => ({
         fontWeight: 600,
         lineHeight: 1.3,
-        fontSize: 18,
+        fontSize: accessibilityActive ? 22 : 18,
         margin:0,
         color: secondaryTextColorOne
-    },
-    paragraph:{
+    }),
+    paragraph: ({ accessibilityActive }: IProps) => ({
         fontWeight: 300,
         lineHeight: 1.3,
-        fontSize: 16,
+        fontSize: accessibilityActive ? 20 : 16,
         margin:0,
         color: secondaryTextColorOne
-    },
-    link:{
+    }),
+    link:({ accessibilityActive }: IProps)=>({
         display:'flex',
         width:'fit-content',
+        fontSize: accessibilityActive ? 20 : 16,
         '&:hover': {
             cursor:'pointer'
         }
-    }
+    })
 });
-

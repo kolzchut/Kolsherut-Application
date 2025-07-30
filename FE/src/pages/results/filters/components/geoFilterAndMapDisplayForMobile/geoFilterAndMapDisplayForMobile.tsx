@@ -10,16 +10,18 @@ import {store} from "../../../../../store/store";
 import {setLocationFilter} from "../../../../../store/filter/filterSlice";
 import {useDisplayResultsMap, useSetDisplayResultsMap} from "../../../context/contextFunctions";
 import {setModal} from "../../../../../store/general/generalSlice";
+import {isAccessibilityActive} from "../../../../../store/general/general.selector.ts";
 
 const GeoFilterAndMapDisplayForMobile = () => {
     const currentLocation = useSelector(getLocationFilter);
     const resultsLength = useSelector(getFilterResultsLength);
+    const accessibilityActive = useSelector(isAccessibilityActive);
     const onClickNationWide = () => store.dispatch(setLocationFilter(israelLocation))
     const nationwideKey = israelLocation.key;
     const isNationwide = currentLocation.key === nationwideKey;
     const displayResultsMap = useDisplayResultsMap()
     const setDisplayResultsMap = useSetDisplayResultsMap()
-    const classes = useStyles({isNationwide, displayResultsMap, isSearchOpen:!isNationwide});
+    const classes = useStyles({isNationwide, displayResultsMap, isSearchOpen:!isNationwide, accessibilityActive});
     const displayMapText = displayResultsMap ? window.strings.results.hideMapOnMobile : window.strings.results.showMapOnMobile;
     const searchText = isNationwide ? window.strings.results.searchLocationOnMobile : currentLocation.key;
     return <div className={classes.root}>

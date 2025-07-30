@@ -1,6 +1,10 @@
 import {createUseStyles} from 'react-jss';
 import {secondaryTextColorOne, tertiaryTextColorOne, primaryBorderColorTwo} from "../../../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
     mainDiv: {
         width: '100%',
@@ -23,21 +27,21 @@ export default createUseStyles({
         display: "flex",
         flexDirection: 'column',
     },
-    branchName: {
+    branchName: ({accessibilityActive}: IProps) => ({
         color: secondaryTextColorOne,
         fontWeight: 400,
-        fontSize: 14,
-    },
-    branchAddress: {
+        fontSize: accessibilityActive ? 18 : 14,
+    }),
+    branchAddress: ({accessibilityActive}: IProps) => ({
         color: tertiaryTextColorOne,
         fontWeight: 400,
-        fontSize: 12,
-    },
-    nationalBranch: {
+        fontSize: accessibilityActive ? 16 : 12,
+    }),
+    nationalBranch: ({accessibilityActive}: IProps) => ({
         fontWeight: 700,
         color: tertiaryTextColorOne,
-        fontSize: 14,
-    },
+        fontSize: accessibilityActive ? 18 : 14,
+    }),
     icon:{
         height:'18px'
     }

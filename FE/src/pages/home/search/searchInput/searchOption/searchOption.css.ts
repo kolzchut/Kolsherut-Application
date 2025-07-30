@@ -1,6 +1,10 @@
 import {createUseStyles} from 'react-jss';
 import {primaryBorderColorOne} from "../../../../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean;
+}
+
 export default createUseStyles({
     optionalSearchValue: {
         borderBottom: `1px dotted ${primaryBorderColorOne}`,
@@ -21,14 +25,14 @@ export default createUseStyles({
             height: '20px',
         }
     },
-    iconAndText: {
+    iconAndText: ({ accessibilityActive }: IProps) => ({
         display: 'flex',
         alignItems: 'center',
         gap: 10,
         paddingRight: 10,
-        fontSize: 24,
+        fontSize: accessibilityActive ? 28 : 24,
         "@media (max-width: 768px)": {
-            fontSize: 20,
+            fontSize: accessibilityActive ? 24 : 20,
         },
-    }
+    })
 });

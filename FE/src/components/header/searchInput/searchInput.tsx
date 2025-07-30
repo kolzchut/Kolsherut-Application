@@ -11,7 +11,7 @@ import resultsAnalytics from "../../../services/gtag/resultsEvents";
 import {useDebounce} from "../../../hooks/useDebounce";
 import useOnClickedOutside from "../../../hooks/useOnClickedOutside";
 import {useSelector} from "react-redux";
-import {getPage, getSearchQuery} from "../../../store/general/general.selector";
+import {getPage, getSearchQuery, isAccessibilityActive} from "../../../store/general/general.selector";
 import {settingToResults} from "../../../store/shared/sharedSlice";
 import generalAnalytics from "../../../services/gtag/generalEvents";
 
@@ -21,8 +21,9 @@ const emptyAutocomplete: AutocompleteType = {structured: [], unstructured: []};
 const SearchInput = () => {
     const searchQuery = useSelector(getSearchQuery);
     const page = useSelector(getPage);
+    const accessibilityActive = useSelector(isAccessibilityActive);
     const isMobile = useMediaQuery(widthOfMobile);
-    const classes = useStyles({isMobile});
+    const classes = useStyles({isMobile, accessibilityActive});
     const [isInputFocused, setIsInputFocused] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const [optionalSearchValues, setOptionalSearchValues] = useState<AutocompleteType>(emptyAutocomplete);
@@ -58,7 +59,6 @@ const SearchInput = () => {
         }
     };
     const inputValue = searchTerm.replace(/_/g, ' ')
-    console.log(inputValue, "inputValue");
     return <div className={classes.root} ref={ref}>
         <div className={classes.inputDiv}>
             <img className={classes.searchIcon} alt={"search icon"}

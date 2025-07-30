@@ -1,21 +1,27 @@
 import {createUseStyles} from 'react-jss';
 import {primaryBackgroundColorOne} from "../../../services/theme";
 
+interface IProps {
+    distanceFromTop: number,
+    isMobile: boolean,
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
-    mainDiv:({distanceFromTop, isMobile}:{distanceFromTop:number, isMobile:boolean})=>({
+    mainDiv: ({distanceFromTop, isMobile}: IProps) => ({
         width:'100%',
         boxSizing: 'border-box',
         position:'absolute',
         padding:10,
         top: !isMobile ? distanceFromTop: 0,
     }),
-    title: {
+    title: ({accessibilityActive}: IProps) => ({
         width: '100%',
         height: 60,
         boxSizing: 'border-box',
         backgroundColor:primaryBackgroundColorOne,
         padding: '0 20px',
-        fontSize: 19,
+        fontSize: accessibilityActive ? 23 : 19,
         fontWeight: 700,
         borderBottom: '3px solid #E1DEDB',
         borderTopRightRadius: 8,
@@ -23,7 +29,7 @@ export default createUseStyles({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-    },
+    }),
     closeIcon:{
         height: '25px',
         '&:hover': {

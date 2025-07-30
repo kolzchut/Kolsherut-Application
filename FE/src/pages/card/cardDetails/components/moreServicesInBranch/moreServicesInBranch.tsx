@@ -3,11 +3,14 @@ import useStyle from "./moreServicesInBranch.css";
 import CardBanner from "../../../../../components/cardBanner/cardBanner";
 import {reRouteToCard} from "../../../../../services/routes/reRoute";
 import {getHrefForCard} from "../../../../../services/href";
+import { useSelector } from 'react-redux';
+import {isAccessibilityActive} from "../../../../../store/general/general.selector";
 
 const MoreServicesInBranch = ({moreServicesInBranch}: { moreServicesInBranch: ICardForBanner[] }) => {
     const moreServicesInBranchTitle = window.strings.cardDetails.moreServicesInBranchTitle;
 
-    const classes = useStyle();
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyle({accessibilityActive});
     return (
         <div className={classes.mainDiv}>
             <span className={classes.title}>{moreServicesInBranchTitle}</span>

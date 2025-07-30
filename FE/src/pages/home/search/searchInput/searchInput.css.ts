@@ -1,6 +1,11 @@
 import {createUseStyles} from 'react-jss';
 import {primaryTextColorThree, primaryBackgroundColorOne} from "../../../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean;
+    moveUp: boolean;
+}
+
 export default createUseStyles({
     root: {
         width: "100%",
@@ -14,19 +19,19 @@ export default createUseStyles({
             height: '40vh',
         }
     },
-    searchContainer: ({moveUp}: { moveUp: boolean }) => ({
+    searchContainer: ({moveUp}: IProps) => ({
         position: 'relative',
         width: '80%',
         height: moveUp ? "60%" : '10%',
         transition: 'height 0.3s ease-in-out',
     }),
-    searchInput: {
+    searchInput: ({accessibilityActive}: IProps) => ({
         width: '100%',
         padding: '10px 80px 10px 60px',
         boxSizing: 'border-box',
         border: `1px solid ${primaryTextColorThree}`,
         borderRadius: 10,
-        fontSize: 24,
+        fontSize: accessibilityActive ? 28 : 24,
         direction: 'rtl',
         backgroundColor: primaryBackgroundColorOne,
         '&:focus': {
@@ -39,12 +44,12 @@ export default createUseStyles({
             color: primaryTextColorThree,
         },
         "@media (max-width: 768px)": {
-            fontSize: 18,
+            fontSize: accessibilityActive ? 22 : 18,
             padding: '10px 55px 10px 55px',
 
         }
 
-    },
+    }),
     searchButton: {
         position: 'absolute',
         right: 30,
@@ -68,18 +73,18 @@ export default createUseStyles({
     mainTextDiv: {
         display: 'flex',
     },
-    mainText: {
+    mainText: ({accessibilityActive}: IProps) => ({
         textAlign: 'center',
-        fontSize: 24,
+        fontSize: accessibilityActive ? 28 : 24,
         fontWeight: 300,
         lineHeight: 1.3,
-        paddingBottom:'10px',
+        paddingBottom: '10px',
         color: primaryBackgroundColorOne,
         whiteSpace: 'pre-line',
         "@media (max-width: 768px)": {
-            fontSize: 18,
+            fontSize: accessibilityActive ? 22 : 18,
         }
-        },
+    }),
     mainTextBold: {
         fontWeight: 600,
     },

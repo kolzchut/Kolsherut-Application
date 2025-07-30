@@ -5,9 +5,12 @@ import linkIcon from "../../../../assets/icon-arrow-top-right-gray-4.svg";
 import {getHrefForCard} from "../../../../services/href";
 import resultsAnalytics from "../../../../services/gtag/resultsEvents";
 import {reRouteToCard} from "../../../../services/routes/reRoute";
+import { useSelector } from 'react-redux';
+import {isAccessibilityActive} from "../../../../store/general/general.selector.ts";
 
 const Branch = ({branch}: { branch: IBranch }) => {
-    const classes = useStyles();
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyles({accessibilityActive});
     const accurateLocation: string = branch.isAccurate ? "" : window.strings.results.notAccurateLocation;
     const addressText: string = branch.address + " " + accurateLocation;
     const showNational = branch.isNational && !branch.address

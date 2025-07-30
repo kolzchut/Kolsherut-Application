@@ -6,12 +6,15 @@ import JusticeLink from "../../../links/justiceLink";
 import DigitalLink from "../../../links/digitalLink";
 import KZLink from "../../../links/kzLink";
 import {useMediaQuery} from "@mui/material";
-import {widthOfMobile} from "../../../../constants/mediaQueryProps";
+import {widthOfMobile} from "../../../../constants/mediaQueryProps.ts";
+import { useSelector } from 'react-redux';
+import {isAccessibilityActive} from "../../../../store/general/general.selector.ts";
 
 const About = () => {
     const strings = window.strings.staticModals.about;
     const isMobile = useMediaQuery(widthOfMobile);
-    const classes = useStyle({isMobile});
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyle({isMobile, accessibilityActive});
     const close = () => store.dispatch(setModal(null));
     return <div className={classes.root}>
         <button className={classes.closeIcon} onClick={close}><img src={closeIcon} alt={"close icon"}/></button>

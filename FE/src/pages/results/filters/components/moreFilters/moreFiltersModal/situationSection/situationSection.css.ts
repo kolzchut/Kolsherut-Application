@@ -8,6 +8,10 @@ import {
     tertiaryBackgroundColorTwo
 } from "../../../../../../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
     mainDiv:{
         width:"100%",
@@ -26,25 +30,25 @@ export default createUseStyles({
         justifyContent:"space-between",
         flexDirection:"row",
     },
-    title:{
+    title: ({accessibilityActive}: IProps) => ({
         fontWeight:600,
         lineHeight:1.3,
-        fontSize:16,
+        fontSize: accessibilityActive ? 20 : 16,
         color:secondaryTextColorTwo
-    },
-    cleanup:{
+    }),
+    cleanup: ({accessibilityActive}: IProps) => ({
         fontWeight:400,
         lineHeight:1.3,
-        fontSize:13,
+        fontSize: accessibilityActive ? 18 : 13,
         color: tertiaryTextColorThree,
         '&:hover': {
             color:tertiaryTextColorOne,
             cursor: 'pointer',
             textDecoration: 'underline',
         }
-    },
-    label:{
-        fontSize:16,
+    }),
+    label: ({accessibilityActive}: IProps) => ({
+        fontSize: accessibilityActive ? 20 : 16,
         width:'fit-content',
         display:'flex',
         alignItems:'center',
@@ -61,7 +65,7 @@ export default createUseStyles({
             borderColor: tertiaryTextColorThree,
             cursor: 'pointer',
         }
-    },
+    }),
     visuallyHidden: {
         position: 'absolute',
         width: 1,

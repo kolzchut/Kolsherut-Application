@@ -1,6 +1,10 @@
 import {createUseStyles} from 'react-jss';
 import {secondaryTextColorTwo} from "../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean
+}
+
 export default  createUseStyles({
     disclaimer:{
         direction:'rtl',
@@ -9,21 +13,21 @@ export default  createUseStyles({
             padding: '24px 16px'
         }
     },
-    firstParagraph:{
-        fontSize:16,
-        lineHeight: 1.25,
-        fontWeight: 300,
-        color:secondaryTextColorTwo
-    },
-    bolder:{
-        fontWeight: 700
-    },
-    secondAndThirdParagraphs:{
-        fontSize:13,
+    firstParagraph: ({accessibilityActive}: IProps) => ({
+        fontSize: accessibilityActive ? 20 : 16,
         lineHeight: 1.25,
         fontWeight: 300,
         color: secondaryTextColorTwo
+    }),
+    bolder:{
+        fontWeight: 700
     },
+    secondAndThirdParagraphs: ({accessibilityActive}: IProps) => ({
+        fontSize: accessibilityActive ? 17 : 13,
+        lineHeight: 1.25,
+        fontWeight: 300,
+        color: secondaryTextColorTwo
+    }),
     icons:{
         height:13
     }

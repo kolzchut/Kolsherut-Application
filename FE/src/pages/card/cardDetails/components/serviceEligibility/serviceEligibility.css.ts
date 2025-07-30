@@ -1,16 +1,20 @@
 import {createUseStyles} from 'react-jss';
 import {tertiaryTextColorOne} from "../../../../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
-    paragraphText: {
+    paragraphText: ({accessibilityActive}: IProps) => ({
         fontWeight: 300,
-        fontSize:16,
+        fontSize: accessibilityActive ? 20 : 16,
         lineHeight: 1.3,
-    },
-    title: {
+    }),
+    title: ({accessibilityActive}: IProps) => ({
         color: tertiaryTextColorOne,
         fontWeight:600,
         lineHeight: 1.3,
-        fontSize:16
-    },
+        fontSize: accessibilityActive ? 20 : 16
+    }),
 });

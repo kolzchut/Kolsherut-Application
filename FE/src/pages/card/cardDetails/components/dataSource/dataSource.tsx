@@ -1,6 +1,10 @@
 import useStyle from "./dataSource.css";
-const DataSource = ({dataSource}: { dataSource: string[] }) => {
-    const classes = useStyle();
+import { useSelector } from 'react-redux';
+import { isAccessibilityActive } from "../../../../../store/general/general.selector";
+
+const DataSource = ({ dataSource }: { dataSource: string[] }) => {
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyle({ accessibilityActive });
     if (!dataSource || dataSource.length === 0) return <></>
     return <>
         {dataSource.map((source, index) => (

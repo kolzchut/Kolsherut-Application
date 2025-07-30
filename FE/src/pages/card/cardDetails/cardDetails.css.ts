@@ -1,6 +1,10 @@
 import {createUseStyles} from 'react-jss';
 import {secondaryTextColorTwo, tertiaryTextColorOne} from "../../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
     root: {
         position: "relative",
@@ -26,27 +30,27 @@ export default createUseStyles({
             padding: '8px 16px'
         }
         },
-    serviceNameText:{
-        fontSize: '24px',
+    serviceNameText: ({accessibilityActive}: IProps) => ({
+        fontSize: accessibilityActive ? 28 : 24,
         margin:0,
         lineHeight:1.15,
         color: secondaryTextColorTwo,
         fontWeight: 600,
-    },
-    branchNameText:{
+    }),
+    branchNameText: ({accessibilityActive}: IProps) => ({
         fontWeight:400,
-        fontSize: '20px',
+        fontSize: accessibilityActive ? 24 : 20,
         lineHeight: 1.4,
         color: tertiaryTextColorOne,
         margin:0
-    },
-    serviceDescriptionText: {
+    }),
+    serviceDescriptionText: ({accessibilityActive}: IProps) => ({
         margin:0,
-        fontSize: 16,
+        fontSize: accessibilityActive ? 20 : 16,
         fontWeight: 300,
         lineHeight: 1.5,
         color: secondaryTextColorTwo
-    },
+    }),
     quickActionContainer: {
         position: 'sticky',
         bottom: 0,

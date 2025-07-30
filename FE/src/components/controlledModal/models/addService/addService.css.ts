@@ -7,7 +7,7 @@ import {
 } from "../../../../services/theme";
 
 export default createUseStyles({
-    root: ({isMobile}: { isMobile: boolean }) => {
+    root: ({isMobile}: { isMobile: boolean, accessibilityActive: boolean }) => {
         const style = {
             position: 'relative',
             display: 'flex',
@@ -51,20 +51,20 @@ export default createUseStyles({
     header: {
         marginBottom: 20
     },
-    title: {
-        fontSize: '28px',
+    title: ({ accessibilityActive }: { accessibilityActive: boolean }) => ({
+        fontSize: accessibilityActive ? '32px' : '28px',
         fontWeight: 600,
         color: secondaryTextColorTwo
-    },
-    subtitle: {
-        fontSize: '22px',
+    }),
+    subtitle: ({ accessibilityActive }: { accessibilityActive: boolean }) => ({
+        fontSize: accessibilityActive ? '26px' : '22px',
         fontWeight: 400,
         margin: '10px 0',
         color: secondaryTextColorTwo
-    },
-    button: {
+    }),
+    button: ({ accessibilityActive }: { accessibilityActive: boolean }) => ({
         width: '100%',
-        fontSize: '16px',
+        fontSize: accessibilityActive ? '20px' : '16px',
         height: '40px',
         borderRadius: '20px',
         background: primaryTextColorTwo,
@@ -72,6 +72,5 @@ export default createUseStyles({
         '&:hover': {
             cursor: 'pointer',
         }
-    }
+    })
 });
-

@@ -9,6 +9,8 @@ import {
 } from "../../../../../../store/filter/filterSlice";
 import {getColor} from "../../../../../../components/label/labelLogic";
 import resultsAnalytics from "../../../../../../services/gtag/resultsEvents";
+import { useSelector } from 'react-redux';
+import {isAccessibilityActive} from "../../../../../../store/general/general.selector.ts";
 
 
 const OccasionButtonForMobile = ({response, situation, isSelected, count = 0}: {
@@ -18,7 +20,8 @@ const OccasionButtonForMobile = ({response, situation, isSelected, count = 0}: {
     count?: number | string
 }) => {
     const {isResponse, color} = getColor({response})
-    const classes = useStyle({color, isSelected});
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyle({color, isSelected, accessibilityActive});
     const occasion = response || situation;
     if (!occasion) return <></>;
     const onClick = () => {

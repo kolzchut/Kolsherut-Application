@@ -2,8 +2,9 @@ import useStyles from './linksMenu.css';
 import {useEffect, useState} from "react";
 import axios from "axios";
 import logger from "../../../services/logger/logger";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {setModal} from "../../../store/general/generalSlice";
+import {isAccessibilityActive} from "../../../store/general/general.selector.ts";
 
 interface ILinks {
     title: string,
@@ -14,6 +15,9 @@ interface ILinks {
 const LinksMenu = () => {
     const [links, setLinks] = useState<Array<ILinks>>([])
     const dispatch = useDispatch();
+    const accessibilityActive = useSelector(isAccessibilityActive);
+    const classes = useStyles({accessibilityActive});
+
     useEffect(() => {
         const getLinks = async () => {
             try {
@@ -30,7 +34,6 @@ const LinksMenu = () => {
         e.preventDefault();
         dispatch(setModal(link.modal));
     }
-    const classes = useStyles();
     if (links.length === 0) return <></>;
     return <div className={classes.mainDiv}>
         {links.map((link: ILinks) => (

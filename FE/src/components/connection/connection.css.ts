@@ -16,7 +16,7 @@ export default createUseStyles({
         marginTop: '10px',
         marginBottom: '10px',
     },
-    aTag: ({ isTel }: { isTel: boolean }) => ({
+    aTag: ({ isTel, accessibilityActive }: { isTel: boolean, accessibilityActive: boolean }) => ({
         display: 'flex',
         alignItems: 'center',
         paddingRight: '10px',
@@ -30,7 +30,7 @@ export default createUseStyles({
         height: '40px',
         flex: 1,
         textDecoration: 'none',
-        fontSize: '16px',
+        fontSize: accessibilityActive ? '20px' : '16px',
         fontWeight: 600,
         cursor: 'pointer',
         transition: 'background-color 0.2s, box-shadow 0.2s',
@@ -47,10 +47,10 @@ export default createUseStyles({
     aTagImage:{
         height:'70%'
     },
-    innerATagText:{
+    innerATagText: ({ accessibilityActive }: { accessibilityActive: boolean }) => ({
       direction:'ltr',
-    },
-
+      fontSize: accessibilityActive ? '20px' : '16px',
+    }),
     button: {
         display: 'flex',
         alignItems: 'center',
@@ -67,7 +67,6 @@ export default createUseStyles({
             backgroundColor: '#f5f5f5',
             boxShadow: '0 0 5px rgba(0, 0, 0, 0.1)',
         },
-
         '&:focus': {
             outline: `2px solid ${quaternaryBackgroundColorOne}`,
             outlineOffset: '2px',

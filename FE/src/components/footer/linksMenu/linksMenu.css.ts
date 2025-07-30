@@ -1,6 +1,10 @@
 import {createUseStyles} from 'react-jss';
 import {primaryTextColorTwo} from "../../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
     mainDiv: {
         width: '100%',
@@ -15,14 +19,14 @@ export default createUseStyles({
             padding: '24px 16px'
         }
     },
-    links: {
+    links: ({accessibilityActive}: IProps) => ({
         textDecoration: 'none',
         color: primaryTextColorTwo,
         lineHeight: 1.25,
-        fontSize: '16px',
+        fontSize: accessibilityActive ? '20px' : '16px',
         fontWeight: 300,
         '&:hover': {
             textDecoration: 'underline',
         }
-    }
+    })
 });

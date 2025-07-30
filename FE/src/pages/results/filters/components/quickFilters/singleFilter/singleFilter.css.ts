@@ -1,6 +1,10 @@
 import {createUseStyles} from 'react-jss';
 import {primaryTextColorTwo, secondaryBackgroundColorOne} from "../../../../../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
     optionDiv:{
       height:30,
@@ -13,21 +17,21 @@ export default createUseStyles({
         backgroundColor: secondaryBackgroundColorOne
         }
     },
-    optionText:{
+    optionText: ({accessibilityActive}: IProps) => ({
         color: primaryTextColorTwo,
-        fontSize: 18,
+        fontSize: accessibilityActive ? 22 : 18,
         fontWeight: 400,
         lineHeight: 1.2
-    },
-    optionValue:{
-        fontSize: 16,
+    }),
+    optionValue: ({accessibilityActive}: IProps) => ({
+        fontSize: accessibilityActive ? 20 : 16,
         fontWeight: 300,
         lineHeight: 1,
         color: primaryTextColorTwo,
         borderRadius: 12,
         background: secondaryBackgroundColorOne,
         padding:'2px 6px',
-    },
+    }),
     visuallyHidden: {
         position: 'absolute',
         width: 1,

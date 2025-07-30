@@ -6,8 +6,12 @@ import {
     secondaryTextColorOne
 } from "../../../../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
-    root: {
+    root: ({accessibilityActive}: IProps) => ({
         display: "flex",
         flexDirection: "row",
         boxSizing: 'border-box',
@@ -15,10 +19,10 @@ export default createUseStyles({
         width: '100%',
         backgroundColor: tertiaryBackgroundColorTwo,
         boxShadow: "0 4px 8px #0000001a",
-        fontSize: 16,
+        fontSize: accessibilityActive ? 20 : 16,
         color: tertiaryTextColorOne,
 
-    },
+    }),
     backButtonDiv: {
         flex: 1,
         display: "flex",

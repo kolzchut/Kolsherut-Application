@@ -1,13 +1,17 @@
 import {createUseStyles} from 'react-jss';
 import {tertiaryTextColorOne, tertiaryBackgroundColorTwo} from "../../../../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
-    title: {
+    title: ({accessibilityActive}: IProps) => ({
         color: tertiaryTextColorOne,
         fontWeight:600,
         lineHeight: 1.25,
-        fontSize:16
-    },
+        fontSize: accessibilityActive ? 20 : 16
+    }),
     aTag: {
         textDecoration: "none",
         '&:hover': {

@@ -2,13 +2,18 @@ import {createUseStyles} from 'react-jss';
 import {primaryTextColorOne, secondaryBackgroundColorTwo, tertiaryTextColorOne, tertiaryTextColorThree} from "../../../../../services/theme";
 import ArrowDirection from "./arrowDirectionEnum";
 
+interface IProps {
+    arrow: ArrowDirection;
+    accessibilityActive: boolean;
+}
+
 export default createUseStyles({
-    title: {
+    title: ({accessibilityActive}: IProps) => ({
         color: tertiaryTextColorOne,
         fontWeight:600,
         lineHeight: 1.3,
-        fontSize:16
-    },
+        fontSize: accessibilityActive ? 20 : 16
+    }),
     mainDiv:()=> {
         const halfTransparentBrightBlue = `${primaryTextColorOne}40`;
         return({
@@ -22,13 +27,13 @@ export default createUseStyles({
             borderRadius: 10,
             border: `1px solid ${halfTransparentBrightBlue}`
         })},
-    link: {
+    link: ({accessibilityActive}: IProps) => ({
         cursor: 'pointer',
         width: 'calc(100% - 30px)',
         display: 'inline-block',
         paddingLeft: '18px',
         fontWeight: 600,
-        fontSize: '16px',
+        fontSize: accessibilityActive ? '20px' : '16px',
         lineHeight: 1.25,
         height: 'fit-content',
         color: primaryTextColorOne,
@@ -36,7 +41,7 @@ export default createUseStyles({
         '&:hover': {
             textDecoration: 'underline',
         }
-    },
+    }),
     linkIcon: {
         height: '16px'
     },
@@ -45,15 +50,15 @@ export default createUseStyles({
         flexDirection: 'column',
         gap: 4
     },
-    hiddenLinks: {
+    hiddenLinks: ({accessibilityActive}: IProps) => ({
         display: 'flex',
         gap: 5,
         color: tertiaryTextColorThree,
         fontWeight: 400,
         lineHeight: 1,
-        fontSize: '16px'
-    },
-    arrow: ({arrow}: { arrow: ArrowDirection }) => ({
+        fontSize: accessibilityActive ? '20px' : '16px'
+    }),
+    arrow: ({arrow}: IProps) => ({
         height: '16px',
         width: '16px',
         position: 'absolute',

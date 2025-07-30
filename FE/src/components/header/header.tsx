@@ -14,7 +14,7 @@ const logo = "/icons/logo.svg"
 const Header = ({showLogo = true, showSearchbar = true}: { showLogo?: boolean, showSearchbar?: boolean }) => {
     const isMobile = useMediaQuery(widthOfMobile);
     const accessibility = useSelector(isAccessibilityActive);
-    const classes = useStyle();
+    const classes = useStyle({accessibilityActive: accessibility});
     const dispatch = useDispatch();
 
     const handleIconClick = () => {

@@ -1,6 +1,10 @@
 import {createUseStyles} from 'react-jss';
 import {primaryTextColorTwo, secondaryBackgroundColorOne, tertiaryBackgroundColorTwo, primaryTextColorThree, primaryBackgroundColorOne} from "../../../../../../services/theme";
 
+interface IProps {
+    accessibilityActive: boolean
+}
+
 export default createUseStyles({
     root: {
         position: 'relative',
@@ -27,11 +31,11 @@ export default createUseStyles({
         alignItems: 'center',
         justifyContent: 'space-between',
     },
-    input: {
+    input: ({accessibilityActive}: IProps) => ({
         width: '70%',
         height: '30px',
         direction: 'rtl',
-        fontSize: '18px',
+        fontSize: accessibilityActive ? 22 : 18,
         border: 0,
         color: primaryTextColorTwo,
         padding: '5px',
@@ -40,7 +44,7 @@ export default createUseStyles({
         '&:focus': {
             outline: `2px solid ${primaryTextColorThree}`,
         }
-    },
+    }),
     closeIcon: {
         background: "transparent",
         cursor: 'pointer',
@@ -57,11 +61,11 @@ export default createUseStyles({
             transition: 'background 0.3s ease, transform 0.5s ease',
         }
     },
-    count: () => {
+    count: ({accessibilityActive}: IProps) => {
         const colorOfText = primaryTextColorTwo;
         const colorOfBackground = `${primaryTextColorTwo}33`;
         return ({
-            fontSize: 18,
+            fontSize: accessibilityActive ? 22 : 18,
             fontWeight: 700,
             lineHeight: 1,
             color: colorOfText,
@@ -70,9 +74,9 @@ export default createUseStyles({
             padding: '2px 6px',
         })
     },
-    currentLocationDiv: {
+    currentLocationDiv: ({accessibilityActive}: IProps) => ({
         display: 'flex',
-        fontSize: 18,
+        fontSize: accessibilityActive ? 22 : 18,
         height: '30px',
         direction: 'rtl',
         border: 0,
@@ -85,8 +89,8 @@ export default createUseStyles({
         alignItems: 'center',
         gap: 15,
         justifyContent: 'center'
-    },
-    locationDiv: {
+    }),
+    locationDiv: ({accessibilityActive}: IProps) => ({
         width: '100%',
         display: 'flex',
         alignItems: 'center',
@@ -94,21 +98,21 @@ export default createUseStyles({
         direction: 'rtl',
         background: primaryBackgroundColorOne,
         border: `1px solid transparent`,
-        fontSize: '20px',
+        fontSize: accessibilityActive ? 24 : 20,
         boxSizing: 'border-box',
         fontWeight: 400,
         borderRadius: 8,
         color: primaryTextColorTwo,
-        padding: '10px 20px',
+        padding: '10px',
+        gap: 6,
+        cursor: 'pointer',
         '&:hover': {
             background: tertiaryBackgroundColorTwo,
-            cursor: 'pointer',
-            border: `1px solid ${secondaryBackgroundColorOne}`,
         }
-    },
-    border:{
-        borderBottom: `2px dashed ${secondaryBackgroundColorOne}`,
-        width: '90%',
-        marginRight: '5%',
-    },
+    }),
+    border: {
+        width: '100%',
+        borderBottom: `1px solid ${primaryTextColorThree}`,
+        margin: '5px 0'
+    }
 });
