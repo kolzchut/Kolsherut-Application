@@ -27,7 +27,7 @@ import {useOnce} from "../../hooks/useOnce";
 import {allowChangeStoreLocation} from "../../services/map/events/mapInteraction";
 import {settingToResults} from "../../store/shared/sharedSlice";
 import noResultsIcon from "../../assets/noResults.svg";
-import loadingIcon from '../../assets/searchAnimation.svg';
+import Loader from "./loader/loader.tsx";
 
 const Results = () => {
     const isResultsLoading = useSelector(isLoading);
@@ -78,21 +78,18 @@ const Results = () => {
                 {isMobile ? <FiltersForMobile/> : <FiltersForDesktop/>}
                 <div className={classes.resultsContainer} onScroll={reportOnce}>
                     <div className={classes.hits}>
-                        {conditionToShowResults&& filteredResults.map((service: IService) => (
+                        {conditionToShowResults && filteredResults.map((service: IService) => (
                             <Hits key={service.id} service={service}/>
                         ))}
-                        {conditionToShowNoResults&& (
+                        {conditionToShowNoResults && (
                             <div className={classes.noResults}>
                                 <img className={classes.noResultsIcon} src={noResultsIcon} alt={"no results"}/>
                                 <span className={classes.noResultsTitle}>{window.strings.results.noResults}</span>
-                                <span className={classes.noResultsSubtitle}>{window.strings.results.noResultsDescription}</span>
+                                <span
+                                    className={classes.noResultsSubtitle}>{window.strings.results.noResultsDescription}</span>
                             </div>
                         )}
-                        {conditionToShowLoading && (
-                            <div className={classes.loading}>
-                                <img className={classes.loadingIcon} src={loadingIcon} alt={"loading..."} />
-                            </div>
-                        )}
+                        {conditionToShowLoading && (<Loader/>)}
                     </div>
                     <div className={classes.branchList}>
                         {selectedOrganization && (<BranchList organization={selectedOrganization}/>)}

@@ -25,6 +25,7 @@
     "human_services:emergency:emergency_food",
     "human_services:place:health:clinic:mental_health_clinic"
   ],
+  "loaderIterations": 4,
   "situationsColors": "#CCCDF5",
   "logToServer": false,
   "routes": {

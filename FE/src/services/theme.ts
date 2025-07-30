@@ -1,5 +1,6 @@
 // Backgrounds
 const primaryBackgroundColorOne = '#FFFFFF';
+const primaryBackgroundColorTwo = '#EFF1F6';
 const secondaryBackgroundColorOne = '#E9F0FE';
 const secondaryBackgroundColorTwo = '#F8FBFF';
 const tertiaryBackgroundColorOne = '#FFFFB7';
@@ -42,5 +43,6 @@ export {
     transparent,
     tertiaryBackgroundColorTwo,
     tertiaryBackgroundColorOne,
-    quaternaryBackgroundColorOne
+    quaternaryBackgroundColorOne,
+    primaryBackgroundColorTwo
 };
