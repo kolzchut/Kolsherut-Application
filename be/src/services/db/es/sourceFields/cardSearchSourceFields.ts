@@ -1,0 +1,23 @@
+export const cardSearchSourceFields = [
+    "service_id",
+    "service_name",
+    "service_description",
+    "organization_id",
+    "organization_name",
+    "organization_short_name",
+    "branch_id",
+    "branch_name",
+    "branch_address",
+    "branch_location_accurate",
+    "branch_city",
+    "branch_geometry",
+    "national_service",
+    "address_parts",
+    "card_id",
+    "responses",
+    "response_category",
+    "point_id",
+    "collapse_key",
+    "situations"
+];
+

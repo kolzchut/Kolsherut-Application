@@ -1,8 +1,8 @@
 import {Response} from "../../../../../types/cardType";
 import useStyle from "./serviceEssence.css";
 import Label from "../../../../../components/label/label";
-import {reRouteToResults} from "../../../../../services/routes/reRoute";
 import {getHrefForResults} from "../../../../../services/href";
+import {settingToResults} from "../../../../../store/shared/sharedSlice.ts";
 
 const ServiceEssence = ({responses}: { responses: Response[] }) => {
     const serviceEssenceTitle = window.strings.cardDetails.serviceEssence
@@ -13,12 +13,12 @@ const ServiceEssence = ({responses}: { responses: Response[] }) => {
         <div className={classes.linkList}>
             {responses.map((response: Response) => {
                 const href = getHrefForResults({responseFilter: [response.id]});
-                const onClick = () => {
-                    reRouteToResults({responseFilter: [response.id]})
-                    return false;
+                const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+                    e.preventDefault();
+                    settingToResults({value: {response_id:response.id, query:response.name}, removeOldFilters:true});
                 }
                 return <a href={href} key={response.id} className={classes.link}
-                          onClick={onClick}>
+                          onClick={(e: React.MouseEvent<HTMLAnchorElement>)=>onClick(e)}>
                     <Label key={response.id} response={response}/>
                 </a>
             })}

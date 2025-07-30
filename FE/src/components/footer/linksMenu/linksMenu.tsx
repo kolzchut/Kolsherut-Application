@@ -25,16 +25,17 @@ const LinksMenu = () => {
         }
         getLinks();
     }, []);
-    const onClick = (link: ILinks) => {
-        if (link.url || !link.modal) return true;
+    const onClick = (e: React.MouseEvent<HTMLAnchorElement>, link: ILinks) => {
+        if (link.url || !link.modal) return;
+        e.preventDefault();
         dispatch(setModal(link.modal));
-        return false
     }
     const classes = useStyles();
     if (links.length === 0) return <></>;
     return <div className={classes.mainDiv}>
         {links.map((link: ILinks) => (
-            <a className={classes.links} key={link.title} target={'_blank'} href={link.url} onClick={() => onClick(link)}>{link.title}</a>
+            <a className={classes.links} key={link.title} target={'_blank'} href={link.url}
+               onClick={(e: React.MouseEvent<HTMLAnchorElement>) => onClick(e, link)}>{link.title}</a>
         ))}
     </div>
 }

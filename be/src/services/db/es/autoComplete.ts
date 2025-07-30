@@ -1,26 +1,8 @@
 import {executeESQuery} from './es';
-import vars from "../../../vars";
+import buildAutoCompleteQuery from "./dsl/buildAutoCompleteQuery";
 
 export default async (search: string) => {
-    const query = {
-        index: vars.serverSetups.elastic.indices.autocomplete,
-        body: {
-            size: 5,
-            query: {
-                bool: {
-                    must: {
-                        match: {
-                            query: {
-                                query: search,
-                                fuzziness: "AUTO"
-                            }
-                        }
-                    }
-                }
-            },
-        }
-    };
-
+    const query = buildAutoCompleteQuery(search);
     try {
         return await executeESQuery(query);
     } catch (error) {

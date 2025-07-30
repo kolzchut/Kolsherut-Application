@@ -9,6 +9,7 @@ const clickOnOptionalSearch = (group: IGroup) => {
 }
 const searchInputFocusEvent = () => analytics.interactionEvent('homepage-searchbar', 'homepage')
 
+
 export default {
     clickOnOptionalSearch,
     searchInputFocusEvent

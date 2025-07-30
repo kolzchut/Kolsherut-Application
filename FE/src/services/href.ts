@@ -30,12 +30,9 @@ export const getHrefForResults = ({
             queryParams.set('lf', locationString);
         }
     }
-    if (situationFilter.length > 0) {
-        queryParams.set('sf', situationFilter.join(','));
-    }
-    if (responseFilter.length > 0) {
-        queryParams.set('rf', responseFilter.join(','));
-    }
+    //TODO: finish
+    queryParams.set('sf', JSON.stringify(situationFilter));
+    queryParams.set('rf', JSON.stringify(responseFilter));
 
     return `${baseUrl}/?${queryParams.toString()}`;
 };

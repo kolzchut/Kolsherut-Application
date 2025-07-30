@@ -13,11 +13,11 @@ const MoreServicesInBranch = ({moreServicesInBranch}: { moreServicesInBranch: IC
             <span className={classes.title}>{moreServicesInBranchTitle}</span>
             {moreServicesInBranch.map((service: ICardForBanner) => {
                 const href = getHrefForCard(service.card_id);
-                const onClick = () => {
-                    reRouteToCard({cardId: service.card_id})
-                    return false;
+                const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+                    e.preventDefault();
+                    reRouteToCard({cardId: service.card_id});
                 };
-                return (<a href={href} key={service.card_id} onClick={onClick} className={classes.aTag}>
+                return (<a href={href} key={service.card_id} onClick={(e: React.MouseEvent<HTMLAnchorElement>)=>onClick(e)} className={classes.aTag}>
                     <CardBanner key={service.card_id} card={service}/>
                 </a>);
             })}
