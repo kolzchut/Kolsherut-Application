@@ -23,6 +23,20 @@ export default {
             }
         }
     },
+    defaultParams:{
+        searchCards:{
+        fast:{
+            size:  parseInt(process.env.SEARCHCARDS_FIRST_LENGTH || '50'),
+            offset: 0,
+            innerHitsSize: 1000
+        },
+        rest:{
+            size: 300,
+            offset:  parseInt(process.env.SEARCHCARDS_FIRST_LENGTH || '50'),
+            innerHitsSize: 1000
+        }
+        }
+    },
     logs: {
         verbose: process.env.VERBOSE === 'true',
         logToFile: process.env.LOG_TO_FILE === 'true',

@@ -15,6 +15,7 @@ services:
       - VERBOSE=true
       - LOG_TO_FILE=true
       - LOG_DURATION=10
+      - SEARCHCARDS_FIRST_LENGTH=50
     volumes:
       - ./volumes/be/logs:/app/logs
   fe:
