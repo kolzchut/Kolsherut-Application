@@ -8,9 +8,6 @@ export const dataSlice = createSlice({
         setResults(state:DataStore, action){
             state.results = action.payload;
         },
-        setSearchOptions(state: DataStore, action) {
-            state.searchOptions = action.payload;
-        },
         setSelectedOrganization(state: DataStore, action) {
             state.selectedOrganization = action.payload || null;
         },
@@ -22,7 +19,6 @@ export const dataSlice = createSlice({
 
 export const {
     setSelectedOrganization,
-    setSearchOptions,
     setLocations,
     setResults
 } = dataSlice.actions;

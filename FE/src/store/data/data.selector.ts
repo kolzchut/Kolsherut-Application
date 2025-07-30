@@ -6,9 +6,6 @@ import {getBranches} from "../shared/utilities/getBranches";
 
 export const dataStore = (state: RootState) => state.data;
 
-export const getSearchOptions = createSelector([dataStore], (dataStore: DataStore) => {
-    return dataStore.searchOptions;
-});
 export const getResults = createSelector([dataStore], (dataStore: DataStore) => {
     return dataStore.results;
 });

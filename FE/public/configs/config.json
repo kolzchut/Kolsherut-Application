@@ -31,7 +31,6 @@
     "logs": "/logs",
     "test": "/test",
     "search": "/search",
-    "homepage": "/homepage",
     "card": "/card/%%cardId%%",
     "autocomplete": "/autocomplete/%%search%%"
   },
