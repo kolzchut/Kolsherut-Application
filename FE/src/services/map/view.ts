@@ -2,8 +2,11 @@ import View from "ol/View";
 import {fromLonLat} from "ol/proj";
 import map from "./map";
 import {toRadians} from "ol/math";
+import {isMobileScreen} from "../media";
 
-const view = new View();
+const view = new View({
+    minZoom: isMobileScreen() ? 7.5 : 8,
+});
 
 export const setViewPort = ({center=window.config.map.center,zoom = window.config.map.zoom,rotation = window.config.map.rotation}:{center?: [number, number], zoom?: number, rotation?: number}) => {
     view.setCenter(fromLonLat(center));

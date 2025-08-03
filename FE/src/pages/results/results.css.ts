@@ -74,7 +74,7 @@ export default createUseStyles({
             transition: 'flex 0.2s ease-in-out',
         })
         return ({
-            height: 'calc(100vh - 130px)',
+            height: 'calc(100vh - 191px)',
             display: displayResultsMap ? 'block' : 'none',
             top: 0,
             left: 0,
