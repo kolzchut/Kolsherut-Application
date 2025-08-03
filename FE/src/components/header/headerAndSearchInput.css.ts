@@ -3,7 +3,7 @@ import {
     primaryTextColorTwo,
     secondaryBackgroundColorOne,
     primaryBorderColorTwo,
-    tertiaryBackgroundColorTwo, primaryBackgroundColorOne
+    tertiaryBackgroundColorTwo, primaryBackgroundColorOne, primaryTextColorOne
 } from "../../services/theme";
 
 interface IProps {
@@ -52,6 +52,7 @@ export default createUseStyles({
         fontSize: accessibilityActive ? 24 : 20,
         textDecoration: "none",
         fontWeight: 300,
+        color:primaryTextColorOne,
         '&:hover': {
             lineHeight: 4,
             fontWeight: 400,

@@ -3,18 +3,16 @@ import {Attribution} from 'ol/control';
 import Map from "ol/Map";
 import {Feature} from "ol";
 import {Geometry} from "ol/geom";
-import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import initLayers from "./layers";
-import OSM from "ol/source/OSM";
 import {getSources} from "./sources";
 import view, {setViewPort} from "./view";
 import {MapInitParams} from "../../types/InteractionsTypes";
-import TileLayer from "ol/layer/Tile";
 import Overlay from "ol/Overlay";
 import nationalServiceNotification from "./style/nationalServiceNotification/nationalServiceNotification";
 import {fromLonLat} from "ol/proj";
 import {XYZ} from "ol/source";
+import {GetLayersReturn} from "../../types/layers";
 
 const attribution = new Attribution({
     collapsible: false,
@@ -22,7 +20,7 @@ const attribution = new Attribution({
 export class MapSingleton {
     readonly ol: Map;
     public readonly view: View;
-    public layers: [TileLayer<OSM>, VectorLayer<VectorSource<Feature<Geometry>>>] | undefined;
+    public layers: GetLayersReturn | undefined;
     public sources: {
         worldImagerySource: XYZ;
         poiSource: VectorSource<Feature<Geometry>>;
