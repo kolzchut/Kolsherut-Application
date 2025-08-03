@@ -15,7 +15,10 @@ import {getSearchQuery, isAccessibilityActive, isLoading} from "../../store/gene
 import Map from "../../components/map/map";
 import {useDisplayResultsMap} from "./context/contextFunctions";
 import {removeAllPOIs} from "../../services/map/poiInteraction";
-import {getFilteredBranches, getFilteredResults} from "../../store/shared/shared.selector";
+import {
+    getFilteredBranchesByResponseAndFilter,
+    getFilteredResults,
+} from "../../store/shared/shared.selector";
 import resultsAnalytics from "../../services/gtag/resultsEvents";
 import FiltersForMobile from "./filters/filtersForMobile";
 import {getLocationFilter} from "../../store/filter/filter.selector";
@@ -28,24 +31,29 @@ import noResultsIcon from "../../assets/noResults.svg";
 import Loader from "./loader/loader.tsx";
 import {isMobileScreen} from "../../services/media.ts";
 
-const Results = ({headerStyle}:{headerStyle: {[_key: string]: string}}) => {
+const Results = ({headerStyle}: { headerStyle: { [_key: string]: string } }) => {
     const isResultsLoading = useSelector(isLoading);
     const filteredResults = useSelector(getFilteredResults);
     const selectedOrganization = useSelector(getSelectedOrganization);
-    const branches = useSelector(getFilteredBranches);
     const searchQuery = useSelector(getSearchQuery);
     const displayResultsMap = useDisplayResultsMap();
     const location = useSelector(getLocationFilter)
     const isMobile = isMobileScreen();
+    const branchesForMapWithoutLocationFilter = useSelector(getFilteredBranchesByResponseAndFilter)
     const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyles({displayResultsMap, isSelectedOrganization: !!selectedOrganization, isMobile, accessibilityActive});
+    const classes = useStyles({
+        displayResultsMap,
+        isSelectedOrganization: !!selectedOrganization,
+        isMobile,
+        accessibilityActive
+    });
     const metaTagsData = getResultsMetaTags({searchQuery, location})
     const dispatch = useDispatch();
     const reportOnce = useOnce(() => resultsAnalytics.scrollOnceEvent());
     const newResults = () => {
         dispatch(setSelectedOrganization(null));
         removeAllPOIs();
-        addResultsPOIs(branches);
+        addResultsPOIs(branchesForMapWithoutLocationFilter);
         allowChangeStoreLocation(false);
         if (location.key !== window.strings.map.locationByBoundingBox)
             setMapOnLocation(location.bounds);

@@ -7,9 +7,12 @@ import {createClusterStyle} from "../style/clusterStyle.ts";
 import {Feature} from "ol";
 import {Geometry} from "ol/geom";
 import {GetLayersReturn} from "../../../types/layers.ts";
+import areFeatureGroupsEqual from "./areFeatureGroupsEqual.ts";
 
 let currentClusterLayers: VectorLayer<Cluster>[] = [];
-
+let lastFeaturesByColor: { [color: string]: Feature<Geometry>[] } = {};
+let lastFeatureCount = 0;
+let updateTimeout: number | null = null;
 
 export const setupClusterLayer = ({layers,clusterSources}:{layers: GetLayersReturn,clusterSources?: { [_p: string]: Cluster<Feature<Geometry>> } | undefined
 }) => {
@@ -26,16 +29,48 @@ export const setupClusterLayer = ({layers,clusterSources}:{layers: GetLayersRetu
     });
 }
 
-export const updateClusterLayer = () => {
+export const updateClusterLayerWithDebounce = () => {
+    if (updateTimeout) {
+        clearTimeout(updateTimeout);
+    }
+
+    updateTimeout = setTimeout(() => {
+        performClusterUpdate();
+    }, 50);
+};
+
+export const performClusterUpdate = () => {
     if (!map.sources) return;
 
     const {poiSource} = map.sources;
     const features = poiSource.getFeatures();
+
+    if (features.length === 0) {
+        if (currentClusterLayers.length > 0) {
+            currentClusterLayers.forEach((layer: VectorLayer) => {
+                map.ol.removeLayer(layer);
+            });
+            currentClusterLayers = [];
+            lastFeaturesByColor = {};
+            lastFeatureCount = 0;
+        }
+        return;
+    }
+
+    if (Math.abs(features.length - lastFeatureCount) < 5 && currentClusterLayers.length > 0) {
+        return;
+    }
+
     const featuresByColor = groupFeaturesByColor(features);
 
-    currentClusterLayers.forEach((layer: VectorLayer) => {
+    if (areFeatureGroupsEqual(featuresByColor, lastFeaturesByColor)) return;
+
+    lastFeaturesByColor = featuresByColor;
+    lastFeatureCount = features.length;
+
+    for (const layer of currentClusterLayers) {
         map.ol.removeLayer(layer);
-    });
+    }
 
     const clusterSources = createColorBasedClusterSources(featuresByColor);
 
@@ -51,4 +86,3 @@ export const updateClusterLayer = () => {
         currentClusterLayers.push(clusterLayer);
     });
 };
-

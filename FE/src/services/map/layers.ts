@@ -4,7 +4,7 @@ import {MapSingleton} from "./map";
 import {GetLayersParams, GetLayersReturn} from "../../types/layers";
 import {createColorBasedClusterSources} from "./cluster/cluster.ts";
 import {groupFeaturesByColor} from "./cluster/groupFeaturesByColor.ts";
-import {setupClusterLayer, updateClusterLayer} from "./cluster/clusterLayer.ts";
+import {setupClusterLayer, updateClusterLayerWithDebounce} from "./cluster/clusterLayer.ts";
 
 
 const getLayers = ({worldImagerySource, poiSource, clusterSources}: GetLayersParams): GetLayersReturn => {
@@ -36,9 +36,9 @@ const initLayers = (map: MapSingleton) => {
 
     map.layers = getLayers({worldImagerySource, poiSource, clusterSources});
 
-    poiSource.on('addfeature', () => updateClusterLayer());
-    poiSource.on('removefeature', () => updateClusterLayer());
-    poiSource.on('changefeature', () => updateClusterLayer());
+    poiSource.on('addfeature', () => updateClusterLayerWithDebounce());
+    poiSource.on('removefeature', () => updateClusterLayerWithDebounce());
+    poiSource.on('changefeature', () => updateClusterLayerWithDebounce());
 }
 
 export default initLayers;

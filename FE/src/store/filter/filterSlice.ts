@@ -41,17 +41,14 @@ export const filterSlice = createSlice({
         },
         addMultipleResponseFilters(state: FilterStore, action) {
             const responseIds: string[] = action.payload;
-            responseIds.forEach((id) => {
-                if (!state.filters.responses.includes(id)) {
-                    state.filters.responses = [...state.filters.responses, id];
-                }
-            });
-            const responseId = action.payload;
-            state.filters.responses = state.filters.responses.filter((id) => id !== responseId);
+            const currentResponses = new Set(state.filters.responses);
+            responseIds.forEach((id) => currentResponses.add(id));
+            state.filters.responses = Array.from(currentResponses);
         },
         removeMultipleResponseFilters(state: FilterStore, action) {
-            const responseIds = action.payload;
-            state.filters.responses = state.filters.responses.filter((id) => !responseIds.includes(id));
+            const responseIds: string[] = action.payload;
+            const responseIdsSet = new Set(responseIds);
+            state.filters.responses = state.filters.responses.filter((id) => !responseIdsSet.has(id));
         },
         addSituationFilter(state: FilterStore, action) {
             if (state.filters.situations.some((id) => id === action.payload)) return;
@@ -62,8 +59,9 @@ export const filterSlice = createSlice({
             state.filters.situations = state.filters.situations.filter((id) => id !== situationId);
         },
         removeMultipleSituationFilters(state: FilterStore, action) {
-            const situationIds = action.payload;
-            state.filters.situations = state.filters.situations.filter((id) => !situationIds.includes(id));
+            const situationIds: string[] = action.payload;
+            const situationIdsSet = new Set(situationIds);
+            state.filters.situations = state.filters.situations.filter((id) => !situationIdsSet.has(id));
         },
         setLocationFilter(state: FilterStore, action) {
             const {key, bounds} = action.payload;

@@ -1,9 +1,11 @@
 import Style from "ol/style/Style";
 import {Circle, Fill, Stroke, Text} from "ol/style";
 import {FeatureLike} from "ol/Feature";
+import Feature from "ol/Feature";
 import dynamicBranchStyle from "./dynamicBranchStyle";
 
-const styleCache: {[key: string]: Style} = {};
+const styleCache = new Map<string, Style>();
+const MAX_CACHE_SIZE = 200;
 
 const getSinglePOIStyle = (feature: FeatureLike) => {
     const originalFeature = feature.get('features')[0];
@@ -19,13 +21,19 @@ export const createClusterStyle = (color: string) => {
 
         if (size === 1) return getSinglePOIStyle(feature);
 
+        if (feature instanceof Feature) {
+            feature.set('zIndex', size);
+        }
+
         const cacheKey = `${color}_${size}`;
 
-        let style = styleCache[cacheKey];
+        let style = styleCache.get(cacheKey);
         if (!style) {
+            const radius = Math.min(12 + size * 0.5, 32);
+
             style = new Style({
                 image: new Circle({
-                    radius: 12 + Math.min(size*0.5, 20),
+                    radius,
                     fill: new Fill({
                         color: color,
                     }),
@@ -35,46 +43,23 @@ export const createClusterStyle = (color: string) => {
                     }),
                 }),
                 text: new Text({
-                    text: size.toString(),
+                    text: size > 99 ? '99+' : size.toString(),
                     fill: new Fill({
                         color: '#fff',
                     }),
+                    font: 'bold 12px sans-serif',
                 }),
+                zIndex: size
             });
-            styleCache[cacheKey] = style;
+
+            if (styleCache.size >= MAX_CACHE_SIZE) {
+                const keysToDelete = Array.from(styleCache.keys()).slice(0, Math.floor(MAX_CACHE_SIZE * 0.1));
+                keysToDelete.forEach(key => styleCache.delete(key));
+            }
+
+            styleCache.set(cacheKey, style);
         }
         return style;
     };
 };
 
-const clusterStyle = (feature: FeatureLike) => {
-    const size = feature.get('features').length;
-
-    if (size === 1) return getSinglePOIStyle(feature);
-
-    let style = styleCache[size];
-    if (!style) {
-        style = new Style({
-            image: new Circle({
-                radius: 12 + Math.min(size * 2, 20),
-                stroke: new Stroke({
-                    color: '#fff',
-                    width: 2
-                }),
-                fill: new Fill({
-                    color: '#3399CC',
-                }),
-            }),
-            text: new Text({
-                text: size.toString(),
-                fill: new Fill({
-                    color: '#fff',
-                }),
-            }),
-        });
-        styleCache[size] = style;
-    }
-    return style;
-}
-
-export default clusterStyle;
