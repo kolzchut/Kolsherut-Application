@@ -20,19 +20,15 @@ export const getHrefForResults = ({
 }) => {
     const baseUrl = window.location.origin;
     const queryParams = new URLSearchParams({p: 'results'});
-
-    if (searchQuery) {
-        queryParams.set('sq', searchQuery);
-    }
+    const searchQueryToSet = searchQuery.trim() || responseFilter.join(',') || situationFilter.join(',') || location.key;
+    queryParams.set('sq', searchQueryToSet);
     if (location) {
         const locationString = stringifyLocation(location);
         if (locationString) {
             queryParams.set('lf', locationString);
         }
     }
-    //TODO: finish
     queryParams.set('sf', JSON.stringify(situationFilter));
     queryParams.set('rf', JSON.stringify(responseFilter));
-
     return `${baseUrl}/?${queryParams.toString()}`;
 };

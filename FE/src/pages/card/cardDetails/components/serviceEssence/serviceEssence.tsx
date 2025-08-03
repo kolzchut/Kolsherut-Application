@@ -15,7 +15,7 @@ const ServiceEssence = ({responses}: { responses: Response[] }) => {
         <span className={classes.title}>{serviceEssenceTitle}</span>
         <div className={classes.linkList}>
             {responses.map((response: Response) => {
-                const href = getHrefForResults({responseFilter: [response.id]});
+                const href = getHrefForResults({searchQuery: response.name,responseFilter: [response.id]});
                 const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
                     e.preventDefault();
                     settingToResults({value: {response_id:response.id, query:response.name}, removeOldFilters:true});
