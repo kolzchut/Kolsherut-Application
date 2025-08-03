@@ -1,1 +1,1 @@
-export const widthOfMobile = '(max-width:768px)'
+export const widthOfMobile = 768;

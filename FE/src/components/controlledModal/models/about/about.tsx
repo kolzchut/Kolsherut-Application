@@ -5,14 +5,13 @@ import {setModal} from "../../../../store/general/generalSlice";
 import JusticeLink from "../../../links/justiceLink";
 import DigitalLink from "../../../links/digitalLink";
 import KZLink from "../../../links/kzLink";
-import {useMediaQuery} from "@mui/material";
-import {widthOfMobile} from "../../../../constants/mediaQueryProps.ts";
+import {isMobileScreen} from "../../../../services/media";
 import { useSelector } from 'react-redux';
 import {isAccessibilityActive} from "../../../../store/general/general.selector.ts";
 
 const About = () => {
     const strings = window.strings.staticModals.about;
-    const isMobile = useMediaQuery(widthOfMobile);
+    const isMobile = isMobileScreen();
     const accessibilityActive = useSelector(isAccessibilityActive);
     const classes = useStyle({isMobile, accessibilityActive});
     const close = () => store.dispatch(setModal(null));

@@ -4,8 +4,7 @@ import {setModal} from "../../../../store/general/generalSlice";
 import closeIcon from "../../../../assets/icon-close-black.svg";
 import AddServiceBox from "./addServiceBox/addServiceBox";
 import {useState} from "react";
-import {useMediaQuery} from "@mui/material";
-import {widthOfMobile} from "../../../../constants/mediaQueryProps.ts";
+import {isMobileScreen} from "../../../../services/media";
 import { useSelector } from 'react-redux';
 import {isAccessibilityActive} from "../../../../store/general/general.selector.ts";
 
@@ -15,7 +14,7 @@ interface Service {
 }
 
 const AddService = () => {
-    const isMobile = useMediaQuery(widthOfMobile);
+    const isMobile = isMobileScreen();
     const accessibilityActive = useSelector(isAccessibilityActive);
     const classes = useStyle({isMobile, accessibilityActive});
     const [selectedService, setSelectedService] = useState<number>(-1);
@@ -35,7 +34,7 @@ const AddService = () => {
             services.map((service:Service, index: number) => {
                 const onClick = () => click(index);
                 return (<>
-                    <AddServiceBox key={service.title} isExtendedBox={selectedService === index} onClick={onClick}
+                    <AddServiceBox key={service.title+index} isExtendedBox={selectedService === index} onClick={onClick}
                                    title={service.title} content={service.content}/>
                 </>);
             })

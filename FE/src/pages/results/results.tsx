@@ -16,8 +16,6 @@ import Map from "../../components/map/map";
 import {useDisplayResultsMap} from "./context/contextFunctions";
 import {removeAllPOIs} from "../../services/map/poiInteraction";
 import {getFilteredBranches, getFilteredResults} from "../../store/shared/shared.selector";
-import {useMediaQuery} from '@mui/material';
-import {widthOfMobile} from "../../constants/mediaQueryProps";
 import resultsAnalytics from "../../services/gtag/resultsEvents";
 import FiltersForMobile from "./filters/filtersForMobile";
 import {getLocationFilter} from "../../store/filter/filter.selector";
@@ -28,8 +26,9 @@ import {allowChangeStoreLocation} from "../../services/map/events/mapInteraction
 import {settingToResults} from "../../store/shared/sharedSlice";
 import noResultsIcon from "../../assets/noResults.svg";
 import Loader from "./loader/loader.tsx";
+import {isMobileScreen} from "../../services/media.ts";
 
-const Results = () => {
+const Results = ({headerStyle}:{headerStyle: {[_key: string]: string}}) => {
     const isResultsLoading = useSelector(isLoading);
     const filteredResults = useSelector(getFilteredResults);
     const selectedOrganization = useSelector(getSelectedOrganization);
@@ -37,7 +36,7 @@ const Results = () => {
     const searchQuery = useSelector(getSearchQuery);
     const displayResultsMap = useDisplayResultsMap();
     const location = useSelector(getLocationFilter)
-    const isMobile = useMediaQuery(widthOfMobile);
+    const isMobile = isMobileScreen();
     const accessibilityActive = useSelector(isAccessibilityActive);
     const classes = useStyles({displayResultsMap, isSelectedOrganization: !!selectedOrganization, isMobile, accessibilityActive});
     const metaTagsData = getResultsMetaTags({searchQuery, location})
@@ -53,6 +52,12 @@ const Results = () => {
         allowChangeStoreLocation(true)
 
     }
+
+    const conditionToShowResults = filteredResults.length > 0;
+    const conditionToShowLoading = isResultsLoading && !conditionToShowResults;
+    const conditionToShowNoResults = !isResultsLoading && filteredResults.length === 0;
+
+
     useEffect(() => {
         newResults();
     }, [filteredResults, searchQuery]);
@@ -67,13 +72,10 @@ const Results = () => {
             dispatch(setSelectedOrganization(null));
         }
     }, []);
-    const conditionToShowResults = filteredResults.length > 0;
-    const conditionToShowLoading = isResultsLoading && !conditionToShowResults;
-    const conditionToShowNoResults = !isResultsLoading && filteredResults.length === 0;
     return <>
         <MetaTags {...metaTagsData}/>
         <div>
-            <Header/>
+            <Header key={'resultHeader'} headerStyle={headerStyle}/>
             <div className={classes.mainDiv}>
                 {isMobile ? <FiltersForMobile/> : <FiltersForDesktop/>}
                 <div className={classes.resultsContainer} onScroll={reportOnce}>

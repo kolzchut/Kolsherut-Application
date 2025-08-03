@@ -4,16 +4,16 @@ import innerActivateMapIcon from '../../../../../assets/icon-map-region-blue-2.s
 import innerDeactivateMapIcon from '../../../../../assets/icon-close-blue-3.svg';
 import useStyles from "./mapDisplay.css";
 import {useDisplayResultsMap, useSetDisplayResultsMap} from "../../../context/contextFunctions";
-import {useMediaQuery} from "@mui/material";
-import {widthOfMobile} from "../../../../../constants/mediaQueryProps";
 import mapAnalytics from "../../../../../services/gtag/mapEvents";
 import { useSelector } from 'react-redux';
 import {isAccessibilityActive} from "../../../../../store/general/general.selector.ts";
+import {isMobileScreen} from "../../../../../services/media.ts";
+
 
 const MapDisplay = () => {
     const displayResultsMap = useDisplayResultsMap()
     const setDisplayResultsMap = useSetDisplayResultsMap()
-    const isMobile = useMediaQuery(widthOfMobile);
+    const isMobile = isMobileScreen();
     const accessibilityActive = useSelector(isAccessibilityActive);
     const classes = useStyles({isMobile, accessibilityActive});
     const vals = {

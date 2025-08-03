@@ -2,13 +2,12 @@ import useStyle from "./contact.css"
 import {store} from "../../../../store/store";
 import {setModal} from "../../../../store/general/generalSlice";
 import closeIcon from "../../../../assets/icon-close-black.svg";
-import {useMediaQuery} from "@mui/material";
-import {widthOfMobile} from "../../../../constants/mediaQueryProps";
 import { useSelector } from 'react-redux';
 import {isAccessibilityActive} from "../../../../store/general/general.selector.ts";
+import {isMobileScreen} from "../../../../services/media.ts";
 
 const Contact = () => {
-    const isMobile = useMediaQuery(widthOfMobile);
+    const isMobile = isMobileScreen();
     const accessibilityActive = useSelector(isAccessibilityActive);
     const classes = useStyle({isMobile, accessibilityActive});
     const close = () => store.dispatch(setModal(null));

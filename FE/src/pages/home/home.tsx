@@ -3,21 +3,21 @@ import Header from "../../components/header/header";
 import Search from "./search/search";
 import OptionalSearch from "./optionalSearch/optionalSearch";
 import Footer from "../../components/footer/footer";
-import {useMediaQuery} from "@mui/material";
-import {widthOfMobile} from "../../constants/mediaQueryProps";
 import getHomeMetaTags from "./getHomeMetaTags";
 import MetaTags from "../../services/metaTags";
+import {isMobileScreen} from "../../services/media.ts";
 
-const Home = () => {
-    const isMobile = useMediaQuery(widthOfMobile);
+const Home = ({headerStyle}:{headerStyle: {[_key: string]: string}}) => {
+    const isMobile = isMobileScreen();
     const metaTagsData = getHomeMetaTags();
     const classes = useStyle();
+
     return <>
         {metaTagsData && <MetaTags {...metaTagsData}/>}
         <main className={classes.root}>
             <section className={classes.main}>
 
-                {!isMobile && <Header showSearchbar={false} showLogo={false}/>}
+                {!isMobile && <Header showSearchbar={false} showLogo={false} key={'homeHeader'} headerStyle={headerStyle}/>}
                 <OptionalSearch/>
                 <Footer/>
             </section>

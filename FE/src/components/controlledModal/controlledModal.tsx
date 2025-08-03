@@ -4,11 +4,10 @@ import {useSelector} from "react-redux";
 import {getModal} from "../../store/general/general.selector";
 import {setModal} from "../../store/general/generalSlice";
 import {store} from "../../store/store";
-import {useMediaQuery} from "@mui/material";
-import {widthOfMobile} from "../../constants/mediaQueryProps";
+import {isMobileScreen} from "../../services/media.ts";
 
 const ControlledModal = () => {
-    const isMobile = useMediaQuery(widthOfMobile);
+    const isMobile = isMobileScreen();
     const classes = useStyles({isMobile});
     const modal = useSelector(getModal);
     const onClose = () => store.dispatch(setModal(null))

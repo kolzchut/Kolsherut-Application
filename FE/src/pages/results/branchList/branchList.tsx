@@ -5,18 +5,17 @@ import {setSelectedOrganization} from "../../../store/data/dataSlice";
 import closeIcon from "../../../assets/icon-close-black.svg";
 import Branch from "./branch/branch";
 import {useDistanceFromTop} from "../context/contextFunctions";
-import {useMediaQuery} from "@mui/material";
-import {widthOfMobile} from "../../../constants/mediaQueryProps";
 import {useEffect} from "react";
 import resultsAnalytics from "../../../services/gtag/resultsEvents";
 import {useSelector} from "react-redux";
 import {getSearchQuery, isAccessibilityActive} from "../../../store/general/general.selector";
 import {getFilteredResponseLength} from "../../../store/shared/shared.selector";
+import {isMobileScreen} from "../../../services/media.ts";
 
 
 const BranchList = ({organization}: { organization: IOrganization }) => {
     const distanceFromTop = useDistanceFromTop()
-    const isMobile = useMediaQuery(widthOfMobile);
+    const isMobile = isMobileScreen();
     const searchQuery = useSelector(getSearchQuery);
     const filtersCount = useSelector(getFilteredResponseLength);
     const responsesCount = useSelector(getFilteredResponseLength);

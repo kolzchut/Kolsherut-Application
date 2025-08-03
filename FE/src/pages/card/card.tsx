@@ -11,7 +11,7 @@ import Header from "../../components/header/header";
 import getCardMetaTags from "./getCardMetaTags";
 import MetaTags from "../../services/metaTags";
 
-const Card = () => {
+const Card = ({headerStyle}:{headerStyle: {[_key: string]: string}}) => {
     const classes = useStyle();
     const [fullCard, setFullCard] = useState<ICard | null>(null)
     const cardId = useSelector(getCardId)
@@ -36,7 +36,7 @@ const Card = () => {
         <>
             {metaTagsData && <MetaTags {...metaTagsData}/>}
             <main>
-                <Header/>
+                <Header {...{headerStyle}}/>
                 <section className={classes.root}>
                     <div className={classes.mapContainer}>
                         <Map/>

@@ -4,26 +4,21 @@ import {ChangeEvent, useEffect, useRef, useState, KeyboardEvent} from "react";
 import AutocompleteType, {IStructureAutocomplete} from "../../../types/autocompleteType";
 import sendMessage from "../../../services/sendMessage/sendMessage";
 import SearchOption from "../../../pages/home/search/searchInput/searchOption/searchOption";
-import useStyles from "./searchInput.css"
-import {useMediaQuery} from "@mui/material";
-import {widthOfMobile} from "../../../constants/mediaQueryProps";
 import resultsAnalytics from "../../../services/gtag/resultsEvents";
 import {useDebounce} from "../../../hooks/useDebounce";
 import useOnClickedOutside from "../../../hooks/useOnClickedOutside";
 import {useSelector} from "react-redux";
-import {getPage, getSearchQuery, isAccessibilityActive} from "../../../store/general/general.selector";
+import {getPage, getSearchQuery} from "../../../store/general/general.selector";
 import {settingToResults} from "../../../store/shared/sharedSlice";
 import generalAnalytics from "../../../services/gtag/generalEvents";
 
 const inputDescription = "Search for services, organizations, branches, and more"
 const emptyAutocomplete: AutocompleteType = {structured: [], unstructured: []};
 
-const SearchInput = () => {
+const SearchInput = ({headerStyle}:{headerStyle:any}) => {
+    const classes = headerStyle;
     const searchQuery = useSelector(getSearchQuery);
     const page = useSelector(getPage);
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const isMobile = useMediaQuery(widthOfMobile);
-    const classes = useStyles({isMobile, accessibilityActive});
     const [isInputFocused, setIsInputFocused] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const [optionalSearchValues, setOptionalSearchValues] = useState<AutocompleteType>(emptyAutocomplete);
@@ -59,7 +54,7 @@ const SearchInput = () => {
         }
     };
     const inputValue = searchTerm.replace(/_/g, ' ')
-    return <div className={classes.root} ref={ref}>
+    return <div className={classes.mainInputDiv} ref={ref}>
         <div className={classes.inputDiv}>
             <img className={classes.searchIcon} alt={"search icon"}
                  src={isInputFocused ? activeSearchIcon : inactiveSearchIcon}/>

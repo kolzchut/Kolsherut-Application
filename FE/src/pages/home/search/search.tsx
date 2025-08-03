@@ -1,13 +1,12 @@
 import useStyle from './search.css';
 import SearchInput from "./searchInput/searchInput";
-import {useMediaQuery} from "@mui/material";
-import {widthOfMobile} from "../../../constants/mediaQueryProps";
 import {store} from "../../../store/store";
 import {setPage, setShowSidebar} from "../../../store/general/generalSlice";
 import hamburger from "../../../assets/icon-hamburger-gray-5.svg";
 import homepageBackground from '../../../assets/homepage-background.svg';
 import { useSelector } from 'react-redux';
 import {isAccessibilityActive} from "../../../store/general/general.selector.ts";
+import {isMobileScreen} from "../../../services/media.ts";
 
 const kolsherutLogo = "/icons/logo-white.svg"
 const nationalDigitalLogo = "/icons/logo-digital-israel.png"
@@ -17,7 +16,7 @@ const mojLogo = "/icons/logo-moj.png"
 const Search = () => {
     const accessibilityActive = useSelector(isAccessibilityActive);
     const classes = useStyle({accessibilityActive});
-    const isMobile = useMediaQuery(widthOfMobile);
+    const isMobile = isMobileScreen();
     const handleIconClick = () => {
         if (!isMobile) return store.dispatch(setPage('home'))
         return store.dispatch(setShowSidebar(true));

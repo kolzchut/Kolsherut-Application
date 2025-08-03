@@ -3,17 +3,83 @@ import {
     primaryTextColorTwo,
     secondaryBackgroundColorOne,
     primaryBorderColorTwo,
-    tertiaryBackgroundColorTwo,
-    primaryBackgroundColorOne
-} from "../../../services/theme";
+    tertiaryBackgroundColorTwo, primaryBackgroundColorOne
+} from "../../services/theme";
 
 interface IProps {
-    isMobile: boolean,
-    accessibilityActive: boolean
+    accessibilityActive: boolean;
+    isMobile: boolean;
 }
 
 export default createUseStyles({
     root: {
+        display: 'flex',
+        backgroundColor: 'white',
+        width: '100%',
+        gap: 10,
+        height: 80,
+        color: primaryTextColorTwo,
+        direction: 'ltr',
+        alignItems: 'center',
+        boxSizing: 'border-box',
+        padding: '10px',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.14)',
+        position: 'relative',
+        zIndex: 1
+    },
+    logo: {
+        flex: 1,
+        height: 40,
+        '&:hover': {
+            cursor: 'pointer',
+        }
+    },
+    linksAndAcc: {
+        display: 'flex',
+        justifyContent: 'space-between'
+    },
+    linksDiv: {
+        display: "flex",
+        justifyContent: "space-around",
+        gap: 12,
+    },
+    linksAndButtonsDiv: {
+        display: 'flex',
+        justifyContent: 'space-between'
+    },
+    link: ({accessibilityActive}: IProps) => ({
+        lineHeight: 4,
+        fontSize: accessibilityActive ? 24 : 20,
+        textDecoration: "none",
+        fontWeight: 300,
+        '&:hover': {
+            lineHeight: 4,
+            fontWeight: 400,
+            textDecoration: 'underline',
+            cursor: 'pointer',
+        }
+    }),
+    button: ({accessibilityActive}: IProps) => {
+        const styles = ({
+            height: 50,
+            margin: 15,
+            padding: 5,
+            cursor: "pointer",
+            borderRadius: 30,
+            border: 'none',
+            background: "transparent",
+            boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)',
+        })
+        if(!accessibilityActive) return styles;
+        styles.boxShadow = 'inset 2px 2px 5px rgba(0, 0, 0, 0.6)';
+        styles.background = '#208Ff3';
+        return styles;
+
+    },
+    accIcon: {
+        height: '100%',
+    },
+    mainInputDiv: {
         flex: 14,
     },
     inputDiv: {
@@ -80,4 +146,6 @@ export default createUseStyles({
         }
         return style;
     }
+}, {
+    name: 'header',
 });

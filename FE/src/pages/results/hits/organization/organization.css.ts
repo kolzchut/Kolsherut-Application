@@ -6,6 +6,12 @@ interface IProps {
     accessibilityActive: boolean
 }
 
+const textStyle = {
+    fontWeight: 400,
+    color: primaryTextColorTwo,
+    textAlign: 'right'
+};
+
 export default createUseStyles({
     organization: ({isSelected}: IProps) => ({
         width: '100%',
@@ -26,13 +32,13 @@ export default createUseStyles({
             boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
         }
     }),
-    text: ({accessibilityActive}: IProps) => ({
+    organizationName:({accessibilityActive}: IProps) => ({
+        ...textStyle,
         fontSize: accessibilityActive ? 22 : 18,
-        fontWeight: 400,
-        color: primaryTextColorTwo,
-        textAlign: 'right'
+        width:'30%',
     }),
     numOfBranches: ({accessibilityActive}: IProps) => ({
+        ...textStyle,
         fontSize: accessibilityActive ? 18 : 14,
         fontWeight: 300,
     }),

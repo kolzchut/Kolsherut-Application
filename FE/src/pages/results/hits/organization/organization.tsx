@@ -28,8 +28,8 @@ const Organization = ({organization, serviceId}: { organization: IOrganization, 
     }
 
     return <div onClick={onSelectOrganization} className={classes.organization}>
-        <span className={`${classes.text}`}>{organization.name}</span>
-        <span className={`${classes.text} ${classes.numOfBranches}`}> {numOfBranchesText}</span>
+        <span className={classes.organizationName}>{organization.name}</span>
+        <span className={classes.numOfBranches}> {numOfBranchesText}</span>
         <img src={openBranches} alt={"Open Branches"}/>
     </div>
 }
