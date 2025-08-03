@@ -34,7 +34,7 @@ const Header = ({showLogo = true, showSearchbar = true, headerStyle}: { showLogo
         <div className={classes.root} key={'1'}>
 
             {!isMobile && <div className={classes.linksAndButtonsDiv}>
-                <button className={classes.button} onClick={toggleAccessibility} key={'2'}>
+                <button title={window.strings.toolTips.accessibility || "toggle accessibility"} className={classes.button} onClick={toggleAccessibility} key={'2'}>
                     <img src={accessibilityIcon} alt={'activate accessibility'} className={classes.accIcon} key={'3'}/>
                 </button>
                 <div className={classes.linksDiv}>

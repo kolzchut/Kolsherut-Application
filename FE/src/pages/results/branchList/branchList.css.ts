@@ -12,7 +12,7 @@ export default createUseStyles({
         width:'100%',
         boxSizing: 'border-box',
         position:'absolute',
-        padding:10,
+        padding: !isMobile ? 10 : 0,
         top: !isMobile ? distanceFromTop: 0,
     }),
     title: ({accessibilityActive}: IProps) => ({
@@ -40,7 +40,7 @@ export default createUseStyles({
     branchList:{
         width: '100%',
         backgroundColor:primaryBackgroundColorOne,
-        maxHeight:'calc(100vh - 60px)',
+        maxHeight:'calc(100vh - 130px)',
         overflowY: 'auto',
     }
 });
