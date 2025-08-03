@@ -17,6 +17,8 @@ const globals = {
     allowChangeStoreLocation: false,
 }
 
+export const getAllowChangeStoreLocation = () => globals.allowChangeStoreLocation;
+
 const debounce = ({cb, delay}: { cb: () => void, delay: number }) => {
     clearTimeout(globals.lastSetNewLocationTimeOutId);
     globals.lastSetNewLocationTimeOutId = setTimeout(cb, delay);
