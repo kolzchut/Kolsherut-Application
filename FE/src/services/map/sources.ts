@@ -1,13 +1,20 @@
 import VectorSource from "ol/source/Vector";
-import {XYZ} from "ol/source";
+import {OSM} from "ol/source";
 
 
 export const getSources = () => {
-    const worldImagerySource = new XYZ(window.config.map.worldImagery);
-    const poiSource = new VectorSource({});
+    const osm = new OSM({
+        attributions:[
+            "© OpenStreetMap contributors",
+        ]
+    });
+
+    const poiSource = new VectorSource({
+        useSpatialIndex: true,
+    });
 
     return {
-        worldImagerySource,
+        osm,
         poiSource,
     };
 };

@@ -7,7 +7,7 @@ import {XYZ} from "ol/source";
 import {Cluster} from "ol/source";
 
 export interface GetLayersParams {
-    worldImagerySource: XYZ;
+    osm: XYZ;
     poiSource: VectorSource<Feature<Geometry>>;
     clusterSources?: { [color: string]: Cluster };
 }

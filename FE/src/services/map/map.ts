@@ -22,7 +22,7 @@ export class MapSingleton {
     public readonly view: View;
     public layers: GetLayersReturn | undefined;
     public sources: {
-        worldImagerySource: XYZ;
+        osm: XYZ;
         poiSource: VectorSource<Feature<Geometry>>;
     } | null;
     private popupOverlay?: Overlay;

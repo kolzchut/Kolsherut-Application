@@ -7,9 +7,9 @@ import {groupFeaturesByColor} from "./cluster/groupFeaturesByColor.ts";
 import {setupClusterLayer, updateClusterLayerWithDebounce} from "./cluster/clusterLayer.ts";
 
 
-const getLayers = ({worldImagerySource, poiSource, clusterSources}: GetLayersParams): GetLayersReturn => {
-    const worldImageryLayer = new TileLayer({
-        source: worldImagerySource,
+const getLayers = ({osm, poiSource, clusterSources}: GetLayersParams): GetLayersReturn => {
+    const osmLayer = new TileLayer({
+        source: osm,
         zIndex: 0,
         opacity: 0.6,
         background: "#FFFFFF",
@@ -20,7 +20,7 @@ const getLayers = ({worldImagerySource, poiSource, clusterSources}: GetLayersPar
         visible: false,
         zIndex: 1
     });
-    const layers: GetLayersReturn = [worldImageryLayer, poiLayer];
+    const layers: GetLayersReturn = [osmLayer, poiLayer];
     setupClusterLayer({layers,clusterSources});
     return layers;
 }
@@ -28,13 +28,13 @@ const getLayers = ({worldImagerySource, poiSource, clusterSources}: GetLayersPar
 
 const initLayers = (map: MapSingleton) => {
     if (!map.sources) return;
-    const {worldImagerySource, poiSource} = map.sources;
+    const {osm, poiSource} = map.sources;
 
     const features = poiSource.getFeatures();
     const featuresByColor = groupFeaturesByColor(features);
     const clusterSources = createColorBasedClusterSources(featuresByColor);
 
-    map.layers = getLayers({worldImagerySource, poiSource, clusterSources});
+    map.layers = getLayers({osm, poiSource, clusterSources});
 
     poiSource.on('addfeature', () => updateClusterLayerWithDebounce());
     poiSource.on('removefeature', () => updateClusterLayerWithDebounce());

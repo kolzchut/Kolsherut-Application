@@ -36,18 +36,15 @@
     "autocomplete": "/autocomplete/%%search%%"
   },
   "map": {
-    "center": [35.2137, 31.4683],
+    "center": [
+      35.2137,
+      31.4683
+    ],
     "zoom": 7.5,
     "rotation": 0,
     "poi": {
       "circleRadius": 5,
       "strokeRadius": 15
-    },
-    "worldImagery": {
-      "url": "https://api.maptiler.com/maps/basic-v2/{z}/{x}/{y}.png?key=ARZwtpXssK20EkYXBmuE",
-      "attributions": [
-        "© <a href=\"https://www.maptiler.com/\">MapTiler</a>"
-      ]
     }
   },
   "baseMaxOfOrganizationsDisplayed": 5,
@@ -57,19 +54,39 @@
     },
     {
       "key": "גוש דן",
-      "bounds": [34.75, 32.0, 35.5, 32.5]
+      "bounds": [
+        34.75,
+        32.0,
+        35.5,
+        32.5
+      ]
     },
     {
       "key": "איזור ירושלים",
-        "bounds": [35.0, 31.5, 35.5, 32.0]
+      "bounds": [
+        35.0,
+        31.5,
+        35.5,
+        32.0
+      ]
     },
     {
       "key": "איזור הצפון",
-      "bounds": [35.1, 32.8, 35.8, 33.3]
+      "bounds": [
+        35.1,
+        32.8,
+        35.8,
+        33.3
+      ]
     },
     {
       "key": "איזור הדרום",
-        "bounds": [34.0, 30.5, 35.5, 31.5]
+      "bounds": [
+        34.0,
+        30.5,
+        35.5,
+        31.5
+      ]
     }
   ]
 }
