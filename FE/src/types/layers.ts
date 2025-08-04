@@ -9,7 +9,8 @@ import {Cluster} from "ol/source";
 export interface GetLayersParams {
     osm: XYZ;
     poiSource: VectorSource<Feature<Geometry>>;
+    israelBorderSource: VectorSource<Feature<Geometry>>
     clusterSources?: { [color: string]: Cluster };
 }
 
-export type GetLayersReturn = [TileLayer<XYZ>, VectorLayer<VectorSource<Feature<Geometry>>>, ...VectorLayer<Cluster>[]];
+export type GetLayersReturn = [TileLayer<XYZ>, VectorLayer<VectorSource<Feature<Geometry>>>,VectorLayer<VectorSource<Feature<Geometry>>>, ...VectorLayer<Cluster>[]];

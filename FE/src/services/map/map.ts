@@ -24,6 +24,7 @@ export class MapSingleton {
     public sources: {
         osm: XYZ;
         poiSource: VectorSource<Feature<Geometry>>;
+        israelBorderSource: VectorSource<Feature<Geometry>>;
     } | null;
     private popupOverlay?: Overlay;
     public constructor() {
