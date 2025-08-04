@@ -87,7 +87,7 @@ const Results = ({headerStyle}: { headerStyle: { [_key: string]: string } }) => 
             <div className={classes.mainDiv}>
                 {isMobile ? <FiltersForMobile/> : <FiltersForDesktop/>}
                 <div className={classes.resultsContainer} onScroll={reportOnce}>
-                    <div className={classes.hits}>
+                    <div className={classes.hits}  onScroll={reportOnce}>
                         {conditionToShowResults && filteredResults.map((service: IService) => (
                             <Hits key={service.id} service={service}/>
                         ))}

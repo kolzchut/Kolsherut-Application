@@ -11,6 +11,7 @@ import {setLocationFilter} from "../../../../../store/filter/filterSlice";
 import {useDisplayResultsMap, useSetDisplayResultsMap} from "../../../context/contextFunctions";
 import {setModal} from "../../../../../store/general/generalSlice";
 import {isAccessibilityActive} from "../../../../../store/general/general.selector.ts";
+import mapAnalytics from "../../../../../services/gtag/mapEvents.ts";
 
 const GeoFilterAndMapDisplayForMobile = () => {
     const currentLocation = useSelector(getLocationFilter);
@@ -24,6 +25,10 @@ const GeoFilterAndMapDisplayForMobile = () => {
     const classes = useStyles({isNationwide, displayResultsMap, isSearchOpen:!isNationwide, accessibilityActive});
     const displayMapText = displayResultsMap ? window.strings.results.hideMapOnMobile : window.strings.results.showMapOnMobile;
     const searchText = isNationwide ? window.strings.results.searchLocationOnMobile : currentLocation.key;
+    const onClickDisplayResultsMap = ()=>{
+        mapAnalytics.mapStateEvent({isOpen: !displayResultsMap});
+        setDisplayResultsMap(!displayResultsMap);
+    }
     return <div className={classes.root}>
         <button className={classes.nationwideButton} onClick={onClickNationWide}>
             <div className={classes.textAndMapDiv}>
@@ -33,7 +38,7 @@ const GeoFilterAndMapDisplayForMobile = () => {
             {isNationwide && <span className={classes.count}>{resultsLength}</span>}
         </button>
         <button className={`${classes.mapButton} ${classes.textAndMapDiv}`}
-                onClick={() => setDisplayResultsMap(!displayResultsMap)}>
+                onClick={onClickDisplayResultsMap}>
             <img src={mapIcon} alt={"map icon"}/>
             {isNationwide && <span>{displayMapText}</span>}
         </button>

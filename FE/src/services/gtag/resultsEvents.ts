@@ -87,8 +87,14 @@ export const onFocusOnSearchInput = () => {
 }
 
 export const scrollOnceEvent = () => {
-    analytics.interactionEvent('scroll-in-results', window.location.href);
+    analytics.logEvent({
+        event: 'scroll-in-results',
+        params: {
+            landing_page: getIsLandingPage(store.getState()) ? 'yes' : 'no'
+        }
+    })
 }
+
 export const quickFilterActivatedEvent = () => {
     analytics.logEvent({
         event: 'srm:quick_filter', params: {

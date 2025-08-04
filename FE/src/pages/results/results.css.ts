@@ -24,9 +24,9 @@ export default createUseStyles({
     },
     resultsContainer: {
         flex: 6,
+        height:"100%",
         width: '100%',
-        height: '100%',
-        overflowY: 'auto',
+        overflowY:'auto',
         display: 'flex',
         flexDirection: 'row',
         scrollbarWidth: "none"
@@ -36,6 +36,8 @@ export default createUseStyles({
             width: displayResultsMap && !isSelectedOrganization ? "100%" : "55%",
         })
         return ({
+            height: 'calc(100vh - 191px)',
+            overflowY: 'auto',
             display: (displayResultsMap || isSelectedOrganization) ? 'none' : 'flex',
             flexDirection: 'column',
             width: !isSelectedOrganization ? "100%" : "0%",
