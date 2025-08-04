@@ -1,7 +1,8 @@
 import {Feature} from "ol";
 import {Geometry, Point} from "ol/geom";
 import map from "../map";
-import buildPopupContent from "../style/PopupContent/PopupContent";
+import cardPopUp from "../style/PopupContent/cardPopUp/cardPopup.ts";
+import branchServicesPopup from "../style/PopupContent/branchServicesPopup/branchServicesPopup.ts";
 
 const globals = {
     popUpLocked: false,
@@ -14,13 +15,14 @@ const createPopupOverlay = (
         getElement: () => HTMLElement | undefined
     },
     feature: Feature<Geometry>,
-    contentElement: HTMLDivElement
+    contentElement: HTMLDivElement,
+    popUpCreator: ({feature, root}: { feature: Feature<Geometry>, root: HTMLDivElement }) => string
 ) => {
     const geometry = feature.getGeometry();
     if (geometry instanceof Point) {
         const coords = geometry.getCoordinates();
 
-        contentElement.innerHTML = buildPopupContent({feature, root: contentElement});
+        contentElement.innerHTML = popUpCreator({feature, root: contentElement});
 
         const popupEl = popupOverlay.getElement();
         if (popupEl && !popupEl.contains(contentElement)) {
@@ -40,20 +42,28 @@ const deletePopupOverlay = (
     popupOverlay.setPosition(undefined);
 };
 
-export const createPopupByCardId = ({cardId}: { cardId: string }) => {
-    if (!map.layers || !map.layers[1]?.getSource()) return;
+export const createPopupByCardIdForCard = ({cardId}: { cardId: string }) => {
+    if (!map.layers || !map.layers[1]?.getSource() || globals.popUpLocked) return;
     const source = map.layers[1].getSource();
     if (!source) return;
     const feature = source.getFeatures().find(f => f.getProperties().cardId === cardId);
     if (!feature) return;
-    const popupOverlay = map.getPopupOverlay?.();
+    const popupOverlay = map.getPopupOverlay();
     if (!popupOverlay) return;
     const contentElement = document.createElement("div") as HTMLDivElement;
-    createPopupOverlay(popupOverlay, feature, contentElement);
+    createPopupOverlay(popupOverlay, feature, contentElement, cardPopUp);
 }
 
-export const deletePopup = () =>{
-    const popupOverlay = map.getPopupOverlay?.();
+export const createPopupByFeatureForBranchServices = (feature: Feature<Geometry>) => {
+    if(globals.popUpLocked) return;
+    const popupOverlay = map.getPopupOverlay();
+    if (!popupOverlay) return;
+    const contentElement = document.createElement("div") as HTMLDivElement;
+    createPopupOverlay(popupOverlay, feature, contentElement, branchServicesPopup);
+}
+
+export const deletePopup = () => {
+    const popupOverlay = map.getPopupOverlay();
     if (!popupOverlay) return;
     deletePopupOverlay(popupOverlay);
 }

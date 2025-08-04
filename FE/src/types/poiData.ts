@@ -8,4 +8,6 @@ export default interface PoiData{
     branch_name: string;
     branch_address: string;
     accurateLocation:boolean;
+    organization_name: string;
+    service_name: string;
 }

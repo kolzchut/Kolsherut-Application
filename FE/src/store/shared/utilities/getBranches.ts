@@ -10,7 +10,12 @@ export const getBranches = (services: IService[]) => {
             organization.branches.forEach((branch: IBranch) => {
                 const existingBranch = branches.find((b) => b.id === branch.id);
                 if (existingBranch) return;
-                branches.push(branch)
+                const extendedBranch = {
+                    ...branch,
+                    organizationName: organization.name,
+                    serviceName: service.service_name
+                };
+                branches.push(extendedBranch)
             })
         })
     });

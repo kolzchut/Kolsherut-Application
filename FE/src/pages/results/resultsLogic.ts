@@ -7,6 +7,8 @@ export const addResultsPOIs = (branches: IBranch[]) => {
     branches.forEach((branch: IBranch) => {
         if (!branch.geometry || !branch.responses || !branch.situations) return;
         const poiData: PoiData = {
+            organization_name: branch.organizationName,
+            service_name: branch.serviceName || "",
             branch_geometry: branch.geometry,
             responses: branch.responses,
             situations: branch.situations,

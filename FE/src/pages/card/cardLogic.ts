@@ -5,7 +5,7 @@ import {setViewPort} from "../../services/map/view";
 import {addPOI, removeAllPOIs} from "../../services/map/poiInteraction";
 import PoiData from "../../types/poiData";
 import map from "../../services/map/map";
-import {createPopupByCardId, deletePopup, lockPopup, unlockPopup} from "../../services/map/events/popup";
+import {createPopupByCardIdForCard, deletePopup, lockPopup, unlockPopup} from "../../services/map/events/popup";
 import {setPage} from "../../store/general/generalSlice";
 
 export const getFullCard = async(cardId:string) => {
@@ -32,6 +32,8 @@ export const setMapToCard = (card:ICard) =>{
     const {branch_geometry} = card;
     setViewPort({center:branch_geometry, zoom:12});
     const poiData: PoiData = {
+        organization_name: card.organization_name,
+        service_name: card.service_name || "",
         branch_geometry,
         responses: card.responses,
         situations: card.situations,
@@ -48,7 +50,7 @@ export const backToHome = () => store.dispatch(setPage("home"))
 
 export const setCardOnMap = (cardData:ICard) =>{
     setMapToCard(cardData)
-    createPopupByCardId({cardId: cardData.card_id});
+    createPopupByCardIdForCard({cardId: cardData.card_id});
     lockPopup();
 }
 export const setMapBackToDefault = () =>{

@@ -1,10 +1,10 @@
-import PoiData from "../../../../types/poiData";
+import PoiData from "../../../../../types/poiData.ts";
 import {Feature} from "ol";
 import {Geometry} from "ol/geom";
-import "./PopupContent.css"
-import getColorByResponses from "../getColorByResponses";
+import "./cardPopup.css"
+import getColorByResponses from "../../getColorByResponses.ts";
 
-const buildPopupContent = ({feature,root}:{feature: Feature<Geometry>, root: HTMLDivElement }): string => {
+const cardPopUp = ({feature,root}:{feature: Feature<Geometry>, root: HTMLDivElement }): string => {
     if (!feature || !root) return '';
     root.className = "popup-content-div";
     const props = feature.getProperties() as PoiData;
@@ -16,4 +16,4 @@ const buildPopupContent = ({feature,root}:{feature: Feature<Geometry>, root: HTM
       <strong class="popup-content">${props.branch_name}</strong>
   `;
 };
-export default buildPopupContent;
+export default cardPopUp;

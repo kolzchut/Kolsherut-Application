@@ -9,6 +9,8 @@ export interface IBranch {
     geometry: [number, number];
     responses: Response[];
     situations: Situation[];
+    serviceName: string;
+    organizationName: string;
 }
 
 export interface IOrganization {

@@ -20,7 +20,7 @@ export const getHrefForResults = ({
 }) => {
     const baseUrl = window.location.origin;
     const queryParams = new URLSearchParams({p: 'results'});
-    const searchQueryToSet = searchQuery.trim() || responseFilter.join(',') || situationFilter.join(',') || location.key;
+    const searchQueryToSet = searchQuery?.trim() || responseFilter?.join(',') || situationFilter?.join(',') || location?.key;
     queryParams.set('sq', searchQueryToSet);
     if (location) {
         const locationString = stringifyLocation(location);
