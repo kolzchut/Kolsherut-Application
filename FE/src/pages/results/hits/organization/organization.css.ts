@@ -34,7 +34,7 @@ export default createUseStyles({
     }),
     organizationName:({accessibilityActive}: IProps) => ({
         ...textStyle,
-        fontSize: accessibilityActive ? 22 : 18,
+        fontSize: accessibilityActive ? 18 : 14,
         width:'30%',
     }),
     numOfBranches: ({accessibilityActive}: IProps) => ({

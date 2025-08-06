@@ -5,11 +5,14 @@ import useStyles from "./hits.css";
 import Organization from "./organization/organization";
 import OrganizationWithSingleBranch from "./organization/organizationWithSingleBranch";
 import ShowMore from "./showMore/showMore";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const Hits = ({service}: { service: IService }) => {
     const classes = useStyles();
     const baseMaxOfOrganizationsDisplayed = window.config.baseMaxOfOrganizationsDisplayed;
+    useEffect(() => {
+        setDisplayShowMore(service.organizations.length > baseMaxOfOrganizationsDisplayed)
+    }, [baseMaxOfOrganizationsDisplayed, service]);
     const [maxOfOrganizationsDisplayed, setMaxOfOrganizationsDisplayed] = useState<number>(baseMaxOfOrganizationsDisplayed);
     const [displayShowMore, setDisplayShowMore] = useState<boolean>(service.organizations.length > baseMaxOfOrganizationsDisplayed);
     if(!service || !service.organizations || service.organizations.length === 0) return <></>;

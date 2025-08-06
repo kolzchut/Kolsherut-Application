@@ -27,14 +27,14 @@ export default createUseStyles({
     },
     text: ({accessibilityActive}: IProps) => ({
         fontWeight: 300,
-        fontSize: accessibilityActive ? '20px' : '16px',
+        fontSize: accessibilityActive ? 18 : 14,
         lineHeight: 1.3,
     }),
     nationalBranch: ({accessibilityActive}: IProps) => ({
         color: tertiaryTextColorThree,
         display: "flex",
         fontWeight: 300,
-        fontSize: accessibilityActive ? '20px' : '16px',
+        fontSize: accessibilityActive ? 18 : 14,
         lineHeight: 1.3,
     }),
     nationalSpan: {
