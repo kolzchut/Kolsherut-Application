@@ -26,7 +26,8 @@ const getLayers = ({osm, poiSource,israelBorderSource, clusterSources}: GetLayer
         zIndex:2,
         style: polygonStyle
     });
-    const layers: GetLayersReturn = [osmLayer, poiLayer, israelBorderLayer];
+    // const layers: GetLayersReturn = [osmLayer, poiLayer, israelBorderLayer];
+    const layers: GetLayersReturn = [osmLayer, poiLayer];
     setupClusterLayer({layers,clusterSources});
     return layers;
 }
