@@ -6,6 +6,7 @@ export const initialState = {
     loading: false,
     showSidebar: false,
     accessibilityActive: false,
-    firstVisitedUrl: null as string | null
+    firstVisitedUrl: null as string | null,
+    selectedFeatureId: null as string | null
 };
 export type GeneralStore = typeof initialState;

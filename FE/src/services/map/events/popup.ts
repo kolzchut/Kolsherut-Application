@@ -29,7 +29,6 @@ const createPopupOverlay = (
             popupEl.innerHTML = '';
             popupEl.appendChild(contentElement);
         }
-        popupOverlay.setOffset([0, 52]);
         popupOverlay.setPosition(coords);
     } else {
         deletePopupOverlay(popupOverlay);
@@ -74,3 +73,13 @@ export const lockPopup = () => {
 export const unlockPopup = () => {
     globals.popUpLocked = false;
 };
+    export const setPopupOffsetForBigMap = () => {
+    const popupOverlay = map.getPopupOverlay();
+    if (!popupOverlay) return;
+    popupOverlay.setOffset([-475, 0]);
+}
+export const setPopupOffsetForSmallMap = () => {
+    const popupOverlay = map.getPopupOverlay();
+    if (!popupOverlay) return;
+    popupOverlay.setOffset([0, 0]);
+}

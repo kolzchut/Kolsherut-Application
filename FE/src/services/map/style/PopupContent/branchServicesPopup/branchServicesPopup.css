@@ -3,7 +3,7 @@
     flex-direction: column;
     background-color: white;
     color: #000000;
-    width: 300px;
+    max-width: 450px;
     box-sizing: border-box;
     border-radius: 10px;
     align-items: flex-start;

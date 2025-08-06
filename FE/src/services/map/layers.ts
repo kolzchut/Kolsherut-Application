@@ -21,11 +21,11 @@ const getLayers = ({osm, poiSource,israelBorderSource, clusterSources}: GetLayer
         visible: false,
         zIndex: 1
     });
-    const israelBorderLayer = new VectorLayer({
-        source:israelBorderSource,
-        zIndex:2,
-        style: polygonStyle
-    });
+    // const israelBorderLayer = new VectorLayer({
+    //     source:israelBorderSource,
+    //     zIndex:2,
+    //     style: polygonStyle
+    // });
     // const layers: GetLayersReturn = [osmLayer, poiLayer, israelBorderLayer];
     const layers: GetLayersReturn = [osmLayer, poiLayer];
     setupClusterLayer({layers,clusterSources});

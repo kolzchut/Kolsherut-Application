@@ -61,3 +61,7 @@ export const getIsLandingPage = createSelector([generalStore], (generalStore: Ge
     const currentUrl = window.location.href;
     return firstUrl === currentUrl;
 })
+export const getSelectedFeatureId = createSelector([generalStore], (generalStore: GeneralStore) => {
+    return generalStore.selectedFeatureId;
+});
+

@@ -3,7 +3,7 @@ import {secondaryBackgroundColorTwo} from "../../services/theme";
 
 interface IProps {
     displayResultsMap: boolean,
-    isSelectedOrganization: boolean,
+    openSecondList: boolean,
     isMobile: boolean,
     accessibilityActive: boolean
 }
@@ -23,7 +23,7 @@ export default createUseStyles({
         }
     },
     resultsContainer: {
-        flex: 6,
+        flex: 10,
         height:"100%",
         width: '100%',
         overflowY:'auto',
@@ -31,43 +31,43 @@ export default createUseStyles({
         flexDirection: 'row',
         scrollbarWidth: "none"
     },
-    hits: ({displayResultsMap, isSelectedOrganization, isMobile}: IProps) => {
+    hits: ({displayResultsMap, openSecondList, isMobile}: IProps) => {
         if (!isMobile) return ({
-            width: displayResultsMap && !isSelectedOrganization ? "100%" : "55%",
+            width: displayResultsMap && !openSecondList ? "100%" : "70%",
         })
         return ({
             height: 'calc(100vh - 191px)',
             overflowY: 'auto',
-            display: (displayResultsMap || isSelectedOrganization) ? 'none' : 'flex',
+            display: (displayResultsMap || openSecondList) ? 'none' : 'flex',
             flexDirection: 'column',
-            width: !isSelectedOrganization ? "100%" : "0%",
+            width: !openSecondList ? "100%" : "0%",
         })
     },
-    branchList: ({displayResultsMap, isSelectedOrganization, isMobile}: {
+    branchList: ({displayResultsMap, openSecondList, isMobile}: {
         displayResultsMap: boolean,
-        isSelectedOrganization: boolean,
+        openSecondList: boolean,
         isMobile: boolean
     }) => {
         if (!isMobile) return ({
-            width: isSelectedOrganization ? "45%" : "0%",
+            width: openSecondList ? "30%" : "0%",
             position: 'relative',
         })
         return ({
-            height: isSelectedOrganization ?'100vh': 'fit-content',
+            height: openSecondList ? 'calc(100vh - 191px)': 'fit-content',
             position: 'relative',
             display: displayResultsMap ? 'none' : 'flex',
             flexDirection: 'column',
-            width: isSelectedOrganization ? "100%" : "0%",
+            width: openSecondList ? "100%" : "0%",
         })
     },
-    mapContainer: ({isSelectedOrganization, displayResultsMap, isMobile}: {
+    mapContainer: ({openSecondList, displayResultsMap, isMobile}: {
         displayResultsMap: boolean,
-        isSelectedOrganization: boolean,
+        openSecondList: boolean,
         isMobile: boolean
     }) => {
-        const showLargeMap = displayResultsMap && !isSelectedOrganization;
-        const showSmallMap = displayResultsMap && isSelectedOrganization;
-        const mapFlex = showLargeMap ? 6 : showSmallMap ? 3 : 0;
+        const showLargeMap = displayResultsMap && !openSecondList;
+        const showSmallMap = displayResultsMap && openSecondList;
+        const mapFlex = showLargeMap ? 10 : showSmallMap ? 4 : 0;
         if (!isMobile) return ({
             flex: mapFlex,
             position: 'sticky',

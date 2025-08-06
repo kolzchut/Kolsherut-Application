@@ -1,8 +1,10 @@
 import {Feature} from "ol";
 import {Geometry} from "ol/geom";
-import logger from "../../logger/logger.ts";
 import mapAnalytics from "../../gtag/mapEvents.ts";
 import {createPopupByFeatureForBranchServices} from "./popup.ts";
+import {isMobileScreen} from "../../media.ts";
+import {store} from "../../../store/store.ts";
+import {setSelectedFeatureId} from "../../../store/general/generalSlice.ts";
 
 const onMapClickHandler = (selectedFeature: Feature<Geometry>) => {
     const featureProperties = selectedFeature.getProperties();
@@ -10,11 +12,7 @@ const onMapClickHandler = (selectedFeature: Feature<Geometry>) => {
         cardId: featureProperties.cardId,
         branchName: featureProperties.name || 'סניף ללא שם'
     });
-    logger.log({
-        message: "replace with Show only selected feature to display the selected feature (poi or route)",
-        payload: featureProperties
-    });
-
- return createPopupByFeatureForBranchServices(selectedFeature);
+    if (isMobileScreen()) return store.dispatch(setSelectedFeatureId(selectedFeature.getId()));
+    return createPopupByFeatureForBranchServices(selectedFeature);
 }
 export default onMapClickHandler

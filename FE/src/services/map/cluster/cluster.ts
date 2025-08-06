@@ -26,6 +26,18 @@ export const createColorBasedClusterSources = (featuresByColor: { [color: string
                     return feature.getGeometry() as Point || null;
                 }
             });
+            clusterSource.on('addfeature', (event) => {
+                const clusterFeature = event.feature as Feature<Geometry>;
+                if (!clusterFeature.getId()) {
+                    const clusteredFeatures = clusterFeature.get('features') || [];
+                    const featureIds = clusteredFeatures.map((f: Feature<Geometry>) =>
+                        f.getProperties().cardId || f.getId() || 'unknown'
+                    ).sort().join('_');
+                    const clusterId = `cluster_${color}_${featureIds}`;
+                    clusterFeature.setId(clusterId);
+                }
+            });
+
             if (clusterSourceCache.size > 20) {
                 const firstKey = clusterSourceCache.keys().next().value;
                 if(firstKey) clusterSourceCache.delete(firstKey);

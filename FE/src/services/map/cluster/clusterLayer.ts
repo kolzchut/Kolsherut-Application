@@ -6,7 +6,6 @@ import {Cluster} from "ol/source";
 import {createClusterStyle} from "../style/clusterStyle.ts";
 import {Feature} from "ol";
 import {Geometry} from "ol/geom";
-import {GetLayersReturn} from "../../../types/layers.ts";
 import areFeatureGroupsEqual from "./areFeatureGroupsEqual.ts";
 
 let currentClusterLayers: VectorLayer<Cluster>[] = [];
@@ -14,7 +13,7 @@ let lastFeaturesByColor: { [color: string]: Feature<Geometry>[] } = {};
 let lastFeatureCount = 0;
 let updateTimeout: number | null = null;
 
-export const setupClusterLayer = ({layers,clusterSources}:{layers: GetLayersReturn,clusterSources?: { [_p: string]: Cluster<Feature<Geometry>> } | undefined
+export const setupClusterLayer = ({clusterSources}:{ clusterSources?: { [_p: string]: Cluster<Feature<Geometry>> } | undefined
 }) => {
     if (!clusterSources) return currentClusterLayers = [];
     Object.entries(clusterSources).forEach(([color, clusterSource]) => {
@@ -22,11 +21,11 @@ export const setupClusterLayer = ({layers,clusterSources}:{layers: GetLayersRetu
             source: clusterSource,
             visible: true,
             zIndex: 1,
-            style: createClusterStyle(color)
+            style: createClusterStyle(color),
         });
-        layers.push(clusterLayer);
         currentClusterLayers.push(clusterLayer);
     });
+    return currentClusterLayers;
 }
 
 export const updateClusterLayerWithDebounce = () => {

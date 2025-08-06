@@ -9,9 +9,13 @@ import FiltersForDesktop from "./filters/filtersForDesktop";
 import {setSelectedOrganization} from "../../store/data/dataSlice";
 import Hits from "./hits/hits";
 import {IService} from "../../types/serviceType";
-import BranchList from "./branchList/branchList";
 import Header from "../../components/header/header";
-import {getSearchQuery, isAccessibilityActive, isLoading} from "../../store/general/general.selector";
+import {
+    getSearchQuery,
+    getSelectedFeatureId,
+    isAccessibilityActive,
+    isLoading
+} from "../../store/general/general.selector";
 import Map from "../../components/map/map";
 import {useDisplayResultsMap} from "./context/contextFunctions";
 import {removeAllPOIs} from "../../services/map/poiInteraction";
@@ -30,6 +34,9 @@ import {settingToResults} from "../../store/shared/sharedSlice";
 import noResultsIcon from "../../assets/noResults.svg";
 import Loader from "./loader/loader.tsx";
 import {isMobileScreen} from "../../services/media.ts";
+import BranchServicesForMobile from "./branchServicesForMobile/branchServicesForMobile.tsx";
+import BranchList from "./branchList/branchList.tsx";
+import { setPopupOffsetForBigMap, setPopupOffsetForSmallMap} from "../../services/map/events/popup.ts";
 
 const Results = ({headerStyle}: { headerStyle: { [_key: string]: string } }) => {
     const isResultsLoading = useSelector(isLoading);
@@ -39,11 +46,13 @@ const Results = ({headerStyle}: { headerStyle: { [_key: string]: string } }) => 
     const displayResultsMap = useDisplayResultsMap();
     const location = useSelector(getLocationFilter)
     const isMobile = isMobileScreen();
+    const selectedFeatureId = useSelector(getSelectedFeatureId);
     const branchesForMapWithoutLocationFilter = useSelector(getFilteredBranchesByResponseAndFilter)
     const accessibilityActive = useSelector(isAccessibilityActive);
+    const showBranchFilterForMobile = !!selectedFeatureId && isMobile && !selectedOrganization;
     const classes = useStyles({
         displayResultsMap,
-        isSelectedOrganization: !!selectedOrganization,
+        openSecondList: !!selectedOrganization || showBranchFilterForMobile,
         isMobile,
         accessibilityActive
     });
@@ -69,6 +78,11 @@ const Results = ({headerStyle}: { headerStyle: { [_key: string]: string } }) => 
     useEffect(() => {
         newResults();
     }, [filteredResults, searchQuery]);
+    useEffect(() => {
+        if(selectedOrganization) return setPopupOffsetForSmallMap();
+        return setPopupOffsetForBigMap();
+    }, [selectedOrganization]);
+
     useEffect(() => {
         allowChangeStoreLocation(true)
         if (!filteredResults || filteredResults.length === 0) {
@@ -102,7 +116,8 @@ const Results = ({headerStyle}: { headerStyle: { [_key: string]: string } }) => 
                         {conditionToShowLoading && (<Loader/>)}
                     </div>
                     <div className={classes.branchList}>
-                        {selectedOrganization && (<BranchList organization={selectedOrganization}/>)}
+                        {selectedOrganization && <BranchList organization={selectedOrganization}/>}
+                        {showBranchFilterForMobile && (<BranchServicesForMobile featureId={selectedFeatureId} />)}
                     </div>
                 </div>
                 <div className={classes.mapContainer}>

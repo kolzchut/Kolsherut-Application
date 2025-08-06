@@ -43,7 +43,10 @@ export const generalSlice = createSlice({
         setLoading(state: GeneralStore, action) {
             if (typeof action.payload != 'boolean') return;
             state.loading = action.payload;
-
+        },
+        setSelectedFeatureId(state: GeneralStore, action) {
+            if (typeof action.payload !== 'string' && action.payload !== null) return;
+            state.selectedFeatureId = action.payload;
         }
     },
 });
@@ -58,6 +61,7 @@ export const {
     setAccessibility,
     setFirstVisitedUrl,
     setLoading,
+    setSelectedFeatureId
 } = generalSlice.actions;
 
 export default generalSlice.reducer;
