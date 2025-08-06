@@ -1,6 +1,5 @@
 import useStyle from "./header.css";
 import backIcon from "../../../../../assets/icon-arrow-right.svg";
-import {backToResults} from "../../../../../store/shared/sharedSlice";
 import { useSelector } from 'react-redux';
 import {isAccessibilityActive} from "../../../../../store/general/general.selector";
 
@@ -13,9 +12,7 @@ const Header = ({organizationName, branchAddress, branchLocationAccurate, isNati
     const notAccurateLocation = window.strings.cardDetails.notAccurateLocation;
     const serviceGivenNationWide = window.strings.cardDetails.serviceGivenNationWide
     const showNoAccurateLocation = !branchLocationAccurate && !isNational;
-    const onBackButtonClick = () =>{
-        backToResults();
-    }
+    const onBackButtonClick = () => window.history.back();
     const accessibilityActive = useSelector(isAccessibilityActive);
     const classes = useStyle({accessibilityActive});
     return <div className={classes.root}>

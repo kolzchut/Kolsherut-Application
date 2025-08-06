@@ -11,16 +11,25 @@ import analytics from "./gtag/analytics";
 import {setFilterRouteParams} from "../store/filter/filterSlice";
 
 
+const routeParamsToStore = (routeParams: Record<string, string>) => {
+    store.dispatch(setRouteParams(routeParams));
+    store.dispatch(setFilterRouteParams(routeParams));
+};
+
+const handlePopState = (event: { state: any }) => {
+    if (!event.state) return;
+    routeParamsToStore(event.state);
+};
 export default async (main: React.ReactNode) => {
     const routeParams = getRouteParams();
-    if(routeParams) {
-        store.dispatch(setRouteParams(routeParams));
-        store.dispatch(setFilterRouteParams(routeParams));
-    }
-    if (await loadConfig()) {
+    if(routeParams) routeParamsToStore(routeParams);
+
+    if(await loadConfig()) {
         analytics.init();
         mapService.init({mapInteractions, viewInteractions})
         setAllLocationsInStore();
     }
+
+    window.addEventListener('popstate', handlePopState);
     ReactDOM.createRoot(document.getElementById('root')!).render(main);
 };

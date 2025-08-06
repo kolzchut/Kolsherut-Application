@@ -1,11 +1,11 @@
 import {ILabel} from "../../types/homepageType";
 import {store} from "../store";
-import {setLoading, setPage, settingURLParamsToResults} from "../general/generalSlice";
+import {setLoading, settingURLParamsToResults} from "../general/generalSlice";
 import {setResults} from "../data/dataSlice";
 import fetchResults from "../../services/searchUtilities/fetchResults";
 import {resetFilters, setFilters} from "../filter/filterSlice";
 import setupNewFilters from "./utilities/setupNewFilters";
-import {IService} from "../../types/serviceType.ts";
+import {IService} from "../../types/serviceType";
 
 
 const updateFirstResults = async ({startResults, value, removeOldFilters}: {
@@ -54,8 +54,3 @@ export const settingToResults = async ({value, removeOldFilters}: { value: ILabe
     updateAllResults({startResults, restResults, value, removeOldFilters});
 
 }
-
-export const backToResults = () => {
-    store.dispatch(setPage('results'));
-}
-

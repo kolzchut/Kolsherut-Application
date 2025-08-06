@@ -6,8 +6,9 @@ import ControlledModal from "./components/controlledModal/controlledModal";
 import Sidebar from "./components/sidebar/sidebar";
 import {useOnce} from "./hooks/useOnce";
 import {setFirstVisitedUrl} from "./store/general/generalSlice";
-import useHeaderStyle from "./components/header/headerAndSearchInput.css.ts";
+import useHeaderStyle from "./components/header/headerAndSearchInput.css";
 import {isMobileScreen} from "./services/media";
+
 
 function App() {
   useRouteUpdater();
@@ -22,6 +23,7 @@ function App() {
     dispatch(setFirstVisitedUrl(window.location.href));
   });
   captureFirstUrl();
+
 
   return <>
     <Page {...{headerStyle}}/>
