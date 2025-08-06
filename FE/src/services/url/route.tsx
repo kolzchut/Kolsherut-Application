@@ -2,6 +2,9 @@ import {useSelector} from "react-redux";
 import {getUrlParams} from "../../store/shared/urlSelector";
 import {debounced} from "../debounced";
 
+const globals = {
+    lockUpdateURL: false,
+}
 
 export const getRouteParams = () => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -17,5 +20,7 @@ const debouncedHistoryUpdate = debounced(updateHistory, 100);
 
 export const useRouteUpdater = () => {
     const urlParams = useSelector(getUrlParams);
+    if (globals.lockUpdateURL) return;
     debouncedHistoryUpdate(urlParams);
 };
+export const setLockUpdateURL = (lock: boolean) => globals.lockUpdateURL = lock;
