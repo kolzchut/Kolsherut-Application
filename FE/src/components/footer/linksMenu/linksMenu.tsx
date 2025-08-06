@@ -2,9 +2,10 @@ import useStyles from './linksMenu.css';
 import {useEffect, useState} from "react";
 import axios from "axios";
 import logger from "../../../services/logger/logger";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {setModal} from "../../../store/general/generalSlice";
-import {isAccessibilityActive} from "../../../store/general/general.selector.ts";
+import { useTheme } from 'react-jss';
+import IDynamicThemeApp from "../../../types/dynamicThemeApp.ts";
 
 interface ILinks {
     title: string,
@@ -15,8 +16,8 @@ interface ILinks {
 const LinksMenu = () => {
     const [links, setLinks] = useState<Array<ILinks>>([])
     const dispatch = useDispatch();
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyles({accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyles(theme);
 
     useEffect(() => {
         const getLinks = async () => {

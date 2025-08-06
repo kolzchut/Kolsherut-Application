@@ -1,14 +1,14 @@
 import useStyle from './footer.css';
 import LinksMenu from "./linksMenu/linksMenu";
-import { useSelector } from 'react-redux';
-import {isAccessibilityActive} from "../../store/general/general.selector.ts";
+import { useTheme } from 'react-jss';
+import IDynamicThemeApp from "../../types/dynamicThemeApp.ts";
 
 const israelIcon = "/icons/icon-state-of-israel.svg"
 const logoKZ = "/icons/icon-kz.svg"
 
 const Footer = ({hideLinks=false}: {hideLinks?: boolean}) => {
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyle({accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyle(theme);
 
     const nameOfWebsite = window.strings.footer.nameOfWebsite;
     const firstParagraph = window.strings.footer.firstParagraph;

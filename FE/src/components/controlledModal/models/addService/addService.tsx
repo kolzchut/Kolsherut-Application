@@ -1,12 +1,11 @@
+import { useTheme } from 'react-jss';
 import useStyle from "./addService.css";
 import {store} from "../../../../store/store";
 import {setModal} from "../../../../store/general/generalSlice";
 import closeIcon from "../../../../assets/icon-close-black.svg";
 import AddServiceBox from "./addServiceBox/addServiceBox";
 import {useState} from "react";
-import {isMobileScreen} from "../../../../services/media";
-import { useSelector } from 'react-redux';
-import {isAccessibilityActive} from "../../../../store/general/general.selector.ts";
+import IDynamicThemeApp from "../../../../types/dynamicThemeApp.ts";
 
 interface Service {
     title: string;
@@ -14,9 +13,8 @@ interface Service {
 }
 
 const AddService = () => {
-    const isMobile = isMobileScreen();
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyle({isMobile, accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyle(theme);
     const [selectedService, setSelectedService] = useState<number>(-1);
     const strings = window.strings.staticModals.addService;
     const [services] = useState(window.modules);

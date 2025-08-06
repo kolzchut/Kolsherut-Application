@@ -3,12 +3,11 @@ import telIcon from "../../assets/icon-call-white.svg"
 import mailIcon from "../../assets/icon-mail-blue.svg";
 import websiteIcon from "../../assets/icon-external-link-blue.svg";
 import addressIcon from "../../assets/icon-nav-blue.svg";
-import { useSelector } from 'react-redux';
-
 import useStyle from "./connection.css";
 import {ICard} from "../../types/cardType";
 import cardAnalytics from "../../services/gtag/cardEvents";
-import {isAccessibilityActive} from "../../store/general/general.selector.ts";
+import {useTheme} from "react-jss";
+import IDynamicThemeApp from "../../types/dynamicThemeApp.ts";
 
 type ConnectionType = 'tel' | 'mailto' | 'address' | 'website';
 type ActionType = 'phone' | 'email' | 'url' | 'nav';
@@ -22,17 +21,17 @@ interface IProps {
 }
 
 const Connection = ({text, type, link, card, actionType}: IProps) => {
-    const accessibilityActive = useSelector(isAccessibilityActive);
+    const theme = useTheme<IDynamicThemeApp>()
     const gtag = () => {
         if (!card || !actionType) return;
-        cardAnalytics.copyToClipboard({action_url: window.location.href, action:actionType, card})
+        cardAnalytics.copyToClipboard({action_url: window.location.href, action: actionType, card})
     }
     const handleCopy = async () => {
         await navigator.clipboard.writeText(text);
         gtag();
     }
     const isTel = type === 'tel';
-    const classes = useStyle({isTel, accessibilityActive})
+    const classes = useStyle({isTel, accessibilityActive: theme.accessibilityActive})
     const iconMap: Record<ConnectionType, string> = {
         tel: telIcon,
         mailto: mailIcon,

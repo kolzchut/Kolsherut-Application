@@ -2,14 +2,12 @@ import useStyle from "./partners.css";
 import {store} from "../../../../store/store";
 import {setModal} from "../../../../store/general/generalSlice";
 import closeIcon from "../../../../assets/icon-close-black.svg";
-import {isMobileScreen} from "../../../../services/media";
-import { useSelector } from 'react-redux';
-import {isAccessibilityActive} from "../../../../store/general/general.selector.ts";
+import { useTheme } from 'react-jss';
+import IDynamicThemeApp from "../../../../types/dynamicThemeApp.ts";
 
 const Partners = () => {
-    const isMobile = isMobileScreen();
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyle({isMobile, accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyle(theme);
     const close = () => store.dispatch(setModal(null));
     const strings = window.strings.staticModals.partners;
     return <div className={classes.root}>

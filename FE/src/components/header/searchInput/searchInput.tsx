@@ -11,12 +11,16 @@ import {useSelector} from "react-redux";
 import {getPage, getSearchQuery} from "../../../store/general/general.selector";
 import {settingToResults} from "../../../store/shared/sharedSlice";
 import generalAnalytics from "../../../services/gtag/generalEvents";
+import {useTheme} from "react-jss";
+import IDynamicThemeApp from "../../../types/dynamicThemeApp.ts";
+import useStyles from "./searchInput.css.ts";
 
 const inputDescription = "Search for services, organizations, branches, and more"
 const emptyAutocomplete: AutocompleteType = {structured: [], unstructured: []};
 
-const SearchInput = ({headerStyle}:{headerStyle:any}) => {
-    const classes = headerStyle;
+const SearchInput = () => {
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyles({theme});
     const searchQuery = useSelector(getSearchQuery);
     const page = useSelector(getPage);
     const [isInputFocused, setIsInputFocused] = useState(false);

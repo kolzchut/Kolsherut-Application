@@ -1,7 +1,12 @@
 import {createUseStyles} from 'react-jss';
 import {secondaryTextColorTwo, tertiaryTextColorThree, primaryTextColorThree, primaryBackgroundColorOne} from "../../services/theme";
 
-export default createUseStyles({
+export interface IDynamicTheme {
+    isMobile: boolean;
+    accessibilityActive: boolean;
+}
+
+export default createUseStyles((theme: IDynamicTheme) => ({
     aTag: {
         textDecoration: "none",
         '&:hover': {
@@ -23,20 +28,20 @@ export default createUseStyles({
         top: '5px',
         position: 'absolute',
     },
-    bannerTitle:({accessibilityActive}: { accessibilityActive: boolean }) => ({
+    bannerTitle: {
         color: secondaryTextColorTwo,
         fontWeight:300,
         lineHeight: 1.4,
-        fontSize: accessibilityActive ? '24px' : '20px',
+        fontSize: theme?.accessibilityActive ? '24px' : '20px',
         margin: 0,
         width: 'calc(100% - 30px)',
-    }),
+    },
     bannerDescriptionDiv:{
         display:"flex",
         width: '100%',
         flexDirection: 'row',
     },
-    bannerDescriptionShort:({accessibilityActive}: { accessibilityActive: boolean }) => ({
+    bannerDescriptionShort: {
         display: '-webkit-box',
         WebkitLineClamp: 3,
         WebkitBoxOrient: 'vertical',
@@ -45,10 +50,10 @@ export default createUseStyles({
         whiteSpace:'pre-wrap',
         fontWeight:400,
         lineHeight:'normal',
-        fontSize: accessibilityActive ? '20px': '16px',
+        fontSize: theme?.accessibilityActive ? '20px': '16px',
         color:tertiaryTextColorThree
-    }),
-    bannerDescriptionLong:({accessibilityActive}: { accessibilityActive: boolean }) => ({
+    },
+    bannerDescriptionLong: {
         display: '-webkit-box',
         WebkitLineClamp: 20,
         WebkitBoxOrient: 'vertical',
@@ -57,26 +62,26 @@ export default createUseStyles({
         whiteSpace:'pre-wrap',
         fontWeight:400,
         lineHeight:'normal',
-        fontSize: accessibilityActive ? '20px': '16px',
+        fontSize: theme?.accessibilityActive ? '20px': '16px',
         color:tertiaryTextColorThree
-    }),
-    bannerDescriptionButton:({accessibilityActive}: { accessibilityActive: boolean }) => ({
+    },
+    bannerDescriptionButton: {
         display:'flex',
         alignItems:'flex-end',
         background: "transparent",
         color:primaryTextColorThree,
         fontWeight:500,
-        fontSize: accessibilityActive? '20px':'16px',
+        fontSize: theme?.accessibilityActive ? '20px':'16px',
         border: "none",
         cursor:'pointer',
         '&:hover': {
             textDecoration: 'underline',
         }
-    }),
+    },
     linksDiv:{
         display: 'flex',
         flexWrap: 'wrap',
         width: '100%',
     }
 
-});
+}));

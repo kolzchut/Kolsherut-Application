@@ -1,7 +1,7 @@
 import useStyle from "./header.css";
 import backIcon from "../../../../../assets/icon-arrow-right.svg";
-import { useSelector } from 'react-redux';
-import {isAccessibilityActive} from "../../../../../store/general/general.selector";
+import {useTheme} from "react-jss";
+import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
 
 const Header = ({organizationName, branchAddress, branchLocationAccurate, isNational}: {
     organizationName: string,
@@ -13,8 +13,9 @@ const Header = ({organizationName, branchAddress, branchLocationAccurate, isNati
     const serviceGivenNationWide = window.strings.cardDetails.serviceGivenNationWide
     const showNoAccurateLocation = !branchLocationAccurate && !isNational;
     const onBackButtonClick = () => window.history.back();
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyle({accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+
+    const classes = useStyle({accessibilityActive: theme.accessibilityActive});
     return <div className={classes.root}>
         <div className={classes.backButtonDiv}>
             <button onClick={onBackButtonClick} className={classes.backButton}><img className={classes.backButtonImg} src={backIcon} alt={"go back to results"}/></button>

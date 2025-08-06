@@ -7,7 +7,7 @@ import getHomeMetaTags from "./getHomeMetaTags";
 import MetaTags from "../../services/metaTags";
 import {isMobileScreen} from "../../services/media.ts";
 
-const Home = ({headerStyle}:{headerStyle: {[_key: string]: string}}) => {
+const Home = () => {
     const isMobile = isMobileScreen();
     const metaTagsData = getHomeMetaTags();
     const classes = useStyle();
@@ -17,7 +17,7 @@ const Home = ({headerStyle}:{headerStyle: {[_key: string]: string}}) => {
         <main className={classes.root}>
             <section className={classes.main}>
 
-                {!isMobile && <Header showSearchbar={false} showLogo={false} key={'homeHeader'} headerStyle={headerStyle}/>}
+                {!isMobile && <Header showSearchbar={false} showLogo={false} key={'homeHeader'}/>}
                 <OptionalSearch/>
                 <Footer/>
             </section>

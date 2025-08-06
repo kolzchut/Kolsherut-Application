@@ -7,7 +7,6 @@ import {getShowSidebar, isAccessibilityActive} from "../../store/general/general
 import SidebarButton from "./sidebarButton/sidebarButton";
 import accessibilityInactive from "../../assets/accessability.svg";
 import accessibilityActive from "../../assets/accessabilityActive.svg";
-
 const logo = "/icons/logo.svg"
 
 const Sidebar = () => {

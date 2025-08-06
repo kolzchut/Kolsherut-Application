@@ -11,12 +11,13 @@ import ResponseSection from "./responseSection/responseSection";
 import {store} from "../../../../../../store/store";
 import {setModal} from "../../../../../../store/general/generalSlice";
 import closeIcon from "../../../../../../assets/icon-close-black.svg";
-import {isAccessibilityActive} from "../../../../../../store/general/general.selector.ts";
+import IDynamicThemeApp from "../../../../../../types/dynamicThemeApp.ts";
+import {useTheme} from "react-jss";
 
 
 const MoreFiltersModal = () => {
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyles({accessibilityActive})
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyles({accessibilityActive: theme.accessibilityActive})
     const resultsLength = useSelector(getFilterResultsLength)
     const situationsToFilter= useSelector(getAllSituationsToFilter)
     const numOfResults = replaceMacro({

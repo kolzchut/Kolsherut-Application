@@ -8,11 +8,12 @@ import {
     getQuickFilterResponseOptions,
     getQuickFilterSituationOptions
 } from "../../../../../store/shared/quickFilter.selector";
-import {isAccessibilityActive} from "../../../../../store/general/general.selector.ts";
+import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
+import {useTheme} from "react-jss";
 
 const QuickFilters = () => {
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyles({accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyles({accessibilityActive: theme.accessibilityActive});
     const quickFilterText = window.strings.results.quickFilters;
     const responseOptions: IFilterOptions = useSelector(getQuickFilterResponseOptions)
     const situationOptions = useSelector(getQuickFilterSituationOptions);

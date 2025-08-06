@@ -3,27 +3,33 @@ import hamburger from "../../assets/icon-hamburger.svg";
 import accessibilityInactive from "../../assets/accessability.svg";
 import accessibilityActive from "../../assets/accessabilityActive.svg";
 import SearchInput from "./searchInput/searchInput";
-import {isAccessibilityActive} from "../../store/general/general.selector";
 import {useDispatch, useSelector} from "react-redux";
+import {useTheme} from 'react-jss';
+import {isAccessibilityActive} from "../../store/general/general.selector";
 import {isMobileScreen} from "../../services/media.ts";
+import useStyles from "./header.css.ts"
+import IDynamicThemeApp from "../../types/dynamicThemeApp.ts";
+
 
 const logo = "/icons/logo.svg"
 
-const Header = ({showLogo = true, showSearchbar = true, headerStyle}: { showLogo?: boolean, showSearchbar?: boolean , headerStyle: {[_key: string]: string}}) => {
-    const isMobile = isMobileScreen();
-    const accessibility = useSelector(isAccessibilityActive);
-    const classes = headerStyle;
+const Header = ({showLogo = true, showSearchbar = true}: { showLogo?: boolean, showSearchbar?: boolean }) => {
+    const accessibilityActiveFromRedux = useSelector(isAccessibilityActive);
+    const isMobileFromMedia = isMobileScreen();
+
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyles({theme});
     const dispatch = useDispatch();
 
     const handleIconClick = () => {
-        if (!isMobile) return dispatch(setPage('home'))
+        if (!isMobileFromMedia) return dispatch(setPage('home'))
         return dispatch(setShowSidebar(true));
     }
     const {names} = window.strings.staticModals
     const toggleAccessibility = () => {
-        dispatch(setAccessibility(!accessibility));
+        dispatch(setAccessibility(!accessibilityActiveFromRedux));
     }
-    const accessibilityIcon = accessibility ? accessibilityActive : accessibilityInactive;
+    const accessibilityIcon = accessibilityActiveFromRedux ? accessibilityActive : accessibilityInactive;
 
     const onClick = (e: React.MouseEvent<HTMLAnchorElement>, modalName: string) => {
         e.preventDefault();
@@ -33,8 +39,9 @@ const Header = ({showLogo = true, showSearchbar = true, headerStyle}: { showLogo
     return <>
         <div className={classes.root} key={'1'}>
 
-            {!isMobile && <div className={classes.linksAndButtonsDiv}>
-                <button title={window.strings.toolTips.accessibility || "toggle accessibility"} className={classes.button} onClick={toggleAccessibility} key={'2'}>
+            {!isMobileFromMedia && <div className={classes.linksAndButtonsDiv}>
+                <button title={window.strings.toolTips.accessibility || "toggle accessibility"}
+                        className={classes.button} onClick={toggleAccessibility} key={'2'}>
                     <img src={accessibilityIcon} alt={'activate accessibility'} className={classes.accIcon} key={'3'}/>
                 </button>
                 <div className={classes.linksDiv}>
@@ -49,9 +56,10 @@ const Header = ({showLogo = true, showSearchbar = true, headerStyle}: { showLogo
                 </div>
 
             </div>}
-            {showSearchbar && <SearchInput headerStyle={headerStyle}/>}
-            {showLogo && <img onClick={handleIconClick} className={classes.logo} src={isMobile ? hamburger : logo}
-                              alt={"kolsherut logo"}/>}
+            {showSearchbar && <SearchInput/>}
+            {showLogo &&
+                <img onClick={handleIconClick} className={classes.logo} src={isMobileFromMedia ? hamburger : logo}
+                     alt={"kolsherut logo"}/>}
 
         </div>
     </>

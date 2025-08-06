@@ -8,11 +8,13 @@ import {
     addMultipleResponseFilters,
     removeMultipleResponseFilters
 } from "../../../../../../../store/filter/filterSlice";
-import {isAccessibilityActive} from "../../../../../../../store/general/general.selector.ts";
+import {useTheme} from "react-jss";
+import IDynamicThemeApp from "../../../../../../../types/dynamicThemeApp.ts";
 
 const ResponseSection = () => {
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyles({accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+
+    const classes = useStyles({accessibilityActive: theme.accessibilityActive});
     const responseOptions = useSelector(getMoreFiltersResponseOptions);
     const onClick = (responses: IResponseToFilter[]) => {
         const isSelected = responses.some((response) => response.selected);

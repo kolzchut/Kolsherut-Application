@@ -9,8 +9,8 @@ import {
 } from "../../../../../../store/filter/filterSlice";
 import {getColor} from "../../../../../../components/label/labelLogic";
 import resultsAnalytics from "../../../../../../services/gtag/resultsEvents";
-import { useSelector } from 'react-redux';
-import {isAccessibilityActive} from "../../../../../../store/general/general.selector.ts";
+import IDynamicThemeApp from "../../../../../../types/dynamicThemeApp.ts";
+import {useTheme} from "react-jss";
 
 
 const OccasionButtonForMobile = ({response, situation, isSelected, count = 0}: {
@@ -20,8 +20,9 @@ const OccasionButtonForMobile = ({response, situation, isSelected, count = 0}: {
     count?: number | string
 }) => {
     const {isResponse, color} = getColor({response})
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyle({color, isSelected, accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+
+    const classes = useStyle({color, isSelected, accessibilityActive: theme.accessibilityActive});
     const occasion = response || situation;
     if (!occasion) return <></>;
     const onClick = () => {

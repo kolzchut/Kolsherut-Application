@@ -1,14 +1,14 @@
 import useStyles from "./singleFilter.css";
-import { useSelector } from 'react-redux';
-import {isAccessibilityActive} from "../../../../../../store/general/general.selector.ts";
+import IDynamicThemeApp from "../../../../../../types/dynamicThemeApp.ts";
+import {useTheme} from "react-jss";
 
 const SingleFilter = ({value, onClick, isFilterActive}: {
     value: { count?: number | string, name: string },
     onClick: () => void,
     isFilterActive: boolean
 }) => {
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyles({accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyles({accessibilityActive: theme.accessibilityActive});
 
     return <div onClick={onClick} className={classes.optionDiv}>
                     <span className={classes.optionText}>

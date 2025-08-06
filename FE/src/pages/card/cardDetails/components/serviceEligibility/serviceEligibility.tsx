@@ -1,6 +1,6 @@
 import useStyle from "./serviceEligibility.css";
-import { useSelector } from 'react-redux';
-import {isAccessibilityActive} from "../../../../../store/general/general.selector";
+import { useTheme } from 'react-jss';
+import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
 
 const ServiceEligibility = ({serviceDetails, servicePaymentDetails, branchDescription}: {
     serviceDetails: string | null,
@@ -8,8 +8,8 @@ const ServiceEligibility = ({serviceDetails, servicePaymentDetails, branchDescri
     branchDescription: string | null
 }) => {
     const serviceEligibilityTitle = window.strings.cardDetails.serviceEligibility;
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyle({accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyle({accessibilityActive: theme.accessibilityActive});
     return <div>
         <span className={classes.title}>{serviceEligibilityTitle}</span>
         {serviceDetails && <p className={classes.paragraphText}>{serviceDetails}</p>}

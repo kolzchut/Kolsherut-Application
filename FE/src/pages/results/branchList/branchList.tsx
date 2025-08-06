@@ -8,9 +8,11 @@ import {useDistanceFromTop} from "../context/contextFunctions";
 import {useEffect} from "react";
 import resultsAnalytics from "../../../services/gtag/resultsEvents";
 import {useSelector} from "react-redux";
-import {getSearchQuery, isAccessibilityActive} from "../../../store/general/general.selector";
+import {getSearchQuery} from "../../../store/general/general.selector";
 import {getFilteredResponseLength} from "../../../store/shared/shared.selector";
 import {isMobileScreen} from "../../../services/media.ts";
+import IDynamicThemeApp from "../../../types/dynamicThemeApp.ts";
+import {useTheme} from "react-jss";
 
 
 const BranchList = ({organization}: { organization: IOrganization }) => {
@@ -19,8 +21,8 @@ const BranchList = ({organization}: { organization: IOrganization }) => {
     const searchQuery = useSelector(getSearchQuery);
     const filtersCount = useSelector(getFilteredResponseLength);
     const responsesCount = useSelector(getFilteredResponseLength);
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyles({distanceFromTop, isMobile, accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyles({distanceFromTop, isMobile, accessibilityActive: theme.accessibilityActive});
     useEffect(() => {
         resultsAnalytics.viewItemListEvent({branches:organization.branches, organizationName:organization.name, searchQuery, filtersCount,responsesCount})
     }, [filtersCount, organization.branches, organization.name, responsesCount, searchQuery]);

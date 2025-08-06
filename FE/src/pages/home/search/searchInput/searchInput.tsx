@@ -9,14 +9,13 @@ import homepageAnalytics from "../../../../services/gtag/homepageEvents";
 import {useDebounce} from "../../../../hooks/useDebounce";
 import useOnClickedOutside from "../../../../hooks/useOnClickedOutside";
 import {settingToResults} from "../../../../store/shared/sharedSlice";
-import { useSelector } from 'react-redux';
-import {isAccessibilityActive} from "../../../../store/general/general.selector.ts";
+import {useTheme} from "react-jss";
+import IDynamicThemeApp from "../../../../types/dynamicThemeApp.ts";
 
 const inputDescription = "Search for services, organizations, branches, and more"
 const emptyAutocomplete: AutocompleteType = {structured: [], unstructured: []};
 
 const SearchInput = () => {
-    const accessibilityActive = useSelector(isAccessibilityActive);
     const searchInputRef = useRef<HTMLInputElement>(null);
     const [isSearchInputFocused, setIsSearchInputFocused] = useState(false);
     const {ref} = useOnClickedOutside(() => setOptionalSearchValues(emptyAutocomplete));
@@ -43,8 +42,10 @@ const SearchInput = () => {
     }, [searchInputRef]);
     const [optionalSearchValues, setOptionalSearchValues] = useState<AutocompleteType>(emptyAutocomplete);
     const [searchTerm, setSearchTerm] = useState<string>('');
+    const theme = useTheme<IDynamicThemeApp>();
+
     const moveUp = isSearchInputFocused || searchTerm !== '' || optionalSearchValues.structured.length > 0 || optionalSearchValues.unstructured.length > 0;
-    const classes = useStyles({moveUp, accessibilityActive});
+    const classes = useStyles({moveUp, accessibilityActive: theme.accessibilityActive});
     const debouncedGetAutoComplete = useDebounce(async (value) => {
         if (value === '') return setOptionalSearchValues(emptyAutocomplete);
         const requestURL = window.config.routes.autocomplete.replace('%%search%%', value);

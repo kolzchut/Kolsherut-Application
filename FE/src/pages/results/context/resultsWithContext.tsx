@@ -1,11 +1,11 @@
 import {UIProvider} from "./context";
 import Results from "../results";
 
-const ResultsWithContext = ({headerStyle}:{headerStyle: {[_key: string]: string}}) =>{
+const ResultsWithContext = () =>{
 
     return (
         <UIProvider>
-            <Results {...{headerStyle}}/>
+            <Results/>
         </UIProvider>
     )
 }

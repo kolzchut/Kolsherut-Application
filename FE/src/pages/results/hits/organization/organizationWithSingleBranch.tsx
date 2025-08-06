@@ -4,12 +4,12 @@ import useStyles from "./organizationWithSingleBranch.css";
 import {IBranch} from "../../../../types/serviceType";
 import {getHrefForCard} from "../../../../services/href";
 import {reRouteToCard} from "../../../../services/routes/reRoute";
-import { useSelector } from 'react-redux';
-import {isAccessibilityActive} from "../../../../store/general/general.selector.ts";
+import IDynamicThemeApp from "../../../../types/dynamicThemeApp.ts";
+import {useTheme} from "react-jss";
 
 const OrganizationWithSingleBranch = ({branch, orgName}: { branch: IBranch, orgName: string }) => {
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyles({accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyles({accessibilityActive: theme.accessibilityActive});
     const href = getHrefForCard(branch.id);
     const name = branch.isNational ? orgName : branch.name || branch.address;
     const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {

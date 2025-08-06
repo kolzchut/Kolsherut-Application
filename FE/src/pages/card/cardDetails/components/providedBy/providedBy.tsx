@@ -6,8 +6,8 @@ import emailIcon from "../../../../../assets/icon-mail-blue.svg"
 import {useEffect, useState} from "react";
 import openIcon from "../../../../../assets/icon-chevron-down-blue.svg";
 import ArrowDirection from "./arrowDirectionEnum";
-import { useSelector } from 'react-redux';
-import {isAccessibilityActive} from "../../../../../store/general/general.selector";
+import {useTheme} from "react-jss";
+import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
 
 interface IProps {
     organizationNameParts: OrganizationNameParts;
@@ -25,12 +25,11 @@ const ProvidedBy = ({
                         organizationPhoneNumbers,
                         organizationEmailAddress
                     }: IProps) => {
+    const theme = useTheme<IDynamicThemeApp>();
     const providedByTitle = window.strings.cardDetails.providedBy;
     const isOrgUrlAvailable: boolean = !!(organizationUrls && organizationUrls.length > 0 && organizationUrls[0].href)
     const noEmailAndNoPhone: boolean = !organizationEmailAddress && (!organizationPhoneNumbers || organizationPhoneNumbers.length < 1)
     const [arrowDirection, setArrowDirection] = useState<ArrowDirection>(ArrowDirection.Close);
-
-    const accessibilityActive = useSelector(isAccessibilityActive);
 
     useEffect(() => {
     if (noEmailAndNoPhone) setArrowDirection(ArrowDirection.NotDisplayed);
@@ -38,7 +37,7 @@ const ProvidedBy = ({
 
     const handleToggle = () => setArrowDirection((prevState) => prevState === ArrowDirection.Open ? ArrowDirection.Close : ArrowDirection.Open)
 
-    const classes = useStyle({arrow: arrowDirection, accessibilityActive});
+    const classes = useStyle({arrow: arrowDirection, accessibilityActive: theme.accessibilityActive});
     return <div>
         <span className={classes.title}>{providedByTitle}</span>
         <div className={classes.mainDiv}>

@@ -12,8 +12,8 @@ import MoreServicesInBranch from "./components/moreServicesInBranch/moreServices
 import Footer from "../../../components/footer/footer";
 import QuickAction from "./components/quickActions/quickAction";
 import {useEffect, useRef, useState} from "react";
-import { useSelector } from 'react-redux';
-import {isAccessibilityActive} from "../../../store/general/general.selector.ts";
+import { useTheme } from 'react-jss';
+import IDynamicThemeApp from "../../../types/dynamicThemeApp.ts";
 
 const CardDetails = ({card}: { card: ICard }) => {
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -44,8 +44,8 @@ const CardDetails = ({card}: { card: ICard }) => {
     }, []);
 
 
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyle({accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyle({accessibilityActive: theme.accessibilityActive});
     const email: string = card.branch_email_address || card.service_email_address || card.organization_email_address;
     const websites: BranchUrl[] = [card.branch_urls, card.organization_urls, card.service_urls].find(arr => {
         if (arr === null) return;

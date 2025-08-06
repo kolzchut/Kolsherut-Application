@@ -15,16 +15,17 @@ import wideLocationIcon from "../../../../../../assets/wideLocation.svg"
 import {setModal} from "../../../../../../store/general/generalSlice";
 import {getOptionalLocations} from "../../../../../../store/shared/locationFilters.selector";
 import resultsAnalytics from "../../../../../../services/gtag/resultsEvents";
-import {isAccessibilityActive} from "../../../../../../store/general/general.selector.ts";
+import IDynamicThemeApp from "../../../../../../types/dynamicThemeApp.ts";
+import {useTheme} from "react-jss";
 
 const GeoFilterModal = () => {
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyles({accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyles({accessibilityActive: theme.accessibilityActive});
     const searchLocations = useSelector(getSearchLocation);
     const dynamicLocations = useSelector(getOptionalLocations);
     const [optionalLocations, setOptionalLocations] = useState<ILocation[]>([]);
-    const resultsLength = useSelector(getFilterResultsLength)
-    const location = useSelector(getLocationFilter)
+    const resultsLength = useSelector(getFilterResultsLength);
+    const location = useSelector(getLocationFilter);
     const placeholder = window.strings.results.geoFilterModalPlaceHolder;
     const focusRef = useRef<HTMLInputElement>(null);
     useEffect(() => {
@@ -34,7 +35,7 @@ const GeoFilterModal = () => {
     useEffect(() => {
         const setLocations = async () => {
             if (dynamicLocations && dynamicLocations.length > 0) return setOptionalLocations(dynamicLocations);
-            setOptionalLocations(await getDefaultLocations())
+            setOptionalLocations(await getDefaultLocations());
         }
         setLocations()
     }, [dynamicLocations]);
@@ -46,7 +47,7 @@ const GeoFilterModal = () => {
         store.dispatch(setSearchLocation(e.target.value));
     }
     const onClick = (location: ILocation, zoom = 12) => {
-        store.dispatch(setLocationFilter(location))
+        store.dispatch(setLocationFilter(location));
         centerByLocation(location.bounds, zoom);
         resultsAnalytics.geoFilterLocationSelect(location);
         close();

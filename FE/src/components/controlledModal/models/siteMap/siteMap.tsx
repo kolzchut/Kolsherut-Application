@@ -2,12 +2,11 @@ import useStyle from "./siteMap.css.ts"
 import {store} from "../../../../store/store";
 import {setModal} from "../../../../store/general/generalSlice";
 import closeIcon from "../../../../assets/icon-close-black.svg";
-import {isMobileScreen} from "../../../../services/media";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import logger from "../../../../services/logger/logger.ts";
-import { useSelector } from 'react-redux';
-import {isAccessibilityActive} from "../../../../store/general/general.selector.ts";
+import { useTheme } from 'react-jss';
+import IDynamicThemeApp from "../../../../types/dynamicThemeApp.ts";
 
 interface ILink {
     title: string;
@@ -23,9 +22,8 @@ interface IGUISiteMap {
 }
 
 const SiteMap = () => {
-    const isMobile = isMobileScreen();
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyle({isMobile, accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyle(theme);
     const close = () => store.dispatch(setModal(null));
     const [siteMapData, setSiteMapData] = useState<IGUISiteMap | null>(null);
     useEffect(() => {

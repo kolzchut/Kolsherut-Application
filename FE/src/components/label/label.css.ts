@@ -12,7 +12,7 @@ export default createUseStyles({
         flexDirection: "row",
         height:"fit-content",
         alignItems:'center',
-        margin: 8
+        margin: 10
     },
     label: ({color, accessibilityActive}: IProps) =>{
         const backgroundColor = `${color}10`;

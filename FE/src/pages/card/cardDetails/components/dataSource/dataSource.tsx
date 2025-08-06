@@ -1,10 +1,11 @@
 import useStyle from "./dataSource.css";
-import { useSelector } from 'react-redux';
-import { isAccessibilityActive } from "../../../../../store/general/general.selector";
+import {useTheme} from "react-jss";
+import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
 
 const DataSource = ({ dataSource }: { dataSource: string[] }) => {
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyle({ accessibilityActive });
+    const theme = useTheme<IDynamicThemeApp>();
+
+    const classes = useStyle({ accessibilityActive: theme.accessibilityActive });
     if (!dataSource || dataSource.length === 0) return <></>
     return <>
         {dataSource.map((source, index) => (

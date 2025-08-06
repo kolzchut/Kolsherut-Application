@@ -38,7 +38,7 @@ import BranchServicesForMobile from "./branchServicesForMobile/branchServicesFor
 import BranchList from "./branchList/branchList.tsx";
 import { setPopupOffsetForBigMap, setPopupOffsetForSmallMap} from "../../services/map/events/popup.ts";
 
-const Results = ({headerStyle}: { headerStyle: { [_key: string]: string } }) => {
+const Results = () => {
     const isResultsLoading = useSelector(isLoading);
     const filteredResults = useSelector(getFilteredResults);
     const selectedOrganization = useSelector(getSelectedOrganization);
@@ -97,7 +97,7 @@ const Results = ({headerStyle}: { headerStyle: { [_key: string]: string } }) => 
     return <>
         <MetaTags {...metaTagsData}/>
         <div>
-            <Header key={'resultHeader'} headerStyle={headerStyle}/>
+            <Header key={'resultHeader'}/>
             <div className={classes.mainDiv}>
                 {isMobile ? <FiltersForMobile/> : <FiltersForDesktop/>}
                 <div className={classes.resultsContainer} onScroll={reportOnce}>

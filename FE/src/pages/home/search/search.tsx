@@ -4,9 +4,9 @@ import {store} from "../../../store/store";
 import {setPage, setShowSidebar} from "../../../store/general/generalSlice";
 import hamburger from "../../../assets/icon-hamburger-gray-5.svg";
 import homepageBackground from '../../../assets/homepage-background.svg';
-import { useSelector } from 'react-redux';
-import {isAccessibilityActive} from "../../../store/general/general.selector.ts";
 import {isMobileScreen} from "../../../services/media.ts";
+import {useTheme} from "react-jss";
+import IDynamicThemeApp from "../../../types/dynamicThemeApp.ts";
 
 const kolsherutLogo = "/icons/logo-white.svg"
 const nationalDigitalLogo = "/icons/logo-digital-israel.png"
@@ -14,8 +14,8 @@ const kolzchutLogo = "/icons/logo-moj.png"
 const mojLogo = "/icons/logo-moj.png"
 
 const Search = () => {
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyle({accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyle({accessibilityActive: theme.accessibilityActive});
     const isMobile = isMobileScreen();
     const handleIconClick = () => {
         if (!isMobile) return store.dispatch(setPage('home'))

@@ -5,15 +5,13 @@ import {setModal} from "../../../../store/general/generalSlice";
 import JusticeLink from "../../../links/justiceLink";
 import DigitalLink from "../../../links/digitalLink";
 import KZLink from "../../../links/kzLink";
-import {isMobileScreen} from "../../../../services/media";
-import { useSelector } from 'react-redux';
-import {isAccessibilityActive} from "../../../../store/general/general.selector.ts";
+import {useTheme} from "react-jss";
+import IDynamicThemeApp from "../../../../types/dynamicThemeApp.ts";
 
 const About = () => {
+    const theme = useTheme<IDynamicThemeApp>();
     const strings = window.strings.staticModals.about;
-    const isMobile = isMobileScreen();
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyle({isMobile, accessibilityActive});
+    const classes = useStyle(theme);
     const close = () => store.dispatch(setModal(null));
     return <div className={classes.root}>
         <button className={classes.closeIcon} onClick={close}><img src={closeIcon} alt={"close icon"}/></button>

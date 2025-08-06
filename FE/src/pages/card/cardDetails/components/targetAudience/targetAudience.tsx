@@ -3,14 +3,14 @@ import useStyle from "./targetAudience.css";
 import Label from "../../../../../components/label/label";
 import {getHrefForResults} from "../../../../../services/href";
 import {settingToResults} from "../../../../../store/shared/sharedSlice.ts";
-import {useSelector} from 'react-redux';
-import {isAccessibilityActive} from "../../../../../store/general/general.selector.ts";
+import { useTheme } from 'react-jss';
+import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
 
 const TargetAudience = ({situations}: { situations: Situation[] }) => {
     const targetAudienceTitle = window.strings.cardDetails.targetAudience;
 
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyle({accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyle({accessibilityActive: theme.accessibilityActive});
     if (situations.length < 1) return <></>
     return <div>
         <span className={classes.title}>{targetAudienceTitle}</span>

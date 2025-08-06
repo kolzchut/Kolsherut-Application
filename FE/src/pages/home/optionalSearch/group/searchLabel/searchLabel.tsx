@@ -1,12 +1,12 @@
 import useStyles from "./searchLabel.css"
 import {ILabel} from "../../../../../types/homepageType";
 import {settingToResults} from "../../../../../store/shared/sharedSlice";
-import { useSelector } from 'react-redux';
-import { isAccessibilityActive } from "../../../../../store/general/general.selector";
+import {useTheme} from "react-jss";
+import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
 
 const SearchLabel = ({value}:{value:ILabel}) => {
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyles({ accessibilityActive });
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyles({ accessibilityActive: theme.accessibilityActive });
     const onClick = () => settingToResults({value, removeOldFilters:true})
     return <button
         className={classes.optionalSearchValue}

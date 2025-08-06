@@ -2,8 +2,8 @@ import {useState} from "react";
 import useStyles from "./situationSection.css";
 import ISituationsToFilter from "../../../../../../../types/SituationsToFilter";
 import {uniqueBy} from "../../../../../../../services/arr";
-import { useSelector } from 'react-redux';
-import {isAccessibilityActive} from "../../../../../../../store/general/general.selector.ts";
+import {useTheme} from "react-jss";
+import IDynamicThemeApp from "../../../../../../../types/dynamicThemeApp.ts";
 
 interface IProps {
     title: string,
@@ -15,8 +15,9 @@ interface IProps {
 const SituationSection = ({title, situations, onClick, onClear}: IProps) => {
     const cleanup = window.strings.results.cleanup
     const showMore = window.strings.results.showMore
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyles({accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+
+    const classes = useStyles({accessibilityActive: theme.accessibilityActive});
     const fixedSituations = uniqueBy({arr:situations, key: "id"})
     const [amountOfSituationsToDisplay, setAmountOfSituationsToDisplay] = useState(Math.min(fixedSituations.length, 5));
     const situationsToDisplay = fixedSituations.slice(0, amountOfSituationsToDisplay);

@@ -2,14 +2,14 @@ import {Response} from "../../../../../types/cardType";
 import useStyle from "./serviceEssence.css";
 import Label from "../../../../../components/label/label";
 import {getHrefForResults} from "../../../../../services/href";
-import { useSelector } from 'react-redux';
-import {isAccessibilityActive} from "../../../../../store/general/general.selector";
+import { useTheme } from 'react-jss';
 import {settingToResults} from "../../../../../store/shared/sharedSlice.ts";
+import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
 
 const ServiceEssence = ({responses}: { responses: Response[] }) => {
     const serviceEssenceTitle = window.strings.cardDetails.serviceEssence
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyle({accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyle({accessibilityActive: theme.accessibilityActive});
 
     return <div>
         <span className={classes.title}>{serviceEssenceTitle}</span>

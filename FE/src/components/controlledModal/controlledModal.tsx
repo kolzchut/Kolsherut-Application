@@ -4,11 +4,12 @@ import {useSelector} from "react-redux";
 import {getModal} from "../../store/general/general.selector";
 import {setModal} from "../../store/general/generalSlice";
 import {store} from "../../store/store";
-import {isMobileScreen} from "../../services/media.ts";
+import { useTheme } from 'react-jss';
+import IDynamicThemeApp from "../../types/dynamicThemeApp.ts";
 
 const ControlledModal = () => {
-    const isMobile = isMobileScreen();
-    const classes = useStyles({isMobile});
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyles(theme);
     const modal = useSelector(getModal);
     const onClose = () => store.dispatch(setModal(null))
     if(!modal || !modalKeys.includes(modal as IModals)) return <></>;

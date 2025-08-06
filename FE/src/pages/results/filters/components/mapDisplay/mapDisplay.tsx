@@ -5,17 +5,16 @@ import innerDeactivateMapIcon from '../../../../../assets/icon-close-blue-3.svg'
 import useStyles from "./mapDisplay.css";
 import {useDisplayResultsMap, useSetDisplayResultsMap} from "../../../context/contextFunctions";
 import mapAnalytics from "../../../../../services/gtag/mapEvents";
-import { useSelector } from 'react-redux';
-import {isAccessibilityActive} from "../../../../../store/general/general.selector.ts";
-import {isMobileScreen} from "../../../../../services/media.ts";
+import {useTheme} from "react-jss";
+import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
 
 
 const MapDisplay = () => {
     const displayResultsMap = useDisplayResultsMap()
     const setDisplayResultsMap = useSetDisplayResultsMap()
-    const isMobile = isMobileScreen();
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyles({isMobile, accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+
+    const classes = useStyles(theme);
     const vals = {
         text: displayResultsMap ? window.strings.results.hideMapOnDesktop : window.strings.results.showMapOnDesktop,
         icon: displayResultsMap ? deactivateMapIcon : activateMapIcon,

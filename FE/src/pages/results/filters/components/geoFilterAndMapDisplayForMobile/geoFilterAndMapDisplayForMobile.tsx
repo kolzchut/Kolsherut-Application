@@ -10,19 +10,21 @@ import {store} from "../../../../../store/store";
 import {setLocationFilter} from "../../../../../store/filter/filterSlice";
 import {useDisplayResultsMap, useSetDisplayResultsMap} from "../../../context/contextFunctions";
 import {setModal} from "../../../../../store/general/generalSlice";
-import {isAccessibilityActive} from "../../../../../store/general/general.selector.ts";
 import mapAnalytics from "../../../../../services/gtag/mapEvents.ts";
+import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
+import {useTheme} from "react-jss";
 
 const GeoFilterAndMapDisplayForMobile = () => {
     const currentLocation = useSelector(getLocationFilter);
     const resultsLength = useSelector(getFilterResultsLength);
-    const accessibilityActive = useSelector(isAccessibilityActive);
     const onClickNationWide = () => store.dispatch(setLocationFilter(israelLocation))
     const nationwideKey = israelLocation.key;
     const isNationwide = currentLocation.key === nationwideKey;
     const displayResultsMap = useDisplayResultsMap()
     const setDisplayResultsMap = useSetDisplayResultsMap()
-    const classes = useStyles({isNationwide, displayResultsMap, isSearchOpen:!isNationwide, accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+
+    const classes = useStyles({isNationwide, displayResultsMap, isSearchOpen:!isNationwide, accessibilityActive: theme.accessibilityActive});
     const displayMapText = displayResultsMap ? window.strings.results.hideMapOnMobile : window.strings.results.showMapOnMobile;
     const searchText = isNationwide ? window.strings.results.searchLocationOnMobile : currentLocation.key;
     const onClickDisplayResultsMap = ()=>{

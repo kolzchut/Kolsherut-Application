@@ -8,12 +8,13 @@ import unstructuredSearchIcon from "../../../../../assets/icon-chevron-left-gray
 import {settingToResults} from "../../../../../store/shared/sharedSlice";
 import {ILabel} from "../../../../../types/homepageType";
 import generalAnalytics from "../../../../../services/gtag/generalEvents";
-import { useSelector } from 'react-redux';
-import { isAccessibilityActive } from "../../../../../store/general/general.selector";
+import {useTheme} from "react-jss";
+import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
 
 const SearchOption = ({value, onCloseSearchOptions, isStructured}: { value: IStructureAutocomplete | IUnStructuredAutocomplete, onCloseSearchOptions: () => void, isStructured:boolean}) => {
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyles({ accessibilityActive });
+    const theme = useTheme<IDynamicThemeApp>();
+
+    const classes = useStyles({ accessibilityActive: theme.accessibilityActive });
     const onClick = () => {
         const customValueAsLabel: ILabel = {
             query: value.query,

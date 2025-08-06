@@ -1,14 +1,14 @@
 import useStyles from './links.css'
-import { useSelector } from 'react-redux';
-import {isAccessibilityActive} from "../../store/general/general.selector.ts";
+import { useTheme } from 'react-jss';
+import IDynamicThemeApp from "../../types/dynamicThemeApp.ts";
 
 const LINK = 'https://www.kolzchut.org.il/he/כל-זכות:אודות_המיזם';
 const LINK_TEXT = 'כל זכות'
 const kzLogo = '/icons/icon-kz.svg'
 
 const KZLink = () => {
-    const accessibilityActive = useSelector(isAccessibilityActive);
-    const classes = useStyles({accessibilityActive});
+    const theme = useTheme<IDynamicThemeApp>();
+    const classes = useStyles({accessibilityActive: theme.accessibilityActive});
     return <a href={LINK} className={`${classes.root} ${classes.kzLink}`}>
         <img className={`${classes.icon}`} src={kzLogo} alt={"kz logo"}/>
         {LINK_TEXT}

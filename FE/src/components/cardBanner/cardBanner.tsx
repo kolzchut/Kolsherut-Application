@@ -1,18 +1,17 @@
 import {ICardForBanner} from "../../types/cardType";
 import React, {useEffect, useRef, useState} from "react";
+import { useTheme } from 'react-jss';
 import Label from "../label/label";
-import useStyle from "./cardBanner.css";
+import useStyle, {IDynamicTheme} from "./cardBanner.css";
 import {isEmergency as checkIfEmergency} from "./cardBannerLogic";
-import {useSelector} from "react-redux";
-import {isAccessibilityActive} from "../../store/general/general.selector.ts";
 import cardAnalytics from "../../services/gtag/cardEvents";
 
 const emergencyIcon = "/icons/emergency-icon.svg"
 
 const CardBanner = ({card}: { card: ICardForBanner }) => {
-    const accessibilityActive = useSelector(isAccessibilityActive)
+    const theme = useTheme<IDynamicTheme>();
     const [extendText, setExtendText] = useState<boolean>(false);
-    const classes = useStyle({accessibilityActive});
+    const classes = useStyle({theme});
     const isEmergency = checkIfEmergency(card.responses);
     const buttonText = extendText ? window.strings.cardBanner.less : window.strings.cardBanner.more;
     const buttonClass = extendText ? classes.bannerDescriptionLong : classes.bannerDescriptionShort;
