@@ -3,16 +3,13 @@ import React, {useEffect, useRef, useState} from "react";
 import { useTheme } from 'react-jss';
 import Label from "../label/label";
 import useStyle, {IDynamicTheme} from "./cardBanner.css";
-import {isEmergency as checkIfEmergency} from "./cardBannerLogic";
 import cardAnalytics from "../../services/gtag/cardEvents";
 
-const emergencyIcon = "/icons/emergency-icon.svg"
 
 const CardBanner = ({card}: { card: ICardForBanner }) => {
     const theme = useTheme<IDynamicTheme>();
     const [extendText, setExtendText] = useState<boolean>(false);
     const classes = useStyle({theme});
-    const isEmergency = checkIfEmergency(card.responses);
     const buttonText = extendText ? window.strings.cardBanner.less : window.strings.cardBanner.more;
     const buttonClass = extendText ? classes.bannerDescriptionLong : classes.bannerDescriptionShort;
     const el = useRef<HTMLSpanElement | null>(null);
@@ -34,14 +31,12 @@ const CardBanner = ({card}: { card: ICardForBanner }) => {
         else cardAnalytics.extendDescriptionEvent(card.card_id);
         setExtendText((prev) => !prev);
     };
-
     const responsesAmount = card.responses ? card.responses.length : 0;
     const situationsAmount = card.situations ? card.situations.length : 0;
     const displayLinks = !isOverflowing || (extendText && (responsesAmount > 0 || situationsAmount > 0));
 
     return (
         <div className={classes.cardBanner}>
-            {isEmergency && <img src={emergencyIcon} alt={"Emergency Icon"} className={classes.emergencyIcon}/>}
             <h2 className={classes.bannerTitle}>
                 {card.service_name}
             </h2>

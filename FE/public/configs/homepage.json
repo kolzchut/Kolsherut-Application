@@ -1,44 +1,5 @@
 [
   {
-    "group": "מצב החירום",
-    "showBorder": true,
-    "icon": "emergency-icon.svg",
-    "group_link": null,
-    "response_id": null,
-    "labels": [
-      {
-        "response_id": "human_services:internal_emergency_services",
-        "title": "שירותים למצב החירום",
-        "situation_id": null,
-        "query": "שירותים_למצב_החירום"
-      },
-      {
-        "response_id": "human_services:emergency:emergency_mental_assistance",
-        "title": "סיוע נפשי בחירום",
-        "situation_id": null,
-        "query": "סיוע_נפשי_בחירום"
-      },
-      {
-        "response_id": "human_services:emergency:emergency_helpline",
-        "title": "הכוונה בחירום",
-        "situation_id": null,
-        "query": "הכוונה_בחירום"
-      },
-      {
-        "response_id": "human_services:emergency:emergency_food",
-        "title": "מזון בחירום",
-        "situation_id": null,
-        "query": "מזון_בחירום"
-      },
-      {
-        "response_id": "human_services:place:health:clinic:mental_health_clinic",
-        "title": "מרפאות בריאות הנפש",
-        "situation_id": null,
-        "query": "מרפאת_בריאות_הנפש"
-      }
-    ]
-  },
-  {
     "group": "מיצוי זכויות",
     "group_link": "לכל השירותים בנושא מיצוי זכויות",
     "response_id": "human_services:legal:advocacy_legal_aid:understand_government_programs",

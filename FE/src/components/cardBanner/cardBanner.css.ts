@@ -22,12 +22,6 @@ export default createUseStyles((theme: IDynamicTheme) => ({
         backgroundColor: primaryBackgroundColorOne,
         borderRadius: 2,
     },
-    emergencyIcon: {
-        height: '18px',
-        left: '5px',
-        top: '5px',
-        position: 'absolute',
-    },
     bannerTitle: {
         color: secondaryTextColorTwo,
         fontWeight:300,
