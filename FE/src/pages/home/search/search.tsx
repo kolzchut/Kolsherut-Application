@@ -10,7 +10,7 @@ import IDynamicThemeApp from "../../../types/dynamicThemeApp.ts";
 
 const kolsherutLogo = "/icons/logo-white.svg"
 const nationalDigitalLogo = "/icons/logo-digital-israel.png"
-const kolzchutLogo = "/icons/logo-moj.png"
+const kolzchutLogo = "/icons/logo-kolzchut.png"
 const mojLogo = "/icons/logo-moj.png"
 
 const Search = () => {
