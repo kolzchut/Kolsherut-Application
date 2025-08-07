@@ -22,6 +22,7 @@ const ESInit = async () => {
         setTimeout(()=>ESInit(),vars.serverSetups.elastic.reconnectTimeout);
     }
 };
+
 const executeESQuery = async (query: object) => {
     const esClient = getESClient();
     try {
@@ -32,4 +33,23 @@ const executeESQuery = async (query: object) => {
     }
 }
 
-export {ESInit, getESClient, executeESQuery};
+const executeESScrollQuery = async (scrollParams: { scroll_id: string; scroll: string }) => {
+    const esClient = getESClient();
+    try {
+        return await esClient.scroll(scrollParams);
+    } catch (error) {
+        logger.error({service: "DB", message: 'Error executing Elasticsearch scroll query:', payload: error});
+        throw error;
+    }
+}
+
+const clearESScroll = async (scrollId: string) => {
+    const esClient = getESClient();
+    try {
+        await esClient.clearScroll({ scroll_id: scrollId });
+    } catch (error) {
+        logger.error({service: "DB", message: 'Error clearing Elasticsearch scroll:', payload: error});
+    }
+}
+
+export {ESInit, getESClient, executeESQuery, executeESScrollQuery, clearESScroll};

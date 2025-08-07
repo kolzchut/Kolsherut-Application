@@ -5,7 +5,7 @@ export const dataSlice = createSlice({
     name: 'data',
     initialState,
     reducers: {
-        setResults(state:DataStore, action){
+        setResults(state: DataStore, action) {
             state.results = action.payload;
         },
         setSelectedOrganization(state: DataStore, action) {
@@ -13,6 +13,9 @@ export const dataSlice = createSlice({
         },
         setLocations(state: DataStore, action) {
             state.locations = action.payload;
+        },
+        setSitemap(state: DataStore, action) {
+            state.sitemap = action.payload;
         }
     },
 });
@@ -20,7 +23,8 @@ export const dataSlice = createSlice({
 export const {
     setSelectedOrganization,
     setLocations,
-    setResults
+    setResults,
+    setSitemap
 } = dataSlice.actions;
 
 export default dataSlice.reducer;

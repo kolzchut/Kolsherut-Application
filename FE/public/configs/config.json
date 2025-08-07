@@ -33,7 +33,8 @@
     "test": "/test",
     "search": "/search",
     "card": "/card/%%cardId%%",
-    "autocomplete": "/autocomplete/%%search%%"
+    "autocomplete": "/autocomplete/%%search%%",
+    "siteMapForModal": "/siteMapForModal"
   },
   "map": {
     "center": [

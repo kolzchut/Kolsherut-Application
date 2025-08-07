@@ -9,6 +9,7 @@ import {getRouteParams} from "./url/route";
 import  {setAllLocationsInStore} from "./geoLogic";
 import analytics from "./gtag/analytics";
 import {setFilterRouteParams} from "../store/filter/filterSlice";
+import setSiteMapInStore from "./setSiteMapInStore.ts";
 
 
 const routeParamsToStore = (routeParams: Record<string, string>) => {
@@ -30,6 +31,7 @@ export default async (main: React.ReactNode) => {
         setAllLocationsInStore();
     }
 
+    setSiteMapInStore();
     window.addEventListener('popstate', handlePopState);
     ReactDOM.createRoot(document.getElementById('root')!).render(main);
 };

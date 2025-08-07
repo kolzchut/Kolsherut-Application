@@ -26,3 +26,6 @@ export const getSelectedOrganizationIdAndServiceId = createSelector([getSelected
 export const getLocations = createSelector([dataStore], (dataStore: DataStore) => {
     return dataStore.locations;
 });
+export const getSitemap = createSelector([dataStore], (dataStore: DataStore) => {
+    return dataStore.sitemap;
+});

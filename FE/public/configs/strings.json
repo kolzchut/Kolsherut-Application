@@ -110,5 +110,11 @@
   },
   "toolTips": {
     "accessibility": "החלפת מצב נגישות"
+  },
+  "siteMap": {
+    "title": "מפת אתר כל שירות",
+    "subtitle": "קטלוג מענים ומצבים",
+    "responses": "מענים",
+    "situations": "מצבים"
   }
 }

@@ -9,6 +9,8 @@ import {errorHandler} from "./middlewares/errorHandler";
 import logRoute from "./routes/logRoute";
 import searchRoute from "./routes/searchRoute";
 import autoCompleteRoute from "./routes/autoCompleteRoute";
+import siteMapRoute from "./routes/siteMapRoute";
+import siteMapForModalRoute from "./routes/siteMapForModalRoute";
 
 
 const app = express();
@@ -22,11 +24,12 @@ app.use(cors({origin}));
 app.get('/test', (req: Request, res: Response) => {
     res.status(200).json({message:'Server is running 🍍☺', success: true});
 });
-app.get('/autocomplete/:search', autoCompleteRoute)
+app.get('/autocomplete/:search', autoCompleteRoute);
 app.get('/card/:card_id', cardRoute);
-app.get('/search/:searchQuery/:isFast', searchRoute)
-app.post('/logs/:provider', logRoute)
-
+app.get('/search/:searchQuery/:isFast', searchRoute);
+app.post('/logs/:provider', logRoute);
+app.get('/sitemap', siteMapRoute);
+app.get('/siteMapForModal', siteMapForModalRoute);
 app.use(errorHandler);
 
 httpServer.listen(port, () => {

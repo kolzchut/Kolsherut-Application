@@ -11,27 +11,21 @@ interface IProps {
 }
 
 export default createUseStyles({
-    root: ({isMobile}: IProps) => {
-        const style = {
+    root: {
             position: 'relative',
             display: 'flex',
             gap: 10,
             flexDirection: 'column',
-            height: 'fit-content',
+            height: '100%',
             width: '100%',
             boxSizing: 'border-box',
             padding: '20px 40px',
             borderRadius: 8,
             boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
             direction: 'rtl',
-            background: primaryBackgroundColorOne
-        };
-        if (isMobile) {
-            style.width = '100%';
-            style.height = "100%";
-            style.boxSizing = 'border-box';
-        }
-        return style
+            background: primaryBackgroundColorOne,
+            overflowY: 'auto',
+            scrollbarWidth: 'none'
     },
     closeIcon: {
         background: "transparent",
