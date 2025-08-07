@@ -13,8 +13,11 @@ export default createUseStyles({
             display: 'flex',
             gap: 10,
             flexDirection: 'column',
-            height: 'unset',
-            width: 'unset',
+            height: 'fit-content',
+            maxHeight: '100%',
+            overflowY:'auto',
+            scrollbarWidth: 'none',
+            width: '100%',
             boxSizing: 'border-box',
             padding: '20px 40px',
             borderRadius: 8,
@@ -23,6 +26,7 @@ export default createUseStyles({
             background: primaryBackgroundColorOne,
         }
         if (isMobile) {
+            style.borderRadius = 0;
             style.width = '100%';
             style.height = "100%";
             style.boxSizing = 'border-box';

@@ -1,5 +1,10 @@
 import {createUseStyles} from 'react-jss';
-import {secondaryTextColorOne, primaryTextColorOne, secondaryBackgroundColorTwo} from "../../../../../services/theme";
+import {
+    secondaryTextColorOne,
+    primaryTextColorOne,
+    secondaryBackgroundColorTwo,
+    primaryBackgroundColorOne
+} from "../../../../../services/theme";
 
 interface IProps {
     isExtendedBox: boolean;
@@ -7,18 +12,20 @@ interface IProps {
 }
 
 export default createUseStyles({
-    root: () => {
+    root: ({isExtendedBox}: IProps) => {
         const halfTransparentBrightBlue = `${primaryTextColorOne}40`;
         return ({
             width: '100%',
             display: 'flex',
+            maxHeight: isExtendedBox ? '700px' : '300px',
             flexDirection: 'column',
             position: 'relative',
             padding: '10px',
             boxSizing: 'border-box',
-            backgroundColor: secondaryBackgroundColorTwo,
+            backgroundColor: isExtendedBox ? primaryBackgroundColorOne : secondaryBackgroundColorTwo,
             borderRadius: 10,
-            border: `1px solid ${halfTransparentBrightBlue}`
+            border: `1px solid ${halfTransparentBrightBlue}`,
+            transition: 'background-color 0.3s ease-in-out, max-height 0.4s ease-in-out'
         })
     },
     arrow: ({isExtendedBox}: IProps) => ({
@@ -59,7 +66,7 @@ export default createUseStyles({
     }),
     paragraph: ({ accessibilityActive }: IProps) => ({
         fontWeight: 300,
-        lineHeight: 1.3,
+        lineHeight: 1.6,
         fontSize: accessibilityActive ? 20 : 16,
         margin:0,
         color: secondaryTextColorOne

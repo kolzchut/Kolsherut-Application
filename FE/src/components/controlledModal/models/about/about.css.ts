@@ -6,13 +6,16 @@ import {
 } from "../../../../services/theme";
 
 export default createUseStyles({
-    root: ({isMobile}: { isMobile: boolean, accessibilityActive:boolean }) => {
+    root: ({isMobile}: { isMobile: boolean, accessibilityActive: boolean }) => {
         const style = {
             position: 'relative',
             display: 'flex',
             gap: 10,
             flexDirection: 'column',
             height: 'fit-content',
+            maxHeight: '100%',
+            overflowY:'auto',
+            scrollbarWidth: 'none',
             width: 'fit-content',
             boxSizing: 'border-box',
             padding: '20px 40px',
@@ -22,9 +25,10 @@ export default createUseStyles({
             background: primaryBackgroundColorOne,
         }
         if (isMobile) {
+            style.borderRadius = 0;
             style.width = '100%';
-            style.height="100%";
-            style.boxSizing='border-box';
+            style.height = "100%";
+            style.boxSizing = 'border-box';
         }
         return style
     },
@@ -50,33 +54,38 @@ export default createUseStyles({
     header: {
         marginBottom: 20
     },
-    title: ({ accessibilityActive }: { accessibilityActive: boolean }) => ({
+    title: ({accessibilityActive}: { accessibilityActive: boolean }) => ({
         fontSize: accessibilityActive ? '32px' : '28px',
         fontWeight: 600,
         color: secondaryTextColorTwo
     }),
-    subtitle: ({ accessibilityActive }: { accessibilityActive: boolean }) => ({
+    subtitle: ({accessibilityActive}: { accessibilityActive: boolean }) => ({
         fontSize: accessibilityActive ? '26px' : '22px',
         fontWeight: 400,
         margin: '10px 0',
         color: secondaryTextColorTwo
     }),
-    boldStartText: ({ accessibilityActive }: { accessibilityActive: boolean }) => ({
+    boldStartText: ({accessibilityActive}: { accessibilityActive: boolean }) => ({
         fontWeight: 700,
         fontSize: accessibilityActive ? 22 : 18
     }),
-    inlineParagraph: ({ accessibilityActive }: { accessibilityActive: boolean }) => ({
+    inlineParagraph: ({accessibilityActive}: { accessibilityActive: boolean }) => ({
         display: 'inline',
         fontSize: accessibilityActive ? 22 : 18
     }),
-    paragraph: ({ accessibilityActive }: { accessibilityActive: boolean }) => ({
+    paragraph: ({accessibilityActive}: { accessibilityActive: boolean }) => ({
         display: 'inline-block',
         margin: '5px 0',
+        lineHeight: 1.6,
         alignItems: 'center',
         fontSize: accessibilityActive ? 22 : 18,
     }),
     blackRegularLink: {
         fontWeight: 500,
         color: secondaryTextColorTwo,
+    },
+    links: {
+        display: 'flex',
+        flexDirection: 'column',
     }
 });

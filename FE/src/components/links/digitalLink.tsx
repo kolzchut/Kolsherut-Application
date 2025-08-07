@@ -9,7 +9,7 @@ const digitalLogo = '/icons/icon-state-of-israel.svg'
 const DigitalLink = () => {
     const theme = useTheme<IDynamicThemeApp>();
     const classes = useStyles({accessibilityActive: theme.accessibilityActive});
-    return <a href={LINK} className={`${classes.root} ${classes.digitalLink}`}>
+    return <a target={'_blank'} href={LINK} className={`${classes.root} ${classes.digitalLink}`}>
         <img className={`${classes.icon}`} src={digitalLogo} alt={"digital logo"}/>
         {LINK_TEXT}
     </a>;

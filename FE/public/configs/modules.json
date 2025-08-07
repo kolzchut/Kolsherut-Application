@@ -27,6 +27,17 @@
             "href": "https://www.youtube.com/watch?v=nvEqq2dxb9Q"
           }
         ]
+      },
+      {
+        "paragraphs": [
+          "שאלות? כתבו אלינו לכתובת"
+        ],
+        "links": [
+          {
+            "key": "info@kolsherut.org.il",
+            "href": "mailto:info@kolsherut.org.il"
+          }
+        ]
       }
     ],
     "buttonTitle": "לאתר גיידסטאר",
@@ -55,9 +66,17 @@
             "key": "info@kolsherut.org.il",
             "href": "mailto:info@kolsherut.org.il"
           }
-        ],
-        "text": "כתבו אלינו",
-        "href": "mailto:info@kolsherut.org.il"
+        ]
+      },
+      {
+        "paragraphs": [
+          "אנא ציינו את שמכם, שם הארגון ואילו שירותים חברתיים אתם מספקים. וכמובן, פרטי ההתקשרות שלכם."
+        ]
+      },
+      {
+        "paragraphs": [
+          "תודה, צוות כל שירות."
+        ]
       }
     ],
     "buttonTitle": "כתבו אלינו",

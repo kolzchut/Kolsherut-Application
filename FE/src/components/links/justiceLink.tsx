@@ -11,7 +11,7 @@ const JusticeLink =() => {
     const theme = useTheme<IDynamicThemeApp>();
     const classes = useStyles({accessibilityActive: theme.accessibilityActive});
 
-    return <a href={LINK} className={`${classes.root} ${classes.justiceLink}`}>
+    return <a target={'_blank'} href={LINK} className={`${classes.root} ${classes.justiceLink}`}>
         <img className={`${classes.icon}`} src={justiceLogo} alt={"justice logo"}/>
         {LINK_TEXT}
     </a>;

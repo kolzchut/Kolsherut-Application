@@ -26,19 +26,22 @@ const About = () => {
                 {strings.paragraphOne}
             </p>
             <p className={classes.paragraph}>{strings.paragraphTwo}</p>
-            <p className={classes.paragraph}>{strings.paragraphThree}
-                <KZLink/>
-            </p>
-            <p className={classes.paragraph}> {strings.paragraphFour}
-                <JusticeLink/>
-            </p>
-            <p className={classes.paragraph}>{strings.paragraphFive}
-                <DigitalLink/>
-            </p>
+            <div className={classes.links}>
+                <p className={classes.paragraph}>{strings.paragraphThree}
+                    <KZLink/>
+                </p>
+                <p className={classes.paragraph}> {strings.paragraphFour}
+                    <JusticeLink/>
+                </p>
+                <p className={classes.paragraph}>{strings.paragraphFive}
+                    <DigitalLink/>
+                </p>
+            </div>
             <p className={classes.paragraph}>{strings.paragraphSix}</p>
             <p className={classes.paragraph}>{strings.paragraphSeven}</p>
             <p className={classes.inlineParagraph}>{strings.paragraphEight}
-                <a className={classes.blackRegularLink} href={window.config.redirects.policyLink}>{strings.paragraphEightLink}</a>
+                <a target={'_blank'} className={classes.blackRegularLink}
+                   href={window.config.redirects.policyLink}>{strings.paragraphEightLink}</a>
             </p>
         </div>
     </div>

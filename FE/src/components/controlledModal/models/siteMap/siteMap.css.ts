@@ -16,16 +16,27 @@ export default createUseStyles({
             display: 'flex',
             gap: 10,
             flexDirection: 'column',
-            height: '100%',
+            height: 'fit-content',
+            maxHeight: '100%',
+            overflowY:'auto',
+            scrollbarWidth: 'none',
+
             width: '100%',
             boxSizing: 'border-box',
             padding: '20px 40px',
             borderRadius: 8,
             boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
             direction: 'rtl',
-            background: primaryBackgroundColorOne,
-            overflowY: 'auto',
-            scrollbarWidth: 'none'
+            background: primaryBackgroundColorOne
+        };
+        if (isMobile) {
+            style.borderRadius = 0;
+            style.width = '100%';
+            style.height = "100%";
+            style.boxSizing = 'border-box';
+        }
+        return style
+
     },
     closeIcon: {
         background: "transparent",
