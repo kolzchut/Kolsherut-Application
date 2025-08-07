@@ -22,7 +22,7 @@ const SingleFilter = ({value, onClick, isFilterActive}: {
                         <label htmlFor={`checkbox-${value.name}`} className={classes.visuallyHidden}>
                             {value.name}
                         </label>
-                        {value.name}
+                        {' ' + value.name}
                     </span>
         {!isFilterActive && value.count != undefined && value.count != 0 &&
             <span className={classes.optionValue}>{value.count}</span>}

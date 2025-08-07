@@ -51,7 +51,7 @@ export default createUseStyles({
         boxSizing: 'border-box',
         border: `4px solid ${secondaryBackgroundColorOne}`,
         outline: `1px solid ${primaryTextColorTwo}`,
-        borderRadius: '50%',
+        borderRadius: '15%',
         cursor: 'pointer',
         transition: 'all 0.2s ease',
         '&:checked': {
