@@ -11,7 +11,8 @@ interface IProps {
 }
 
 export default createUseStyles({
-    root: {
+    root: ({isMobile})=> {
+        const style ={
             position: 'relative',
             display: 'flex',
             gap: 10,
@@ -28,7 +29,7 @@ export default createUseStyles({
             boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
             direction: 'rtl',
             background: primaryBackgroundColorOne
-        };
+        }
         if (isMobile) {
             style.borderRadius = 0;
             style.width = '100%';
@@ -36,7 +37,6 @@ export default createUseStyles({
             style.boxSizing = 'border-box';
         }
         return style
-
     },
     closeIcon: {
         background: "transparent",
