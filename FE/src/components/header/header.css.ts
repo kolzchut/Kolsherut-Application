@@ -30,16 +30,20 @@ export default createUseStyles((theme: IDynamicThemeApp) => ({
     },
     linksAndAcc: {
         display: 'flex',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     linksDiv: {
+        direction:"rtl",
         display: "flex",
         justifyContent: "space-around",
         gap: 12,
+        width: '100%',
     },
     linksAndButtonsDiv: {
         display: 'flex',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        flex:8,
+        maxWidth: 500,
     },
     link: {
         lineHeight: 4,
