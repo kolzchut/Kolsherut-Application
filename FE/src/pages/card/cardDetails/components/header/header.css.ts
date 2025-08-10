@@ -3,7 +3,6 @@ import {
     tertiaryTextColorOne,
     tertiaryBackgroundColorTwo,
     primaryTextColorThree,
-    secondaryTextColorOne
 } from "../../../../../services/theme";
 
 interface IProps {
@@ -15,12 +14,14 @@ export default createUseStyles({
         display: "flex",
         flexDirection: "row",
         boxSizing: 'border-box',
+        justifyContent:'space-between',
         padding: 20,
         width: '100%',
         backgroundColor: tertiaryBackgroundColorTwo,
         boxShadow: "0 4px 8px #0000001a",
         fontSize: accessibilityActive ? 20 : 16,
         color: tertiaryTextColorOne,
+        alignItems: "center",
 
     }),
     backButtonDiv: {
@@ -28,10 +29,12 @@ export default createUseStyles({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        padding:10,
     },
     backButton: {
         background: 'transparent',
-        border: `1px solid ${secondaryTextColorOne}`,
+        border: `none`,
+        outline:0,
         height: 30,
         width: 30,
         borderRadius: 15,
@@ -60,5 +63,8 @@ export default createUseStyles({
     nationWideText: {
         color: primaryTextColorThree,
         fontWeight: 600
+    },
+    headerIcon:{
+        height:40,
     }
 });

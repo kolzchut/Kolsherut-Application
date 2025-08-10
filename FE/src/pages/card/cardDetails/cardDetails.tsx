@@ -19,7 +19,6 @@ const CardDetails = ({card}: { card: ICard }) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [isScrollUp, setIsScrollUp] = useState(false);
     const previousScrollTop = useRef(0);
-
     useEffect(() => {
         const div = scrollRef.current;
         if (!div) return;
@@ -54,9 +53,10 @@ const CardDetails = ({card}: { card: ICard }) => {
     const phoneNumbers: string[] = [card.branch_phone_numbers, card.organization_phone_numbers, card.service_phone_numbers].find(arr => arr.length > 0) || [];
     const address = {text: card.branch_address, geom: card.branch_geometry};
     return <section ref={scrollRef} className={classes.root}>
-        <Header organizationName={card.organization_name} isNational={card.national_service}
+        <Header branchOperatingUnit={card.branch_operating_unit || card.branch_name ||  card.organization_name} isNational={card.national_service}
                 branchLocationAccurate={card.branch_location_accurate}
-                branchAddress={card.branch_address}/>
+                organizationName={card.organization_name}
+                addressParts={card.address_parts || card.branch_address}/>
         <div className={classes.content}>
             <h1 className={classes.serviceNameText}>{card.service_name}</h1>
             {card.branch_name && <h2 className={classes.branchNameText}>{card.branch_name}</h2>}
