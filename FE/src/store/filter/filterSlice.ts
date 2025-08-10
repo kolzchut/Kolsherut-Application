@@ -11,6 +11,8 @@ export const filterSlice = createSlice({
             const newLocation = !action.payload.lf ? null : parseLocation(action.payload.lf);
             const newSituations = action.payload.sf ? JSON.parse(action.payload.sf) : null;
             const newResponses = action.payload.rf ? JSON.parse(action.payload.rf) : null;
+            state.backendFilters.response = action.payload.brf || null;
+            state.backendFilters.situation = action.payload.bsf || null;
             state.filters.location = newLocation || state.filters.location;
             state.filters.situations = newSituations || state.filters.situations;
             state.filters.responses = newResponses || state.filters.responses;
@@ -27,6 +29,11 @@ export const filterSlice = createSlice({
             state.filters.location = location || israelLocation;
             state.filters.situations = situations || [];
             state.filters.responses = responses || [];
+        },
+        setBackendFilters(state: FilterStore, action) {
+            const {response, situation} = action.payload;
+            state.backendFilters.response = response || '';
+            state.backendFilters.situation = situation || '';
         },
         setSearchLocation(state: FilterStore, action) {
             state.searchLocation = action.payload;
@@ -86,6 +93,7 @@ export const {
     setLocationFilter,
     setSearchLocation,
     setFilterRouteParams,
+    setBackendFilters
 } = filterSlice.actions;
 
 export default filterSlice.reducer;

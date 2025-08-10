@@ -25,7 +25,7 @@ import {
 } from "../../store/shared/shared.selector";
 import resultsAnalytics from "../../services/gtag/resultsEvents";
 import FiltersForMobile from "./filters/filtersForMobile";
-import {getLocationFilter} from "../../store/filter/filter.selector";
+import {getBackendFilters, getLocationFilter} from "../../store/filter/filter.selector";
 import MetaTags from "../../services/metaTags";
 import getResultsMetaTags from "./getResultsMetaTags";
 import {useOnce} from "../../hooks/useOnce";
@@ -37,6 +37,7 @@ import {isMobileScreen} from "../../services/media.ts";
 import BranchServicesForMobile from "./branchServicesForMobile/branchServicesForMobile.tsx";
 import BranchList from "./branchList/branchList.tsx";
 import { setPopupOffsetForBigMap, setPopupOffsetForSmallMap} from "../../services/map/events/popup.ts";
+import {ILabel} from "../../types/homepageType.ts";
 
 const Results = () => {
     const isResultsLoading = useSelector(isLoading);
@@ -73,7 +74,7 @@ const Results = () => {
     const conditionToShowResults = filteredResults.length > 0;
     const conditionToShowLoading = isResultsLoading && !conditionToShowResults;
     const conditionToShowNoResults = !isResultsLoading && filteredResults.length === 0;
-
+    const backendFilters = useSelector(getBackendFilters)
 
     useEffect(() => {
         newResults();
@@ -86,7 +87,10 @@ const Results = () => {
     useEffect(() => {
         allowChangeStoreLocation(true)
         if (!filteredResults || filteredResults.length === 0) {
-            settingToResults({value: {query: searchQuery}, removeOldFilters: false})
+            const value: ILabel = {query:searchQuery};
+            if(backendFilters.situation) value.situation_id = backendFilters.situation;
+            if(backendFilters.response) value.response_id = backendFilters.response;
+            settingToResults({value, removeOldFilters: false})
         }
         return () => {
             allowChangeStoreLocation(false);

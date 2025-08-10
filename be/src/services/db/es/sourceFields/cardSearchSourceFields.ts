@@ -1,6 +1,8 @@
 export const cardSearchSourceFields = [
     "service_id",
     "service_name",
+    "score",
+    "_score",
     "service_description",
     "organization_id",
     "organization_name",
@@ -18,6 +20,6 @@ export const cardSearchSourceFields = [
     "response_category",
     "point_id",
     "collapse_key",
-    "situations"
+    "situations",
 ];
 

@@ -3,7 +3,7 @@ import {Request, Response} from "express";
 import searchCards from "../services/db/es/searchCards";
 
 export default asyncHandler(async (req: Request, res: Response) => {
-    const {searchQuery, isFast} = req.params;
+    const {searchQuery, isFast, responseId, situationId} = req.body;
     if (!searchQuery)
         return res.status(400).json({
             success: false,
@@ -11,6 +11,6 @@ export default asyncHandler(async (req: Request, res: Response) => {
         });
     const fixedSearchQuery = searchQuery.replace('_', " ")
 
-    const results = await searchCards({fixedSearchQuery, isFast: isFast === 'fast'})
+    const results = await searchCards({fixedSearchQuery, isFast, responseId, situationId})
     res.status(200).json({success: true, data: results});
 });

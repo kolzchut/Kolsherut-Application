@@ -1,13 +1,14 @@
 import {IBranch, IOrganization, IService} from "../types/serviceType";
 
-const createNewService = (sourceService: any): IService => {
+const createNewService = (sourceService: any, score?: number): IService => {
     return {
         id: sourceService.service_id,
         service_name: sourceService.service_name,
         service_description: sourceService.service_description,
         responses: sourceService.responses || [],
         situations: sourceService.situations || [],
-        organizations: []
+        organizations: [],
+        score: score
     };
 };
 
@@ -68,24 +69,26 @@ const transformCardIdToNewFormat = (elasticsearchResponse: any) => {
 
     elasticsearchResponse.hits.hits.forEach((hit: {
         _source: any,
-        inner_hits: { collapse_hits: { hits: { hits: Array<{ _source: any }> } } }
+        _score: number,
+        inner_hits: { collapse_hits: { hits: { hits: Array<{ _source: any, _score: number }> } } }
     }) => {
         const sourceService = hit._source;
-        const sourceBranches = hit.inner_hits.collapse_hits.hits.hits.map(hit => hit._source);
+        const sourceBranches = hit.inner_hits.collapse_hits.hits.hits.map(innerHit => {
+            return innerHit._source;
+        });
 
-        if (!servicesMap.has(sourceService.service_id)) {
-            const newService = createNewService(sourceService);
-            servicesMap.set(sourceService.service_id, newService);
+        if (!servicesMap.has(sourceService.service_name)) {
+            const newService = createNewService(sourceService, hit._score);
+            servicesMap.set(sourceService.service_name, newService);
         }
 
-        const service = servicesMap.get(sourceService.service_id);
+        const service = servicesMap.get(sourceService.service_name);
         processBranchesForService(service, sourceBranches);
     });
 
     const services = Array.from(servicesMap.values());
+
     return sortOrganizationsByBranchCount(services);
 };
 
 export default transformCardIdToNewFormat;
-
-

@@ -26,8 +26,8 @@ app.get('/test', (req: Request, res: Response) => {
 });
 app.get('/autocomplete/:search', autoCompleteRoute);
 app.get('/card/:card_id', cardRoute);
-app.get('/search/:searchQuery/:isFast', searchRoute);
-app.post('/logs/:provider', logRoute);
+app.post('/search', searchRoute)
+app.post('/logs/:provider', logRoute)
 app.get('/sitemap', siteMapRoute);
 app.get('/siteMapForModal', siteMapForModalRoute);
 app.use(errorHandler);

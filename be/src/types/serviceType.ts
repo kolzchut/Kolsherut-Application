@@ -33,5 +33,5 @@ export interface IService {
     responses: IResponse[];
     situations: ISituation[];
     organizations: IOrganization[];
+    score?: number;
 }
-

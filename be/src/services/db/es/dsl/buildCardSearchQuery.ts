@@ -13,11 +13,11 @@ interface BuildCardSearchQueryParams {
 
 export default function buildCardSearchQuery({
     mustConditions,
-    size = 300,
+    size = 1500,
     offset = 0,
     innerHitsSize = 1000,
     collapseField = "service_id",
-    sortField = "national_service",
+    sortField = "score",
     sortOrder = "desc",
     sourceFields
 }: BuildCardSearchQueryParams) {
@@ -31,6 +31,13 @@ export default function buildCardSearchQuery({
                     must: mustConditions
                 }
             },
+            sort: [
+                {
+                    [sortField]: {
+                        order: sortOrder
+                    }
+                }
+            ],
             collapse: {
                 field: collapseField,
                 inner_hits: {

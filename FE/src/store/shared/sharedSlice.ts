@@ -3,10 +3,8 @@ import {store} from "../store";
 import {setLoading, settingURLParamsToResults} from "../general/generalSlice";
 import {setResults} from "../data/dataSlice";
 import fetchResults from "../../services/searchUtilities/fetchResults";
-import {resetFilters, setFilters} from "../filter/filterSlice";
+import {resetFilters, setBackendFilters, setFilters} from "../filter/filterSlice";
 import {IService} from "../../types/serviceType";
-import setupNewFilters from "./utilities/setupNewFilters";
-import {setLockUpdateURL} from "../../services/url/route";
 
 
 const updateFirstResults = async ({startResults}: {
@@ -14,8 +12,6 @@ const updateFirstResults = async ({startResults}: {
 }) => {
     const results = await startResults;
     store.dispatch(setResults(results));
-    store.dispatch(setLoading(false));
-
 };
 const updateAllResults = async ({startResults, restResults}: {
     startResults: Promise<IService[]>,
@@ -28,14 +24,15 @@ const updateAllResults = async ({startResults, restResults}: {
     return combinedResults;
 };
 
-const settingFilters = ({removeOldFilters, value, restResults}: {removeOldFilters:boolean,value:ILabel, restResults:IService[]})=>{
-    const newFilters = setupNewFilters({value: value, results: restResults});
-    if (removeOldFilters) return store.dispatch(resetFilters(newFilters));
-    store.dispatch(setFilters(newFilters));
+const settingFilters = ({removeOldFilters, value}: {removeOldFilters:boolean,value:ILabel})=>{
+    store.dispatch(setBackendFilters({response: value.response_id, situation: value.situation_id}));
+    const filters: {location?: {key: string, bounds: [number,number,number,number]}} = {}
+    if(value.cityName && value.bounds) filters.location = {key: value.cityName, bounds: value.bounds};
+    if (removeOldFilters) return store.dispatch(resetFilters(filters));
+    store.dispatch(setFilters(filters));
 }
 
 export const settingToResults = async ({value, removeOldFilters}: { value: ILabel, removeOldFilters: boolean }) => {
-    setLockUpdateURL(true);
     store.dispatch(setResults([]))
     store.dispatch(setLoading(true));
     store.dispatch(settingURLParamsToResults(value.query))
@@ -47,10 +44,7 @@ export const settingToResults = async ({value, removeOldFilters}: { value: ILabe
     }
     const startResults = fetchResults({...fetchBaseData, isFast: true,});
     const restResults = fetchResults({...fetchBaseData, isFast: false,});
+    settingFilters({removeOldFilters, value});
     updateFirstResults({startResults});
-    updateAllResults({startResults, restResults}).then((restResults: IService[]) => {
-        settingFilters({removeOldFilters, value, restResults});
-        setLockUpdateURL(false);
-    });
-
+    updateAllResults({startResults, restResults})
 }
