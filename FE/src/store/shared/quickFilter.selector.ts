@@ -1,17 +1,21 @@
 import {createSelector} from "@reduxjs/toolkit";
 import {getAllBranchesInBounds, getFilteredBranchesInBounds} from "./locationFilters.selector";
 import IFilterOptions from "../../types/filterOptions";
-import {getFilters} from "../filter/filter.selector";
+import {getFilters, getBackendResponseFilter, getBackendSituationFilter} from "../filter/filter.selector";
 import {getAllSituationsToFilter} from "./shared.selector";
 import {runOverResponsesAndGetOptionsNoResponseFilterApplied} from "./utilities/runOverResponsesAndGetOptionsNoResponseFilterApplied";
 import {sortAndLimitOptions} from "./utilities/sortAndLimitOptions";
 import {countAdditionalBranches} from "./utilities/countAdditionalBranches";
 import {deduplicateById} from "./utilities/deduplicateById";
+import {addSelectedResponseToResult} from "./utilities/addSelectedResponseToResult";
+import {mergeFilteredOptionsToResult} from "./utilities/mergeFilteredOptionsToResult";
+import {addMissingSelectedResponses} from "./utilities/addMissingSelectedResponses";
 
-export const getTopResponses = createSelector([getAllBranchesInBounds], (branches) => {
+export const getTopResponses = createSelector([getAllBranchesInBounds, getBackendResponseFilter], (branches, backendResponseFilter) => {
     if (!branches || branches.length === 0) return [];
     const responsesArray = branches.flatMap(branch => branch.responses);
-    const options = runOverResponsesAndGetOptionsNoResponseFilterApplied(responsesArray);
+    const filteredResponses = responsesArray.filter(response => response.id !== backendResponseFilter);
+    const options = runOverResponsesAndGetOptionsNoResponseFilterApplied(filteredResponses);
     return sortAndLimitOptions(options);
 });
 
@@ -57,26 +61,21 @@ export const getQuickFilterResponseOptions = createSelector(
     [getFilters, getTopResponses, getQuickFilterList, getAllBranchesInBounds],
     (filters, topResponses, filterOptionsIfFilterApplied, allBranches) => {
         if (filters.responses.length > 0 || filters.situations.length > 0) {
-            const selectedResponsesOptions: IFilterOptions = {};
+            const result: IFilterOptions = {};
 
-            // Add selected responses to quick filters
-            filters.responses.forEach(selectedResponseId => {
-                const responsesArray = allBranches.flatMap(branch => branch.responses);
-                const selectedResponse = responsesArray.find(response => response.id === selectedResponseId);
-
-                if (selectedResponse) {
-                    selectedResponsesOptions[selectedResponseId] = {
-                        count: 0,
-                        name: selectedResponse.name,
-                    };
+            topResponses.forEach(([id]) => {
+                if (filterOptionsIfFilterApplied[id]) {
+                    result[id] = filterOptionsIfFilterApplied[id];
+                } else if (filters.responses.includes(id)) {
+                    addSelectedResponseToResult(result, id, allBranches);
                 }
             });
 
+            mergeFilteredOptionsToResult(result, filterOptionsIfFilterApplied);
 
-            return {
-                ...selectedResponsesOptions,
-                ...filterOptionsIfFilterApplied
-            };
+            addMissingSelectedResponses(result, filters.responses, allBranches);
+
+            return result;
         }
 
         const filteredOptions: IFilterOptions = {}
@@ -87,9 +86,11 @@ export const getQuickFilterResponseOptions = createSelector(
     }
 );
 
-export const getQuickFilterSituationOptions = createSelector([getAllSituationsToFilter], (situationsToFilter) => {
+export const getQuickFilterSituationOptions = createSelector([getAllSituationsToFilter, getBackendSituationFilter], (situationsToFilter, backendSituationFilter) => {
     const allSelectedSituations = situationsToFilter.flatMap(([, situations]) =>
         situations.filter(situation => situation.selected)
     );
-    return deduplicateById(allSelectedSituations);
+    const deduplicated = deduplicateById(allSelectedSituations);
+
+    return deduplicated.filter(situation => situation.id !== backendSituationFilter);
 });
