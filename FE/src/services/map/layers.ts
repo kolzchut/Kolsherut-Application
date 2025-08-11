@@ -5,10 +5,9 @@ import {GetLayersParams, GetLayersReturn} from "../../types/layers";
 import {createColorBasedClusterSources} from "./cluster/cluster.ts";
 import {groupFeaturesByColor} from "./cluster/groupFeaturesByColor.ts";
 import {setupClusterLayer, updateClusterLayerWithDebounce} from "./cluster/clusterLayer.ts";
-import polygonStyle from "./style/polygonStyle.ts";
 
 
-const getLayers = ({osm, poiSource,israelBorderSource, clusterSources}: GetLayersParams): GetLayersReturn => {
+const getLayers = ({osm, poiSource, clusterSources}: GetLayersParams): GetLayersReturn => {
     const osmLayer = new TileLayer({
         source: osm,
         zIndex: 0,
@@ -21,27 +20,21 @@ const getLayers = ({osm, poiSource,israelBorderSource, clusterSources}: GetLayer
         visible: false,
         zIndex: 1
     });
-    // const israelBorderLayer = new VectorLayer({
-    //     source:israelBorderSource,
-    //     zIndex:2,
-    //     style: polygonStyle
-    // });
-    // const layers: GetLayersReturn = [osmLayer, poiLayer, israelBorderLayer];
     const layers: GetLayersReturn = [osmLayer, poiLayer];
-    setupClusterLayer({layers,clusterSources});
+    setupClusterLayer({clusterSources});
     return layers;
 }
 
 
 const initLayers = (map: MapSingleton) => {
     if (!map.sources) return;
-    const {osm, poiSource, israelBorderSource} = map.sources;
+    const {osm, poiSource} = map.sources;
 
     const features = poiSource.getFeatures();
     const featuresByColor = groupFeaturesByColor(features);
     const clusterSources = createColorBasedClusterSources(featuresByColor);
 
-    map.layers = getLayers({osm, poiSource,israelBorderSource, clusterSources});
+    map.layers = getLayers({osm, poiSource, clusterSources});
 
     poiSource.on('addfeature', () => updateClusterLayerWithDebounce());
     poiSource.on('removefeature', () => updateClusterLayerWithDebounce());
