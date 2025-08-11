@@ -6,8 +6,8 @@ import { cardSearchSourceFields } from "./sourceFields/cardSearchSourceFields";
 
 export default async ({fixedSearchQuery, isFast, responseId, situationId}: { fixedSearchQuery: string, isFast: boolean, responseId: string, situationId:string }) => {
     const mustConditions = [];
-
-    if (fixedSearchQuery && responseId === "" && situationId === "") {
+    const freeSearch = !!(fixedSearchQuery && responseId === "" && situationId === "")
+    if (freeSearch) {
         mustConditions.push({
             multi_match: {
                 query: fixedSearchQuery,
@@ -40,12 +40,13 @@ export default async ({fixedSearchQuery, isFast, responseId, situationId}: { fix
         sourceFields: cardSearchSourceFields,
         size: propsForQuery.size,
         offset: propsForQuery.offset,
-        innerHitsSize: propsForQuery.innerHitsSize
+        innerHitsSize: propsForQuery.innerHitsSize,
+        manualSort: !freeSearch
     });
 
     try {
         const response = await executeESQuery(query);
-        return transformCardIdToNewFormat(response);
+        return transformCardIdToNewFormat(response, freeSearch);
     } catch (error) {
         console.error('Error executing query:', error);
         throw error;

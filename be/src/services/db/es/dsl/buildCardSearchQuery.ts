@@ -9,6 +9,8 @@ interface BuildCardSearchQueryParams {
     sortField?: string;
     sortOrder?: 'asc' | 'desc';
     sourceFields: string[];
+    sort?: boolean;
+    manualSort?: boolean;
 }
 
 export default function buildCardSearchQuery({
@@ -19,41 +21,47 @@ export default function buildCardSearchQuery({
     collapseField = "service_id",
     sortField = "score",
     sortOrder = "desc",
-    sourceFields
+    sourceFields,
+    manualSort = false
 }: BuildCardSearchQueryParams) {
+    const queryBody: any = {
+        size,
+        from: offset,
+        query: {
+            bool: {
+                must: mustConditions
+            }
+        },
+        collapse: {
+            field: collapseField,
+            inner_hits: {
+                name: "collapse_hits",
+                size: innerHitsSize,
+                _source: sourceFields
+            }
+        },
+        _source: sourceFields
+    };
+
+    if (manualSort) {
+        queryBody.sort = [
+            {
+                [sortField]: {
+                    order: sortOrder
+                }
+            }
+        ];
+        queryBody.collapse.inner_hits.sort = [
+            {
+                [sortField]: {
+                    order: sortOrder
+                }
+            }
+        ];
+    }
+
     return {
         index: vars.serverSetups.elastic.indices.card,
-        body: {
-            size,
-            from: offset,
-            query: {
-                bool: {
-                    must: mustConditions
-                }
-            },
-            sort: [
-                {
-                    [sortField]: {
-                        order: sortOrder
-                    }
-                }
-            ],
-            collapse: {
-                field: collapseField,
-                inner_hits: {
-                    name: "collapse_hits",
-                    size: innerHitsSize,
-                    sort: [
-                        {
-                            [sortField]: {
-                                order: sortOrder
-                            }
-                        }
-                    ],
-                    _source: sourceFields
-                }
-            },
-            _source: sourceFields
-        }
+        body: queryBody
     };
 }

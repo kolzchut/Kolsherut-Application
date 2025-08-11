@@ -1,6 +1,7 @@
 import {IBranch, IOrganization, IService} from "../types/serviceType";
+import {calculateFinalElasticsearchScore} from "./sortSearchCards";
 
-const createNewService = (sourceService: any, score?: number): IService => {
+const createNewService = (sourceService: any): IService => {
     return {
         id: sourceService.service_id,
         service_name: sourceService.service_name,
@@ -8,7 +9,10 @@ const createNewService = (sourceService: any, score?: number): IService => {
         responses: sourceService.responses || [],
         situations: sourceService.situations || [],
         organizations: [],
-        score: score
+        score: sourceService.score || 1,
+        organization_phone_numbers: sourceService.organization_phone_numbers || [],
+        service_phone_numbers: sourceService.service_phone_numbers || [],
+        organization_kind: sourceService.organization_kind || ''
     };
 };
 
@@ -64,7 +68,35 @@ const sortOrganizationsByBranchCount = (services: IService[]): IService[] => {
     });
 };
 
-const transformCardIdToNewFormat = (elasticsearchResponse: any) => {
+const sortServicesByScore = (services: IService[]): IService[] => {
+    return services.sort((a, b) => {
+        const scoreA = calculateFinalElasticsearchScore({
+            service_id: a.id,
+            service_description: a.service_description,
+            service_boost: a.score,
+            organization_branch_count: a.organizations.reduce((total, org) => total + org.branches.length, 0),
+            national_service: a.organizations.some(org => org.branches.some(branch => branch.isNational)),
+            service_phone_numbers: a.service_phone_numbers,
+            organization_phone_numbers: a.organization_phone_numbers,
+            organization_kind: a.organization_kind
+        });
+
+        const scoreB = calculateFinalElasticsearchScore({
+            service_id: b.id,
+            service_description: b.service_description,
+            service_boost: b.score,
+            organization_branch_count: b.organizations.reduce((total, org) => total + org.branches.length, 0),
+            national_service: b.organizations.some(org => org.branches.some(branch => branch.isNational)),
+            service_phone_numbers: b.service_phone_numbers,
+            organization_phone_numbers: b.organization_phone_numbers,
+            organization_kind: b.organization_kind
+        });
+
+        return scoreB - scoreA;
+    });
+};
+
+const transformCardIdToNewFormat = (elasticsearchResponse: any, sortByScore: boolean) => {
     const servicesMap = new Map();
 
     elasticsearchResponse.hits.hits.forEach((hit: {
@@ -78,7 +110,7 @@ const transformCardIdToNewFormat = (elasticsearchResponse: any) => {
         });
 
         if (!servicesMap.has(sourceService.service_name)) {
-            const newService = createNewService(sourceService, hit._score);
+            const newService = createNewService(sourceService);
             servicesMap.set(sourceService.service_name, newService);
         }
 
@@ -87,8 +119,9 @@ const transformCardIdToNewFormat = (elasticsearchResponse: any) => {
     });
 
     const services = Array.from(servicesMap.values());
-
-    return sortOrganizationsByBranchCount(services);
+    if (!sortByScore) return services;
+    const sortedByScore = sortServicesByScore(services);
+    return sortOrganizationsByBranchCount(sortedByScore);
 };
 
 export default transformCardIdToNewFormat;

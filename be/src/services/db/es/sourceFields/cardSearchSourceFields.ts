@@ -21,5 +21,8 @@ export const cardSearchSourceFields = [
     "point_id",
     "collapse_key",
     "situations",
+    "service_phone_numbers",
+    "organization_phone_numbers",
+    "organization_kind",
 ];
 
