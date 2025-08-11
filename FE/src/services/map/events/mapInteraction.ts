@@ -1,15 +1,15 @@
 import {ObjectEvent} from "ol/Object";
 import {MapBrowserEvent} from "ol";
 import {MapSingleton} from "../map";
-import onMapClickGetFeature from "./onMapClickGetFeature";
+import onMapEventProvideFeatureToCallBack from "./onMapEventProvideFeatureToCallBack.ts";
 import {IMapInteractions, ViewInteractionEventTypes} from "../../../types/InteractionsTypes";
-import {handler as hoverOnPOIHandler} from "./hoverOnPOI";
 import mapAnalytics from "../../gtag/mapEvents";
 import ILocation from "../../../types/locationType.ts";
 import {store} from "../../../store/store.ts";
 import {setLocationFilter} from "../../../store/filter/filterSlice.ts";
 import {transformExtent} from 'ol/proj';
 import onMapClickHandler from "./onMapClickHandler.ts";
+import {debounced} from "../../debounced.ts";
 
 const globals = {
     draggedBefore: false,
@@ -30,7 +30,7 @@ const startDragEventIfNotHappenedBefore = (map: MapSingleton) => {
     mapAnalytics.mapDragEvent(map.view.getZoom() || -1)
 }
 const handleNewBounds = (map: MapSingleton) => {
-    if(!globals.allowChangeStoreLocation) return;
+    if (!globals.allowChangeStoreLocation) return;
     debounce({
         cb: () => {
             setNewLocationToStoreByBoundingBox(map);
@@ -56,16 +56,21 @@ const setNewLocationToStoreByBoundingBox = (map: MapSingleton) => {
     store.dispatch(setLocationFilter(newLocation));
 };
 
+const debouncedOnMapClickHandler = debounced(onMapClickHandler, 500);
+
+
 export const mapInteractions: IMapInteractions = [
     {
         event: 'click',
         handler: (map: MapSingleton) => (event: MapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>) => {
-            onMapClickGetFeature(event, map.ol, onMapClickHandler);
+            onMapEventProvideFeatureToCallBack(event, map.ol, onMapClickHandler, true);
         }
     },
     {
         event: "pointermove",
-        handler: hoverOnPOIHandler
+        handler: (map: MapSingleton) => (event: MapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>) => {
+            onMapEventProvideFeatureToCallBack(event, map.ol, debouncedOnMapClickHandler, false);
+        }
     },
     {
         event: "pointerdrag",

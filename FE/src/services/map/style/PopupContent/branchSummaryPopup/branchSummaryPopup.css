@@ -1,0 +1,47 @@
+.summary-popup-container {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    color: #000000;
+    max-width: 300px;
+    width: 280px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    height: fit-content;
+    overflow: hidden;
+}
+
+.summary-popup-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.summary-branches-count-header {
+    background-color: white;
+    padding: 6px 7px 4px 7px;
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.summary-branches-count-header span {
+    font-weight: 300;
+    font-size: 13px;
+    color: #333333;
+}
+
+.summary-popup-footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    direction: rtl;
+    padding: 10px 15px;
+    background: #FAF1E0;
+}
+
+.summary-popup-footer strong {
+    font-size: 13px;
+    font-weight: 600;
+}

@@ -64,7 +64,6 @@ export class MapSingleton {
             element: popupContainer,
             positioning: "bottom-center",
             stopEvent: true,
-            autoPan:true,
             insertFirst:false,
         });
         this.ol.addOverlay(this.popupOverlay);

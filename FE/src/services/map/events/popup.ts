@@ -3,10 +3,12 @@ import {Geometry, Point} from "ol/geom";
 import map from "../map";
 import cardPopUp from "../style/PopupContent/cardPopUp/cardPopup.ts";
 import branchServicesPopup from "../style/PopupContent/branchServicesPopup/branchServicesPopup.ts";
+import branchSummaryPopup from "../style/PopupContent/branchSummaryPopup/branchSummaryPopup.ts";
 
 const globals = {
     popUpLocked: false,
 }
+export const isPopupLocked = () => globals.popUpLocked;
 
 const createPopupOverlay = (
     popupOverlay: {
@@ -53,12 +55,13 @@ export const createPopupByCardIdForCard = ({cardId}: { cardId: string }) => {
     createPopupOverlay(popupOverlay, feature, contentElement, cardPopUp);
 }
 
-export const createPopupByFeatureForBranchServices = (feature: Feature<Geometry>) => {
-    if(globals.popUpLocked) return;
+export const createPopupByFeatureForBranchServices = (feature: Feature<Geometry>, isOnClickPopup: boolean) => {
+    if (globals.popUpLocked) return;
     const popupOverlay = map.getPopupOverlay();
     if (!popupOverlay) return;
     const contentElement = document.createElement("div") as HTMLDivElement;
-    createPopupOverlay(popupOverlay, feature, contentElement, branchServicesPopup);
+    if (isOnClickPopup || feature.getProperties().features.length <2) createPopupOverlay(popupOverlay, feature, contentElement, branchServicesPopup);
+    else createPopupOverlay(popupOverlay, feature, contentElement, branchSummaryPopup);
 }
 
 export const deletePopup = () => {
@@ -73,7 +76,7 @@ export const lockPopup = () => {
 export const unlockPopup = () => {
     globals.popUpLocked = false;
 };
-    export const setPopupOffsetForBigMap = () => {
+export const setPopupOffsetForBigMap = () => {
     const popupOverlay = map.getPopupOverlay();
     if (!popupOverlay) return;
     popupOverlay.setOffset([-475, 0]);
