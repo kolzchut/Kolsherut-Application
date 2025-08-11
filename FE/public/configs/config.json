@@ -89,5 +89,11 @@
         31.5
       ]
     }
+  ],
+  "searchQueryForSeparators": [
+    "עבור"
+  ],
+  "searchQueryBySeparators": [
+    "של"
   ]
 }

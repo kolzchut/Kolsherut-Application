@@ -17,6 +17,7 @@ const secondaryTextColorTwo = '#333231';
 const tertiaryTextColorOne = '#555452';
 const tertiaryTextColorTwo = '#3A343B';
 const tertiaryTextColorThree = '#333231';
+const tertiaryTextColorFour = '#878787';
 
 // Borders
 const primaryBorderColorOne = '#878787';
@@ -32,6 +33,7 @@ export {
     primaryTextColorOne,
     secondaryBackgroundColorTwo,
     tertiaryTextColorThree,
+    tertiaryTextColorFour,
     primaryBorderColorTwo,
     secondaryTextColorOne,
     secondaryTextColorTwo,

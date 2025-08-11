@@ -121,5 +121,9 @@
     "subtitle": "קטלוג מענים ומצבים",
     "responses": "מענים",
     "situations": "מצבים"
+  },
+  "searchQueryTextDefaults": {
+    "serviceSentence": "כל זכות",
+    "forSentence": "עבור כולם"
   }
 }

@@ -34,7 +34,7 @@ export default createUseStyles((theme: IDynamicThemeApp) => ({
         border: 0,
     },
     input: {
-        height: "100%",
+        height: 60,
         width: '100%',
         fontSize: theme?.accessibilityActive ? '26px' : '22px',
         boxSizing: 'border-box',
