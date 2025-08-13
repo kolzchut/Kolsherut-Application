@@ -32,9 +32,9 @@ export default createUseStyles({
         height: '25px',
         width: '25px',
         position: 'absolute',
-        top: 'calc(50% - 8px)',
+        top: 12,
         left: '10px',
-        transform: isExtendedBox ? 'rotate(0deg)' : 'rotate(180deg)',
+        transform: isExtendedBox ? 'rotate(180deg)' : 'rotate(0deg)',
         transition: 'transform 0.3s ease-in-out',
         '&:hover': {
             cursor: 'pointer',
