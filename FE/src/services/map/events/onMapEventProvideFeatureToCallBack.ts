@@ -2,7 +2,7 @@ import {Feature} from "ol";
 import {Geometry} from "ol/geom";
 import Map from "ol/Map";
 import MapBrowserEvent from "ol/MapBrowserEvent";
-import {deletePopup, isPopupLocked, unlockPopup} from "./popup.ts";
+import {deleteMainPopup, deleteSecondaryPopup, isPopupLocked, unlockPopup} from "./popup.ts";
 
 const onMapEventProvideFeatureToCallBack = (
     event: MapBrowserEvent<PointerEvent | KeyboardEvent | WheelEvent>,
@@ -11,16 +11,20 @@ const onMapEventProvideFeatureToCallBack = (
     onClickPopUp: boolean
 ) => {
     let foundFeature = false;
-    if(isPopupLocked() && !onClickPopUp) return;
+    if (isPopupLocked() && !onClickPopUp) return;
     ol.forEachFeatureAtPixel(event.pixel, (feature) => {
         const castedFeature = feature as Feature<Geometry>;
         onClickCB(castedFeature, onClickPopUp);
         foundFeature = true;
         return true;
     });
+    if (!foundFeature && !onClickPopUp) {
+        unlockPopup();
+        deleteSecondaryPopup();
+    }
     if (!foundFeature && onClickPopUp) {
         unlockPopup();
-        deletePopup();
+        deleteMainPopup();
     }
 };
 

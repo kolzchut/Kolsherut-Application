@@ -56,7 +56,7 @@ const setNewLocationToStoreByBoundingBox = (map: MapSingleton) => {
     store.dispatch(setLocationFilter(newLocation));
 };
 
-const debouncedOnMapClickHandler = debounced(onMapClickHandler, 500);
+const debouncedOnMapClickHandler = debounced(onMapClickHandler, 60);
 
 
 export const mapInteractions: IMapInteractions = [

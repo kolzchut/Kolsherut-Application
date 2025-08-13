@@ -5,7 +5,7 @@ import {setViewPort} from "../../services/map/view";
 import {addPOI, removeAllPOIs} from "../../services/map/poiInteraction";
 import PoiData from "../../types/poiData";
 import map from "../../services/map/map";
-import {createPopupByCardIdForCard, deletePopup, lockPopup, unlockPopup} from "../../services/map/events/popup";
+import {createPopupByCardIdForCard, deleteMainPopup, lockPopup, unlockPopup} from "../../services/map/events/popup";
 import {setPage} from "../../store/general/generalSlice";
 
 export const getFullCard = async(cardId:string) => {
@@ -58,5 +58,5 @@ export const setMapBackToDefault = () =>{
     removeMapNationalService();
     removeAllPOIs()
     unlockPopup();
-    deletePopup();
+    deleteMainPopup();
 }

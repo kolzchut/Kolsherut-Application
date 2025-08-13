@@ -6,17 +6,21 @@ import Popup from "./Popup/Popup";
 
 const Map = () => {
     const mapRef = useRef<HTMLDivElement>(null);
-    const popupRef = useRef<HTMLDivElement>(null);
-    const contentRef = useRef<HTMLDivElement>(null);
+    const mainPopupRef = useRef<HTMLDivElement>(null);
+    const mainContentRef = useRef<HTMLDivElement>(null);
+    const secondaryPopupRef = useRef<HTMLDivElement>(null);
+    const secondaryContentRef = useRef<HTMLDivElement>(null);
     const classes = useStyles();
 
     useEffect(() => {
         mapService.setTarget(mapRef.current || 'map')
-        if (popupRef.current) mapService.setPopupOverlay(popupRef.current);
+        if (mainPopupRef.current) mapService.setMainPopupOverlay(mainPopupRef.current);
+        if (secondaryPopupRef.current) mapService.setSecondaryPopupOverlay(secondaryPopupRef.current);
     }, []);
 
     return <div ref={mapRef} className={classes.map}>
-        <Popup popupRef={popupRef} contentRef={contentRef}/>
+        <Popup  popupRef={mainPopupRef} contentRef={mainContentRef}/>
+        <Popup popupRef={secondaryPopupRef} contentRef={secondaryContentRef}/>
     </div>;
 };
 

@@ -25,7 +25,8 @@ export class MapSingleton {
         osm: XYZ;
         poiSource: VectorSource<Feature<Geometry>>;
     } | null;
-    private popupOverlay?: Overlay;
+    private mainPopupOverlay?: Overlay;
+    private secondaryPopupOverlay?: Overlay;
     public constructor() {
         this.layers = undefined;
         this.sources = null;
@@ -55,21 +56,38 @@ export class MapSingleton {
     public setTarget(target: HTMLElement | string) {
         this.ol.setTarget(target);
     };
-    public setPopupOverlay(popupContainer: HTMLElement) {
-        if (this.popupOverlay) {
-            this.ol.removeOverlay(this.popupOverlay);
+    public setSecondaryPopupOverlay(popupContainer: HTMLElement) {
+        if (this.secondaryPopupOverlay) {
+            this.ol.removeOverlay(this.secondaryPopupOverlay);
         }
-        this.popupOverlay = new Overlay({
+        this.secondaryPopupOverlay = new Overlay({
             element: popupContainer,
             positioning: "bottom-center",
             stopEvent: true,
             insertFirst:false,
         });
-        this.ol.addOverlay(this.popupOverlay);
+        this.ol.addOverlay(this.secondaryPopupOverlay);
+    }
+    public getSecondaryPopupOverlay() {
+        return this.secondaryPopupOverlay;
     }
 
-    public getPopupOverlay() {
-        return this.popupOverlay;
+    public setMainPopupOverlay(popupContainer: HTMLElement) {
+        if (this.mainPopupOverlay) {
+            this.ol.removeOverlay(this.mainPopupOverlay);
+        }
+        this.mainPopupOverlay = new Overlay({
+            element: popupContainer,
+            positioning: "bottom-center",
+            stopEvent: true,
+            autoPan:true,
+            insertFirst:false,
+        });
+        this.ol.addOverlay(this.mainPopupOverlay);
+    }
+
+    public getMainPopupOverlay() {
+        return this.mainPopupOverlay;
     }
 
     public disableMovement(disable: boolean) {
@@ -99,7 +117,6 @@ export class MapSingleton {
             }
         }
     }
-
 }
 
 const map = new MapSingleton();
