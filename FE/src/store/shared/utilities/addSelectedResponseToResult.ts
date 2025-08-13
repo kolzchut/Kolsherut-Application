@@ -13,6 +13,7 @@ export const addSelectedResponseToResult = (
         result[responseId] = {
             count: 0,
             name: selectedResponse.name,
+            type: 'response'
         };
     }
 };

@@ -12,7 +12,7 @@ const Hits = ({service}: { service: IService }) => {
     const baseMaxOfOrganizationsDisplayed = window.config.baseMaxOfOrganizationsDisplayed;
     useEffect(() => {
         setDisplayShowMore(service.organizations.length > baseMaxOfOrganizationsDisplayed)
-    }, [baseMaxOfOrganizationsDisplayed, service]);
+    }, [baseMaxOfOrganizationsDisplayed, service.organizations.length]);
     const [maxOfOrganizationsDisplayed, setMaxOfOrganizationsDisplayed] = useState<number>(baseMaxOfOrganizationsDisplayed);
     const [displayShowMore, setDisplayShowMore] = useState<boolean>(service.organizations.length > baseMaxOfOrganizationsDisplayed);
     if(!service || !service.organizations || service.organizations.length === 0) return <></>;

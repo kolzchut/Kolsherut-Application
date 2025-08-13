@@ -3,7 +3,7 @@ import {Situation, Response} from "../../../../../../types/cardType";
 import useStyle from "./occasionButtonForMobile.css";
 import {store} from "../../../../../../store/store";
 import {
-    addResponseFilter,
+    addResponseFilter, addSituationFilter,
     removeResponseFilter,
     removeSituationFilter
 } from "../../../../../../store/filter/filterSlice";
@@ -32,13 +32,14 @@ const OccasionButtonForMobile = ({response, situation, isSelected, count = 0}: {
             return store.dispatch(addResponseFilter(occasion.id));
         }
         if (isSelected) return store.dispatch(removeSituationFilter(occasion.id));
-        return store.dispatch(removeSituationFilter(occasion.id));
+        return store.dispatch(addSituationFilter(occasion.id));
     }
+    const countToDisplay =  isSelected ? "": `(${count})`;
     return (
         <div className={classes.container} onClick={onClick}>
             <div className={classes.label} key={occasion.id}>
                 <span className={classes.dot}/>
-                <span>{`${occasion.name} ${count != 0 ? `(${count})` : ""}`} </span>
+                <span>{`${occasion.name} ${countToDisplay}`} </span>
                 {isSelected && <img alt="cancel or add icon" src={cancelOrAddIcon} className={classes.cancelOrAdd}/>}
             </div>
         </div>);

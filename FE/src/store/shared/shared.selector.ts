@@ -24,16 +24,16 @@ export const getFilteredResponseLength = createSelector([getFilteredResponseIds]
     return filterResponse.length;
 });
 
-export const getFilteredResultsByResponseAndFilter = createSelector([getResults, getFilters], (results, filters) => {
+export const getFilteredResultsByFilter = createSelector([getResults, getFilters], (results, filters) => {
     if (!filters || (!filters.situations.length && !filters.responses.length)) return results;
     return filterServices({filters, services: results,byResponseAndSituation:true})
 });
-export const getFilteredBranchesByResponseAndFilter = createSelector([getFilteredResultsByResponseAndFilter], (services: IService[]) => {
+export const getFilteredBranchesByResponseAndFilter = createSelector([getFilteredResultsByFilter], (services: IService[]) => {
     return getBranches(services);
 });
 
 
-export const getFilteredResults = createSelector([getFilteredResultsByResponseAndFilter, getFilters], (results, filters) => {
+export const getFilteredResults = createSelector([getFilteredResultsByFilter, getFilters], (results, filters) => {
     if (!filters || (!filters.location || filters.location.key === israelLocation.key)) return results;
     return filterServices({filters, services: results, byLocation:true})
 });

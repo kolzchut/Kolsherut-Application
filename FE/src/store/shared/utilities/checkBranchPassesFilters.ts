@@ -21,7 +21,7 @@ export const checkBranchPassesFilters = (
         const passesSituationFilters = checkTags({
             filters: situationFilters,
             ids: branchSituationIds,
-            checkAll: false
+            checkAll:  !(situationFilters.length > 1)
         });
         if (!passesSituationFilters) return false;
     }

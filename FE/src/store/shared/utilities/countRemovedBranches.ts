@@ -1,7 +1,7 @@
 import {IBranch} from "../../../types/serviceType.ts";
 import {checkBranchPassesFilters} from "./checkBranchPassesFilters.ts";
 
-export const countAdditionalBranches = (
+export const countRemovedBranches = (
     allBranches: IBranch[],
     filteredBranchIds: Set<string>,
     itemId: string,
@@ -17,9 +17,9 @@ export const countAdditionalBranches = (
         : currentFilters.situations;
 
     allBranches.forEach(branch => {
-        if (filteredBranchIds.has(branch.id)) return;
+        if (!filteredBranchIds.has(branch.id)) return;
 
-        if (checkBranchPassesFilters(branch, simulatedResponseFilters, simulatedSituationFilters)) {
+        if (!checkBranchPassesFilters(branch, simulatedResponseFilters, simulatedSituationFilters)) {
             count++;
         }
     });

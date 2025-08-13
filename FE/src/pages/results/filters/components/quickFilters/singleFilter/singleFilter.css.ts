@@ -31,6 +31,7 @@ export default createUseStyles({
         borderRadius: 12,
         background: secondaryBackgroundColorOne,
         padding:'2px 6px',
+        direction:'ltr'
     }),
     visuallyHidden: {
         position: 'absolute',

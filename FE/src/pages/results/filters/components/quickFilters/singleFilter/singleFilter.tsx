@@ -24,7 +24,7 @@ const SingleFilter = ({value, onClick, isFilterActive}: {
                         </label>
                         {' ' + value.name}
                     </span>
-        {!isFilterActive && value.count != undefined && value.count != 0 &&
+        {!isFilterActive && value.count != undefined &&
             <span className={classes.optionValue}>{value.count}</span>}
     </div>
 

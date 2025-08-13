@@ -5,7 +5,7 @@ import resultsAnalytics from "../../../../../services/gtag/resultsEvents";
 
 interface FilterProps {
     id: string;
-    value: { count?: number, name: string };
+    value: { count: number | string, name: string };
     situationFilters: string[];
 }
 
