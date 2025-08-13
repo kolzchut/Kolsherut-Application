@@ -28,6 +28,8 @@ const Search = () => {
                 alt="רקע ראשי"
                 className={classes.backgroundImage}
                 fetchPriority="high"
+                loading="eager"
+                decoding="sync"
             />
             <div className={classes.aboveDiv}>
                 {isMobile && <img onClick={handleIconClick} className={classes.hamburger} src={hamburger}

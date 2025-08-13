@@ -1,9 +1,9 @@
 import {createUseStyles} from 'react-jss';
 import IDynamicThemeApp from "../../../../types/dynamicThemeApp.ts";
 import {
-    primaryBorderColorTwo, primaryTextColorTwo,
+    primaryBorderColorThree, primaryTextColorTwo,
     secondaryBackgroundColorOne, secondaryTextColorOne,
-    tertiaryBackgroundColorTwo, tertiaryTextColorFour
+    tertiaryBackgroundColorFour, tertiaryTextColorFour
 } from "../../../../services/theme.ts";
 
 export default createUseStyles((theme: IDynamicThemeApp) => ({
@@ -18,14 +18,14 @@ export default createUseStyles((theme: IDynamicThemeApp) => ({
         padding: '10px 5px 10px 40px',
         borderRadius: '5px',
         direction: 'rtl',
-        background: tertiaryBackgroundColorTwo,
-        border: `2px solid ${primaryBorderColorTwo}`,
+        background: tertiaryBackgroundColorFour,
+        border: `2px solid ${primaryBorderColorThree}`,
         '&:hover': {
             background: secondaryBackgroundColorOne,
             border: `2px solid ${primaryTextColorTwo}42`,
         },
     },
-    bottomDiv:{
+    bottomDiv: {
         display: 'flex',
         flexDirection: 'row',
         gap: 5

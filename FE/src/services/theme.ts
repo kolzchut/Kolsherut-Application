@@ -6,6 +6,7 @@ const secondaryBackgroundColorTwo = '#F8FBFF';
 const tertiaryBackgroundColorOne = '#FFFFB7';
 const tertiaryBackgroundColorTwo = '#FFFDF5';
 const tertiaryBackgroundColorThree = '#FAF1E0';
+const tertiaryBackgroundColorFour = '#FFFDF5';
 const quaternaryBackgroundColorOne = '#0012F0';
 
 // Text Colors
@@ -17,11 +18,12 @@ const secondaryTextColorTwo = '#333231';
 const tertiaryTextColorOne = '#555452';
 const tertiaryTextColorTwo = '#3A343B';
 const tertiaryTextColorThree = '#333231';
-const tertiaryTextColorFour = '#878787';
+const tertiaryTextColorFour = '#444444';
 
 // Borders
 const primaryBorderColorOne = '#878787';
 const primaryBorderColorTwo = '#F1EEEA';
+const primaryBorderColorThree = '#CCCCCC';
 
 // Transparent
 const transparent = 'rgba(0, 0, 0, 0)';
@@ -34,10 +36,10 @@ export {
     secondaryBackgroundColorTwo,
     tertiaryTextColorThree,
     tertiaryTextColorFour,
+    primaryBorderColorThree,
     primaryBorderColorTwo,
     secondaryTextColorOne,
     secondaryTextColorTwo,
-    tertiaryBackgroundColorThree,
     primaryBackgroundColorOne,
     primaryBorderColorOne,
     tertiaryTextColorOne,
@@ -45,6 +47,8 @@ export {
     transparent,
     tertiaryBackgroundColorTwo,
     tertiaryBackgroundColorOne,
+    tertiaryBackgroundColorThree,
+    tertiaryBackgroundColorFour,
     quaternaryBackgroundColorOne,
     primaryBackgroundColorTwo
 };

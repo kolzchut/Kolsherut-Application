@@ -33,7 +33,7 @@ export default createUseStyles({
         display: 'inline-block',
         paddingLeft: '18px',
         fontWeight: 600,
-        fontSize: accessibilityActive ? '20px' : '16px',
+        fontSize: accessibilityActive ? '22px' : '18px',
         lineHeight: 1.25,
         height: 'fit-content',
         color: primaryTextColorOne,

@@ -32,3 +32,9 @@ export const getHrefForResults = ({
     queryParams.set('rf', JSON.stringify(responseFilter));
     return `${baseUrl}/?${queryParams.toString()}`;
 };
+
+export const getHrefForLinkBelow = (modal?: string) => {
+    const currentUrl = window.location.href;
+    if(currentUrl.includes('p=') || !modal) return currentUrl;
+    return `${currentUrl}&m=${modal}`;
+}
