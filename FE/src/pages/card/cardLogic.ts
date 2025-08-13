@@ -50,6 +50,7 @@ export const backToHome = () => store.dispatch(setPage("home"))
 
 export const setCardOnMap = (cardData:ICard) =>{
     setMapToCard(cardData)
+    unlockPopup();
     createPopupByCardIdForCard({cardId: cardData.card_id});
     lockPopup();
 }
