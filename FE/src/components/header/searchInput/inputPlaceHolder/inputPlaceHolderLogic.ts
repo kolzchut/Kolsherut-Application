@@ -9,9 +9,9 @@ interface IParseSearchQueryToSentences {
     bySeparators: string[];
 }
 
-interface IPlaceHolderText {
-    serviceSentence?: string;
-    forSentence?: string;
+export interface IPlaceHolderText {
+    responseSentence?: string;
+    situationSentence?: string;
     bySentence?: string;
 }
 
@@ -24,28 +24,31 @@ export const parseSearchQueryToSentences = ({searchQueryArray, forSeparators, by
 
     if (indexOfForSeparator !== -1 && indexOfBySeparator !== -1) {
         if (indexOfForSeparator < indexOfBySeparator) {
-            text.serviceSentence = searchQueryArray.slice(0, indexOfForSeparator).join(' ');
-            text.forSentence = searchQueryArray.slice(indexOfForSeparator, indexOfBySeparator).join(' ');
+            text.responseSentence = searchQueryArray.slice(0, indexOfForSeparator).join(' ');
+            text.situationSentence = searchQueryArray.slice(indexOfForSeparator, indexOfBySeparator).join(' ');
             text.bySentence = searchQueryArray.slice(indexOfBySeparator).join(' ');
         } else {
-            text.serviceSentence = searchQueryArray.slice(0, indexOfBySeparator).join(' ');
+            text.responseSentence = searchQueryArray.slice(0, indexOfBySeparator).join(' ');
             text.bySentence = searchQueryArray.slice(indexOfBySeparator, indexOfForSeparator).join(' ');
-            text.forSentence = searchQueryArray.slice(indexOfForSeparator).join(' ');
+            text.situationSentence = searchQueryArray.slice(indexOfForSeparator).join(' ');
         }
     } else if (indexOfForSeparator !== -1) {
-        text.serviceSentence = searchQueryArray.slice(0, indexOfForSeparator).join(' ');
-        text.forSentence = searchQueryArray.slice(indexOfForSeparator).join(' ');
+        text.responseSentence = searchQueryArray.slice(0, indexOfForSeparator).join(' ');
+        text.situationSentence = searchQueryArray.slice(indexOfForSeparator).join(' ');
     } else if (indexOfBySeparator !== -1) {
-        text.serviceSentence = searchQueryArray.slice(0, indexOfBySeparator).join(' ');
+        text.responseSentence = searchQueryArray.slice(0, indexOfBySeparator).join(' ');
         text.bySentence = searchQueryArray.slice(indexOfBySeparator).join(' ');
     } else
-        text.serviceSentence = searchQueryArray.join(' ');
+        text.responseSentence = searchQueryArray.join(' ');
 
-    if (!text.serviceSentence || text.serviceSentence.trim() === '')
-        text.serviceSentence = window.strings.searchQueryTextDefaults.serviceSentence;
+    if(!text.situationSentence && !text.bySentence)
+        return text;
 
-    if (!text.forSentence || text.forSentence.trim() === '')
-        text.forSentence = window.strings.searchQueryTextDefaults.forSentence;
+    if (!text.responseSentence || text.responseSentence.trim() === '')
+        text.responseSentence = window.strings.searchQueryTextDefaults.serviceSentence;
+
+    if (!text.situationSentence || text.situationSentence.trim() === '')
+        text.situationSentence = window.strings.searchQueryTextDefaults.forSentence;
 
     return text;
 }
