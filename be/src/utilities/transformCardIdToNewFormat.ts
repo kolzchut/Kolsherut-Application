@@ -1,5 +1,5 @@
 import {IBranch, IOrganization, IService} from "../types/serviceType";
-import {calculateFinalElasticsearchScore} from "./sortSearchCards";
+import {calculateServiceScore} from "./sortSearchCards";
 
 const createNewService = (sourceService: any): IService => {
     return {
@@ -70,10 +70,10 @@ const sortOrganizationsByBranchCount = (services: IService[]): IService[] => {
 
 const sortServicesByScore = (services: IService[]): IService[] => {
     return services.sort((a, b) => {
-        const scoreA = calculateFinalElasticsearchScore({
+        const scoreA = calculateServiceScore({
             service_id: a.id,
             service_description: a.service_description,
-            service_boost: a.score,
+            service_boost: (a.score || 0) + ((a.score || 0)* (a.service_boost|| 0)),
             organization_branch_count: a.organizations.reduce((total, org) => total + org.branches.length, 0),
             national_service: a.organizations.some(org => org.branches.some(branch => branch.isNational)),
             service_phone_numbers: a.service_phone_numbers,
@@ -81,10 +81,10 @@ const sortServicesByScore = (services: IService[]): IService[] => {
             organization_kind: a.organization_kind
         });
 
-        const scoreB = calculateFinalElasticsearchScore({
+        const scoreB = calculateServiceScore({
             service_id: b.id,
             service_description: b.service_description,
-            service_boost: b.score,
+            service_boost: (b.score || 0) + ((b.score || 0)* (b.service_boost|| 0)),
             organization_branch_count: b.organizations.reduce((total, org) => total + org.branches.length, 0),
             national_service: b.organizations.some(org => org.branches.some(branch => branch.isNational)),
             service_phone_numbers: b.service_phone_numbers,

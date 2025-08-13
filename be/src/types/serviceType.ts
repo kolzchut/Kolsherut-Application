@@ -34,6 +34,7 @@ export interface IService {
     situations: ISituation[];
     organizations: IOrganization[];
     score?: number;
+    service_boost?: number;
     organization_phone_numbers?: string[];
     service_phone_numbers?: string[];
     organization_kind: string;

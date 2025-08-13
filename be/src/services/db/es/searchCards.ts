@@ -46,7 +46,7 @@ export default async ({fixedSearchQuery, isFast, responseId, situationId}: { fix
 
     try {
         const response = await executeESQuery(query);
-        return transformCardIdToNewFormat(response, freeSearch);
+        return transformCardIdToNewFormat(response, !freeSearch);
     } catch (error) {
         console.error('Error executing query:', error);
         throw error;

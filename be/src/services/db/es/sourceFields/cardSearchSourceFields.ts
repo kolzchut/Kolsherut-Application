@@ -2,7 +2,7 @@ export const cardSearchSourceFields = [
     "service_id",
     "service_name",
     "score",
-    "_score",
+    "service_boost",
     "service_description",
     "organization_id",
     "organization_name",
