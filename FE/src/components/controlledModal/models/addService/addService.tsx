@@ -6,6 +6,7 @@ import closeIcon from "../../../../assets/icon-close-black.svg";
 import AddServiceBox from "./addServiceBox/addServiceBox";
 import {useState} from "react";
 import IDynamicThemeApp from "../../../../types/dynamicThemeApp.ts";
+import {createKeyboardHandler} from "../../../../services/keyboardHandler";
 
 interface Service {
     title: string;
@@ -20,10 +21,20 @@ const AddService = () => {
     const [services] = useState(window.modules);
 
     const close = () => store.dispatch(setModal(null));
+    const handleCloseKeyDown = createKeyboardHandler(close);
     const click = (clickedPart: number) => setSelectedService(prev => clickedPart !== prev ? clickedPart : -1);
     const showButton = selectedService > -1 && !!services[selectedService].buttonTitle;
     return <div className={classes.root}>
-        <button className={classes.closeIcon} onClick={close}><img src={closeIcon} alt={"close icon"}/></button>
+        <img
+            className={classes.closeIcon}
+            src={closeIcon}
+            onClick={close}
+            onKeyDown={handleCloseKeyDown}
+            tabIndex={0}
+            role="button"
+            aria-label="Close modal"
+            alt={"close icon"}
+        />
         <div className={classes.header}>
             <h1 className={classes.title}>{strings.title}</h1>
             <h3 className={classes.subtitle}>{strings.subtitleOne}</h3>

@@ -7,6 +7,7 @@ import {useDisplayResultsMap, useSetDisplayResultsMap} from "../../../context/co
 import mapAnalytics from "../../../../../services/gtag/mapEvents";
 import {useTheme} from "react-jss";
 import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
+import {createKeyboardHandler} from "../../../../../services/keyboardHandler";
 
 
 const MapDisplay = () => {
@@ -27,13 +28,21 @@ const MapDisplay = () => {
         mapAnalytics.mapStateEvent({isOpen: !displayResultsMap});
     }
 
-    return <div onClick={onClick} className={classes.root}>
-                <img fetchPriority={'high'} className={classes.icon} src={vals.icon} alt={vals.altIcon} />
-                <span className={classes.text}>
+    const handleKeyDown = createKeyboardHandler(onClick);
+
+    return <div
+        onClick={onClick}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
+        role="button"
+        aria-label={displayResultsMap ? "Hide map" : "Show map"}
+        className={classes.root}>
+        <img fetchPriority={'high'} className={classes.icon} src={vals.icon} alt={vals.altIcon}/>
+        <span className={classes.text}>
                     <img className={classes.innerIcon} src={vals.innerIcon} alt={vals.altIcon}/>
-                    {vals.text}
+            {vals.text}
                 </span>
-         </div>
+    </div>
 
 }
 export default MapDisplay;

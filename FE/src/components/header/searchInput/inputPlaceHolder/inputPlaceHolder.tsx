@@ -4,11 +4,8 @@ import useStyles from "./inputPlaceHolder.css.ts";
 import {useSelector} from "react-redux";
 import {getSearchQuery} from "../../../../store/general/general.selector.ts";
 import {getLocationFilter} from "../../../../store/filter/filter.selector.ts";
-import {
-    checkIfLocationKeyEqualsToWord,
-    IPlaceHolderText,
-    parseSearchQueryToSentences
-} from "./inputPlaceHolderLogic.ts";
+import {createKeyboardHandler} from "../../../../services/keyboardHandler";
+import {checkIfLocationKeyEqualsToWord, IPlaceHolderText, parseSearchQueryToSentences} from "./inputPlaceHolderLogic.ts";
 import {getBackendFiltersNamesByResults} from "../../../../store/shared/utilities/header.selector.ts";
 
 const InputPlaceHolder = ({onClick}: { onClick: () => void }) => {
@@ -24,9 +21,18 @@ const InputPlaceHolder = ({onClick}: { onClick: () => void }) => {
     const names = useSelector(getBackendFiltersNamesByResults);
     const hasNames = names.response || names.situation;
 
+    const handleKeyDown = createKeyboardHandler(onClick);
+
     const text: IPlaceHolderText = hasNames ? {responseSentence: names.response || window.strings.searchQueryTextDefaults.serviceSentence, situationSentence: names.situation || window.strings.searchQueryTextDefaults.forSentence} : parseSearchQueryToSentences({searchQueryArray, forSeparators, bySeparators});
     const classes = useStyles({theme});
-    return <div className={classes.mainDiv} onClick={onClick}>
+    return <div
+        className={classes.mainDiv}
+        onClick={onClick}
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+        role="button"
+        aria-label="Search input placeholder"
+    >
         {text.responseSentence && <h1 className={classes.firstSentence}>{text.responseSentence}</h1>}
         <div className={classes.bottomDiv}>
             {text.situationSentence && <h2 className={classes.secondSentence}>{text.situationSentence}</h2>}

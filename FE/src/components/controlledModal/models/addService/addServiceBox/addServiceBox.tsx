@@ -2,6 +2,7 @@ import openIcon from "../../../../../assets/icon-chevron-down-blue.svg";
 import useStyle from "./addServiceBox.css";
 import { useTheme } from 'react-jss';
 import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
+import {createKeyboardHandler} from "../../../../../services/keyboardHandler";
 
 const AddServiceBox = ({title, content, isExtendedBox, onClick}: {
     title: string,
@@ -12,8 +13,19 @@ const AddServiceBox = ({title, content, isExtendedBox, onClick}: {
     const theme = useTheme<IDynamicThemeApp>();
     const classes = useStyle({isExtendedBox, accessibilityActive: theme.accessibilityActive});
 
+    const handleKeyDown = createKeyboardHandler(onClick);
+
     return <div className={classes.root}>
-        <img src={openIcon} className={classes.arrow} alt={"Toggle Details"} onClick={onClick}/>
+        <img
+            src={openIcon}
+            className={classes.arrow}
+            alt={"Toggle Details"}
+            onClick={onClick}
+            onKeyDown={handleKeyDown}
+            tabIndex={0}
+            role="button"
+            aria-label={isExtendedBox ? "Collapse details" : "Expand details"}
+        />
         <h4 className={classes.title}>{title}</h4>
         {isExtendedBox && content.map((item, index) => (
             <div className={classes.openDiv}>

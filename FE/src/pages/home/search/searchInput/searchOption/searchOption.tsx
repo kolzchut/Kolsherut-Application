@@ -10,6 +10,7 @@ import {ILabel} from "../../../../../types/homepageType";
 import generalAnalytics from "../../../../../services/gtag/generalEvents";
 import {useTheme} from "react-jss";
 import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
+import {createKeyboardHandler} from "../../../../../services/keyboardHandler";
 
 const SearchOption = ({value, onCloseSearchOptions, isStructured}: { value: IStructureAutocomplete | IUnStructuredAutocomplete, onCloseSearchOptions: () => void, isStructured:boolean}) => {
     const theme = useTheme<IDynamicThemeApp>();
@@ -31,8 +32,15 @@ const SearchOption = ({value, onCloseSearchOptions, isStructured}: { value: IStr
         settingToResults({value: customValueAsLabel, removeOldFilters:true});
         onCloseSearchOptions();
     };
+
+    const handleKeyDown = createKeyboardHandler(onClick);
+
     const icon = isStructured ? structuredSearchIcon : unstructuredSearchIcon;
     return <div onClick={onClick}
+                onKeyDown={handleKeyDown}
+                tabIndex={0}
+                role="button"
+                aria-label={`Search option: ${value.label}`}
                 className={classes.optionalSearchValue}>
                         <span className={classes.iconAndText}>
                             <img className={classes.searchIcon} alt={"חיפוש"} src={lightIconSearch}/>

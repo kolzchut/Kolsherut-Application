@@ -17,6 +17,8 @@ import {getOptionalLocations} from "../../../../../../store/shared/locationFilte
 import resultsAnalytics from "../../../../../../services/gtag/resultsEvents";
 import IDynamicThemeApp from "../../../../../../types/dynamicThemeApp.ts";
 import {useTheme} from "react-jss";
+import {createKeyboardHandler} from "../../../../../../services/keyboardHandler";
+import LocationDiv from "./locationDiv/locationDiv";
 
 const GeoFilterModal = () => {
     const theme = useTheme<IDynamicThemeApp>();
@@ -43,6 +45,7 @@ const GeoFilterModal = () => {
         store.dispatch(setSearchLocation(""));
         store.dispatch(setModal(null));
     }
+    const handleCloseKeyDown = createKeyboardHandler(close);
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         store.dispatch(setSearchLocation(e.target.value));
     }
@@ -60,23 +63,36 @@ const GeoFilterModal = () => {
                 <span>{location.key}</span>
                 <span className={classes.count}>{resultsLength}</span>
             </div>
-            <button className={classes.closeIcon} onClick={close}><img src={closeIcon} alt={"close icon"}/></button>
+            <button
+                className={classes.closeIcon}
+                onClick={close}
+                onKeyDown={handleCloseKeyDown}
+                aria-label="Close location filter modal"
+            >
+                <img src={closeIcon} alt={"close icon"}/>
+            </button>
         </div>
         <div>
-            <div className={classes.locationDiv} onClick={() => onClick(israelLocation, window.config.map.zoom || 7.5)}>
-                <img src={wideLocationIcon} alt={"wide location icon"}/>
-                <span>{israelLocation.key}</span>
-            </div>
+            <LocationDiv
+                location={israelLocation}
+                icon={wideLocationIcon}
+                iconAlt="wide location icon"
+                onClick={onClick}
+                zoom={window.config.map.zoom || 7.5}
+                className={classes.locationDiv}
+            />
             <div className={classes.border}/>
             {optionalLocations?.map((location, index) => (
-                <div key={index} className={classes.locationDiv} onClick={() => onClick(location)}>
-                    <img src={locationIcon} alt={"location icon"}/>
-                    <span>{location.key}</span>
-                </div>
+                <LocationDiv
+                    key={index}
+                    location={location}
+                    icon={locationIcon}
+                    iconAlt="location icon"
+                    onClick={onClick}
+                    className={classes.locationDiv}
+                />
             ))}
-
         </div>
     </div>
-
 }
 export default GeoFilterModal;

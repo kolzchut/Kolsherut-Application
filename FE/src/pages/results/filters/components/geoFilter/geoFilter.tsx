@@ -7,13 +7,28 @@ import {store} from "../../../../../store/store";
 import {setModal} from "../../../../../store/general/generalSlice";
 import {useTheme} from "react-jss";
 import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
+import {createKeyboardHandler} from "../../../../../services/keyboardHandler";
 
 const GeoFilter = () => {
     const theme = useTheme<IDynamicThemeApp>();
     const classes = useStyles({accessibilityActive: theme.accessibilityActive});
     const resultsLength = useSelector(getFilterResultsLength)
     const location = useSelector(getLocationFilter)
-    return <div className={classes.root} onClick={()=> store.dispatch(setModal('GeoFilterModal'))}>
+
+    const handleClick = () => {
+        store.dispatch(setModal('GeoFilterModal'));
+    };
+
+    const handleKeyDown = createKeyboardHandler(handleClick);
+
+    return <div
+        className={classes.root}
+        onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
+        role="button"
+        aria-label={`Open location filter for ${location.key}, ${resultsLength} results`}
+    >
         <div className={classes.textAndMapDiv}>
             <img src={mapIcon} alt={"map"}/>
             <span>{location.key}</span>

@@ -4,6 +4,8 @@ import {useTheme} from "react-jss";
 import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
 import {AddressParts} from "../../../../../types/cardType.ts";
 import cardHeaderIcon from "../../../../../assets/cardHeaderIcon.json";
+import {createKeyboardHandler} from "../../../../../services/keyboardHandler";
+
 const Header = ({branchOperatingUnit, addressParts, branchLocationAccurate, isNational,organizationName}: {
     branchOperatingUnit: string,
     addressParts: AddressParts | string,
@@ -15,6 +17,7 @@ const Header = ({branchOperatingUnit, addressParts, branchLocationAccurate, isNa
     const serviceGivenNationWide = window.strings.cardDetails.serviceGivenNationWide
     const showNoAccurateLocation = !branchLocationAccurate && !isNational;
     const onBackButtonClick = () => window.history.back();
+    const handleKeyDown = createKeyboardHandler(onBackButtonClick);
     const theme = useTheme<IDynamicThemeApp>();
     const iconSource = cardHeaderIcon.find(icon => icon.organizationName === organizationName);
     const isStringAddressParts = typeof addressParts === 'string';
@@ -22,10 +25,15 @@ const Header = ({branchOperatingUnit, addressParts, branchLocationAccurate, isNa
     const classes = useStyle({accessibilityActive: theme.accessibilityActive});
     return <div className={classes.root}>
         <div className={classes.backButtonDiv}>
-            <button onClick={onBackButtonClick} className={classes.backButton}>
+            <button
+                onClick={onBackButtonClick}
+                onKeyDown={handleKeyDown}
+                className={classes.backButton}
+                aria-label="Go back"
+            >
                 <img className={classes.backButtonImg}
                      src={backIcon}
-                     alt={"go back to results"}/>
+                     alt={"go back"}/>
             </button>
         </div>
         <div className={classes.header}>

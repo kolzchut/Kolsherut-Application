@@ -3,6 +3,7 @@ import {
     tertiaryTextColorOne,
     tertiaryBackgroundColorTwo,
     primaryTextColorThree,
+    primaryTextColorOne,
 } from "../../../../../services/theme";
 
 interface IProps {
@@ -43,6 +44,17 @@ export default createUseStyles({
         '&:hover': {
             transform: 'scale(1.05)',
             transition: 'transform 0.2s ease-in-out',
+        },
+        '&:focus': {
+            border: `2px solid ${primaryTextColorOne}`,
+            outline: 'none',
+            transform: 'scale(1.05)',
+            transition: 'all 0.2s ease-in-out',
+        },
+        '&:focus-visible': {
+            border: `2px solid ${primaryTextColorOne}`,
+            outline: 'none',
+            transform: 'scale(1.05)',
         }
     },
     backButtonImg: {

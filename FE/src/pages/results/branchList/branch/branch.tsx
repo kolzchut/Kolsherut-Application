@@ -7,8 +7,10 @@ import resultsAnalytics from "../../../../services/gtag/resultsEvents";
 import {reRouteToCard} from "../../../../services/routes/reRoute";
 import IDynamicThemeApp from "../../../../types/dynamicThemeApp.ts";
 import {useTheme} from "react-jss";
+import React from "react";
+import {createKeyboardHandler} from "../../../../services/keyboardHandler";
 
-const Branch = ({branch}: { branch: IBranch }) => {
+const Branch = React.forwardRef<HTMLAnchorElement, { branch: IBranch }>(({branch}, ref) => {
     const theme = useTheme<IDynamicThemeApp>();
 
     const classes = useStyles({accessibilityActive: theme.accessibilityActive});
@@ -16,12 +18,29 @@ const Branch = ({branch}: { branch: IBranch }) => {
     const addressText: string = branch.address + " " + accurateLocation;
     const showNational = branch.isNational && !branch.address
     const href = getHrefForCard(branch.id)
+
     const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
         resultsAnalytics.gotoCardFromBranchList(branch.id)
         reRouteToCard({cardId: branch.id})
     }
-    return <a href={href} onClick={onClick} className={classes.mainDiv}>
+
+    const handleKeyboardClick = () => {
+        resultsAnalytics.gotoCardFromBranchList(branch.id)
+        reRouteToCard({cardId: branch.id})
+    }
+
+    const handleKeyDown = createKeyboardHandler(handleKeyboardClick);
+
+    return <a
+        ref={ref}
+        href={href}
+        onClick={onClick}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
+        className={classes.mainDiv}
+        aria-label={`Go to ${branch.name || 'branch'} details${branch.address ? ` at ${branch.address}` : ''}`}
+    >
         <div className={classes.textDiv}>
             {branch.name && <span className={classes.branchName}>{branch.name}</span>}
             {branch.address && <span className={classes.branchAddress}>{addressText} </span>}
@@ -32,5 +51,8 @@ const Branch = ({branch}: { branch: IBranch }) => {
             <img src={linkIcon} alt={"link icon"} className={classes.icon}/>
         </div>
     </a>
-}
+})
+
+Branch.displayName = 'Branch';
+
 export default Branch;
