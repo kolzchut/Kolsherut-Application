@@ -9,6 +9,10 @@ on:
       - 'FE/**'
       - '.github/workflows/fe-ci.yml'
 
+permissions:
+  contents: write
+  packages: write
+
 concurrency:
   group: fe-${{ github.ref }}
   cancel-in-progress: true

@@ -8,6 +8,10 @@ on:
       - 'be/**'
       - '.github/workflows/be-ci.yml'
 
+permissions:
+  contents: write
+  packages: write
+
 concurrency:
   group: be-${{ github.ref }}
   cancel-in-progress: true
