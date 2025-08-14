@@ -60,6 +60,7 @@ jobs:
           docker push "$IMAGE_SHA"
           docker tag be-build ghcr.io/kolzchut/${IMAGE_NAME}:latest
           docker push ghcr.io/kolzchut/${IMAGE_NAME}:latest
+          echo "${SRM_DEVOPS_DEPLOY_KEY}" > srm_devops_deploy_key
             
           chmod 400 srm_devops_deploy_key
           export GIT_SSH_COMMAND="ssh -i $(pwd)/srm_devops_deploy_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
