@@ -1,8 +1,8 @@
 import {IBranch, IOrganization, IService} from "../../../types/serviceType";
 import ILocation from "../../../types/locationType";
-import {checkIfCoordinatesInBounds} from "../../../services/geoLogic";
 import {checkTags} from "./checkTags";
 import israelLocation from "../../../constants/israelLocation";
+import {checkIfCoordinatesInBounds} from "../../../services/geoLogic.ts";
 
 interface IFilters {
     responses: string[],
@@ -16,6 +16,7 @@ interface IFilterServicesProps {
     filters: IFilters;
     byLocation?: boolean;
     byResponseAndSituation?: boolean;
+    includeNational?: boolean;
 }
 
 interface IMergeBranchFilters {
@@ -24,19 +25,21 @@ interface IMergeBranchFilters {
     filters: IFilters;
     organization: IOrganization;
     isSearchingNationWide: boolean;
+    includeNational: boolean;
 
 }
 
-const filterBranchesByLocation = ({filters, organization, isSearchingNationWide}: {
+const filterBranchesByLocation = ({filters, organization, isSearchingNationWide, includeNational}: {
     filters: IFilters,
     organization: IOrganization,
     isSearchingNationWide: boolean
+    includeNational: boolean
 }) => organization.branches.filter((branch: IBranch) => {
-    return !(!isSearchingNationWide && !checkIfCoordinatesInBounds({
+    const autoIncludeByCondition = includeNational ? branch.isNational : isSearchingNationWide;
+    return autoIncludeByCondition ||checkIfCoordinatesInBounds({
         bounds: filters.location.bounds,
         coordinates: branch.geometry
-    }));
-
+    });
 });
 
 const filterBranchesByResponseAndSituation = ({filters, organization}: {
@@ -57,8 +60,8 @@ const filterBranchesByResponseAndSituation = ({filters, organization}: {
 });
 
 
-const mergeBranchFilters = ({byLocation, byResponseAndSituation, filters, organization, isSearchingNationWide}: IMergeBranchFilters): IBranch[] => {
-    const locationResults = byLocation ? filterBranchesByLocation({filters, organization, isSearchingNationWide}) : [];
+const mergeBranchFilters = ({byLocation, byResponseAndSituation, filters, organization, isSearchingNationWide, includeNational}: IMergeBranchFilters): IBranch[] => {
+    const locationResults = byLocation ? filterBranchesByLocation({filters, organization, isSearchingNationWide, includeNational}) : [];
     const responseResults = byResponseAndSituation ? filterBranchesByResponseAndSituation({filters, organization}) : [];
     if (!byLocation || !byResponseAndSituation) return [...locationResults, ...responseResults];
 
@@ -67,14 +70,14 @@ const mergeBranchFilters = ({byLocation, byResponseAndSituation, filters, organi
     );
 };
 
-export const filterServices = ({filters, services, byLocation = false, byResponseAndSituation = false}: IFilterServicesProps) => {
+export const filterServices = ({filters, services, byLocation = false, byResponseAndSituation = false, includeNational=false}: IFilterServicesProps) => {
     const servicesCopy: IService[] = structuredClone(services);
     const filteredServices: IService[] = [];
     const isSearchingNationWide = filters.location.key === israelLocation.key
     for (const service of servicesCopy) {
         const filteredOrganizations: IOrganization[] = [];
         for (const organization of service.organizations) {
-            const filteredBranches = mergeBranchFilters({byLocation, byResponseAndSituation, filters, organization, isSearchingNationWide});
+            const filteredBranches = mergeBranchFilters({byLocation, byResponseAndSituation, filters, organization, isSearchingNationWide, includeNational});
             const filteredOrganization: IOrganization = structuredClone(organization);
             filteredOrganization.branches = filteredBranches;
             if (filteredBranches.length > 0) filteredOrganizations.push(filteredOrganization);

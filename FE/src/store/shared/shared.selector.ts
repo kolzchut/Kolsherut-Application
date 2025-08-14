@@ -35,7 +35,7 @@ export const getFilteredBranchesByResponseAndFilter = createSelector([getFiltere
 
 export const getFilteredResults = createSelector([getFilteredResultsByFilter, getFilters], (results, filters) => {
     if (!filters || (!filters.location || filters.location.key === israelLocation.key)) return results;
-    return filterServices({filters, services: results, byLocation:true})
+    return filterServices({filters, services: results, byLocation:true, includeNational: true})
 });
 
 export const getFilteredBranches = createSelector([getFilteredResults], (services: IService[]) => getBranches(services));

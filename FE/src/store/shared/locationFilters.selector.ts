@@ -4,36 +4,16 @@ import {getFilteredBranches} from "./shared.selector";
 import {getLocations, getResults} from "../data/data.selector";
 import ILocation from "../../types/locationType";
 import {IBranch, IService} from "../../types/serviceType";
-import {checkIfCoordinatesInBounds} from "../../services/geoLogic";
-import israelLocation from "../../constants/israelLocation";
+import isBranchInBounds from "./utilities/isBranchInBounds.ts";
 
-export const getFilteredBranchesInBounds = createSelector([getFilteredBranches, getFilters, getLocationFilter], (branches: IBranch[], filters, location) => {
-    const isDefaultLocation = location.key === israelLocation.key;
-
-    return branches.filter(branch =>
-        (isDefaultLocation && branch.isNational) || checkIfCoordinatesInBounds({
-            bounds: filters.location.bounds,
-            coordinates: branch.geometry
-        })
-    );
+export const getFilteredBranchesInBounds = createSelector([getFilteredBranches, getFilters], (branches: IBranch[], filters) => {
+    return branches.filter(branch => isBranchInBounds(branch, filters.location.bounds));
 });
 
-export const getFilteredResponsesInBounds = createSelector([getFilteredBranchesInBounds], (branches: IBranch[]) => {
-    return branches.flatMap(branch => branch.responses) || [];
-});
 
-export const getAllBranchesInBounds = createSelector([getResults, getFilters,getLocationFilter], (services: IService[], filters,location) => {
-    const isDefaultLocation = location.key === israelLocation.key;
-
+export const getAllBranchesInBounds = createSelector([getResults, getFilters, getLocationFilter], (services: IService[], filters) => {
     return services.flatMap((service: IService) =>
-        service.organizations.flatMap((organization) => organization.branches.filter(branch =>(isDefaultLocation && branch.isNational) || checkIfCoordinatesInBounds({
-            bounds: filters.location.bounds,
-            coordinates: branch.geometry
-        }))));
-});
-
-export const getAllResponsesInBounds = createSelector([getAllBranchesInBounds], (branches: IBranch[]) => {
-    return branches.flatMap(branch => branch.responses) || [];
+        service.organizations.flatMap((organization) => organization.branches.filter(branch => isBranchInBounds(branch, filters.location.bounds))));
 });
 
 export const getOptionalLocations = createSelector([getSearchLocation, getLocations], (searchLocation: string, locations: ILocation[]) => {
