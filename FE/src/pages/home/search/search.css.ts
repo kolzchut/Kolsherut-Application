@@ -39,7 +39,7 @@ export default createUseStyles({
         padding: '24px',
     },
     kolsherutLogo: {
-        height: '72%',
+        height: '90%',
     },
     aboveDivText: ({accessibilityActive}: IProps) => ({
         color: primaryBackgroundColorOne,
