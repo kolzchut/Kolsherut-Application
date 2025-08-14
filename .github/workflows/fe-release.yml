@@ -1,0 +1,86 @@
+name: FE Release (production)
+# Builds and deploys FE on tag pushes (production) only if FE files changed.
+# Produces two images:
+#  1. commit SHA: ghcr.io/kolzchut/kol-sherut-fe:<sha>
+#  2. tag-SHA:    ghcr.io/kolzchut/kol-sherut-fe:<tag>-<sha> (used in Helm)
+# (Plain <tag> alias removed per request.)
+on:
+  push:
+    tags:
+      - '*'
+    paths:
+      - 'FE/**'
+      - '.github/workflows/fe-release.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: fe-release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-release:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Derive Tag
+        id: vars
+        run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: FE/package-lock.json
+
+      - name: Install Dependencies
+        working-directory: FE
+        run: npm ci
+
+      - name: Build FE (Vite prod)
+        working-directory: FE
+        run: npm run build
+
+      - name: Docker Build
+        working-directory: FE
+        env:
+          IMAGE_NAME: kol-sherut-fe
+        run: |
+          BUILD_ARGS=""
+          if docker pull ghcr.io/kolzchut/${IMAGE_NAME}:latest; then
+            BUILD_ARGS="--cache-from ghcr.io/kolzchut/${IMAGE_NAME}:latest"
+          fi
+          docker build -t fe-release $BUILD_ARGS .
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Push & Update Helm (production)
+        env:
+          IMAGE_NAME: kol-sherut-fe
+          CHART_NAME: site
+          SRM_DEVOPS_DEPLOY_KEY: ${{ secrets.SRM_DEVOPS_DEPLOY_KEY }}
+        run: |
+          TAG="${{ steps.vars.outputs.tag_name }}"
+          SHA_IMAGE="ghcr.io/kolzchut/${IMAGE_NAME}:${GITHUB_SHA}"
+          TAG_SHA_IMAGE="ghcr.io/kolzchut/${IMAGE_NAME}:${TAG}-${GITHUB_SHA}"
+          # Push commit-SHA image (for traceability)
+          docker tag fe-release "$SHA_IMAGE"
+          docker push "$SHA_IMAGE"
+          # Push tag-SHA image (used in Helm production values)
+          docker tag fe-release "$TAG_SHA_IMAGE"
+          docker push "$TAG_SHA_IMAGE"
+          echo "${SRM_DEVOPS_DEPLOY_KEY}" > srm_devops_deploy_key
+          chmod 400 srm_devops_deploy_key
+          export GIT_SSH_COMMAND="ssh -i $(pwd)/srm_devops_deploy_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+          git clone git@github.com:kolzchut/srm-devops.git
+          git config --global user.name "srm-devops CI"
+          git config --global user.email "srm-devops-ci@localhost"
+          cd srm-devops
+          VALUES_FILE="helm/${CHART_NAME}/values.auto-updated.production.yaml"
+          bin/update_yaml.py '{"'"${CHART_NAME}"'":{"image":"'"${TAG_SHA_IMAGE}"'"}}' "$VALUES_FILE"
+          git add "$VALUES_FILE"
+          git commit -m "FE production image update: $VALUES_FILE" || echo "No changes to commit"
+          git push origin main
