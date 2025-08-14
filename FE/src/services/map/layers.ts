@@ -3,7 +3,7 @@ import VectorLayer from "ol/layer/Vector";
 import {MapSingleton} from "./map";
 import {GetLayersParams, GetLayersReturn} from "../../types/layers";
 import {createColorBasedClusterSources} from "./cluster/cluster.ts";
-import {groupFeaturesByColor} from "./cluster/groupFeaturesByColor.ts";
+import {groupFeaturesByColorAndMutualLocation} from "./cluster/groupFeaturesByColorAndMutualLocation.ts";
 import {setupClusterLayer, updateClusterLayerWithDebounce} from "./cluster/clusterLayer.ts";
 
 
@@ -31,7 +31,7 @@ const initLayers = (map: MapSingleton) => {
     const {osm, poiSource} = map.sources;
 
     const features = poiSource.getFeatures();
-    const featuresByColor = groupFeaturesByColor(features);
+    const featuresByColor = groupFeaturesByColorAndMutualLocation(features);
     const clusterSources = createColorBasedClusterSources(featuresByColor);
 
     map.layers = getLayers({osm, poiSource, clusterSources});

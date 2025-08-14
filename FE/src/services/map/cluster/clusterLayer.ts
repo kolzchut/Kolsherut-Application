@@ -1,5 +1,5 @@
 import map from "../map.ts";
-import {groupFeaturesByColor} from "./groupFeaturesByColor.ts";
+import {groupFeaturesByColorAndMutualLocation} from "./groupFeaturesByColorAndMutualLocation.ts";
 import {createColorBasedClusterSources} from "./cluster.ts";
 import VectorLayer from "ol/layer/Vector";
 import {Cluster} from "ol/source";
@@ -60,7 +60,7 @@ export const performClusterUpdate = () => {
         return;
     }
 
-    const featuresByColor = groupFeaturesByColor(features);
+    const featuresByColor = groupFeaturesByColorAndMutualLocation(features);
 
     if (areFeatureGroupsEqual(featuresByColor, lastFeaturesByColor)) return;
 
