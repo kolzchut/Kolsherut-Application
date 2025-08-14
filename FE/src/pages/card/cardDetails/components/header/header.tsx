@@ -6,16 +6,13 @@ import {AddressParts} from "../../../../../types/cardType.ts";
 import cardHeaderIcon from "../../../../../assets/cardHeaderIcon.json";
 import {createKeyboardHandler} from "../../../../../services/keyboardHandler";
 
-const Header = ({branchOperatingUnit, addressParts, branchLocationAccurate, isNational,organizationName}: {
+const Header = ({branchOperatingUnit, addressParts, isNational,organizationName}: {
     branchOperatingUnit: string,
     addressParts: AddressParts | string,
-    branchLocationAccurate: boolean,
     organizationName: string,
     isNational: boolean
 }) => {
-    const notAccurateLocation = window.strings.cardDetails.notAccurateLocation;
     const serviceGivenNationWide = window.strings.cardDetails.serviceGivenNationWide
-    const showNoAccurateLocation = !branchLocationAccurate && !isNational;
     const onBackButtonClick = () => window.history.back();
     const handleKeyDown = createKeyboardHandler(onBackButtonClick);
     const theme = useTheme<IDynamicThemeApp>();
@@ -44,8 +41,6 @@ const Header = ({branchOperatingUnit, addressParts, branchLocationAccurate, isNa
                     <span className={classes.headerSubtitle}>{(addressParts as unknown as AddressParts).secondary}</span>
                 </span>}
             {isNational && <span className={`${classes.nationWideText}`}> {serviceGivenNationWide}</span>}
-            {showNoAccurateLocation && <span className={classes.headerSubtitle}> {notAccurateLocation}
-                </span>}
         </div>
         {iconSource&& <img className={classes.headerIcon} src={iconSource.organizationLogo} alt={iconSource.organizationName}/>}
     </div>

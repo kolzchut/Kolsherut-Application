@@ -12,7 +12,7 @@ import MoreServicesInBranch from "./components/moreServicesInBranch/moreServices
 import Footer from "../../../components/footer/footer";
 import QuickAction from "./components/quickActions/quickAction";
 import {useEffect, useRef, useState} from "react";
-import { useTheme } from 'react-jss';
+import {useTheme} from 'react-jss';
 import IDynamicThemeApp from "../../../types/dynamicThemeApp.ts";
 
 const CardDetails = ({card}: { card: ICard }) => {
@@ -53,8 +53,8 @@ const CardDetails = ({card}: { card: ICard }) => {
     const phoneNumbers: string[] = [card.branch_phone_numbers, card.organization_phone_numbers, card.service_phone_numbers].find(arr => arr.length > 0) || [];
     const address = {text: card.branch_address, geom: card.branch_geometry};
     return <section ref={scrollRef} className={classes.root}>
-        <Header branchOperatingUnit={card.branch_operating_unit || card.branch_name ||  card.organization_name} isNational={card.national_service}
-                branchLocationAccurate={card.branch_location_accurate}
+        <Header branchOperatingUnit={card.branch_operating_unit || card.branch_name || card.organization_name}
+                isNational={card.national_service}
                 organizationName={card.organization_name}
                 addressParts={card.address_parts || card.branch_address}/>
         <div className={classes.content}>
