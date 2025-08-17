@@ -75,7 +75,11 @@ jobs:
           git config --global user.email "srm-devops-ci@localhost"
           cd srm-devops
           VALUES_FILE="helm/${CHART_NAME}/values.auto-updated.yaml"
+          echo "Updating $VALUES_FILE with image: $FULL_IMAGE"
+          echo "Before (image lines):" && (grep -n 'image:' "$VALUES_FILE" || true)
           bin/update_yaml.py '{"'"${CHART_NAME}"'":{"image":"'"${FULL_IMAGE}"'"}}' "$VALUES_FILE"
+          echo "After  (image lines):" && (grep -n 'image:' "$VALUES_FILE" || true)
+          echo "Git diff for $VALUES_FILE (if any):" && (git diff -- "$VALUES_FILE" || true)
           git add "$VALUES_FILE"
           git commit -m "FE staging image update: $VALUES_FILE" || echo "No changes to commit"
           git push origin main

@@ -36,6 +36,9 @@ jobs:
           npm ci
           npm run build
 
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
       - name: Docker Build
         working-directory: be
         env:
@@ -46,10 +49,6 @@ jobs:
             BUILD_ARGS="--cache-from ghcr.io/kolzchut/${IMAGE_NAME}:latest"
           fi
           docker build -t be-build $BUILD_ARGS .
-
-      - name: Login to GHCR
-        if: github.ref == 'refs/heads/main'
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Push & Update Helm (staging)
         if: github.ref == 'refs/heads/main'
@@ -64,8 +63,8 @@ jobs:
           docker push "$IMAGE_SHA"
           docker tag be-build ghcr.io/kolzchut/${IMAGE_NAME}:latest
           docker push ghcr.io/kolzchut/${IMAGE_NAME}:latest
-          echo "${SRM_DEVOPS_DEPLOY_KEY}" > srm_devops_deploy_key
-            
+          # write SSH key safely (preserve newlines, strip CR)
+          printf "%s" "$SRM_DEVOPS_DEPLOY_KEY" | tr -d '\r' > srm_devops_deploy_key
           chmod 400 srm_devops_deploy_key
           export GIT_SSH_COMMAND="ssh -i $(pwd)/srm_devops_deploy_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
           git clone git@github.com:kolzchut/srm-devops.git
@@ -73,8 +72,11 @@ jobs:
           git config --global user.email "srm-devops-ci@localhost"
           cd srm-devops
           VALUES_FILE="helm/${CHART_NAME}/values.auto-updated.yaml"
+          echo "Updating $VALUES_FILE with image: $IMAGE_SHA"
+          echo "Before (image lines):" && (grep -n 'image:' "$VALUES_FILE" || true)
           bin/update_yaml.py '{"'"${CHART_SUBPART}"'":{"image":"'"${IMAGE_SHA}"'"}}' "$VALUES_FILE"
+          echo "After  (image lines):" && (grep -n 'image:' "$VALUES_FILE" || true)
+          echo "Git diff for $VALUES_FILE (if any):" && (git diff -- "$VALUES_FILE" || true)
           git add "$VALUES_FILE"
           git commit -m "BE staging image update: $VALUES_FILE" || echo "No changes to commit"
           git push origin main
-
