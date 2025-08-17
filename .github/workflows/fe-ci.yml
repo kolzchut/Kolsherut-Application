@@ -41,7 +41,7 @@ jobs:
 
       - name: Docker Build
         env:
-          IMAGE_NAME: srm-frontend
+          IMAGE_NAME: kol-sherut-fe
         working-directory: FE
         run: |
           BUILD_ARGS=""
@@ -57,7 +57,7 @@ jobs:
       - name: Push & Update Helm (staging)
         if: github.ref == 'refs/heads/main'
         env:
-          IMAGE_NAME: srm-frontend
+          IMAGE_NAME: kol-sherut-fe
           CHART_NAME: site
           SRM_DEVOPS_DEPLOY_KEY: ${{ secrets.SRM_DEVOPS_DEPLOY_KEY }}
         run: |
