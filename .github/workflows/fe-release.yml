@@ -3,7 +3,7 @@ name: FE Release (production)
 # Produces two images:
 #  1. commit SHA: ghcr.io/kolzchut/kol-sherut-fe:<sha>
 #  2. tag-SHA:    ghcr.io/kolzchut/kol-sherut-fe:<tag>-<sha> (used in Helm)
-# (Plain <tag> alias removed per request.)
+# (Plain <tag> alias removed per request)
 on:
   push:
     tags:
