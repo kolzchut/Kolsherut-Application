@@ -1,5 +1,5 @@
 name: BE CI (staging)
-# Builds BE on any branch when be/ changes. Deploys (staging) only on main
+# Builds BE on any branch when be/ changes. Deploys (staging) only on main.
 on:
   push:
     branches:

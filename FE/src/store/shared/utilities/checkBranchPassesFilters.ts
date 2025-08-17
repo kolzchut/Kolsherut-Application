@@ -25,6 +25,5 @@ export const checkBranchPassesFilters = (
         });
         if (!passesSituationFilters) return false;
     }
-
     return true;
 };
