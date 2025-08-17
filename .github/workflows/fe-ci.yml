@@ -41,7 +41,7 @@ jobs:
 
       - name: Docker Build
         env:
-          IMAGE_NAME: kol-sherut-fe
+          IMAGE_NAME: srm-frontend
         working-directory: FE
         run: |
           BUILD_ARGS=""
@@ -51,13 +51,13 @@ jobs:
           docker build -t fe-build $BUILD_ARGS .
 
       - name: Login to GHCR
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/CI-CD-Fixed'
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Push & Update Helm (staging)
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/CI-CD-Fixed'
         env:
-          IMAGE_NAME: kol-sherut-fe
+          IMAGE_NAME: srm-frontend
           CHART_NAME: site
           SRM_DEVOPS_DEPLOY_KEY: ${{ secrets.SRM_DEVOPS_DEPLOY_KEY }}
         run: |
