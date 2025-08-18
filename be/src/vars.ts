@@ -4,7 +4,7 @@ export default {
     serverSetups: {
         origin: process.env.ORIGIN || '*',
         environment: process.env.ENV || 'dev',
-        port: process.env.PORT || 3000,
+        port: process.env.PORT || 5000,
         elastic: {
             connection: {
                 compression: true,
