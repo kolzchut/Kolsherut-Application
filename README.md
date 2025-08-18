@@ -12,11 +12,11 @@ requests from the frontend, process data, and interact with the database.
 | Variable                  | Description                                                              | Default               |
 |---------------------------|--------------------------------------------------------------------------|-----------------------|
 | ORIGIN                    | the front end origin for cors (Need to change default)                   | *                     |
-| ENV                       | the environment you working on                                           | dev                   |
+| ENV                       | the environment you working on  (prod/stage/local)                       | local                 |
 | PORT                      | the port for the back end                                                | 5000                  |
 | ELASTIC_URL               | the elastic search URL (Need to change default)                          | http://localhost:9200 |
 | ELASTIC_USERNAME          | the elastic search username (Need to change default)                     | elastic               |
-| ELASTIC_PASSWORD          | the elastic search password (Need to change default)                     | your-password         |
+| ELASTIC_PASS              | the elastic search password (Need to change default)                     | your-password         |
 | ELASTIC_RECONNECT_TIMEOUT | the time to wait before reconnecting to elastic search (seconds)         | 5                     |
 | VERBOSE                   | Default to false, if true will log more information to the console       | false                 |
 | LOG_TO_FILE               | Default to false, if true will log to file                               | false                 |
