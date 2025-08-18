@@ -30,4 +30,3 @@ const LocationDiv = ({location, icon, iconAlt, onClick, zoom, className}: Locati
 };
 
 export default LocationDiv;
-
