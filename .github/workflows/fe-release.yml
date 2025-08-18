@@ -3,7 +3,7 @@ name: FE Release (production)
 # Produces two images:
 #  1. commit SHA: ghcr.io/kolzchut/kol-sherut-fe:<sha>
 #  2. tag-SHA:    ghcr.io/kolzchut/kol-sherut-fe:<tag>-<sha> (used in Helm)
-# (Plain <tag> alias removed per request.)
+# (Plain <tag> alias removed per request)
 on:
   push:
     tags:
@@ -12,6 +12,10 @@ on:
       - 'FE/**'
       - '.github/workflows/fe-release.yml'
   workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
 
 concurrency:
   group: fe-release-${{ github.ref }}
@@ -52,7 +56,7 @@ jobs:
           if docker pull ghcr.io/kolzchut/${IMAGE_NAME}:latest; then
             BUILD_ARGS="--cache-from ghcr.io/kolzchut/${IMAGE_NAME}:latest"
           fi
-          docker build -t fe-release $BUILD_ARGS .
+          docker build -t fe-release $BUILD_ARGS --build-arg environment=production .
 
       - name: Login to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin

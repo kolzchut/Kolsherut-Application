@@ -9,6 +9,10 @@ on:
       - 'FE/**'
       - '.github/workflows/fe-ci.yml'
 
+permissions:
+  contents: write
+  packages: write
+
 concurrency:
   group: fe-${{ github.ref }}
   cancel-in-progress: true
@@ -35,6 +39,9 @@ jobs:
         working-directory: FE
         run: npm run build
 
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
       - name: Docker Build
         env:
           IMAGE_NAME: kol-sherut-fe
@@ -44,11 +51,10 @@ jobs:
           if docker pull ghcr.io/kolzchut/${IMAGE_NAME}:latest; then
             BUILD_ARGS="--cache-from ghcr.io/kolzchut/${IMAGE_NAME}:latest"
           fi
-          docker build -t fe-build $BUILD_ARGS .
-
-      - name: Login to GHCR
-        if: github.ref == 'refs/heads/main'
-        run: docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          # decide build environment: stage on main, local otherwise
+          ENV_ARG="local"
+          if [ "${GITHUB_REF}" = "refs/heads/main" ]; then ENV_ARG="stage"; fi
+          docker build -t fe-build $BUILD_ARGS --build-arg environment=${ENV_ARG} .
 
       - name: Push & Update Helm (staging)
         if: github.ref == 'refs/heads/main'
@@ -63,6 +69,8 @@ jobs:
           docker push "$FULL_IMAGE"
           docker tag fe-build ghcr.io/kolzchut/${IMAGE_NAME}:latest
           docker push ghcr.io/kolzchut/${IMAGE_NAME}:latest
+          # write SSH key safely (preserve newlines, strip CR)
+          printf "%s" "$SRM_DEVOPS_DEPLOY_KEY" | tr -d '\r' > srm_devops_deploy_key
           chmod 400 srm_devops_deploy_key
           export GIT_SSH_COMMAND="ssh -i $(pwd)/srm_devops_deploy_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
           git clone git@github.com:kolzchut/srm-devops.git
@@ -70,7 +78,11 @@ jobs:
           git config --global user.email "srm-devops-ci@localhost"
           cd srm-devops
           VALUES_FILE="helm/${CHART_NAME}/values.auto-updated.yaml"
+          echo "Updating $VALUES_FILE with image: $FULL_IMAGE"
+          echo "Before (image lines):" && (grep -n 'image:' "$VALUES_FILE" || true)
           bin/update_yaml.py '{"'"${CHART_NAME}"'":{"image":"'"${FULL_IMAGE}"'"}}' "$VALUES_FILE"
+          echo "After  (image lines):" && (grep -n 'image:' "$VALUES_FILE" || true)
+          echo "Git diff for $VALUES_FILE (if any):" && (git diff -- "$VALUES_FILE" || true)
           git add "$VALUES_FILE"
           git commit -m "FE staging image update: $VALUES_FILE" || echo "No changes to commit"
           git push origin main

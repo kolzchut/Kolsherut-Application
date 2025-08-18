@@ -13,6 +13,10 @@ on:
       - '.github/workflows/be-release.yml'
   workflow_dispatch:
 
+permissions:
+  contents: write
+  packages: write
+
 concurrency:
   group: be-release-${{ github.ref }}
   cancel-in-progress: true

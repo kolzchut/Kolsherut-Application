@@ -12,7 +12,6 @@ import autoCompleteRoute from "./routes/autoCompleteRoute";
 import siteMapRoute from "./routes/siteMapRoute";
 import siteMapForModalRoute from "./routes/siteMapForModalRoute";
 
-
 const app = express();
 const httpServer = createServer(app);
 
