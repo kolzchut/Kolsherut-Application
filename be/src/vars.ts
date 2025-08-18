@@ -3,7 +3,7 @@ import path from "path";
 export default {
     serverSetups: {
         origin: process.env.ORIGIN || '*',
-        environment: process.env.ENV || 'dev',
+        environment: process.env.ENV || 'local',
         port: process.env.PORT || 5000,
         elastic: {
             connection: {
@@ -15,26 +15,28 @@ export default {
                 }
             },
             reconnectTimeout: parseInt(process.env.ELASTIC_RECONNECT_TIMEOUT || '5') * 1000,
-            indices: {
+            indices: process.env.ENV === 'prod' ? {
+                card: "srm__cards_20240417210351058073_bb6360fd",
+                autocomplete: "srm__autocomplete_20230214172220805473_23f43e2a",
+
+            } : {
                 card: "srm__cards_20220926183305498944_a9274d22",
-                homepage: "srm__homepage_20240523001317126410_9fa37757",
                 autocomplete: "srm__autocomplete_20240505135631716607_372901c0",
-                locations: "srm__places_20220926183316169381_f69c0129"
             }
         }
     },
-    defaultParams:{
-        searchCards:{
-        fast:{
-            size:  parseInt(process.env.SEARCHCARDS_FIRST_LENGTH || '50'),
-            offset: 0,
-            innerHitsSize: 1000
-        },
-        rest:{
-            size: 300,
-            offset:  parseInt(process.env.SEARCHCARDS_FIRST_LENGTH || '50'),
-            innerHitsSize: 1000
-        }
+    defaultParams: {
+        searchCards: {
+            fast: {
+                size: parseInt(process.env.SEARCHCARDS_FIRST_LENGTH || '50'),
+                offset: 0,
+                innerHitsSize: 1000
+            },
+            rest: {
+                size: 300,
+                offset: parseInt(process.env.SEARCHCARDS_FIRST_LENGTH || '50'),
+                innerHitsSize: 1000
+            }
         }
     },
     logs: {

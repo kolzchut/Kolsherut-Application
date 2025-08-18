@@ -12,7 +12,7 @@ requests from the frontend, process data, and interact with the database.
 | Variable                  | Description                                                              | Default               |
 |---------------------------|--------------------------------------------------------------------------|-----------------------|
 | ORIGIN                    | the front end origin for cors (Need to change default)                   | *                     |
-| ENV                       | the environment you working on                                           | dev                   |
+| ENV                       | the environment you working on  (prod/stage/local)                       | local                 |
 | PORT                      | the port for the back end                                                | 5000                  |
 | ELASTIC_URL               | the elastic search URL (Need to change default)                          | http://localhost:9200 |
 | ELASTIC_USERNAME          | the elastic search username (Need to change default)                     | elastic               |
