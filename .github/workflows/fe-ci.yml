@@ -1,7 +1,6 @@
 name: FE CI (staging)
 # Builds FE on any branch when FE files change. Deploys (staging) only on main.
 # Production (tag) deployment handled by fe-release.yml.
-
 on:
   push:
     branches:
