@@ -1,0 +1,14 @@
+[
+  "human_situations:language:arabic_speaking",
+  "human_situations:language:amharic_speaking",
+  "human_situations:language:english_speaking",
+  "human_situations:language:french_speaking",
+  "human_situations:language:hebrew_speaking",
+  "human_situations:language:russian_speaking",
+  "human_situations:language:sign_language",
+  "human_situations:language:spanish_speaking",
+  "human_situations:household:families",
+  "human_situations:gender:women",
+  "human_situations:gender:men",
+  "human_situations:deprivation:low_income"
+]

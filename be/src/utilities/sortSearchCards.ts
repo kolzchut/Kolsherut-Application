@@ -1,54 +1,35 @@
-interface ServiceData {
-    service_id: string;
-    service_description?: string;
-    service_boost?: number;
-    organization_branch_count?: number;
-    national_service?: boolean;
-    service_phone_numbers?: string[];
-    organization_phone_numbers?: string[];
-    organization_kind?: string;
-}
+import {IService} from "../types/serviceType";
+import GeneralLifeSituationTags from "../assets/generalLifeSituationTags.json"
+import GovernmentTypes from "../assets/governmentTypes.json";
 
-export function calculateServiceScore(data: ServiceData): number {
-    const branchCount = data.organization_branch_count || 1;
-    const nationalService = Boolean(data.national_service);
-    const isMeser = data.service_id.startsWith('meser-');
-    const hasDescription = Boolean(data.service_description && data.service_description.length > 5);
-    const governmentTypes = ['משרד ממשלתי', 'רשות מקומית', 'תאגיד סטטוטורי'];
+const calculateServiceScore = (service: IService): number => {
+    const serviceSituations = service.situations.flatMap(situation => situation.id);
 
-    let score = 1;
+    const isServiceDescriptionIncludesMoreThanFiveWords = !!(service.service_description && service.service_description.split(' ').length > 5);
+    const isServiceHasGeneralLifeSituation = serviceSituations.some(situationId => GeneralLifeSituationTags.includes(situationId));
+    const countBranches = service.organizations.reduce((acc, org) => acc + org.branches.length, 0);
+    const isServiceHasGovernmentType = GovernmentTypes.includes(service.organization_kind)
+    const countSituations = service.situations.length;
+    const serviceScore = Math.min(service.score || 0, 3000);
+    const serviceBoost = Math.min(service.service_boost || 0, 10000);
 
-    if (!isMeser) score *= 8;
-    if (hasDescription) score *= 5;
+    let score = serviceScore + serviceBoost;
 
-    if (nationalService) {
-        score *= 6;
+    if (isServiceDescriptionIncludesMoreThanFiveWords) score += 1000;
+    if (isServiceHasGeneralLifeSituation) score += 2000;
+    score += Math.min(countBranches, 999);
+    if (isServiceHasGovernmentType) score += 500;
+    if (countSituations >= 1 && countSituations <= 9) score += (10 - countSituations) * 100;
 
-        const servicePhones = data.service_phone_numbers || [];
-        const orgPhones = data.organization_phone_numbers || [];
-        const allPhones = [...servicePhones, ...orgPhones].filter(phone => phone && phone.trim());
-
-        if (allPhones.length > 0) {
-            const firstPhone = allPhones[0];
-            if (firstPhone.length <= 5 || firstPhone.startsWith('1')) score *= 3;
-        }
-    } else {
-        if (branchCount > 100) score *= Math.min(branchCount / 20, 8);
-         else score *= Math.sqrt(branchCount);
-    }
-
-    if (data.organization_kind && governmentTypes.includes(data.organization_kind)) score *= 4;
-    score = Math.max(score, 1);
-    const serviceBoost = Math.min(data.service_boost || 0, 2);
-    score *= Math.pow(3, serviceBoost);
     return score;
 }
 
-export function applyElasticsearchScoreModifier(baseScore: number): number {
-    return Math.sqrt(baseScore);
+const sortSearchCards = (services: IService[]) => {
+    return services.sort((a, b) => {
+        const scoreA = calculateServiceScore(a);
+        const scoreB = calculateServiceScore(b);
+        return scoreB - scoreA;
+    });
 }
 
-export function calculateFinalElasticsearchScore(data: ServiceData): number {
-    const baseScore = calculateServiceScore(data);
-    return applyElasticsearchScoreModifier(baseScore);
-}
+export default sortSearchCards;

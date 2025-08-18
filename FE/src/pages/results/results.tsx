@@ -92,6 +92,9 @@ const Results = () => {
             if(backendFilters.response) value.response_id = backendFilters.response;
             settingToResults({value, removeOldFilters: false})
         }
+        allowChangeStoreLocation(false);
+            setMapOnLocation(location.bounds);
+        allowChangeStoreLocation(true)
         return () => {
             allowChangeStoreLocation(false);
             removeAllPOIs();
