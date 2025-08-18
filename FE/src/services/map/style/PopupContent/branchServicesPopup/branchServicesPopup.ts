@@ -6,6 +6,7 @@ import "./branchServicesPopup.css";
 import {getHrefForCard} from "../../../../href.ts";
 import {reRouteToCard} from "../../../../routes/reRoute.ts";
 import mapAnalytics from "../../../../gtag/mapEvents.ts"
+import {getCommonFooterText, groupByOrganization} from "./branchServicesPopupLogic.ts";
 
 interface IProps {
     responses: never[];
@@ -53,6 +54,8 @@ const getHTMLForFeature = (props: IProps) => {
         `;
 }
 
+
+
 const branchServicesPopup = ({feature, root}: { feature: Feature<Geometry>, root: HTMLDivElement }): string => {
     if (!feature || !root) return '';
     root.className = "branch-services-popup-div";
@@ -60,14 +63,29 @@ const branchServicesPopup = ({feature, root}: { feature: Feature<Geometry>, root
 
     lengthOfFeatures = featuresProperties.length;
 
-    const featuresHtml = featuresProperties.map(getHTMLForFeature).join('');
-    const serviceName = featuresProperties[0]?.organization_name || '';
+    const groups = groupByOrganization(featuresProperties);
+    const parts: string[] = [];
+    groups.forEach((items, orgName) => {
+        parts.push(`
+            <div class="branch-service-bottom-div">
+                <strong>${orgName}</strong>
+            </div>
+        `);
+        parts.push(items.map(getHTMLForFeature as never).join(''));
+    });
+    const featuresHtml = parts.join('');
+
+    const footerText = getCommonFooterText(featuresProperties);
+    const footerHtml = footerText ? `
+           <div class="branch-service-bottom-div">
+                <strong>${footerText}</strong>
+           </div>
+    ` : '';
+
     return `
         <div class="branch-services-content">
             ${featuresHtml}
-           <div class="branch-service-bottom-div">
-                <strong>${serviceName}</strong>
-           </div>
+           ${footerHtml}
        </div>
     `;
 };
