@@ -13,7 +13,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "docker:build": "npm run build && npx cross-var docker build -t kolsherut_fe:$npm_package_version .",
+    "docker:build": "npm run build && npx cross-var docker build --build-arg environment=local -t kolsherut_fe:$npm_package_version .",
     "docker:save": "npx cross-var docker save -o ../tars/kolsherut_fe.$npm_package_version.tar kolsherut_fe:$npm_package_version",
     "tar": "npm run docker:build && npm run docker:save"
   },
