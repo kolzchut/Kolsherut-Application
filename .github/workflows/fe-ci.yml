@@ -51,7 +51,10 @@ jobs:
           if docker pull ghcr.io/kolzchut/${IMAGE_NAME}:latest; then
             BUILD_ARGS="--cache-from ghcr.io/kolzchut/${IMAGE_NAME}:latest"
           fi
-          docker build -t fe-build $BUILD_ARGS .
+          # decide build environment: stage on main, local otherwise
+          ENV_ARG="local"
+          if [ "${GITHUB_REF}" = "refs/heads/main" ]; then ENV_ARG="stage"; fi
+          docker build -t fe-build $BUILD_ARGS --build-arg environment=${ENV_ARG} .
 
       - name: Push & Update Helm (staging)
         if: github.ref == 'refs/heads/main'

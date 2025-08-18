@@ -6,7 +6,7 @@ import {setPage} from "../../store/general/generalSlice";
 
 
 const getBaseURL = (): string => {
-    return window.config.URLS.server;
+    return window.environment.server;
 };
 
 
