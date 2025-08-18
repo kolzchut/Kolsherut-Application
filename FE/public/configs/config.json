@@ -22,7 +22,6 @@
   "logToServer": false,
   "routes": {
     "logs": "/logs",
-    "test": "/test",
     "search": "/search",
     "card": "/card/%%cardId%%",
     "autocomplete": "/autocomplete/%%search%%",
