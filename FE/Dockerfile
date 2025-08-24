@@ -6,8 +6,6 @@ ENV environment=${environment}
 
 COPY dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY prepare-config.sh /usr/local/bin/prepare-config.sh
-RUN chmod +x /usr/local/bin/prepare-config.sh
 
-# Prepare environment.json based on selected environment
-RUN ["/bin/sh", "-c", "/usr/local/bin/prepare-config.sh"]
+# Overwrite environment.json with the selected environment file from the built dist
+COPY dist/configs/${environment}.json /usr/share/nginx/html/configs/environment.json
