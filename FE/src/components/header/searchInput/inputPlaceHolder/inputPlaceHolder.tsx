@@ -5,7 +5,11 @@ import {useSelector} from "react-redux";
 import {getSearchQuery} from "../../../../store/general/general.selector.ts";
 import {getLocationFilter} from "../../../../store/filter/filter.selector.ts";
 import {createKeyboardHandler} from "../../../../services/keyboardHandler";
-import {checkIfLocationKeyEqualsToWord, IPlaceHolderText, parseSearchQueryToSentences} from "./inputPlaceHolderLogic.ts";
+import {
+    checkIfLocationKeyEqualsToWord,
+    IPlaceHolderText,
+    parseSearchQueryToSentences
+} from "./inputPlaceHolderLogic.ts";
 import {getBackendFiltersNamesByResults} from "../../../../store/shared/utilities/header.selector.ts";
 
 const InputPlaceHolder = ({onClick}: { onClick: () => void }) => {
@@ -23,7 +27,11 @@ const InputPlaceHolder = ({onClick}: { onClick: () => void }) => {
 
     const handleKeyDown = createKeyboardHandler(onClick);
 
-    const text: IPlaceHolderText = hasNames ? {responseSentence: names.response || window.strings.searchQueryTextDefaults.serviceSentence, situationSentence: names.situation || window.strings.searchQueryTextDefaults.forSentence} : parseSearchQueryToSentences({searchQueryArray, forSeparators, bySeparators});
+    const {baseSituationSentence} = window.strings.searchQueryTextDefaults
+    const text: IPlaceHolderText = hasNames ? {
+        responseSentence: names.response || window.strings.searchQueryTextDefaults.serviceSentence,
+        situationSentence: names.situation || window.strings.searchQueryTextDefaults.forSentence
+    } : parseSearchQueryToSentences({searchQueryArray, forSeparators, bySeparators});
     const classes = useStyles({theme});
     return <div
         className={classes.mainDiv}
@@ -35,7 +43,8 @@ const InputPlaceHolder = ({onClick}: { onClick: () => void }) => {
     >
         {text.responseSentence && <h1 className={classes.firstSentence}>{text.responseSentence}</h1>}
         <div className={classes.bottomDiv}>
-            {text.situationSentence && <h2 className={classes.secondSentence}>{text.situationSentence}</h2>}
+            {text.situationSentence &&
+                <h2 className={classes.secondSentence}>{baseSituationSentence + " " + text.situationSentence}</h2>}
             {text.bySentence && <h3 className={classes.secondSentence}>{text.bySentence}</h3>}
         </div>
     </div>
