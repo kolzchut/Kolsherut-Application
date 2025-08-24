@@ -40,7 +40,8 @@ export const setMapToCard = (card:ICard) =>{
         cardId: card.card_id,
         branch_address: card.branch_address,
         branch_name: card.branch_name || card.organization_name,
-        accurateLocation: card.branch_location_accurate
+        accurateLocation: card.branch_location_accurate,
+        service_description: card.service_description || "",
     }
     addPOI(poiData)
 }

@@ -67,8 +67,7 @@ export const createPopupByFeatureForBranchServices = (feature: Feature<Geometry>
     const isIntendingToHoverOnClickedPopUp = !isOnClickPopup && feature.getId() === globals.currentMainPopupId;
 
     if (!popupOverlay || isIntendingToHoverOnClickedPopUp) return;
-
-    globals.currentMainPopupId = feature.getId() || "";
+    if (isOnClickPopup) globals.currentMainPopupId = feature.getId() || "";
     const contentElement = document.createElement("div") as HTMLDivElement;
 
     if (isOnClickPopup || feature.getProperties().features.length < 2) createPopupOverlay(popupOverlay, feature, contentElement, branchServicesPopup);
@@ -81,6 +80,7 @@ export const deleteMainPopup = () => {
     const popupOverlay = map.getMainPopupOverlay();
     if (!popupOverlay) return;
     deletePopupOverlay(popupOverlay);
+    resetCurrentMainPopupId();
 }
 export const deleteSecondaryPopup = () => {
     const popupOverlay = map.getSecondaryPopupOverlay();
@@ -94,6 +94,10 @@ export const lockPopup = () => {
 export const unlockPopup = () => {
     globals.popUpLocked = false;
 };
+export const resetCurrentMainPopupId = () => {
+    globals.currentMainPopupId = "";
+};
+
 export const setPopupOffsetForBigMap = () => {
     const main = map.getMainPopupOverlay();
     if (main) main.setOffset([-475, 0]);

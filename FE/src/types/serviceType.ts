@@ -11,6 +11,7 @@ export interface IBranch {
     situations: Situation[];
     serviceName: string;
     organizationName: string;
+    serviceDescription: string;
 }
 
 export interface IOrganization {

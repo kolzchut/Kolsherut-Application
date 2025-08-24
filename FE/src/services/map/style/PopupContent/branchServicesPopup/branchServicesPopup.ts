@@ -15,6 +15,7 @@ interface IProps {
     service_name: string;
     branch_name: string;
     cardId: string;
+    service_description: string;
 }
 
 let lengthOfFeatures = 0;
@@ -30,7 +31,7 @@ let lengthOfFeatures = 0;
 };
 
 const getHTMLForFeature = (props: IProps) => {
-    const {service_name, organization_name, branch_name, cardId} = props;
+    const {service_name, organization_name, branch_name, cardId, service_description} = props;
     const responses = props.responses || [];
     const situations = props.situations || [];
     const firstResponse = responses[0];
@@ -45,7 +46,7 @@ const getHTMLForFeature = (props: IProps) => {
 
     return `
             <a class="feature-section" href="${href}" onclick="handleMapFeatureClick(event, '${cardId}')">
-                <strong class="branch-title">${branch_name || organization_name || service_name}</strong>
+                <strong class="branch-title">${ service_name || service_description || branch_name || organization_name}</strong>
                 <div class="feature-labels">
                     ${responseLabel}
                     ${situationLabel}
@@ -53,7 +54,6 @@ const getHTMLForFeature = (props: IProps) => {
             </a>
         `;
 }
-
 
 
 const branchServicesPopup = ({feature, root}: { feature: Feature<Geometry>, root: HTMLDivElement }): string => {

@@ -15,7 +15,8 @@ export const addResultsPOIs = (branches: IBranch[]) => {
             cardId: branch.id,
             branch_address: branch.address,
             branch_name: branch.name,
-            accurateLocation: branch.isAccurate
+            accurateLocation: branch.isAccurate,
+            service_description: branch.serviceDescription || "",
         }
         addPOI(poiData)
     });

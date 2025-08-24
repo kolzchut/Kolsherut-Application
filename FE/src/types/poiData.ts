@@ -10,4 +10,5 @@ export default interface PoiData{
     accurateLocation:boolean;
     organization_name: string;
     service_name: string;
+    service_description: string;
 }
