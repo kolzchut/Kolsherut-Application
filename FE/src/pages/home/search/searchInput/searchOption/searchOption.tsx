@@ -11,6 +11,7 @@ import generalAnalytics from "../../../../../services/gtag/generalEvents";
 import {useTheme} from "react-jss";
 import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
 import {createKeyboardHandler} from "../../../../../services/keyboardHandler";
+import splitEmSegments from "./utils/splitEmSegments";
 
 const SearchOption = ({value, onCloseSearchOptions, isStructured}: { value: IStructureAutocomplete | IUnStructuredAutocomplete, onCloseSearchOptions: () => void, isStructured:boolean}) => {
     const theme = useTheme<IDynamicThemeApp>();
@@ -36,6 +37,8 @@ const SearchOption = ({value, onCloseSearchOptions, isStructured}: { value: IStr
     const handleKeyDown = createKeyboardHandler(onClick);
 
     const icon = isStructured ? structuredSearchIcon : unstructuredSearchIcon;
+    const segments = value.labelHighlighted ? splitEmSegments(value.labelHighlighted) : null;
+
     return <div onClick={onClick}
                 onKeyDown={handleKeyDown}
                 tabIndex={0}
@@ -44,7 +47,17 @@ const SearchOption = ({value, onCloseSearchOptions, isStructured}: { value: IStr
                 className={classes.optionalSearchValue}>
                         <span className={classes.iconAndText}>
                             <img className={classes.searchIcon} alt={"חיפוש"} src={lightIconSearch}/>
-                            {value.label}
+                            {segments ? (
+                                <span>
+                                    {segments.map((seg, i) => seg.isEm ? (
+                                        <span key={i}>{seg.text}</span>
+                                    ) : (
+                                        <span className={classes.boldText} key={i}>{seg.text}</span>
+                                    ))}
+                                </span>
+                            ) : (
+                                <span>{value.label}</span>
+                            )}
                         </span>
         <img className={classes.searchIcon} alt={"חיפוש"} src={icon}/>
     </div>

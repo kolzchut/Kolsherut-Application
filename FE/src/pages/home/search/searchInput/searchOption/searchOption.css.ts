@@ -34,5 +34,8 @@ export default createUseStyles({
         "@media (max-width: 768px)": {
             fontSize: accessibilityActive ? 24 : 20,
         },
-    })
+    }),
+    boldText:{
+        fontWeight: 'bold',
+    }
 });
