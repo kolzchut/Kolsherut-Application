@@ -23,15 +23,12 @@ const InputPlaceHolder = ({onClick}: { onClick: () => void }) => {
     const bySeparators: string[] = window.config.searchQueryBySeparators;
 
     const names = useSelector(getBackendFiltersNamesByResults);
-    const hasNames = names.response || names.situation;
-
     const handleKeyDown = createKeyboardHandler(onClick);
 
     const {baseSituationSentence} = window.strings.searchQueryTextDefaults
-    const text: IPlaceHolderText = hasNames ? {
-        responseSentence: names.response || window.strings.searchQueryTextDefaults.serviceSentence,
-        situationSentence: names.situation || window.strings.searchQueryTextDefaults.forSentence
-    } : parseSearchQueryToSentences({searchQueryArray, forSeparators, bySeparators});
+    const text: IPlaceHolderText =parseSearchQueryToSentences({searchQueryArray, forSeparators, bySeparators});
+    text.responseSentence = names.response;
+    text.situationSentence = names.situation;
     const classes = useStyles({theme});
     return <div
         className={classes.mainDiv}

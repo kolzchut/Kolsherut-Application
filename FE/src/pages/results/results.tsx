@@ -57,7 +57,7 @@ const Results = () => {
         isMobile,
         accessibilityActive
     });
-    const metaTagsData = getResultsMetaTags({searchQuery, location})
+    const metaTagsData = getResultsMetaTags({searchQuery})
     const dispatch = useDispatch();
     const reportOnce = useOnce(() => resultsAnalytics.scrollOnceEvent());
     const newResults = () => {

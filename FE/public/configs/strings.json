@@ -124,7 +124,7 @@
   },
   "searchQueryTextDefaults": {
     "serviceSentence": "כל זכות",
-    "forSentence": "עבור כולם",
+    "forSentence": "כולם",
     "baseSituationSentence": "עבור"
   }
 }

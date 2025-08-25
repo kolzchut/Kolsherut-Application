@@ -100,13 +100,13 @@ export const resetCurrentMainPopupId = () => {
 
 export const setPopupOffsetForBigMap = () => {
     const main = map.getMainPopupOverlay();
-    if (main) main.setOffset([-475, 0]);
+    if (main) main.setOffset([-475, -15]);
     const secondary = map.getSecondaryPopupOverlay();
-    if (secondary) secondary.setOffset([-475, 0]);
+    if (secondary) secondary.setOffset([-475, -15]);
 }
 export const setPopupOffsetForSmallMap = () => {
     const main = map.getMainPopupOverlay();
-    if (main) main.setOffset([0, 0]);
+    if (main) main.setOffset([-175, -15]);
     const secondary = map.getSecondaryPopupOverlay();
-    if (secondary) secondary.setOffset([0, 0]);
+    if (secondary) secondary.setOffset([-175, -15]);
 }
