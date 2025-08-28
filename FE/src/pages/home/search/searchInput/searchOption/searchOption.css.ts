@@ -1,5 +1,5 @@
 import {createUseStyles} from 'react-jss';
-import {primaryBorderColorOne} from "../../../../../services/theme";
+import {primaryBorderColorOne, secondaryTextColorOne} from "../../../../../services/theme";
 
 interface IProps {
     accessibilityActive: boolean;
@@ -28,6 +28,7 @@ export default createUseStyles({
     iconAndText: ({ accessibilityActive }: IProps) => ({
         display: 'flex',
         alignItems: 'center',
+        color: secondaryTextColorOne,
         gap: 10,
         paddingRight: 10,
         fontSize: accessibilityActive ? 28 : 24,

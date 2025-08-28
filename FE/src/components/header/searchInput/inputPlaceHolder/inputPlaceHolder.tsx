@@ -26,9 +26,7 @@ const InputPlaceHolder = ({onClick}: { onClick: () => void }) => {
     const handleKeyDown = createKeyboardHandler(onClick);
 
     const {baseSituationSentence} = window.strings.searchQueryTextDefaults
-    const text: IPlaceHolderText =parseSearchQueryToSentences({searchQueryArray, forSeparators, bySeparators});
-    text.responseSentence = names.response;
-    text.situationSentence = names.situation;
+    const text: IPlaceHolderText =parseSearchQueryToSentences({searchQueryArray, forSeparators, bySeparators, response:names.response, situation:names.situation});
     const classes = useStyles({theme});
     return <div
         className={classes.mainDiv}

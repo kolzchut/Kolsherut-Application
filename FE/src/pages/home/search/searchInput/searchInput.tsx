@@ -90,7 +90,7 @@ const SearchInput = () => {
                 <button className={classes.closeIconButton} onClick={onClose}>
                     <img className={classes.closeIconImg} src={closeIcon} alt={"close list"}/>
                 </button>}
-            <div className={classes.optionalSearchValuesWrapper}>
+            {(optionalSearchValues.structured.length > 0 || optionalSearchValues.unstructured.length> 0) && <div className={classes.optionalSearchValuesWrapper}>
                 {optionalSearchValues.structured.length > 0 &&
                     optionalSearchValues.structured.map((value: IStructureAutocomplete, index: number) => (
                         <SearchOption value={value} isStructured={true} key={index} onCloseSearchOptions={onClose}/>
@@ -98,7 +98,7 @@ const SearchInput = () => {
                     {optionalSearchValues.unstructured.map((value, index) => (
                         <SearchOption value={value} isStructured={false} key={index} onCloseSearchOptions={onClose}/>
                     ))}
-            </div>
+            </div>}
         </div>
     </div>
 }

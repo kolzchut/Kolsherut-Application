@@ -22,7 +22,8 @@ export default {
             } : {
                 card: "srm__cards_20220926183305498944_a9274d22",
                 autocomplete: "srm__autocomplete_20240505135631716607_372901c0",
-            }
+            },
+            autocompleteMinScore: parseFloat(process.env.AUTOCOMPLETE_MIN_SCORE || '5000')
         }
     },
     defaultParams: {

@@ -7,6 +7,8 @@ interface IParseSearchQueryToSentences {
     searchQueryArray: string[];
     forSeparators: string[];
     bySeparators: string[];
+    response?: string;
+    situation?: string;
 }
 
 export interface IPlaceHolderText {
@@ -15,7 +17,7 @@ export interface IPlaceHolderText {
     bySentence?: string;
 }
 
-export const parseSearchQueryToSentences = ({searchQueryArray, forSeparators, bySeparators}
+export const parseSearchQueryToSentences = ({searchQueryArray, forSeparators, bySeparators, response, situation}
                                             : IParseSearchQueryToSentences): IPlaceHolderText => {
     const indexOfForSeparator = searchQueryArray.findIndex((word) => forSeparators.includes(word));
     const indexOfBySeparator = searchQueryArray.findIndex((word) => bySeparators.includes(word));
@@ -41,12 +43,16 @@ export const parseSearchQueryToSentences = ({searchQueryArray, forSeparators, by
     } else
         text.responseSentence = searchQueryArray.join(' ');
 
-    if(!text.situationSentence && !text.bySentence)
+    if(response) text.responseSentence = response;
+    if(situation) text.situationSentence = situation;
+
+    if (situation == text.responseSentence) text.responseSentence =window.strings.searchQueryTextDefaults.serviceSentence;
+
+    if(!text.situationSentence && !text.bySentence && !response)
         return text;
 
     if (!text.responseSentence || text.responseSentence.trim() === '')
         text.responseSentence = window.strings.searchQueryTextDefaults.serviceSentence;
-
     if (!text.situationSentence || text.situationSentence.trim() === '')
         text.situationSentence = window.strings.searchQueryTextDefaults.forSentence;
 

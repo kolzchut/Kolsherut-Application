@@ -6,18 +6,17 @@ export interface IStructureAutocomplete {
     bounds: [number, number, number, number],
     cityName: string,
     labelHighlighted?: string,
+    score?: number
 }
-
 export interface IUnStructuredAutocomplete {
     label: string,
     query: string,
     labelHighlighted?: string,
     cardId?: string,
+    score?: number
 }
 
-
-export default interface AutocompleteType {
-    structured: IStructureAutocomplete[],
-    unstructured: IUnStructuredAutocomplete[],
-
+export interface AutocompleteBuckets {
+    structured?: IStructureAutocomplete[];
+    unstructured?: IUnStructuredAutocomplete[];
 }

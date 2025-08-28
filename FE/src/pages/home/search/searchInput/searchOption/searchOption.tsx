@@ -12,25 +12,38 @@ import {useTheme} from "react-jss";
 import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
 import {createKeyboardHandler} from "../../../../../services/keyboardHandler";
 import splitEmSegments from "./utils/splitEmSegments";
+import {reRouteToCard} from "../../../../../services/routes/reRoute.ts";
 
-const SearchOption = ({value, onCloseSearchOptions, isStructured}: { value: IStructureAutocomplete | IUnStructuredAutocomplete, onCloseSearchOptions: () => void, isStructured:boolean}) => {
+const SearchOption = ({value, onCloseSearchOptions, isStructured}: {
+    value: IStructureAutocomplete | IUnStructuredAutocomplete,
+    onCloseSearchOptions: () => void,
+    isStructured: boolean
+}) => {
     const theme = useTheme<IDynamicThemeApp>();
 
-    const classes = useStyles({ accessibilityActive: theme.accessibilityActive });
+
+    const classes = useStyles({accessibilityActive: theme.accessibilityActive});
     const onClick = () => {
         const customValueAsLabel: ILabel = {
             query: value.query,
             title: value.label,
         }
-        if(isStructured) {
+        if (isStructured) {
             const structuredValue = value as IStructureAutocomplete;
             customValueAsLabel.situation_id = structuredValue.situationId;
             customValueAsLabel.response_id = structuredValue.responseId;
             customValueAsLabel.cityName = structuredValue.cityName;
             customValueAsLabel.bounds = structuredValue.bounds;
+        } else {
+            const unstructuredValue = value as IUnStructuredAutocomplete;
+            if (unstructuredValue.cardId) {
+                reRouteToCard({cardId: unstructuredValue.cardId});
+                onCloseSearchOptions();
+                return;
+            }
         }
         generalAnalytics.enterServiceFromSearchAutocomplete(value.query)
-        settingToResults({value: customValueAsLabel, removeOldFilters:true});
+        settingToResults({value: customValueAsLabel, removeOldFilters: true});
         onCloseSearchOptions();
     };
 

@@ -86,8 +86,8 @@ const SearchInput = () => {
                 onKeyDown={handleKeyDown}
                 aria-label={inputDescription}
             />
-        </div>
-        } {optionalSearchValues.structured.length > 0 && <div className={classes.searchOptionsDiv}>
+        </div>}
+        {(optionalSearchValues.structured.length > 0 || optionalSearchValues.unstructured.length> 0) && <div className={classes.searchOptionsDiv}>
         {optionalSearchValues.structured.map((value: IStructureAutocomplete, index: number) => (
             <SearchOption value={value} isStructured={true} key={index}
                           onCloseSearchOptions={onCloseSearchOptions}/>

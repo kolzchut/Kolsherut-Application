@@ -16,6 +16,7 @@ services:
       - LOG_TO_FILE=true
       - LOG_DURATION=10
       - SEARCHCARDS_FIRST_LENGTH=50
+      - AUTOCOMPLETE_MIN_SCORE=5000
     volumes:
       - ./volumes/be/logs:/app/logs
   fe:
