@@ -5,14 +5,16 @@ import useStyles from "./searchOption.css";
 import structuredSearchIcon from "../../../../../assets/icon-arrow-top-right-gray-4.svg";
 import lightIconSearch from "../../../../../assets/icon-search-gray-4.svg";
 import unstructuredSearchIcon from "../../../../../assets/icon-chevron-left-gray-4.svg";
-import {settingToResults} from "../../../../../store/shared/sharedSlice";
+import {
+    settingToCardAndFittingSearchQuery,
+    settingToResults
+} from "../../../../../store/shared/sharedSlice";
 import {ILabel} from "../../../../../types/homepageType";
 import generalAnalytics from "../../../../../services/gtag/generalEvents";
 import {useTheme} from "react-jss";
 import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
 import {createKeyboardHandler} from "../../../../../services/keyboardHandler";
 import splitEmSegments from "./utils/splitEmSegments";
-import {reRouteToCard} from "../../../../../services/routes/reRoute.ts";
 
 const SearchOption = ({value, onCloseSearchOptions, isStructured}: {
     value: IStructureAutocomplete | IUnStructuredAutocomplete,
@@ -20,7 +22,6 @@ const SearchOption = ({value, onCloseSearchOptions, isStructured}: {
     isStructured: boolean
 }) => {
     const theme = useTheme<IDynamicThemeApp>();
-
 
     const classes = useStyles({accessibilityActive: theme.accessibilityActive});
     const onClick = () => {
@@ -37,7 +38,7 @@ const SearchOption = ({value, onCloseSearchOptions, isStructured}: {
         } else {
             const unstructuredValue = value as IUnStructuredAutocomplete;
             if (unstructuredValue.cardId) {
-                reRouteToCard({cardId: unstructuredValue.cardId});
+                settingToCardAndFittingSearchQuery(value.query, unstructuredValue.cardId);
                 onCloseSearchOptions();
                 return;
             }

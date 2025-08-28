@@ -14,6 +14,9 @@ export const generalSlice = createSlice({
         setPage(state: GeneralStore, action) {
             state.page = action.payload;
         },
+        setSearchQuery(state: GeneralStore, action) {
+            state.searchQuery = action.payload;
+        },
         setModal(state: GeneralStore, action) {
             state.modal = action.payload;
         },
@@ -53,7 +56,9 @@ export const generalSlice = createSlice({
 
 export const {
     setRouteParams,
-    setPage, setSearchQueryAndResultsPage,
+    setPage,
+    setSearchQuery,
+    setSearchQueryAndResultsPage,
     setCardIdAndCardPage,
     setModal,
     settingURLParamsToResults,

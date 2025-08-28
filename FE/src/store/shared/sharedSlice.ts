@@ -1,6 +1,6 @@
 import {ILabel} from "../../types/homepageType";
 import {store} from "../store";
-import {setLoading, settingURLParamsToResults} from "../general/generalSlice";
+import {setCardIdAndCardPage, setLoading, setSearchQuery, settingURLParamsToResults} from "../general/generalSlice";
 import {setResults} from "../data/dataSlice";
 import fetchResults from "../../services/searchUtilities/fetchResults";
 import {resetFilters, setBackendFilters, setFilters} from "../filter/filterSlice";
@@ -47,4 +47,10 @@ export const settingToResults = async ({value, removeOldFilters}: { value: ILabe
     settingFilters({removeOldFilters, value});
     updateFirstResults({startResults});
     updateAllResults({startResults, restResults})
+}
+
+export const settingToCardAndFittingSearchQuery = (searchQuery: string, cardId: string) => {
+    store.dispatch(setSearchQuery(searchQuery));
+    store.dispatch(setResults([]))
+    store.dispatch(setCardIdAndCardPage(cardId));
 }

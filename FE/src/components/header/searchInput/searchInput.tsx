@@ -79,12 +79,13 @@ const SearchInput = () => {
                 id="search-input"
                 ref={inputRef}
                 className={classes.input}
-                type={"text"}
+                type="text"
                 value={inputValue}
                 onBlur={onInputBlur}
                 onChange={inputChangeEvent}
                 onKeyDown={handleKeyDown}
                 aria-label={inputDescription}
+                autoComplete="off"
             />
         </div>}
         {(optionalSearchValues.structured.length > 0 || optionalSearchValues.unstructured.length> 0) && <div className={classes.searchOptionsDiv}>
