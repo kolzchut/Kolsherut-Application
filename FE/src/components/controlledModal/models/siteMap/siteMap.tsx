@@ -13,7 +13,6 @@ const SiteMap = () => {
     const classes = useStyle(theme);
     const close = () => store.dispatch(setModal(null));
     const siteMapData = useSelector(getSitemap)
-    console.log('siteMapData', siteMapData);
     const texts = window.strings.siteMap;
     useEffect(() => {
     }, []);

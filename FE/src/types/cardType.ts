@@ -94,7 +94,5 @@ export interface ICard {
     // Warnings / Sources
     data_sources: string[];
 
-    // Optional / Unused
     branch_operating_unit: string | null;
-    collapseHitsByGroups?: Array<{key:string, vals:Array<ICard>}>;
 }

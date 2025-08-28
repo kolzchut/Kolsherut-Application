@@ -5,6 +5,7 @@ import cardPopUp from "../style/PopupContent/cardPopUp/cardPopup.ts";
 import branchServicesPopup from "../style/PopupContent/branchServicesPopup/branchServicesPopup.ts";
 import branchSummaryPopup from "../style/PopupContent/branchSummaryPopup/branchSummaryPopup.ts";
 import addPopupInteractionGuards from "../utils/popupInteractionGuards";
+import singleServicePopup from "../style/PopupContent/singleServicePopup/singleServicePopup.ts";
 
 const globals = {
     popUpLocked: false,
@@ -69,9 +70,10 @@ export const createPopupByFeatureForBranchServices = (feature: Feature<Geometry>
     if (!popupOverlay || isIntendingToHoverOnClickedPopUp) return;
     if (isOnClickPopup) globals.currentMainPopupId = feature.getId() || "";
     const contentElement = document.createElement("div") as HTMLDivElement;
-
-    if (isOnClickPopup || feature.getProperties().features.length < 2) createPopupOverlay(popupOverlay, feature, contentElement, branchServicesPopup);
-    else createPopupOverlay(popupOverlay, feature, contentElement, branchSummaryPopup);
+    const featuresLength = feature.getProperties().features?.length || 1;
+    if(featuresLength < 2)  createPopupOverlay(popupOverlay, feature, contentElement, singleServicePopup);
+    else if (isOnClickPopup)  createPopupOverlay(popupOverlay, feature, contentElement, branchServicesPopup);
+    else  createPopupOverlay(popupOverlay, feature, contentElement, branchSummaryPopup);
 
     if(isOnClickPopup) deleteSecondaryPopup()
 }
