@@ -9,8 +9,13 @@ const clickOnOptionalSearch = (group: IGroup) => {
 }
 const searchInputFocusEvent = () => analytics.interactionEvent('homepage-searchbar', 'homepage')
 
+const openedSiteMapEvent = () => {analytics.logEvent({
+    event: "open-sitemap",
+    params: {}
+})}
 
 export default {
     clickOnOptionalSearch,
+    openedSiteMapEvent,
     searchInputFocusEvent
 }

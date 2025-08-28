@@ -7,6 +7,7 @@ import {useTheme} from 'react-jss';
 import IDynamicThemeApp from "../../../../types/dynamicThemeApp.ts";
 import {getSitemap} from "../../../../store/data/data.selector.ts";
 import {useSelector} from "react-redux";
+import homepageEvents from "../../../../services/gtag/homepageEvents.ts";
 
 const SiteMap = () => {
     const theme = useTheme<IDynamicThemeApp>();
@@ -15,6 +16,7 @@ const SiteMap = () => {
     const siteMapData = useSelector(getSitemap)
     const texts = window.strings.siteMap;
     useEffect(() => {
+        homepageEvents.openedSiteMapEvent();
     }, []);
     if (!siteMapData) return <></>;
     return <div className={classes.root}>
