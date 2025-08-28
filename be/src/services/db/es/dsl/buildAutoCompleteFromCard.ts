@@ -26,13 +26,11 @@ export default (search: string) => {
                                     }
                                 } : { match_none: {} }
                             ],
-                            // Use should clauses for boosting only
                             should: hasSearch ? [
                                 { terms: { situation_ids_parents: [trimmed] } },
                                 { terms: { response_ids_parents: [trimmed] } },
                                 { terms: { possible_autocomplete: [trimmed] } },
                                 { terms: { coords: [trimmed] } },
-                                // Boost exact phrase matches strongly
                                 {
                                     multi_match: {
                                         query: trimmed,

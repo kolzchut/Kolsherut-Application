@@ -13,7 +13,7 @@ interface BuildCardSearchQueryParams {
     manualSort?: boolean;
 }
 
-export default function buildCardSearchQuery({
+export default function buildSearchQuery({
     mustConditions,
     size = 1500,
     offset = 0,

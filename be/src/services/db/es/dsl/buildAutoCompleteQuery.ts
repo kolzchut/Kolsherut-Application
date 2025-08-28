@@ -1,9 +1,8 @@
 import vars from "../../../../vars";
+import { tokenizeSearch } from "../../../../utilities/tokenizeSearch";
 
 export default (search: string) => {
-    const trimmed = (search || "").trim();
-    const tokens = trimmed ? Array.from(new Set(trimmed.split(/\s+/g).filter(Boolean))) : [];
-    const termsArray = tokens.length ? Array.from(new Set([...tokens, trimmed])) : [];
+    const { trimmed, termsArray } = tokenizeSearch(search);
 
     return ({
         index: vars.serverSetups.elastic.indices.autocomplete,

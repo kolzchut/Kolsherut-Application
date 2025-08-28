@@ -1,17 +1,23 @@
 import {executeESQuery} from './es';
 import transformCardIdToNewFormat from "../../../utilities/transformCardIdToNewFormat";
-import buildCardSearchQuery from "./dsl/buildCardSearchQuery";
+import buildSearchQuery from "./dsl/buildSearchQuery";
 import vars from "../../../vars";
-import { cardSearchSourceFields } from "./sourceFields/cardSearchSourceFields";
+import {cardSearchSourceFields} from "./sourceFields/cardSearchSourceFields";
+import buildFreeSearchQuery from "./dsl/buildFreeSearchQuery";
 
-export default async ({fixedSearchQuery, isFast, responseId, situationId}: { fixedSearchQuery: string, isFast: boolean, responseId: string, situationId:string }) => {
+export default async ({fixedSearchQuery, isFast, responseId, situationId}: {
+    fixedSearchQuery: string,
+    isFast: boolean,
+    responseId: string,
+    situationId: string
+}) => {
     const mustConditions = [];
     const freeSearch = !!(fixedSearchQuery && responseId === "" && situationId === "")
     if (freeSearch) {
         mustConditions.push({
             multi_match: {
                 query: fixedSearchQuery,
-                fields: ["service_name", "service_description", "organization_name", "branch_name", "branch_address","branch_city", "responses.id","situations.id"],
+                fields: ["service_name", "service_description", "organization_name", "branch_name", "branch_address", "branch_city", "responses.id", "situations.id"],
                 fuzziness: "AUTO"
             }
         });
@@ -35,14 +41,26 @@ export default async ({fixedSearchQuery, isFast, responseId, situationId}: { fix
 
     const propsForQuery = isFast ? vars.defaultParams.searchCards.fast : vars.defaultParams.searchCards.rest;
 
-    const query = buildCardSearchQuery({
-        mustConditions,
-        sourceFields: cardSearchSourceFields,
-        size: propsForQuery.size,
-        offset: propsForQuery.offset,
-        innerHitsSize: propsForQuery.innerHitsSize,
-        manualSort: !freeSearch
-    });
+    let query;
+    if (freeSearch) {
+        query = buildFreeSearchQuery(
+            fixedSearchQuery,
+            {
+                size: propsForQuery.size,
+                from: propsForQuery.offset,
+                innerHitsSize: propsForQuery.innerHitsSize,
+            }
+        )
+    } else {
+        query = buildSearchQuery({
+            mustConditions,
+            sourceFields: cardSearchSourceFields,
+            size: propsForQuery.size,
+            offset: propsForQuery.offset,
+            innerHitsSize: propsForQuery.innerHitsSize,
+            manualSort: true
+        });
+    }
 
     try {
         const response = await executeESQuery(query);

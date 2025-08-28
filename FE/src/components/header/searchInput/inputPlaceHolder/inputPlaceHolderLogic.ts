@@ -53,6 +53,7 @@ export const parseSearchQueryToSentences = ({searchQueryArray, forSeparators, by
 
     if (!text.responseSentence || text.responseSentence.trim() === '')
         text.responseSentence = window.strings.searchQueryTextDefaults.serviceSentence;
+
     if (!text.situationSentence || text.situationSentence.trim() === '')
         text.situationSentence = window.strings.searchQueryTextDefaults.forSentence;
 
