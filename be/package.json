@@ -1,6 +1,6 @@
 {
   "name": "be",
-  "version": "0.0.4-dev",
+  "version": "0.0.12",
   "description": "",
   "main": "index.js",
   "engines": {
