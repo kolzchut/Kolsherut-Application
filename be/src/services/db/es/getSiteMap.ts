@@ -2,6 +2,7 @@ import {executeESQuery, executeESScrollQuery, clearESScroll} from "./es";
 import {siteMapFields} from "./sourceFields/siteMapFields";
 import {processSiteMapHits} from "../../../utilities/processSiteMapHits";
 import buildSiteMapScrollQuery from "./dsl/buildSiteMapScrollQuery";
+import SiteMapSets from "../../../types/siteMapSets";
 
 
 export default async () => {
@@ -30,11 +31,13 @@ export default async () => {
 
     if (scrollId) await clearESScroll(scrollId);
 
-    const {cardIds, responses, situations} = processSiteMapHits(allHits);
+    const {responses, situations, cards} = processSiteMapHits(allHits);
 
-    return {
-        cardIds: Array.from(cardIds),
+    const result: SiteMapSets = {
+        cards,
         responses,
-        situations,
+        situations
     };
+
+    return result;
 }

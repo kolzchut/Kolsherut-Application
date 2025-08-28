@@ -26,13 +26,13 @@ const SiteMap = () => {
         <div>
             <h3>{texts.responses}</h3>
             <ul className={classes.mapDiv}>
-                {siteMapData.responseUrls.map((response) => (
+                {siteMapData.responseUrls?.map((response) => (
                     <a className={classes.text} href={response.link} key={response.link}>{response.name}</a>
                 ))}
             </ul>
             <h3>{texts.situations}</h3>
             <ul className={classes.mapDiv}>
-                {siteMapData.situationsUrls.map((situation) => (
+                {siteMapData.situationsUrls?.map((situation) => (
                     <a className={classes.text} href={situation.link} key={situation.link}>{situation.name}</a>
                 ))}
             </ul>

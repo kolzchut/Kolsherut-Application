@@ -1,5 +1,7 @@
 export const siteMapFields = [
     "card_id",
     "responses",
-    "situations"
+    "situations",
+    "last_modified",
+    "service_boost"
 ];
