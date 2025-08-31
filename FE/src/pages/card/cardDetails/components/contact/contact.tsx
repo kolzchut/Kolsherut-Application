@@ -1,5 +1,5 @@
 import Connection from "../../../../../components/connection/connection";
-import {BranchUrl, ICard} from "../../../../../types/cardType";
+import {ICard, ServiceURL} from "../../../../../types/cardType";
 import useStyles from "./contact.css";
 import {useTheme} from "react-jss";
 import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
@@ -8,7 +8,7 @@ interface IProps {
     card:ICard,
     email: string,
     phoneNumbers: string[],
-    websites: BranchUrl[] | null,
+    websites: ServiceURL[] | null,
     address: {
         text: string,
         geom: [number,number]
@@ -29,7 +29,7 @@ const Contact = ({email, phoneNumbers, websites, address,card}: IProps) => {
             {phoneNumbers.map((phoneNumber) => (<Connection type={`tel`} text={phoneNumber} key={phoneNumber} card={card} actionType={'phone'}/>))}
             {email && (<Connection text={email} type={`mailto`}  card={card} actionType={'email'}/>)}
             {websites && websites.map((website) => (
-                <Connection type={`website`} text={website.title} link={website.href} key={website.href}  card={card} actionType={'url'}/>))}
+                <Connection type={`website`} text={website.href} link={website.href} key={website.href}  card={card} actionType={'url'}/>))}
             {addressCondition && (<Connection text={address.text} link={addressFullLink} type={`address`}  card={card} actionType={'nav'}/>)}
         </div>
     )
