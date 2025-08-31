@@ -1,5 +1,8 @@
 import {createUseStyles} from 'react-jss';
-import {secondaryTextColorTwo, tertiaryTextColorThree, primaryTextColorThree, primaryBackgroundColorOne} from "../../services/theme";
+import {
+    secondaryTextColorTwo, primaryTextColorThree, primaryBackgroundColorOne,
+    tertiaryTextColorFour, tertiaryTextColorFive
+} from "../../services/theme";
 
 export interface IDynamicTheme {
     isMobile: boolean;
@@ -26,7 +29,7 @@ export default createUseStyles((theme: IDynamicTheme) => ({
         color: secondaryTextColorTwo,
         fontWeight:300,
         lineHeight: 1.4,
-        fontSize: theme?.accessibilityActive ? '24px' : '20px',
+        fontSize: theme?.accessibilityActive ? '28px' : '24px',
         margin: 0,
         width: 'calc(100% - 30px)',
     },
@@ -45,7 +48,7 @@ export default createUseStyles((theme: IDynamicTheme) => ({
         fontWeight:400,
         lineHeight:'normal',
         fontSize: theme?.accessibilityActive ? '20px': '16px',
-        color:tertiaryTextColorThree
+        color:theme?.accessibilityActive ?tertiaryTextColorFour: tertiaryTextColorFive
     },
     bannerDescriptionLong: {
         display: '-webkit-box',
@@ -57,7 +60,7 @@ export default createUseStyles((theme: IDynamicTheme) => ({
         fontWeight:400,
         lineHeight:'normal',
         fontSize: theme?.accessibilityActive ? '20px': '16px',
-        color:tertiaryTextColorThree
+        color: theme?.accessibilityActive ?tertiaryTextColorFour: tertiaryTextColorFive
     },
     bannerDescriptionButton: {
         display:'flex',
