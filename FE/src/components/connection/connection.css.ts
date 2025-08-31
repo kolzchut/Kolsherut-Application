@@ -31,6 +31,7 @@ export default createUseStyles({
         flex: 1,
         textDecoration: 'none',
         fontSize: accessibilityActive ? '20px' : '16px',
+        overflow:'hidden',
         fontWeight: 600,
         cursor: 'pointer',
         transition: 'background-color 0.2s, box-shadow 0.2s',
@@ -50,6 +51,9 @@ export default createUseStyles({
     innerATagText: ({ accessibilityActive }: { accessibilityActive: boolean }) => ({
       direction:'ltr',
       fontSize: accessibilityActive ? '20px' : '16px',
+        textOverflow:'ellipsis',
+        whiteSpace:'nowrap',
+        overflow:'hidden',
     }),
     button: {
         display: 'flex',
