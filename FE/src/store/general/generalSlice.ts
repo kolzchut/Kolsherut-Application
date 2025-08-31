@@ -25,7 +25,6 @@ export const generalSlice = createSlice({
         },
         settingURLParamsToResults(state: GeneralStore, action) {
             state.searchQuery = action.payload;
-            state.page = 'results';
         },
         setCardIdAndCardPage(state: GeneralStore, action) {
             state.cardId = action.payload;

@@ -125,6 +125,7 @@
   "searchQueryTextDefaults": {
     "serviceSentence": "כל שירות",
     "forSentence": "כולם",
-    "baseSituationSentence": "עבור"
+    "baseSituationSentence": "עבור",
+    "connectBySentence": "של"
   }
 }

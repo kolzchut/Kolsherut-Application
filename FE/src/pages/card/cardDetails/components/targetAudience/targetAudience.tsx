@@ -2,7 +2,7 @@ import {Situation} from "../../../../../types/cardType";
 import useStyle from "./targetAudience.css";
 import Label from "../../../../../components/label/label";
 import {getHrefForResults} from "../../../../../services/href";
-import {settingToResults} from "../../../../../store/shared/sharedSlice.ts";
+import {changingPageToResults} from "../../../../../store/shared/sharedSlice.ts";
 import { useTheme } from 'react-jss';
 import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
 
@@ -19,7 +19,7 @@ const TargetAudience = ({situations}: { situations: Situation[] }) => {
                 const href = getHrefForResults({searchQuery: situation.name, situationFilter: [situation.id]});
                 const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
                     e.preventDefault()
-                    settingToResults({
+                    changingPageToResults({
                         value: {situation_id: situation.id, query: situation.name},
                         removeOldFilters: true
                     });

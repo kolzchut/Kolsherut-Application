@@ -1,6 +1,7 @@
 export interface ILabel {
     situation_id?: string,
     response_id?: string,
+    by?: string,
     title?: string,
     query?: string
     cityName?:string,

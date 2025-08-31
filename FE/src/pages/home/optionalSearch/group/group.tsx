@@ -2,7 +2,7 @@ import {IGroup, ILabel} from "../../../../types/homepageType";
 import useStyles from './group.css'
 import SearchLabel from "./searchLabel/searchLabel";
 import linkIcon from '../../../../assets/linkIcon.svg';
-import {settingToResults} from "../../../../store/shared/sharedSlice";
+import {changingPageToResults} from "../../../../store/shared/sharedSlice";
 import {Response} from "../../../../types/cardType";
 import {getColor} from "../../../../services/colorLogic";
 import homepageAnalytics from "../../../../services/gtag/homepageEvents";
@@ -25,7 +25,7 @@ const Group = ({group}: { group: IGroup }) => {
             query: group.group_link
         }
         homepageAnalytics.clickOnOptionalSearch(group)
-        settingToResults({value: groupAsLabel, removeOldFilters: true});
+        changingPageToResults({value: groupAsLabel, removeOldFilters: true});
     }
 
     const handleKeyDown = createKeyboardHandler(onClick);

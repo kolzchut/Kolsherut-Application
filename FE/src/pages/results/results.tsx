@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     getSelectedOrganization
@@ -30,16 +30,17 @@ import MetaTags from "../../services/metaTags";
 import getResultsMetaTags from "./getResultsMetaTags";
 import {useOnce} from "../../hooks/useOnce";
 import {allowChangeStoreLocation} from "../../services/map/events/mapInteraction";
-import {settingToResults} from "../../store/shared/sharedSlice";
+import { settingToResults} from "../../store/shared/sharedSlice";
 import noResultsIcon from "../../assets/noResults.svg";
 import Loader from "./loader/loader.tsx";
 import {isMobileScreen} from "../../services/media.ts";
 import BranchServicesForMobile from "./branchServicesForMobile/branchServicesForMobile.tsx";
 import BranchList from "./branchList/branchList.tsx";
-import { setPopupOffsetForBigMap, setPopupOffsetForSmallMap} from "../../services/map/events/popup.ts";
+import {setPopupOffsetForBigMap, setPopupOffsetForSmallMap} from "../../services/map/events/popup.ts";
 import {ILabel} from "../../types/homepageType.ts";
 
 const Results = () => {
+    const [newPage, setNewPage] = useState(0);
     const isResultsLoading = useSelector(isLoading);
     const filteredResults = useSelector(getFilteredResults);
     const selectedOrganization = useSelector(getSelectedOrganization);
@@ -60,6 +61,7 @@ const Results = () => {
     const metaTagsData = getResultsMetaTags({searchQuery})
     const dispatch = useDispatch();
     const reportOnce = useOnce(() => resultsAnalytics.scrollOnceEvent());
+    const refreshPage = () => setNewPage(prev => prev + 1);
     const newResults = () => {
         dispatch(setSelectedOrganization(null));
         removeAllPOIs();
@@ -78,37 +80,36 @@ const Results = () => {
 
     useEffect(() => {
         newResults();
-    }, [filteredResults, searchQuery]);
+    }, [filteredResults]);
     useEffect(() => {
-        if(selectedOrganization) return setPopupOffsetForSmallMap();
+        if (selectedOrganization) return setPopupOffsetForSmallMap();
         return setPopupOffsetForBigMap();
     }, [selectedOrganization]);
 
     useEffect(() => {
         allowChangeStoreLocation(true)
-        if (!filteredResults || filteredResults.length === 0) {
-            const value: ILabel = {query:searchQuery};
-            if(backendFilters.situation) value.situation_id = backendFilters.situation;
-            if(backendFilters.response) value.response_id = backendFilters.response;
-            settingToResults({value, removeOldFilters: false})
-        }
+        const value: ILabel = {query: searchQuery};
+        if (backendFilters.situation) value.situation_id = backendFilters.situation;
+        if (backendFilters.response) value.response_id = backendFilters.response;
+        if (backendFilters.by) value.by = backendFilters.by;
+        settingToResults({value});
         allowChangeStoreLocation(false);
-            setMapOnLocation(location.bounds);
+        setMapOnLocation(location.bounds);
         allowChangeStoreLocation(true)
         return () => {
             allowChangeStoreLocation(false);
             removeAllPOIs();
             dispatch(setSelectedOrganization(null));
         }
-    }, []);
+    }, [newPage, searchQuery, backendFilters.situation, backendFilters.response, backendFilters.by]);
     return <>
         <MetaTags {...metaTagsData}/>
         <div>
-            <Header key={'resultHeader'}/>
+            <Header key={'resultHeader'} refreshPage={refreshPage}/>
             <div className={classes.mainDiv}>
                 {isMobile ? <FiltersForMobile/> : <FiltersForDesktop/>}
                 <div className={classes.resultsContainer} onScroll={reportOnce}>
-                    <div className={classes.hits}  onScroll={reportOnce}>
+                    <div className={classes.hits} onScroll={reportOnce}>
                         {conditionToShowResults && filteredResults.map((service: IService) => (
                             <Hits key={service.id} service={service}/>
                         ))}
@@ -124,7 +125,7 @@ const Results = () => {
                     </div>
                     <div className={classes.branchList}>
                         {selectedOrganization && <BranchList organization={selectedOrganization}/>}
-                        {showBranchFilterForMobile && (<BranchServicesForMobile featureId={selectedFeatureId} />)}
+                        {showBranchFilterForMobile && (<BranchServicesForMobile featureId={selectedFeatureId}/>)}
                     </div>
                 </div>
                 <div className={classes.mapContainer}>

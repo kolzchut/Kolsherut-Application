@@ -20,3 +20,4 @@ export const getSearchLocation = createSelector([filterStore], (filterStore: Fil
 });
 export const getBackendResponseFilter = createSelector([getBackendFilters], (beFilters) => beFilters.response);
 export const getBackendSituationFilter = createSelector([getBackendFilters], (beFilters) => beFilters.situation);
+export const getBackendByFilter = createSelector([getBackendFilters], (beFilters) => beFilters.by);

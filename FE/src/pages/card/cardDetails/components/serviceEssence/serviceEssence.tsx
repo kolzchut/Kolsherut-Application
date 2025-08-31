@@ -3,7 +3,7 @@ import useStyle from "./serviceEssence.css";
 import Label from "../../../../../components/label/label";
 import {getHrefForResults} from "../../../../../services/href";
 import { useTheme } from 'react-jss';
-import {settingToResults} from "../../../../../store/shared/sharedSlice.ts";
+import {changingPageToResults} from "../../../../../store/shared/sharedSlice.ts";
 import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
 
 const ServiceEssence = ({responses}: { responses: Response[] }) => {
@@ -18,7 +18,7 @@ const ServiceEssence = ({responses}: { responses: Response[] }) => {
                 const href = getHrefForResults({searchQuery: response.name,responseFilter: [response.id]});
                 const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
                     e.preventDefault();
-                    settingToResults({value: {response_id:response.id, query:response.name}, removeOldFilters:true});
+                    changingPageToResults({value: {response_id:response.id, query:response.name}, removeOldFilters:true});
                 }
                 return <a href={href} key={response.id} className={classes.link}
                           onClick={(e: React.MouseEvent<HTMLAnchorElement>)=>onClick(e)}>

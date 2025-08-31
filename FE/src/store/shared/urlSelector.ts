@@ -2,6 +2,7 @@ import {createSelector} from "@reduxjs/toolkit";
 import UrlParams from "../../types/urlParams";
 import {getCardId, getModal, getPage, getSearchQuery} from "../general/general.selector";
 import {
+    getBackendByFilter,
     getBackendResponseFilter, getBackendSituationFilter,
     getLocationFilter,
     getResponsesFilter,
@@ -9,8 +10,8 @@ import {
 } from "../filter/filter.selector";
 import {stringifyLocation} from "../../services/url/parseURL";
 
-export const getUrlParams = createSelector([getPage, getModal, getCardId, getSearchQuery, getLocationFilter, getSituationsFilter, getResponsesFilter, getBackendResponseFilter, getBackendSituationFilter],
-    (page, modal, cardId, searchQuery, locationFilter, situationFilter, responseFilter, beResponseFilter, beSituationFilter) => {
+export const getUrlParams = createSelector([getPage, getModal, getCardId, getSearchQuery, getLocationFilter, getSituationsFilter, getResponsesFilter, getBackendResponseFilter, getBackendSituationFilter, getBackendByFilter],
+    (page, modal, cardId, searchQuery, locationFilter, situationFilter, responseFilter, beResponseFilter, beSituationFilter, beByFilter) => {
         const params: UrlParams = {
             p: page,
         };
@@ -22,5 +23,7 @@ export const getUrlParams = createSelector([getPage, getModal, getCardId, getSea
         if (page === 'results' && responseFilter && responseFilter.length > 0) params.rf = JSON.stringify(responseFilter);
         if (page === 'results' && beResponseFilter) params.brf = beResponseFilter;
         if (page === 'results' && beSituationFilter) params.bsf = beSituationFilter;
+        if (page === 'results' && beByFilter) params.by = beByFilter;
+
         return params;
     });

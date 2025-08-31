@@ -7,7 +7,7 @@ import lightIconSearch from "../../../../../assets/icon-search-gray-4.svg";
 import unstructuredSearchIcon from "../../../../../assets/icon-chevron-left-gray-4.svg";
 import {
     settingToCardAndFittingSearchQuery,
-    settingToResults
+    changingPageToResults
 } from "../../../../../store/shared/sharedSlice";
 import {ILabel} from "../../../../../types/homepageType";
 import generalAnalytics from "../../../../../services/gtag/generalEvents";
@@ -16,10 +16,11 @@ import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
 import {createKeyboardHandler} from "../../../../../services/keyboardHandler";
 import splitEmSegments from "./utils/splitEmSegments";
 
-const SearchOption = ({value, onCloseSearchOptions, isStructured}: {
+const SearchOption = ({value, onCloseSearchOptions, isStructured,refreshPage}: {
     value: IStructureAutocomplete | IUnStructuredAutocomplete,
     onCloseSearchOptions: () => void,
     isStructured: boolean
+    refreshPage?: () => void
 }) => {
     const theme = useTheme<IDynamicThemeApp>();
 
@@ -35,6 +36,7 @@ const SearchOption = ({value, onCloseSearchOptions, isStructured}: {
             customValueAsLabel.response_id = structuredValue.responseId;
             customValueAsLabel.cityName = structuredValue.cityName;
             customValueAsLabel.bounds = structuredValue.bounds;
+            customValueAsLabel.by = structuredValue.by;
         } else {
             const unstructuredValue = value as IUnStructuredAutocomplete;
             if (unstructuredValue.cardId) {
@@ -44,7 +46,7 @@ const SearchOption = ({value, onCloseSearchOptions, isStructured}: {
             }
         }
         generalAnalytics.enterServiceFromSearchAutocomplete(value.query)
-        settingToResults({value: customValueAsLabel, removeOldFilters: true});
+        changingPageToResults({value: customValueAsLabel, removeOldFilters: true, refreshPage});
         onCloseSearchOptions();
     };
 
@@ -54,6 +56,7 @@ const SearchOption = ({value, onCloseSearchOptions, isStructured}: {
     const segments = value.labelHighlighted ? splitEmSegments(value.labelHighlighted) : null;
 
     return <div onClick={onClick}
+                onMouseDown={(e) => e.preventDefault()}
                 onKeyDown={handleKeyDown}
                 tabIndex={0}
                 role="button"

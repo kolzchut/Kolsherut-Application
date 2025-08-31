@@ -1,6 +1,12 @@
 import {ILabel} from "../../types/homepageType";
 import {store} from "../store";
-import {setCardIdAndCardPage, setLoading, setSearchQuery, settingURLParamsToResults} from "../general/generalSlice";
+import {
+    setCardIdAndCardPage,
+    setLoading,
+    setPage,
+    setSearchQuery,
+    settingURLParamsToResults
+} from "../general/generalSlice";
 import {setResults} from "../data/dataSlice";
 import fetchResults from "../../services/searchUtilities/fetchResults";
 import {resetFilters, setBackendFilters, setFilters} from "../filter/filterSlice";
@@ -25,15 +31,23 @@ const updateAllResults = async ({startResults, restResults}: {
 };
 
 const settingFilters = ({removeOldFilters, value}: {removeOldFilters:boolean,value:ILabel})=>{
-    store.dispatch(setBackendFilters({response: value.response_id, situation: value.situation_id}));
+    store.dispatch(setBackendFilters({response: value.response_id, situation: value.situation_id, by: value.by}));
+    store.dispatch(setPage('results'))
     const filters: {location?: {key: string, bounds: [number,number,number,number]}} = {}
     if(value.cityName && value.bounds) filters.location = {key: value.cityName, bounds: value.bounds};
     if (removeOldFilters) return store.dispatch(resetFilters(filters));
     store.dispatch(setFilters(filters));
 }
 
-export const settingToResults = async ({value, removeOldFilters}: { value: ILabel, removeOldFilters: boolean }) => {
-    store.dispatch(setResults([]))
+
+export const changingPageToResults =  ({value, removeOldFilters, refreshPage}: { value: ILabel, removeOldFilters: boolean,refreshPage?: ()=>void }) => {
+    settingFilters({removeOldFilters, value});
+    store.dispatch(settingURLParamsToResults(value.query))
+    if(refreshPage) refreshPage();
+}
+
+
+export const settingToResults = async ({value}: { value: ILabel}) => {
     store.dispatch(setLoading(true));
     store.dispatch(settingURLParamsToResults(value.query))
 
@@ -41,10 +55,10 @@ export const settingToResults = async ({value, removeOldFilters}: { value: ILabe
         responseId: value.response_id,
         situationId: value.situation_id,
         searchQuery: value.query,
+        by: value.by,
     }
     const startResults = fetchResults({...fetchBaseData, isFast: true,});
     const restResults = fetchResults({...fetchBaseData, isFast: false,});
-    settingFilters({removeOldFilters, value});
     updateFirstResults({startResults});
     updateAllResults({startResults, restResults})
 }

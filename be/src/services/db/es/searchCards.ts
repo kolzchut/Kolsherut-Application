@@ -5,14 +5,15 @@ import vars from "../../../vars";
 import {cardSearchSourceFields} from "./sourceFields/cardSearchSourceFields";
 import buildFreeSearchQuery from "./dsl/buildFreeSearchQuery";
 
-export default async ({fixedSearchQuery, isFast, responseId, situationId}: {
+export default async ({fixedSearchQuery, isFast, responseId, situationId,by}: {
     fixedSearchQuery: string,
     isFast: boolean,
     responseId: string,
-    situationId: string
+    situationId: string,
+    by:string
 }) => {
     const mustConditions = [];
-    const freeSearch = !!(fixedSearchQuery && responseId === "" && situationId === "")
+    const freeSearch = !!(fixedSearchQuery && responseId === "" && situationId === "" && by === "")
     if (freeSearch) {
         mustConditions.push({
             multi_match: {
@@ -35,6 +36,20 @@ export default async ({fixedSearchQuery, isFast, responseId, situationId}: {
         mustConditions.push({
             wildcard: {
                 "situations.id": `*${situationId}*`
+            }
+        });
+    }
+
+    if (by && by !== "") {
+        mustConditions.push({
+            bool: {
+                should: [
+                    { wildcard: { "organization_short_name": `*${by}*` } },
+                    { wildcard: { "organization_name_parts.primary": `*${by}*` } },
+                    { wildcard: { "organization_name_parts.secondary": `*${by}*` } },
+                    { wildcard: { "organization_resolved_name": `*${by}*` } }
+                ],
+                minimum_should_match: 1
             }
         });
     }

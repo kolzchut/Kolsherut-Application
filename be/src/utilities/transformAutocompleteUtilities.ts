@@ -85,12 +85,14 @@ export const transformAutocompleteUtilities = (resultsInElasticFormat: any) => {
                 responseId: result.response,
                 bounds: result.bounds,
                 cityName: result.city_name,
+                by: result.org_name,
                 score: normalize(item._score),
             });
         } else {
             unstructuredResults.push({
                 label,
                 labelHighlighted,
+                by: result.org_name,
                 query: result.id,
                 score: normalize(item._score),
 

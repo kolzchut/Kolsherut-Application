@@ -7,6 +7,7 @@ export interface IStructureAutocomplete {
     cityName: string,
     labelHighlighted?: string,
     score?: number
+    by?: string
 }
 export interface IUnStructuredAutocomplete {
     label: string,
@@ -14,6 +15,7 @@ export interface IUnStructuredAutocomplete {
     labelHighlighted?: string,
     cardId?: string,
     score?: number
+    by?: string
 }
 
 export interface AutocompleteBuckets {
