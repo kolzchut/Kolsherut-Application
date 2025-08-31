@@ -8,6 +8,7 @@ export const addResultsPOIs = (branches: IBranch[]) => {
         if (!branch.geometry || !branch.responses || !branch.situations) return;
         const poiData: PoiData = {
             organization_name: branch.organizationName,
+            organization_name_parts: branch.organization_name_parts,
             service_name: branch.serviceName || "",
             branch_geometry: branch.geometry,
             responses: branch.responses,

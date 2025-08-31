@@ -1,4 +1,4 @@
-import {AddressParts, Response, Situation} from "./cardType";
+import {AddressParts, OrganizationNameParts, Response, Situation} from "./cardType";
 
 export default interface PoiData {
     cardId: string;
@@ -9,6 +9,7 @@ export default interface PoiData {
     branch_address: string;
     accurateLocation: boolean;
     organization_name: string;
+    organization_name_parts: OrganizationNameParts;
     service_name: string;
     service_description: string;
     address_parts: AddressParts,

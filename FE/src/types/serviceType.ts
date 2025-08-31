@@ -1,4 +1,4 @@
-import {Situation, Response, AddressParts} from "./cardType";
+import {Situation, Response, AddressParts, OrganizationNameParts} from "./cardType";
 
 export interface IBranch {
     id: string;
@@ -14,6 +14,7 @@ export interface IBranch {
     serviceDescription: string;
     address_parts: AddressParts,
     branch_operating_unit: string;
+    organization_name_parts: OrganizationNameParts
 }
 
 export interface IOrganization {

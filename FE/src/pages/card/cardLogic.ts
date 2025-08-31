@@ -33,6 +33,7 @@ export const setMapToCard = (card:ICard) =>{
     setViewPort({center:branch_geometry, zoom:12});
     const poiData: PoiData = {
         organization_name: card.organization_name,
+        organization_name_parts: card.organization_name_parts,
         service_name: card.service_name || "",
         branch_geometry,
         responses: card.responses,
