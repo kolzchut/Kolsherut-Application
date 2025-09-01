@@ -2,16 +2,6 @@
   {
     "bounds": null,
     "cityName": null,
-    "label": "שירותים למצב החירום המלחמתי",
-    "labelHighlighted": "<em>שירותים למצב החירום המלחמתי</em>",
-    "query": "שירותים למצב החירום המלחמתי",
-    "responseId": "human_services:internal_emergency_services",
-    "situationId": null,
-    "by": null
-  },
-  {
-    "bounds": null,
-    "cityName": null,
     "label": "הכוונה לשירותים בחירום",
     "labelHighlighted": null,
     "query": "הכוונה לשירותים בחירום",

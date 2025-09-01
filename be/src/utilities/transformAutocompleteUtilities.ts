@@ -64,8 +64,8 @@ export const transformAutoCompleteFromCardStructure = (resultsInElasticFormat: a
     };
 }
 
-export const transformAutocompleteUtilities = (resultsInElasticFormat: any) => {
-    const results = mapHits(resultsInElasticFormat);
+export const transformAutocompleteUtilities = (resultsInElasticFormat: any, shouldMapHits=false) => {
+    const results = shouldMapHits ? mapHits(resultsInElasticFormat) : resultsInElasticFormat;
     const normalize = buildScoreNormalizer(results);
 
     const structuredResults: IStructureAutocomplete[] = [];

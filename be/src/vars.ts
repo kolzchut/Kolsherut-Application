@@ -18,10 +18,11 @@ export default {
             indices: process.env.ENV === 'prod' ? {
                 card: "srm__cards_20240417210351058073_bb6360fd",
                 autocomplete: "srm__autocomplete_20230214172220805473_23f43e2a",
-
+                presets: "srm__presets_20211201201949753432_1915f3c0"
             } : {
                 card: "srm__cards_20220926183305498944_a9274d22",
                 autocomplete: "srm__autocomplete_20240505135631716607_372901c0",
+                presets:"srm__presets_20220322175100923906_0199cd26"
             },
             autocompleteMinScore: parseFloat(process.env.AUTOCOMPLETE_MIN_SCORE || '5000')
         }

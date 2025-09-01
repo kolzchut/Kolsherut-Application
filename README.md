@@ -122,8 +122,14 @@ These files control app behavior, appearance, and content.
 **How to maintain:**
 - Add a new module as a new object with fields like `title`, `description`, and optional `links`.
 
+#### 9. `Presets.json`
+**Purpose** Defines the default Search options.
+**Structure:** Array of objects (each representing a preset).
 
-##### 9. `stage.json`, `production.json`, `local.json`
+**How to maintain:**
+- Make sure you always have label and query, the rest of the fields are optional.
+
+##### 10. `stage.json`, `production.json`, `local.json`
 **Purpose:** Environment-specific configuration files.  
 **Structure:** Identical across environments — only values differ.
 
@@ -132,7 +138,7 @@ These files control app behavior, appearance, and content.
 - Never commit sensitive secrets.
 
 
-##### 10. `environment.json`
+##### 11. `environment.json`
 **Purpose:** Determines which environment the app is currently running on.  
 **Structure:** Simple object pointing to `stage`, `production`, or `local`.
 

@@ -35,7 +35,7 @@ const DefaultSearchOptions = ({onCloseSearchOptions}: { onCloseSearchOptions: ()
     useEffect(() => {
         const getPresets = async () => {
             try {
-                const response = await axios.get(`/configs/Presets.json?cacheBuster=${Date.now()}`);
+                const response = await axios.get(`/configs/presets.json?cacheBuster=${Date.now()}`);
                 setPresets(response.data);
             } catch (error) {
                 logger.error({message: "Error fetching optional presets:", payload: error});

@@ -5,7 +5,7 @@ import {toRadians} from "ol/math";
 import {isMobileScreen} from "../media";
 
 const view = new View({
-    minZoom: isMobileScreen() ? 7.5 : 8,
+    minZoom: isMobileScreen() ? 7.5 : 7.8,
 });
 
 export const setViewPort = ({center=window.config.map.center,zoom = window.config.map.zoom,rotation = window.config.map.rotation}:{center?: [number, number], zoom?: number, rotation?: number}) => {

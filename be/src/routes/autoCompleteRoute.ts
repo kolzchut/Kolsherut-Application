@@ -12,7 +12,7 @@ import ensureAutocompleteFallback from "../utilities/ensureAutocompleteFallback"
 export default asyncHandler(async (req: Request, res: Response) => {
     const {search} = req.params
     const rawAutoComplete = await autoComplete(search);
-    const autocomplete = transformAutocompleteUtilities(rawAutoComplete.autoCompleteResults);
+    const autocomplete = transformAutocompleteUtilities(rawAutoComplete.autoCompleteResults, true);
     const autoCompleteFromCard = transformAutoCompleteFromCardStructure(rawAutoComplete.autoCompleteFromCardResults);
     autocomplete.unstructured = [...(autocomplete.unstructured || []), ...(autoCompleteFromCard.unstructured || [])];
 
