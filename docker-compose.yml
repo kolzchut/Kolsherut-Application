@@ -37,6 +37,5 @@ services:
       - ./volumes/fe/configs/local.json:/usr/share/nginx/html/configs/local.json
       - ./volumes/fe/configs/production.json:/usr/share/nginx/html/configs/production.json
       - ./volumes/fe/configs/stage.json:/usr/share/nginx/html/configs/stage.json
-      - ./volumes/fe/sitemap.txt:/usr/share/nginx/html/sitemap.txt
     depends_on:
       - be
