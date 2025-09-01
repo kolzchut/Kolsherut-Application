@@ -13,6 +13,7 @@ export const getBranches = (services: IService[]) => {
                 const extendedBranch = {
                     ...branch,
                     organizationName: organization.name,
+                    serviceDescription: service.service_description,
                     serviceName: service.service_name
                 };
                 branches.push(extendedBranch)

@@ -1,8 +1,8 @@
-import ILocation from "../../types/locationType.ts";
 
-const getResultsMetaTags = ({searchQuery, location}:{searchQuery:string, location:ILocation}) =>{
+const getResultsMetaTags = ({searchQuery}:{searchQuery:string}) =>{
     const metaTags = window.metaTags.results
-    const search = `${location.key && "ב" + location.key} ${searchQuery && "עבור " + searchQuery}`.trim();
+
+    const search = searchQuery.replace(/_/g, " ").trim();
     const macrosAndReplacements: { [key: string]: string } = {
         "%%search%%":search,
         "%%currentUrl%%": window.location.href,

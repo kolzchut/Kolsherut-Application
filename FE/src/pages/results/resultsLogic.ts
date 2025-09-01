@@ -8,6 +8,7 @@ export const addResultsPOIs = (branches: IBranch[]) => {
         if (!branch.geometry || !branch.responses || !branch.situations) return;
         const poiData: PoiData = {
             organization_name: branch.organizationName,
+            organization_name_parts: branch.organization_name_parts,
             service_name: branch.serviceName || "",
             branch_geometry: branch.geometry,
             responses: branch.responses,
@@ -15,7 +16,10 @@ export const addResultsPOIs = (branches: IBranch[]) => {
             cardId: branch.id,
             branch_address: branch.address,
             branch_name: branch.name,
-            accurateLocation: branch.isAccurate
+            accurateLocation: branch.isAccurate,
+            service_description: branch.serviceDescription || "",
+            address_parts: branch.address_parts || {primary:"", secondary:""},
+            branch_operating_unit: branch.branch_operating_unit || "",
         }
         addPOI(poiData)
     });

@@ -13,7 +13,7 @@ const cardPopUp = ({feature,root}:{feature: Feature<Geometry>, root: HTMLDivElem
     root.style.backgroundColor = color.background;
     root.style.color = color.font;
     return `
-      <strong class="popup-content">${props.branch_name}</strong>
+      <strong class="popup-content">${props.branch_operating_unit || props.organization_name_parts.primary ||  props.organization_name}</strong>
   `;
 };
 export default cardPopUp;

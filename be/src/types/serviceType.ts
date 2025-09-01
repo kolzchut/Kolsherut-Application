@@ -18,6 +18,8 @@ export interface IBranch {
     geometry: [number, number];
     responses: IResponse[];
     situations: ISituation[];
+    address_parts?: { primary:string, secondary:string },
+    branch_operating_unit?: string;
 }
 
 export interface IOrganization {

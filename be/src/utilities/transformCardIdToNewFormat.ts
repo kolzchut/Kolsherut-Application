@@ -22,11 +22,14 @@ const createNewBranch = (branch: any): IBranch => {
         id: branch.card_id,
         name: branch.branch_name,
         address: branch.branch_address,
+        address_parts: branch.address_parts,
+        branch_operating_unit: branch.branch_operating_unit,
         isNational: branch.national_service,
         isAccurate: branch.branch_location_accurate,
         geometry: branch.branch_geometry,
         responses: branch.responses || [],
-        situations: branch.situations || []
+        situations: branch.situations || [],
+
     };
 };
 

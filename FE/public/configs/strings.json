@@ -123,7 +123,9 @@
     "situations": "מצבים"
   },
   "searchQueryTextDefaults": {
-    "serviceSentence": "כל זכות",
-    "forSentence": "עבור כולם"
+    "serviceSentence": "כל שירות",
+    "forSentence": "כולם",
+    "baseSituationSentence": "עבור",
+    "connectBySentence": "של"
   }
 }

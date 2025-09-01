@@ -3,6 +3,7 @@ import {IGroup} from "../../../types/homepageType";
 import Group from "./group/group"
 import axios from "axios";
 import {useEffect, useState} from "react";
+import logger from "../../../services/logger/logger.ts";
 
 const OptionalSearch = () => {
     const classes = useStyle();
@@ -13,7 +14,7 @@ const OptionalSearch = () => {
                     const response = await axios.get(`/configs/homepage.json?cacheBuster=${Date.now()}`);
                     setOptionalSearchValues(response.data);
                 } catch (error) {
-                    console.error("Error fetching optional search values:", error);
+                    logger.error({message:"Error fetching optional search values:",payload:error});
                 }
             }
             getOptionalSearchValues();

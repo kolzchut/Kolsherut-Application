@@ -1,25 +1,24 @@
 import inactiveSearchIcon from "../../../assets/icon-search-blue-1.svg";
 import activeSearchIcon from "../../../assets/icon-search-blue-0.svg";
-import {ChangeEvent, useEffect, useRef, useState, KeyboardEvent} from "react";
+import {useEffect, useRef, useState, KeyboardEvent} from "react";
 import AutocompleteType, {IStructureAutocomplete} from "../../../types/autocompleteType";
-import sendMessage from "../../../services/sendMessage/sendMessage";
 import SearchOption from "../../../pages/home/search/searchInput/searchOption/searchOption";
 import resultsAnalytics from "../../../services/gtag/resultsEvents";
-import {useDebounce} from "../../../hooks/useDebounce";
 import useOnClickedOutside from "../../../hooks/useOnClickedOutside";
 import {useSelector} from "react-redux";
 import {getPage, getSearchQuery} from "../../../store/general/general.selector";
-import {settingToResults} from "../../../store/shared/sharedSlice";
 import generalAnalytics from "../../../services/gtag/generalEvents";
 import {useTheme} from "react-jss";
 import IDynamicThemeApp from "../../../types/dynamicThemeApp.ts";
 import useStyles from "./searchInput.css.ts";
 import InputPlaceHolder from "./inputPlaceHolder/inputPlaceHolder.tsx";
+import useSearchAutocomplete from "../../../hooks/useSearchAutocomplete";
+import executeSearch from "../../../services/executeSearch.ts";
 
 const inputDescription = "Search for services, organizations, branches, and more"
 const emptyAutocomplete: AutocompleteType = {structured: [], unstructured: []};
 
-const SearchInput = () => {
+const SearchInput = ({refreshPage}:{refreshPage?: ()=>void}) => {
     const theme = useTheme<IDynamicThemeApp>();
     const classes = useStyles({theme});
     const searchQuery = useSelector(getSearchQuery);
@@ -29,18 +28,8 @@ const SearchInput = () => {
     const [optionalSearchValues, setOptionalSearchValues] = useState<AutocompleteType>(emptyAutocomplete);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const {ref} = useOnClickedOutside(() => setOptionalSearchValues(emptyAutocomplete));
-    const debouncedGetAutoComplete = useDebounce(async (value) => {
-        if (value === '') return setOptionalSearchValues(emptyAutocomplete);
-        const requestURL = window.config.routes.autocomplete.replace('%%search%%', value);
-        const response = await sendMessage({method: 'get', requestURL});
-        setOptionalSearchValues(response.data);
-    }, 1000);
-    const inputChangeEvent = (v: ChangeEvent<HTMLInputElement>) => {
-        const value: string = v.target.value;
-        setSearchTerm(value);
-        debouncedGetAutoComplete(value);
-    };
-    const onCloseSearchOptions = () => setOptionalSearchValues(emptyAutocomplete);
+
+    const { inputChangeEvent } = useSearchAutocomplete({ setSearchTerm, setOptionalSearchValues });
 
     useEffect(() => {
         if (!searchQuery) return;
@@ -49,10 +38,17 @@ const SearchInput = () => {
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            settingToResults({value: {query: searchTerm}, removeOldFilters: true})
-            onCloseSearchOptions()
+            e.preventDefault();
+            const defaultValue = {query: searchTerm};
+            const optionalStructuredValue = optionalSearchValues.structured.find(v => v.query === searchTerm|| v.label === searchTerm);
+            const optionalUnstructuredValue = optionalSearchValues.unstructured.find(v => v.query === searchTerm|| v.label === searchTerm);
+            const value = optionalStructuredValue || optionalUnstructuredValue || defaultValue;
+            executeSearch({refreshPage, value, isStructured: !!(optionalStructuredValue), onClose: onCloseSearchOptions})
+            inputRef.current?.blur()
         }
     };
+    const onCloseSearchOptions = () => setOptionalSearchValues(emptyAutocomplete);
+
     const onInputBlur = () => {
         setIsInputFocused(false);
         setSearchTerm(searchQuery)
@@ -79,22 +75,23 @@ const SearchInput = () => {
                 id="search-input"
                 ref={inputRef}
                 className={classes.input}
-                type={"text"}
+                type="text"
                 value={inputValue}
                 onBlur={onInputBlur}
                 onChange={inputChangeEvent}
                 onKeyDown={handleKeyDown}
                 aria-label={inputDescription}
+                autoComplete="off"
             />
-        </div>
-        } {optionalSearchValues.structured.length > 0 && <div className={classes.searchOptionsDiv}>
+        </div>}
+        {(optionalSearchValues.structured.length > 0 || optionalSearchValues.unstructured.length> 0) && <div className={classes.searchOptionsDiv}>
         {optionalSearchValues.structured.map((value: IStructureAutocomplete, index: number) => (
             <SearchOption value={value} isStructured={true} key={index}
-                          onCloseSearchOptions={onCloseSearchOptions}/>
+                          onCloseSearchOptions={onCloseSearchOptions} refreshPage={refreshPage}/>
         ))}
         {optionalSearchValues.unstructured.map((value, index) => (
             <SearchOption value={value} isStructured={false} key={index}
-                          onCloseSearchOptions={onCloseSearchOptions}/>
+                          onCloseSearchOptions={onCloseSearchOptions} refreshPage={refreshPage}/>
         ))}
     </div>}
     </div>

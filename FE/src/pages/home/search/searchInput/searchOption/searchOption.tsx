@@ -5,38 +5,34 @@ import useStyles from "./searchOption.css";
 import structuredSearchIcon from "../../../../../assets/icon-arrow-top-right-gray-4.svg";
 import lightIconSearch from "../../../../../assets/icon-search-gray-4.svg";
 import unstructuredSearchIcon from "../../../../../assets/icon-chevron-left-gray-4.svg";
-import {settingToResults} from "../../../../../store/shared/sharedSlice";
-import {ILabel} from "../../../../../types/homepageType";
-import generalAnalytics from "../../../../../services/gtag/generalEvents";
 import {useTheme} from "react-jss";
 import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
 import {createKeyboardHandler} from "../../../../../services/keyboardHandler";
+import splitEmSegments from "./utils/splitEmSegments";
+import executeSearch from "../../../../../services/executeSearch.ts";
 
-const SearchOption = ({value, onCloseSearchOptions, isStructured}: { value: IStructureAutocomplete | IUnStructuredAutocomplete, onCloseSearchOptions: () => void, isStructured:boolean}) => {
+const SearchOption = ({value, onCloseSearchOptions, isStructured, refreshPage}: {
+    value: IStructureAutocomplete | IUnStructuredAutocomplete,
+    onCloseSearchOptions: () => void,
+    isStructured: boolean
+    refreshPage?: () => void
+}) => {
     const theme = useTheme<IDynamicThemeApp>();
 
-    const classes = useStyles({ accessibilityActive: theme.accessibilityActive });
-    const onClick = () => {
-        const customValueAsLabel: ILabel = {
-            query: value.query,
-            title: value.label,
-        }
-        if(isStructured) {
-            const structuredValue = value as IStructureAutocomplete;
-            customValueAsLabel.situation_id = structuredValue.situationId;
-            customValueAsLabel.response_id = structuredValue.responseId;
-            customValueAsLabel.cityName = structuredValue.cityName;
-            customValueAsLabel.bounds = structuredValue.bounds;
-        }
-        generalAnalytics.enterServiceFromSearchAutocomplete(value.query)
-        settingToResults({value: customValueAsLabel, removeOldFilters:true});
-        onCloseSearchOptions();
-    };
+    const classes = useStyles({accessibilityActive: theme.accessibilityActive});
 
-    const handleKeyDown = createKeyboardHandler(onClick);
+    const handleKeyDown = createKeyboardHandler(() => executeSearch({
+        refreshPage,
+        value,
+        isStructured,
+        onClose: onCloseSearchOptions
+    }));
 
     const icon = isStructured ? structuredSearchIcon : unstructuredSearchIcon;
-    return <div onClick={onClick}
+    const segments = value.labelHighlighted ? splitEmSegments(value.labelHighlighted) : null;
+
+    return <div onClick={() => executeSearch({refreshPage, value, isStructured, onClose: onCloseSearchOptions})}
+                onMouseDown={(e) => e.preventDefault()}
                 onKeyDown={handleKeyDown}
                 tabIndex={0}
                 role="button"
@@ -44,7 +40,17 @@ const SearchOption = ({value, onCloseSearchOptions, isStructured}: { value: IStr
                 className={classes.optionalSearchValue}>
                         <span className={classes.iconAndText}>
                             <img className={classes.searchIcon} alt={"חיפוש"} src={lightIconSearch}/>
-                            {value.label}
+                            {segments ? (
+                                <span>
+                                    {segments.map((seg, i) => seg.isEm ? (
+                                        <span key={i}>{seg.text}</span>
+                                    ) : (
+                                        <span className={classes.boldText} key={i}>{seg.text}</span>
+                                    ))}
+                                </span>
+                            ) : (
+                                <span>{value.label}</span>
+                            )}
                         </span>
         <img className={classes.searchIcon} alt={"חיפוש"} src={icon}/>
     </div>

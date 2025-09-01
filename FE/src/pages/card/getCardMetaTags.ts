@@ -1,13 +1,21 @@
 import {ICard} from "../../types/cardType";
 
-const getCardMetaTags = (card:ICard)=>{
+const buildContent = (card: ICard): string => {
+    const contentArray = [];
+    if (card.service_name) contentArray.push(card.service_name);
+    if (card.organization_name_parts.primary) contentArray.push(card.organization_name_parts.primary);
+    if (card.address_parts?.primary) contentArray.push(card.address_parts.primary);
+    return contentArray.join(' / ');
+}
+
+const getCardMetaTags = (card: ICard) => {
     const metaTags = window.metaTags.card;
-    const serviceName = card.service_name || 'שירות ללא שם';
     const serviceDescription = card.service_description;
     const cardId = card.card_id;
+    const content = buildContent(card);
 
     const macrosAndReplacements: { [key: string]: string } = {
-        '%%serviceName%%': serviceName,
+        '%%content%%': content,
         '%%serviceDescription%%': serviceDescription ?? '',
         '%%serviceId%%': cardId
     };

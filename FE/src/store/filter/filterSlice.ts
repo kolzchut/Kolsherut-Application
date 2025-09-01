@@ -13,6 +13,7 @@ export const filterSlice = createSlice({
             const newResponses = action.payload.rf ? JSON.parse(action.payload.rf) : null;
             state.backendFilters.response = action.payload.brf || null;
             state.backendFilters.situation = action.payload.bsf || null;
+            state.backendFilters.by = action.payload.by || "";
             state.filters.location = newLocation || state.filters.location;
             state.filters.situations = newSituations || state.filters.situations;
             state.filters.responses = newResponses || state.filters.responses;
@@ -31,9 +32,10 @@ export const filterSlice = createSlice({
             state.filters.responses = responses || [];
         },
         setBackendFilters(state: FilterStore, action) {
-            const {response, situation} = action.payload;
+            const {response, situation, by} = action.payload;
             state.backendFilters.response = response || '';
             state.backendFilters.situation = situation || '';
+            state.backendFilters.by = by || '';
         },
         setSearchLocation(state: FilterStore, action) {
             state.searchLocation = action.payload;

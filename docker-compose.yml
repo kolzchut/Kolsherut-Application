@@ -16,6 +16,7 @@ services:
       - LOG_TO_FILE=true
       - LOG_DURATION=10
       - SEARCHCARDS_FIRST_LENGTH=50
+      - AUTOCOMPLETE_MIN_SCORE=5000
     volumes:
       - ./volumes/be/logs:/app/logs
   fe:
@@ -29,10 +30,13 @@ services:
       - ./volumes/fe/configs/responseColors.json:/usr/share/nginx/html/configs/responseColors.json
       - ./volumes/fe/configs/filters.json:/usr/share/nginx/html/configs/filters.json
       - ./volumes/fe/configs/homepage.json:/usr/share/nginx/html/configs/homepage.json
-      - ./volumes/fe/configs/GUISiteMap.json:/usr/share/nginx/html/configs/GUISiteMap.json
       - ./volumes/fe/configs/linksBelow.json:/usr/share/nginx/html/configs/linksBelow.json
       - ./volumes/fe/configs/modules.json:/usr/share/nginx/html/configs/modules.json
       - ./volumes/fe/configs/metaTags.json:/usr/share/nginx/html/configs/metaTags.json
+      - ./volumes/fe/configs/environment.json:/usr/share/nginx/html/configs/environment.json
+      - ./volumes/fe/configs/local.json:/usr/share/nginx/html/configs/local.json
+      - ./volumes/fe/configs/production.json:/usr/share/nginx/html/configs/production.json
+      - ./volumes/fe/configs/stage.json:/usr/share/nginx/html/configs/stage.json
       - ./volumes/fe/sitemap.txt:/usr/share/nginx/html/sitemap.txt
     depends_on:
       - be

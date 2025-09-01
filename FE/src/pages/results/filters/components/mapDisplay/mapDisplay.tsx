@@ -37,11 +37,11 @@ const MapDisplay = () => {
         role="button"
         aria-label={displayResultsMap ? "Hide map" : "Show map"}
         className={classes.root}>
-        <img fetchPriority={'high'} className={classes.icon} src={vals.icon} alt={vals.altIcon}/>
+        <img fetchPriority={'high'} className={classes.icon} src={vals.icon} alt={vals.altIcon+'icon'}/>
         <span className={classes.text}>
-                    <img className={classes.innerIcon} src={vals.innerIcon} alt={vals.altIcon}/>
+            <img className={classes.innerIcon} src={vals.innerIcon} alt={vals.altIcon+'icon'}/>
             {vals.text}
-                </span>
+        </span>
     </div>
 
 }

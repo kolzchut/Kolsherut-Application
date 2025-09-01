@@ -33,6 +33,7 @@ export const setMapToCard = (card:ICard) =>{
     setViewPort({center:branch_geometry, zoom:12});
     const poiData: PoiData = {
         organization_name: card.organization_name,
+        organization_name_parts: card.organization_name_parts,
         service_name: card.service_name || "",
         branch_geometry,
         responses: card.responses,
@@ -40,7 +41,10 @@ export const setMapToCard = (card:ICard) =>{
         cardId: card.card_id,
         branch_address: card.branch_address,
         branch_name: card.branch_name || card.organization_name,
-        accurateLocation: card.branch_location_accurate
+        accurateLocation: card.branch_location_accurate,
+        service_description: card.service_description || "",
+        address_parts: card.address_parts || {primary:"", secondary:""},
+        branch_operating_unit: card.branch_operating_unit || "",
     }
     addPOI(poiData)
 }

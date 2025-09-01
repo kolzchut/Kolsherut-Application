@@ -1,4 +1,4 @@
-import {BranchUrl, ICard} from "../../../types/cardType";
+import {ICard, ServiceURL} from "../../../types/cardType";
 import useStyle from "./cardDetails.css";
 import ServiceEssence from "./components/serviceEssence/serviceEssence";
 import TargetAudience from "./components/targetAudience/targetAudience";
@@ -46,16 +46,14 @@ const CardDetails = ({card}: { card: ICard }) => {
     const theme = useTheme<IDynamicThemeApp>();
     const classes = useStyle({accessibilityActive: theme.accessibilityActive});
     const email: string = card.branch_email_address || card.service_email_address || card.organization_email_address;
-    const websites: BranchUrl[] = [card.branch_urls, card.organization_urls, card.service_urls].find(arr => {
-        if (arr === null) return;
-        return arr.length > 0
-    }) || [];
+    const websites: ServiceURL[] = card.service_urls || [];
     const phoneNumbers: string[] = [card.branch_phone_numbers, card.organization_phone_numbers, card.service_phone_numbers].find(arr => arr.length > 0) || [];
     const address = {text: card.branch_address, geom: card.branch_geometry};
     return <section ref={scrollRef} className={classes.root}>
-        <Header branchOperatingUnit={card.branch_operating_unit || card.branch_name || card.organization_name}
+        <Header branchOperatingUnit={card.branch_operating_unit|| ""}
                 isNational={card.national_service}
                 organizationName={card.organization_name}
+                organizationNameParts={card.organization_name_parts}
                 addressParts={card.address_parts || card.branch_address}/>
         <div className={classes.content}>
             <h1 className={classes.serviceNameText}>{card.service_name}</h1>

@@ -1,10 +1,10 @@
 {
   "card": {
-    "title": "כרטיס שירות %%serviceName%%",
+    "title": "%%content%% | כל שירות",
     "properties": [
       {
         "property": "og:title",
-        "content": "כרטיס שירות %%serviceName%%"
+        "content": "%%content%% | כל שירות"
       },
       {
         "property": "og:description",
@@ -51,15 +51,15 @@
     ]
   },
   "results": {
-    "title": "תוצאות חיפוש %%search%%",
+    "title": "חיפוש %%search%% | כל שירות",
     "properties": [
       {
         "property": "og:title",
-        "content": "תוצאות חיפוש %%search%%"
+        "content": "חיפוש %%search%% | כל שירות"
       },
       {
         "property": "og:description",
-        "content": "תוצאות חיפוש %%search%%"
+        "content": "חיפוש %%search%% | כל שירות"
       },
       {
         "property": "og:image",
@@ -102,11 +102,11 @@
     ]
   },
   "home": {
-    "title": "כל-שירות - הבית",
+    "title": "כל שירות | כל השירותים החברתיים, לכל מצב, בכל מקום",
     "properties": [
       {
         "property": "og:title",
-        "content": "כל-שירות - הבית"
+        "content": "כל שירות | כל השירותים החברתיים, לכל מצב, בכל מקום"
       },
       {
         "property": "og:description",

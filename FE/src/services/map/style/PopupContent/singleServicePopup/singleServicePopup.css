@@ -1,0 +1,31 @@
+.single-service-popup-feature-section {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    cursor: pointer;
+    color: #000000;
+}
+.single-service-popup {
+    height: fit-content;
+}
+.single-service-popup-main{
+    padding:10px;
+}
+.single-service-popup-title {
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 5px;
+}
+.single-service-popup-sub{
+    border-top: #333333 solid 1px;
+    padding: 10px;
+    background:#FAF1E0;
+    display: flex;
+    flex-direction: column;
+}
+.single-service-popup-address-bold{
+    font-weight: 700;
+}
+.single-service-popup-address-normal{
+    font-weight: 400;
+}

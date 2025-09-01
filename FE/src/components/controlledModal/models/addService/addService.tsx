@@ -48,7 +48,7 @@ const AddService = () => {
                 </>);
             })
         }
-        {showButton && <a href={services[selectedService].href}>
+        {showButton && <a target={"_blank"} href={services[selectedService].href}>
             <button className={classes.button}>{services[selectedService].buttonTitle}</button>
         </a>}
     </div>

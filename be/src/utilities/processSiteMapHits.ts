@@ -1,43 +1,89 @@
-interface SiteMapSets {
-    cardIds: Set<string>;
-    responses: { id: string, name: string }[];
-    situations: { id: string, name: string }[];
-}
+import SiteMapSets from "../types/siteMapSets";
 
-export const processSiteMapHits = (hits: any[]): SiteMapSets => {
-    const cardIds = new Set<string>();
-    const responsesMap = new Map<string, { id: string, name: string }>();
-    const situationsMap = new Map<string, { id: string, name: string }>();
+const getLastModified = (source: any): string => source?.last_modified ?? 'unknown';
 
-    hits.forEach((hit: any) => {
-        const source = hit._source;
-        if (!source) return;
+const isKnown = (lm: string) => lm !== 'unknown';
 
-        if (source.card_id) cardIds.add(source.card_id);
+const shouldReplaceLastModified = (existingLM: string, incomingLM: string): boolean => {
+    const incomingKnown = isKnown(incomingLM);
+    const existingKnown = isKnown(existingLM);
+    return incomingKnown && (!existingKnown || incomingLM > existingLM);
+};
 
-        if (Array.isArray(source.responses)) {
-            source.responses.forEach((response: any) => {
-                if (response?.id && response?.name) responsesMap.set(response.id, {
-                    id: response.id,
-                    name: response.name
-                });
+const updateCard = (
+    cardsMap: Map<string, { id: string, last_modified: string, service_boost: number }>,
+    cardId: string,
+    lastModified: string,
+    serviceBoost: number
+) => {
+    const existing = cardsMap.get(cardId);
+    if (!existing) {
+        cardsMap.set(cardId, {id: cardId, last_modified: lastModified, service_boost: serviceBoost});
+        return;
+    }
+    if (shouldReplaceLastModified(existing.last_modified, lastModified)) {
+        cardsMap.set(cardId, {id: cardId, last_modified: lastModified, service_boost: Math.max(existing.service_boost,serviceBoost)});
+    }
+};
 
-            });
-        }
-
-        if (Array.isArray(source.situations)) {
-            source.situations.forEach((situation: any) => {
-                if (situation?.id && situation?.name) situationsMap.set(situation.id, {
-                    id: situation.id,
-                    name: situation.name
-                });
-
+const updateResponses = (
+    rawResponses: any,
+    responsesMap: Map<string, { id: string, name: string, last_modified: string }>,
+    lastModified: string
+) => {
+    if (!Array.isArray(rawResponses)) return;
+    rawResponses.forEach((response: any) => {
+        if (response?.id && response?.name) {
+            responsesMap.set(response.id, {
+                id: response.id,
+                name: response.name,
+                last_modified: lastModified
             });
         }
     });
+};
+
+const updateSituations = (
+    rawSituations: any,
+    situationsMap: Map<string, { id: string, name: string, last_modified: string }>,
+    lastModified: string
+) => {
+    if (!Array.isArray(rawSituations)) return;
+    rawSituations.forEach((situation: any) => {
+        if (situation?.id && situation?.name) {
+            situationsMap.set(situation.id, {
+                id: situation.id,
+                name: situation.name,
+                last_modified: lastModified
+            });
+        }
+    });
+};
+
+const processHitPerSource = (
+    source: any,
+    cardsMap: Map<string, { id: string, service_boost: number, last_modified: string }>,
+    responsesMap: Map<string, { id: string, name: string, last_modified: string }>,
+    situationsMap: Map<string, { id: string, name: string, last_modified: string }>
+) => {
+    if (!source) return;
+    const sourceLastModified = getLastModified(source);
+
+    if (source.card_id) updateCard(cardsMap, source.card_id, sourceLastModified, source.service_boost);
+
+    updateResponses(source.responses, responsesMap, sourceLastModified);
+    updateSituations(source.situations, situationsMap, sourceLastModified);
+};
+
+export const processSiteMapHits = (hits: any[]): SiteMapSets => {
+    const cardsMap = new Map<string, { id: string, service_boost: number, last_modified: string }>();
+    const responsesMap = new Map<string, { id: string, name: string, last_modified: string }>();
+    const situationsMap = new Map<string, { id: string, name: string, last_modified: string }>();
+
+    hits.forEach((hit: any) => processHitPerSource(hit?._source, cardsMap, responsesMap, situationsMap));
 
     return {
-        cardIds,
+        cards: Array.from(cardsMap.values()),
         responses: Array.from(responsesMap.values()),
         situations: Array.from(situationsMap.values())
     };

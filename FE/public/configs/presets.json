@@ -1,0 +1,57 @@
+[
+  {
+    "bounds": null,
+    "cityName": null,
+    "label": "הכוונה לשירותים בחירום",
+    "labelHighlighted": null,
+    "query": "הכוונה לשירותים בחירום",
+    "responseId": null,
+    "situationId": null,
+    "by": null
+  },
+  {
+    "bounds": null,
+    "cityName": null,
+    "label": "מתמודדי נפש",
+    "labelHighlighted": null,
+    "query": "מתמודדי נפש",
+    "responseId": null,
+    "situationId": "human_situations:disability:mental_illness",
+    "by": null
+  },
+  {
+    "bounds": null,
+    "cityName": null,
+    "label": "דיור מוסדי עבור בעלי מוגבלות שכלית והתפתחותית",
+    "labelHighlighted": null,
+    "query": "דיור מוסדי עבור בעלי מוגבלות שכלית והתפתחותית",
+    "responseId": "human_services:housing:residential_housing:long_term_housing",
+    "situationId": "human_situations:disability:intellectual_disability",
+    "by": null
+  },
+  {
+    "bounds": [
+      35.0852011,
+      31.7096214,
+      35.2650458,
+      31.8826655
+    ],
+    "cityName": "ירושלים",
+    "label": "ציוד רפואי בירושלים",
+    "labelHighlighted": null,
+    "query": "ציוד רפואי בירושלים",
+    "responseId": "human_services:health:medical_supplies",
+    "situationId": null,
+    "by": null
+  },
+    {
+        "bounds": null,
+        "cityName": null,
+        "label": "אנוש",
+        "labelHighlighted": null,
+        "query": "אנוש",
+        "responseId": null,
+        "situationId": null,
+        "by": "אנוש"
+    }
+]

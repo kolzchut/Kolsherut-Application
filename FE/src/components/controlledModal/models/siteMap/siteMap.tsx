@@ -7,15 +7,16 @@ import {useTheme} from 'react-jss';
 import IDynamicThemeApp from "../../../../types/dynamicThemeApp.ts";
 import {getSitemap} from "../../../../store/data/data.selector.ts";
 import {useSelector} from "react-redux";
+import homepageEvents from "../../../../services/gtag/homepageEvents.ts";
 
 const SiteMap = () => {
     const theme = useTheme<IDynamicThemeApp>();
     const classes = useStyle(theme);
     const close = () => store.dispatch(setModal(null));
     const siteMapData = useSelector(getSitemap)
-    console.log('siteMapData', siteMapData);
     const texts = window.strings.siteMap;
     useEffect(() => {
+        homepageEvents.openedSiteMapEvent();
     }, []);
     if (!siteMapData) return <></>;
     return <div className={classes.root}>
@@ -27,13 +28,13 @@ const SiteMap = () => {
         <div>
             <h3>{texts.responses}</h3>
             <ul className={classes.mapDiv}>
-                {siteMapData.responseUrls.map((response) => (
+                {siteMapData.responseUrls?.map((response) => (
                     <a className={classes.text} href={response.link} key={response.link}>{response.name}</a>
                 ))}
             </ul>
             <h3>{texts.situations}</h3>
             <ul className={classes.mapDiv}>
-                {siteMapData.situationsUrls.map((situation) => (
+                {siteMapData.situationsUrls?.map((situation) => (
                     <a className={classes.text} href={situation.link} key={situation.link}>{situation.name}</a>
                 ))}
             </ul>

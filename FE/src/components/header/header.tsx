@@ -13,7 +13,7 @@ import IDynamicThemeApp from "../../types/dynamicThemeApp.ts";
 
 const logo = "/icons/logo.svg"
 
-const Header = ({showLogo = true, showSearchbar = true}: { showLogo?: boolean, showSearchbar?: boolean }) => {
+const Header = ({showLogo = true, showSearchbar = true, refreshPage}: { showLogo?: boolean, showSearchbar?: boolean, refreshPage?: ()=>void }) => {
     const accessibilityActiveFromRedux = useSelector(isAccessibilityActive);
     const isMobileFromMedia = isMobileScreen();
 
@@ -56,7 +56,7 @@ const Header = ({showLogo = true, showSearchbar = true}: { showLogo?: boolean, s
                 </div>
 
             </div>}
-            {showSearchbar && <SearchInput/>}
+            {showSearchbar && <SearchInput refreshPage={refreshPage}/>}
             {showLogo &&
                 <img onClick={handleIconClick} className={classes.logo} src={isMobileFromMedia ? hamburger : logo}
                      alt={"kolsherut logo"}/>}

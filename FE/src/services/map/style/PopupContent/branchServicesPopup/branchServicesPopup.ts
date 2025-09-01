@@ -4,9 +4,8 @@ import labelComponent from "../label/label.ts";
 import PoiData from "../../../../../types/poiData.ts";
 import "./branchServicesPopup.css";
 import {getHrefForCard} from "../../../../href.ts";
-import {reRouteToCard} from "../../../../routes/reRoute.ts";
-import mapAnalytics from "../../../../gtag/mapEvents.ts"
 import {getCommonFooterText, groupByOrganization} from "./branchServicesPopupLogic.ts";
+import "../../../utils/handleMapFeatureClick.ts";
 
 interface IProps {
     responses: never[];
@@ -15,22 +14,13 @@ interface IProps {
     service_name: string;
     branch_name: string;
     cardId: string;
+    service_description: string;
 }
 
 let lengthOfFeatures = 0;
 
-(window as any).handleMapFeatureClick = (event: Event, cardId: string) => {
-    event.preventDefault();
-    if (lengthOfFeatures === 1) {
-        mapAnalytics.enterServiceFromMapPopupSingleBranchEvent(cardId);
-    } else {
-        mapAnalytics.enterServiceFromMapPopupMultiBranchEvent(cardId);
-    }
-    reRouteToCard({cardId: cardId});
-};
-
 const getHTMLForFeature = (props: IProps) => {
-    const {service_name, organization_name, branch_name, cardId} = props;
+    const {service_name, organization_name, branch_name, cardId, service_description} = props;
     const responses = props.responses || [];
     const situations = props.situations || [];
     const firstResponse = responses[0];
@@ -44,8 +34,8 @@ const getHTMLForFeature = (props: IProps) => {
     const href = getHrefForCard(cardId)
 
     return `
-            <a class="feature-section" href="${href}" onclick="handleMapFeatureClick(event, '${cardId}')">
-                <strong class="branch-title">${branch_name || organization_name || service_name}</strong>
+            <a class="feature-section" href="${href}" onclick="handleMapFeatureClick(event, '${cardId}', lengthOfFeatures)">
+                <strong class="branch-title">${service_name || service_description || branch_name || organization_name}</strong>
                 <div class="feature-labels">
                     ${responseLabel}
                     ${situationLabel}
@@ -53,7 +43,6 @@ const getHTMLForFeature = (props: IProps) => {
             </a>
         `;
 }
-
 
 
 const branchServicesPopup = ({feature, root}: { feature: Feature<Geometry>, root: HTMLDivElement }): string => {

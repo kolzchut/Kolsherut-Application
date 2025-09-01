@@ -1,7 +1,7 @@
 {
   "name": "kolsherut_fe",
   "private": true,
-  "version": "0.0.4-dev",
+  "version": "1.0.0",
   "type": "module",
   "main": "index.js",
   "engines": {
@@ -15,7 +15,16 @@
     "preview": "vite preview",
     "docker:build": "npm run build && npx cross-var docker build --build-arg environment=local -t kolsherut_fe:$npm_package_version .",
     "docker:save": "npx cross-var docker save -o ../tars/kolsherut_fe.$npm_package_version.tar kolsherut_fe:$npm_package_version",
-    "tar": "npm run docker:build && npm run docker:save"
+    "tar": "npm run docker:build && npm run docker:save",
+    "docker:build:local": "npm run build && npx cross-var docker build --build-arg environment=local -t kolsherut_fe:$npm_package_version-local .",
+    "docker:build:stage": "npm run build && npx cross-var docker build --build-arg environment=stage -t kolsherut_fe:$npm_package_version-stage .",
+    "docker:build:prod": "npm run build && npx cross-var docker build --build-arg environment=production -t kolsherut_fe:$npm_package_version-prod .",
+    "docker:save:local": "npx cross-var docker save -o ../tars/kolsherut_fe.$npm_package_version-local.tar kolsherut_fe:$npm_package_version-local",
+    "docker:save:stage": "npx cross-var docker save -o ../tars/kolsherut_fe.$npm_package_version-stage.tar kolsherut_fe:$npm_package_version-stage",
+    "docker:save:prod": "npx cross-var docker save -o ../tars/kolsherut_fe.$npm_package_version-prod.tar kolsherut_fe:$npm_package_version-prod",
+    "tar:local": "npm run docker:build:local && npm run docker:save:local",
+    "tar:stage": "npm run docker:build:stage && npm run docker:save:stage",
+    "tar:prod": "npm run docker:build:prod && npm run docker:save:prod"
   },
   "dependencies": {
     "@fontsource/poppins": "^5.2.5",

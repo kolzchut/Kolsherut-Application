@@ -1,13 +1,17 @@
-import {Response, Situation} from "./cardType";
+import {AddressParts, OrganizationNameParts, Response, Situation} from "./cardType";
 
-export default interface PoiData{
+export default interface PoiData {
     cardId: string;
     responses: Response[]
     situations: Situation[]
-    branch_geometry: [number,number]
+    branch_geometry: [number, number]
     branch_name: string;
     branch_address: string;
-    accurateLocation:boolean;
+    accurateLocation: boolean;
     organization_name: string;
+    organization_name_parts: OrganizationNameParts;
     service_name: string;
+    service_description: string;
+    address_parts: AddressParts,
+    branch_operating_unit: string;
 }

@@ -10,6 +10,7 @@ export const initialState = {
     backendFilters: {
         response: null as string | null,
         situation: null as string | null,
+        by: ""
     }
 };
 export type FilterStore = typeof initialState;

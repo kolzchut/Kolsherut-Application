@@ -2,7 +2,6 @@ import {RootState} from '../store';
 import {createSelector} from '@reduxjs/toolkit';
 import {GeneralStore} from "./initialState";
 import {pageKeys, Pages} from "../../pages/pages";
-import UrlParams from "../../types/urlParams";
 
 export const generalStore = (state: RootState) => state.general;
 
@@ -33,14 +32,6 @@ export const getCardId = createSelector([generalStore], (generalStore: GeneralSt
 });
 export const getSearchQuery = createSelector([generalStore], (generalStore: GeneralStore) => {
     return generalStore.searchQuery;
-});
-export const getUrlParams = createSelector([getPage, getCardId, getSearchQuery], (page, cardId, searchQuery) => {
-    const params: UrlParams = {
-        p: page
-    };
-    if (cardId) params.c = cardId;
-    if (searchQuery) params.sq = searchQuery;
-    return params;
 });
 export const getShowSidebar = createSelector([generalStore], (generalStore: GeneralStore) => {
     return generalStore.showSidebar;
