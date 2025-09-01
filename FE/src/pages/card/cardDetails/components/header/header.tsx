@@ -2,14 +2,15 @@ import useStyle from "./header.css";
 import backIcon from "../../../../../assets/icon-arrow-right.svg";
 import {useTheme} from "react-jss";
 import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
-import {AddressParts} from "../../../../../types/cardType.ts";
+import {AddressParts, OrganizationNameParts} from "../../../../../types/cardType.ts";
 import cardHeaderIcon from "../../../../../assets/cardHeaderIcon.json";
 import {createKeyboardHandler} from "../../../../../services/keyboardHandler";
 
-const Header = ({branchOperatingUnit, addressParts, isNational,organizationName}: {
+const Header = ({branchOperatingUnit, addressParts, isNational, organizationName, organizationNameParts}: {
     branchOperatingUnit: string,
     addressParts: AddressParts | string,
     organizationName: string,
+    organizationNameParts: OrganizationNameParts,
     isNational: boolean
 }) => {
     const serviceGivenNationWide = window.strings.cardDetails.serviceGivenNationWide
@@ -34,15 +35,23 @@ const Header = ({branchOperatingUnit, addressParts, isNational,organizationName}
             </button>
         </div>
         <div className={classes.header}>
-            <span className={classes.headerTitle}>{branchOperatingUnit} </span>
+            {branchOperatingUnit && <span className={classes.headerTitle}>{branchOperatingUnit} </span>}
+            {!branchOperatingUnit && organizationNameParts && <div>
+                <span className={classes.headerTitle}>{organizationNameParts.primary}</span>
+                {organizationNameParts.primary && organizationNameParts.secondary && " - "}
+                <span className={classes.headerSubtitle}>{organizationNameParts.secondary} </span>
+            </div>
+            }
             {!isNational && isStringAddressParts && <span className={classes.headerTitle}>{addressParts}</span>}
             {!isNational && !isStringAddressParts &&
                 <span className={classes.headerTitle}>{(addressParts as unknown as AddressParts).primary + " - "}
-                    <span className={classes.headerSubtitle}>{(addressParts as unknown as AddressParts).secondary}</span>
+                    <span
+                        className={classes.headerSubtitle}>{(addressParts as unknown as AddressParts).secondary}</span>
                 </span>}
             {isNational && <span className={`${classes.nationWideText}`}> {serviceGivenNationWide}</span>}
         </div>
-        {iconSource&& <img className={classes.headerIcon} src={iconSource.organizationLogo} alt={iconSource.organizationName}/>}
+        {iconSource &&
+            <img className={classes.headerIcon} src={iconSource.organizationLogo} alt={iconSource.organizationName}/>}
     </div>
 }
 export default Header;

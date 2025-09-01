@@ -50,9 +50,10 @@ const CardDetails = ({card}: { card: ICard }) => {
     const phoneNumbers: string[] = [card.branch_phone_numbers, card.organization_phone_numbers, card.service_phone_numbers].find(arr => arr.length > 0) || [];
     const address = {text: card.branch_address, geom: card.branch_geometry};
     return <section ref={scrollRef} className={classes.root}>
-        <Header branchOperatingUnit={card.branch_operating_unit || card.branch_name || card.organization_name}
+        <Header branchOperatingUnit={card.branch_operating_unit|| ""}
                 isNational={card.national_service}
                 organizationName={card.organization_name}
+                organizationNameParts={card.organization_name_parts}
                 addressParts={card.address_parts || card.branch_address}/>
         <div className={classes.content}>
             <h1 className={classes.serviceNameText}>{card.service_name}</h1>
