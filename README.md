@@ -154,6 +154,14 @@ These files control app behavior, appearance, and content.
 - Use macros (`%%MACRO%%`) instead of hardcoding values when possible.
 
 ---
+#### while using the Hasadna cloud we do not have the possibility to mount volumes and update the mounted files.
+- using Be to emulate files and rerouting nginx.conf to use BE as a file server.
+- TODO:
+#### After Chnhaing cloud the folowing changes need to be made
+1. move confings to seperate vpulems (dev, stage, prod) and have the relevant one mounted to the FE container.
+1. site map have to be generated as part of ETL and mounted to all Environments.
+1. upload from dev to stage and from stage to prod should be copying the previus level bucket.
+
 
 ### BE
 
