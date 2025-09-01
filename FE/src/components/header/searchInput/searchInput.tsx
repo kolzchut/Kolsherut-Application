@@ -7,13 +7,13 @@ import resultsAnalytics from "../../../services/gtag/resultsEvents";
 import useOnClickedOutside from "../../../hooks/useOnClickedOutside";
 import {useSelector} from "react-redux";
 import {getPage, getSearchQuery} from "../../../store/general/general.selector";
-import {changingPageToResults} from "../../../store/shared/sharedSlice";
 import generalAnalytics from "../../../services/gtag/generalEvents";
 import {useTheme} from "react-jss";
 import IDynamicThemeApp from "../../../types/dynamicThemeApp.ts";
 import useStyles from "./searchInput.css.ts";
 import InputPlaceHolder from "./inputPlaceHolder/inputPlaceHolder.tsx";
 import useSearchAutocomplete from "../../../hooks/useSearchAutocomplete";
+import executeSearch from "../../../services/executeSearch.ts";
 
 const inputDescription = "Search for services, organizations, branches, and more"
 const emptyAutocomplete: AutocompleteType = {structured: [], unstructured: []};
@@ -38,8 +38,13 @@ const SearchInput = ({refreshPage}:{refreshPage?: ()=>void}) => {
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            changingPageToResults({value: {query: searchTerm}, removeOldFilters: true})
-            onCloseSearchOptions()
+            e.preventDefault();
+            const defaultValue = {query: searchTerm};
+            const optionalStructuredValue = optionalSearchValues.structured.find(v => v.query === searchTerm|| v.label === searchTerm);
+            const optionalUnstructuredValue = optionalSearchValues.unstructured.find(v => v.query === searchTerm|| v.label === searchTerm);
+            const value = optionalStructuredValue || optionalUnstructuredValue || defaultValue;
+            executeSearch({refreshPage, value, isStructured: !!(optionalStructuredValue), onClose: onCloseSearchOptions})
+            inputRef.current?.blur()
         }
     };
     const onCloseSearchOptions = () => setOptionalSearchValues(emptyAutocomplete);

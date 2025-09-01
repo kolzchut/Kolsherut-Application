@@ -5,18 +5,13 @@ import useStyles from "./searchOption.css";
 import structuredSearchIcon from "../../../../../assets/icon-arrow-top-right-gray-4.svg";
 import lightIconSearch from "../../../../../assets/icon-search-gray-4.svg";
 import unstructuredSearchIcon from "../../../../../assets/icon-chevron-left-gray-4.svg";
-import {
-    settingToCardAndFittingSearchQuery,
-    changingPageToResults
-} from "../../../../../store/shared/sharedSlice";
-import {ILabel} from "../../../../../types/homepageType";
-import generalAnalytics from "../../../../../services/gtag/generalEvents";
 import {useTheme} from "react-jss";
 import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
 import {createKeyboardHandler} from "../../../../../services/keyboardHandler";
 import splitEmSegments from "./utils/splitEmSegments";
+import executeSearch from "../../../../../services/executeSearch.ts";
 
-const SearchOption = ({value, onCloseSearchOptions, isStructured,refreshPage}: {
+const SearchOption = ({value, onCloseSearchOptions, isStructured, refreshPage}: {
     value: IStructureAutocomplete | IUnStructuredAutocomplete,
     onCloseSearchOptions: () => void,
     isStructured: boolean
@@ -25,37 +20,18 @@ const SearchOption = ({value, onCloseSearchOptions, isStructured,refreshPage}: {
     const theme = useTheme<IDynamicThemeApp>();
 
     const classes = useStyles({accessibilityActive: theme.accessibilityActive});
-    const onClick = () => {
-        const customValueAsLabel: ILabel = {
-            query: value.query,
-            title: value.label,
-        }
-        if (isStructured) {
-            const structuredValue = value as IStructureAutocomplete;
-            customValueAsLabel.situation_id = structuredValue.situationId;
-            customValueAsLabel.response_id = structuredValue.responseId;
-            customValueAsLabel.cityName = structuredValue.cityName;
-            customValueAsLabel.bounds = structuredValue.bounds;
-            customValueAsLabel.by = structuredValue.by;
-        } else {
-            const unstructuredValue = value as IUnStructuredAutocomplete;
-            if (unstructuredValue.cardId) {
-                settingToCardAndFittingSearchQuery(value.query, unstructuredValue.cardId);
-                onCloseSearchOptions();
-                return;
-            }
-        }
-        generalAnalytics.enterServiceFromSearchAutocomplete(value.query)
-        changingPageToResults({value: customValueAsLabel, removeOldFilters: true, refreshPage});
-        onCloseSearchOptions();
-    };
 
-    const handleKeyDown = createKeyboardHandler(onClick);
+    const handleKeyDown = createKeyboardHandler(() => executeSearch({
+        refreshPage,
+        value,
+        isStructured,
+        onClose: onCloseSearchOptions
+    }));
 
     const icon = isStructured ? structuredSearchIcon : unstructuredSearchIcon;
     const segments = value.labelHighlighted ? splitEmSegments(value.labelHighlighted) : null;
 
-    return <div onClick={onClick}
+    return <div onClick={() => executeSearch({refreshPage, value, isStructured, onClose: onCloseSearchOptions})}
                 onMouseDown={(e) => e.preventDefault()}
                 onKeyDown={handleKeyDown}
                 tabIndex={0}
