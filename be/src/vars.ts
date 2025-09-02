@@ -15,7 +15,7 @@ export default {
                 }
             },
             reconnectTimeout: parseInt(process.env.ELASTIC_RECONNECT_TIMEOUT || '5') * 1000,
-            indices: process.env.ENV === 'prod' ? {
+            indices: (process.env.ELASTIC_URL ||"").includes('prod') ? {
                 card: "srm__cards_20240417210351058073_bb6360fd",
                 autocomplete: "srm__autocomplete_20230214172220805473_23f43e2a",
                 presets: "srm__presets_20211201201949753432_1915f3c0"
