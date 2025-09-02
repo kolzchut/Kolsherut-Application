@@ -4,15 +4,17 @@ import map from "../../../services/map/map";
 import VectorLayer from "ol/layer/Vector";
 import {Cluster} from "ol/source";
 import logger from "../../../services/logger/logger";
+import {getCurrentClusterLayers} from "../../../services/map/cluster/clusterLayer.ts";
 
 const getClusterLayers = (): VectorLayer<Cluster>[] => {
     if (!map.ol) return [];
-    const olLayers = map.ol.getLayers().getArray() as VectorLayer<Cluster>[];
-    return olLayers
-        .filter((layer) => {
-            const source = layer.getSource();
-            return source?.constructor.name === 'Cluster';
-        });
+    const layers = getCurrentClusterLayers();
+    if (layers && layers.length) return layers;
+    const layersArray = map.ol.getLayers().getArray() as VectorLayer<Cluster>[];
+    return layersArray.filter((layer) => {
+        const source = layer.getSource();
+        return source instanceof Cluster;
+    });
 };
 
 const findFeatureInLayer = (layer: VectorLayer<Cluster>, featureId: string): Feature<Geometry> | null => {

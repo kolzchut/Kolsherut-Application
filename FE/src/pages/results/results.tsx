@@ -38,6 +38,8 @@ import BranchServicesForMobile from "./branchServicesForMobile/branchServicesFor
 import BranchList from "./branchList/branchList.tsx";
 import {setPopupOffsetForBigMap, setPopupOffsetForSmallMap} from "../../services/map/events/popup.ts";
 import {ILabel} from "../../types/homepageType.ts";
+import mapService from "../../services/map/map";
+import logger from "../../services/logger/logger.ts";
 
 const Results = () => {
     const [newPage, setNewPage] = useState(0);
@@ -102,6 +104,15 @@ const Results = () => {
             dispatch(setSelectedOrganization(null));
         }
     }, [newPage, searchQuery, backendFilters.situation, backendFilters.response, backendFilters.by]);
+    useEffect(() => {
+        if (displayResultsMap) {
+            try {
+                mapService.ol.updateSize();
+            } catch (e) {
+                logger.log({message:" map update size failed", payload: e});
+            }
+        }
+    }, [displayResultsMap]);
     return <>
         <MetaTags {...metaTagsData}/>
         <div>
