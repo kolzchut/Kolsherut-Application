@@ -13,6 +13,7 @@ import nationalServiceNotification from "./style/nationalServiceNotification/nat
 import {fromLonLat} from "ol/proj";
 import {XYZ} from "ol/source";
 import {GetLayersReturn} from "../../types/layers";
+import {isMobileScreen} from "../media";
 
 const attribution = new Attribution({
     collapsible: false,
@@ -80,7 +81,7 @@ export class MapSingleton {
             element: popupContainer,
             positioning: "bottom-center",
             stopEvent: true,
-            autoPan:true,
+            autoPan: !isMobileScreen(),
             insertFirst:false,
         });
         this.ol.addOverlay(this.mainPopupOverlay);
