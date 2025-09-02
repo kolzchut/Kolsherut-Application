@@ -1,4 +1,3 @@
 User-agent: *
-Allow: /
-
+Disallow:
 Sitemap: https://www.kolsherut.org.il/sitemap.xml
