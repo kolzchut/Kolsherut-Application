@@ -5,6 +5,7 @@ import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
 import {AddressParts, OrganizationNameParts} from "../../../../../types/cardType.ts";
 import cardHeaderIcon from "../../../../../assets/cardHeaderIcon.json";
 import {createKeyboardHandler} from "../../../../../services/keyboardHandler";
+import {backToResults} from "../../../../../store/shared/sharedSlice.ts";
 
 const Header = ({branchOperatingUnit, addressParts, isNational, organizationName, organizationNameParts}: {
     branchOperatingUnit: string,
@@ -14,7 +15,7 @@ const Header = ({branchOperatingUnit, addressParts, isNational, organizationName
     isNational: boolean
 }) => {
     const serviceGivenNationWide = window.strings.cardDetails.serviceGivenNationWide
-    const onBackButtonClick = () => window.history.back();
+    const onBackButtonClick = () => backToResults();
     const handleKeyDown = createKeyboardHandler(onBackButtonClick);
     const theme = useTheme<IDynamicThemeApp>();
     const iconSource = cardHeaderIcon.find(icon => icon.organizationName === organizationName);

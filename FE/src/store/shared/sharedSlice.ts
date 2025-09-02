@@ -39,6 +39,9 @@ const settingFilters = ({removeOldFilters, value}: {removeOldFilters:boolean,val
     store.dispatch(setFilters(filters));
 }
 
+export const backToResults = () =>{
+    store.dispatch(setPage('results'))
+}
 
 export const changingPageToResults =  ({value, removeOldFilters, refreshPage}: { value: ILabel, removeOldFilters: boolean,refreshPage?: ()=>void }) => {
     settingFilters({removeOldFilters, value});
