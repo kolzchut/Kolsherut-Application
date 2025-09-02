@@ -30,10 +30,6 @@ export const generalSlice = createSlice({
             state.cardId = action.payload;
             state.page = 'card'
         },
-        setSearchQueryAndResultsPage(state: GeneralStore, action) {
-            state.searchQuery = action.payload;
-            state.page = 'results';
-        },
         setAccessibility(state: GeneralStore, action) {
             state.accessibilityActive = action.payload;
         },
@@ -57,7 +53,6 @@ export const {
     setRouteParams,
     setPage,
     setSearchQuery,
-    setSearchQueryAndResultsPage,
     setCardIdAndCardPage,
     setModal,
     settingURLParamsToResults,
