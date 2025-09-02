@@ -28,7 +28,7 @@ export default createUseStyles({
     },
     modalContent: {
         width: '70vw',
-        height: '100vh',
+        height: '100dvh',
         position: 'relative',
         zIndex: 2,
         background: primaryBackgroundColorOne,

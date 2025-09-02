@@ -127,5 +127,9 @@
     "forSentence": "כולם",
     "baseSituationSentence": "עבור",
     "connectBySentence": "של"
+  },
+  "accessibility": {
+    "toggleOn": "עבור למצב נגישות",
+    "toggleOff": "בטל ממצב נגישות"
   }
 }
