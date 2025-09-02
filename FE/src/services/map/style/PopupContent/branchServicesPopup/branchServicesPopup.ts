@@ -7,19 +7,7 @@ import {getHrefForCard} from "../../../../href.ts";
 import {getCommonFooterText, groupByOrganization} from "./branchServicesPopupLogic.ts";
 import "../../../utils/handleMapFeatureClick.ts";
 
-interface IProps {
-    responses: never[];
-    situations: never[];
-    organization_name: string;
-    service_name: string;
-    branch_name: string;
-    cardId: string;
-    service_description: string;
-}
-
-let lengthOfFeatures = 0;
-
-const getHTMLForFeature = (props: IProps) => {
+const getHTMLForFeature = (props: PoiData, lengthOfFeatures: number) => {
     const {service_name, organization_name, branch_name, cardId, service_description} = props;
     const responses = props.responses || [];
     const situations = props.situations || [];
@@ -31,10 +19,11 @@ const getHTMLForFeature = (props: IProps) => {
         labelComponent({response: firstResponse, extra: responseExtra, accessibilityActive: false}) : '';
     const situationLabel = firstSituation ?
         labelComponent({situation: firstSituation, extra: situationExtra, accessibilityActive: false}) : '';
-    const href = getHrefForCard(cardId)
+    const href = getHrefForCard(cardId);
+    const safeCardId = String(cardId).replace(/'/g, "\\'");
 
     return `
-            <a class="feature-section" href="${href}" onclick="handleMapFeatureClick(event, '${cardId}', lengthOfFeatures)">
+            <a class="feature-section" href="${href}" onclick="handleMapFeatureClick(event, '${safeCardId}', ${lengthOfFeatures})">
                 <strong class="branch-title">${service_name || service_description || branch_name || organization_name}</strong>
                 <div class="feature-labels">
                     ${responseLabel}
@@ -50,7 +39,7 @@ const branchServicesPopup = ({feature, root}: { feature: Feature<Geometry>, root
     root.className = "branch-services-popup-div";
     const featuresProperties = feature.getProperties().features.map((f: Feature<Geometry>) => f.getProperties() as PoiData);
 
-    lengthOfFeatures = featuresProperties.length;
+    const lengthOfFeatures = featuresProperties.length;
 
     const groups = groupByOrganization(featuresProperties);
     const parts: string[] = [];
@@ -60,7 +49,7 @@ const branchServicesPopup = ({feature, root}: { feature: Feature<Geometry>, root
                 <strong>${orgName}</strong>
             </div>
         `);
-        parts.push(items.map(getHTMLForFeature as never).join(''));
+        parts.push(items.map((item: PoiData) => getHTMLForFeature(item, lengthOfFeatures)).join(''));
     });
     const featuresHtml = parts.join('');
 

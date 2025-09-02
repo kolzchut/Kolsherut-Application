@@ -15,6 +15,7 @@ declare global {
         modules: any;
         metaTags: any
         environment: any;
+        handleMapFeatureClick: (event: Event, cardId: string, lengthOfFeatures: number) => void;
     }
 }
 
