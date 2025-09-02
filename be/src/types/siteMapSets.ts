@@ -3,4 +3,5 @@ interface SiteMapSets {
     responses: { id: string, name: string, last_modified?: string }[];
     situations: { id: string, name: string, last_modified?: string }[]
 }
+
 export default SiteMapSets;
