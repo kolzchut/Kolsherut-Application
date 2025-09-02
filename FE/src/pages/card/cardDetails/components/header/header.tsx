@@ -43,11 +43,11 @@ const Header = ({branchOperatingUnit, addressParts, isNational, organizationName
             </div>
             }
             {!isNational && isStringAddressParts && <span className={classes.headerTitle}>{addressParts}</span>}
-            {!isNational && !isStringAddressParts &&
-                <span className={classes.headerTitle}>{(addressParts as unknown as AddressParts).primary + " - "}
-                    <span
-                        className={classes.headerSubtitle}>{(addressParts as unknown as AddressParts).secondary}</span>
-                </span>}
+            {!isNational && !isStringAddressParts && <div>
+                <span className={classes.headerTitle}>{(addressParts as unknown as AddressParts).primary} </span>
+                {addressParts.primary && addressParts.secondary && " - "}
+                <span className={classes.headerSubtitle}>{(addressParts as unknown as AddressParts).secondary}</span>
+            </div>}
             {isNational && <span className={`${classes.nationWideText}`}> {serviceGivenNationWide}</span>}
         </div>
         {iconSource &&
