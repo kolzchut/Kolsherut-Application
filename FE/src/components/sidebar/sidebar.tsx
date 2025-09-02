@@ -5,8 +5,6 @@ import useStyles from "./sidebar.css";
 import {useDispatch, useSelector} from "react-redux";
 import {getShowSidebar, isAccessibilityActive} from "../../store/general/general.selector";
 import SidebarButton from "./sidebarButton/sidebarButton";
-import accessibilityInactive from "../../assets/accessability.svg";
-import accessibilityActive from "../../assets/accessabilityActive.svg";
 const logo = "/icons/logo.svg"
 
 const Sidebar = () => {
@@ -19,9 +17,7 @@ const Sidebar = () => {
     }
     const {names} = window.strings.staticModals
     const onClose = () => store.dispatch(setShowSidebar(false));
-    const btnStyles = accessibility ? classes.accessibilityButton : classes.button;
-    const accessibilityIcon = accessibility ? accessibilityActive : accessibilityInactive;
-
+    const accessibilityText = accessibility ? window.strings.accessibility.toggleOff : window.strings.accessibility.toggleOn;
     if (!showSidebar) return <></>
     return <div className={classes.modalBackground} onClick={onClose}>
         <div className={classes.modalContent} onClick={(e) => e.stopPropagation()}>
@@ -31,15 +27,12 @@ const Sidebar = () => {
                     store.dispatch(setPage('home'));
                     onClose();
                 }}/>
-                <button className={btnStyles} onClick={toggleAccessibility}>
-                    <img src={accessibilityIcon} alt={'activate accessibility'} className={classes.accIcon}/>
-                </button>
             </div>
             <SidebarButton text={names.about} modalName={"About"}/>
             <SidebarButton text={names.addService} modalName={"AddService"}/>
             <SidebarButton text={names.partners} modalName={"Partners"}/>
             <SidebarButton text={names.contact} modalName={"Contact"}/>
-
+            <SidebarButton text={accessibilityText} onClick={toggleAccessibility}/>
         </div>
     </div>
 };
