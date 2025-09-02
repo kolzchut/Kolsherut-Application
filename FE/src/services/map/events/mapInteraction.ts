@@ -40,13 +40,17 @@ const handleNewBounds = (map: MapSingleton) => {
 }
 
 const setNewLocationToStoreByBoundingBox = (map: MapSingleton) => {
-    const mapBounds = map.view.calculateExtent(map.ol.getSize()) as [number, number, number, number];
+    const size = map.ol.getSize();
+    if (!size || size[0] === 0 || size[1] === 0) return;
+    const mapBounds = map.view.calculateExtent(size) as [number, number, number, number];
+    if (!Array.isArray(mapBounds) || mapBounds.some(v => !Number.isFinite(v))) return;
 
     const bounds = transformExtent(
         mapBounds,
         map.view.getProjection().getCode(),
         'EPSG:4326'
     ) as [number, number, number, number];
+    if (!Array.isArray(bounds) || bounds.some(v => !Number.isFinite(v))) return;
 
     const key = window.strings.map.locationByBoundingBox;
     const newLocation: ILocation = {
@@ -100,4 +104,3 @@ export const viewInteractions: Array<{
 ];
 
 export const allowChangeStoreLocation = (allow: boolean) => globals.allowChangeStoreLocation = allow;
-

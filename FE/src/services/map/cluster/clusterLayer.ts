@@ -28,6 +28,8 @@ export const setupClusterLayer = ({clusterSources}:{ clusterSources?: { [_p: str
     return currentClusterLayers;
 }
 
+export const getCurrentClusterLayers = () => currentClusterLayers;
+
 export const updateClusterLayerWithDebounce = () => {
     if (updateTimeout) {
         clearTimeout(updateTimeout);
