@@ -16,7 +16,13 @@ const Organization = ({organization, serviceId}: { organization: IOrganization, 
     const selectedOrgIdAndServiceId = useSelector(getSelectedOrganizationIdAndServiceId)
     const isSelected = selectedOrgIdAndServiceId.orgId === organization.id && selectedOrgIdAndServiceId.serviceId === serviceId;
     const theme = useTheme<IDynamicThemeApp>();
-    const classes = useStyles({isSelected, accessibilityActive: theme.accessibilityActive});
+
+    const styleProps = React.useMemo(() => ({
+        isSelected,
+        accessibilityActive: theme.accessibilityActive
+    }), [isSelected, theme.accessibilityActive]);
+
+    const classes = useStyles(styleProps);
     const setDistanceFromTop = useSetDistanceFromTop();
     const onSelectOrganization = (event: React.MouseEvent<HTMLDivElement>) => {
         if (isSelected) return store.dispatch(setSelectedOrganization(null));
