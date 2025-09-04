@@ -48,7 +48,7 @@ const transformSiteMapFromJSONToXML = (sitemap: SiteMapSets): string => {
     const { cards, responses, situations } = sitemap;
     const xmlDecl = `<?xml version="1.0" encoding="UTF-8"?>`;
     const xmlStart = `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
-    const homeUrl = buildUrlXML(`${vars.serverSetups.origin}/?p=home`, undefined, "never", 1.0);
+    const homeUrl = buildUrlXML(`${vars.serverSetups.origin}/`, undefined, "never", 1.0);
 
 
     const urls = [
