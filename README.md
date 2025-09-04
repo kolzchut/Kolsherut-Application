@@ -15,7 +15,7 @@
     ```bash
     docker compose up -d
     ```
-* Be aware, frontend running on port 4000 and backend on port 3000 (BE port can be set via environment variable PORT).
+* Be aware, frontend running on port 4000 and backend on port 5000 (BE port can be set via environment variable PORT).
 
 #### Building tar files for FE and BE:
 1. Make sure docker is installed and running on your machine.
