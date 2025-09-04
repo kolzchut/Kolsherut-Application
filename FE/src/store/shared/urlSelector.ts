@@ -12,9 +12,8 @@ import {stringifyLocation} from "../../services/url/parseURL";
 
 export const getUrlParams = createSelector([getPage, getModal, getCardId, getSearchQuery, getLocationFilter, getSituationsFilter, getResponsesFilter, getBackendResponseFilter, getBackendSituationFilter, getBackendByFilter],
     (page, modal, cardId, searchQuery, locationFilter, situationFilter, responseFilter, beResponseFilter, beSituationFilter, beByFilter) => {
-        const params: UrlParams = {
-            p: page,
-        };
+        const params: UrlParams = {};
+        if (page != 'home') params.p = page;
         if (modal) params.m = modal;
         if (page === 'card' && cardId) params.c = cardId;
         if (page === 'results' && searchQuery) params.sq = searchQuery;

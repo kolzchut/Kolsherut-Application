@@ -6,12 +6,16 @@ export const generalSlice = createSlice({
     initialState,
     reducers: {
         setRouteParams(state: GeneralStore, action) {
-            state.page = action.payload.p || state.page;
+            state.page = action.payload.p || 'home';
             state.modal = action.payload.m || state.modal;
             state.cardId = action.payload.c || state.cardId;
             state.searchQuery = action.payload.sq || state.searchQuery;
         },
         setPage(state: GeneralStore, action) {
+            if (!action.payload) {
+                state.page = 'home'
+                return;
+            }
             state.page = action.payload;
         },
         setSearchQuery(state: GeneralStore, action) {

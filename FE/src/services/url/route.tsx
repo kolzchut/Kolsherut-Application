@@ -13,7 +13,16 @@ export const getRouteParams = () => {
 
 const updateHistory = (urlParams: Record<string, string>) => {
     const urlParamString = new URLSearchParams(urlParams).toString();
-    window.history.pushState(urlParams, "", "?" + urlParamString);
+    const base = window.location.pathname;
+    const hash = window.location.hash;
+
+    let newUrl: string;
+    if (urlParamString) {
+        newUrl = base + "?" + urlParamString + hash;
+    } else {
+        newUrl = base + hash;
+    }
+    window.history.replaceState(urlParams, "", newUrl);
 }
 
 const debouncedHistoryUpdate = debounced(updateHistory, 100);
