@@ -185,3 +185,12 @@ requests from the frontend, process data, and interact with the database.
 | SEARCHCARDS_FIRST_LENGTH  | The amount of services it will pull initially from server in searchCards  | 50                    |
 | AUTOCOMPLETE_MIN_SCORE    | Minimum final score required for autocomplete results (higher = stricter) | 5000                  |
 
+### CI CD
+
+#### Upload to stage:
+In order to upload to staging environment you need to push to the `main` branch.
+
+#### Upload to production:
+In order to upload to production environment you need to create a release in the `main` branch
+and tag it with the version you want to upload (the version should be higher than the current production version).
+
