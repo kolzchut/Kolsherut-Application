@@ -72,7 +72,7 @@ const sortOrganizationsByBranchCount = (services: IService[]): IService[] => {
     });
 };
 
-const transformCardIdToNewFormat = (elasticsearchResponse: any, sortByScore: boolean) => {
+const mapElasticsearchHitsToServiceHierarchy = ({elasticsearchResponse, sortByScore, searchedWithOnlyResponse}:{elasticsearchResponse: any, sortByScore: boolean, searchedWithOnlyResponse:boolean}) => {
     const servicesMap = new Map();
 
     elasticsearchResponse.hits.hits.forEach((hit: {
@@ -96,8 +96,8 @@ const transformCardIdToNewFormat = (elasticsearchResponse: any, sortByScore: boo
 
     const services = Array.from(servicesMap.values());
     if (!sortByScore) return services;
-    const sortedByScore = sortSearchCards(services);
+    const sortedByScore = sortSearchCards(services, searchedWithOnlyResponse);
     return sortOrganizationsByBranchCount(sortedByScore);
 };
 
-export default transformCardIdToNewFormat;
+export default mapElasticsearchHitsToServiceHierarchy;

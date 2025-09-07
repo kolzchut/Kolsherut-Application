@@ -2,7 +2,7 @@ import {IService} from "../types/serviceType";
 import GeneralLifeSituationTags from "../assets/generalLifeSituationTags.json"
 import GovernmentTypes from "../assets/governmentTypes.json";
 
-const calculateServiceScore = (service: IService): number => {
+const calculateServiceScore = (service: IService, searchedWithOnlyResponse: boolean): number => {
     const serviceSituations = service.situations.flatMap(situation => situation.id);
 
     const isServiceDescriptionIncludesMoreThanFiveWords = !!(service.service_description && service.service_description.split(' ').length > 5);
@@ -19,15 +19,17 @@ const calculateServiceScore = (service: IService): number => {
     if (isServiceHasGeneralLifeSituation) score += 2000;
     score += Math.min(countBranches, 999);
     if (isServiceHasGovernmentType) score += 500;
+
+    if (searchedWithOnlyResponse && countSituations === 0) score += 200;
     if (countSituations >= 1 && countSituations <= 9) score += (10 - countSituations) * 100;
 
     return score;
 }
 
-const sortSearchCards = (services: IService[]) => {
+const sortSearchCards = (services: IService[], searchedWithOnlyResponse: boolean) => {
     return services.sort((a, b) => {
-        const scoreA = calculateServiceScore(a);
-        const scoreB = calculateServiceScore(b);
+        const scoreA = calculateServiceScore(a, searchedWithOnlyResponse);
+        const scoreB = calculateServiceScore(b, searchedWithOnlyResponse);
         return scoreB - scoreA;
     });
 }
