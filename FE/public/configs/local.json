@@ -1,5 +1,6 @@
 {
   "state": "local",
   "server": "http://localhost:5000",
-  "analyticsId": "G-GYV3YZ00Z8"
+  "analyticsId": "G-GYV3YZ00Z8",
+  "currentURL": "http://localhost:4000"
 }

@@ -1,5 +1,6 @@
 {
   "state": "production",
   "server": "https://api.kolsherut.org.il",
-  "analyticsId": "G-SSW46Z8STP"
+  "analyticsId": "G-SSW46Z8STP",
+  "currentURL": "https://www.kolsherut.org.il"
 }
