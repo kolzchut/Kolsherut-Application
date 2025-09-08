@@ -46,5 +46,6 @@ export default {
         logToFile: process.env.LOG_TO_FILE === 'true',
         loggerFolderPath: path.join(process.cwd(), 'logs'),
         logDuration: 60 * 1000 * parseInt(process.env.LOG_DURATION || '10'),
-    }
+    },
+    yaml_url:"https://raw.githubusercontent.com/kolzchut/openeligibility/refs/heads/main/taxonomy.tx.yaml"
 };
