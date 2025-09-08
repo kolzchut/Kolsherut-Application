@@ -1,9 +1,9 @@
 import {Router} from "express";
-import {generalSitemap, mixedTaxonomySitemap, taxonomySitemap} from "../controllers/sitemapControllers";
+import {cardsSitemap, mixedTaxonomySitemap, taxonomySitemap} from "../controllers/sitemapControllers";
 
 const router = Router();
 
-router.get('/', generalSitemap);
+router.get('/cards', cardsSitemap);
 router.get("/taxonomy", taxonomySitemap)
 router.get('/mixedtaxonomy', mixedTaxonomySitemap)
 

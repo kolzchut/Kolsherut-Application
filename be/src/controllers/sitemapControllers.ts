@@ -8,7 +8,7 @@ import {fetchAllCardFields} from "../services/db/es/getAllCardIds";
 import transformSiteMapFromJSONToXML from "../utilities/transformSiteMapFromJSONToXML";
 
 
-export const generalSitemap = asyncHandler(async (req: Request, res: Response) => {
+export const cardsSitemap = asyncHandler(async (req: Request, res: Response) => {
     const siteMap = await fetchAllCardFields();
     const siteMapXML = transformSiteMapFromJSONToXML(siteMap);
     res.type('application/xml').status(200).send(siteMapXML);
