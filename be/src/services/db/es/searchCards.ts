@@ -1,5 +1,5 @@
 import {executeESQuery} from './es';
-import transformCardIdToNewFormat from "../../../utilities/transformCardIdToNewFormat";
+import mapElasticsearchHitsToServiceHierarchy from "../../../utilities/mapElasticsearchHitsToServiceHierarchy";
 import buildSearchQuery from "./dsl/buildSearchQuery";
 import vars from "../../../vars";
 import {cardSearchSourceFields} from "./sourceFields/cardSearchSourceFields";
@@ -79,7 +79,7 @@ export default async ({fixedSearchQuery, isFast, responseId, situationId,by}: {
 
     try {
         const response = await executeESQuery(query);
-        return transformCardIdToNewFormat(response, !freeSearch);
+        return mapElasticsearchHitsToServiceHierarchy({elasticsearchResponse:response, sortByScore:!freeSearch, searchedWithOnlyResponse: (!(!!situationId) && !!responseId) });
     } catch (error) {
         console.error('Error executing query:', error);
         throw error;
