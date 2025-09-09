@@ -1,20 +1,29 @@
 const fs = require("fs");
 const path = require("path");
 
+const env = process.env.ENVIRONMENT || "local";
+const envConfigPath = path.join(__dirname, `../public/configs/${env}.json`);
+const envConfig = JSON.parse(fs.readFileSync(envConfigPath, "utf-8"));
+
+const baseUrl = envConfig.currentURL;
+
 // Ensure the public folder exists
-const publicFolder = path.join(__dirname, "../public"); // adjust relative path
+const publicFolder = path.join(__dirname, "../public");
 if (!fs.existsSync(publicFolder)) {
     fs.mkdirSync(publicFolder, { recursive: true });
 }
 
-// List of sitemap URLs
+// List of sitemap files (relative paths)
 const sitemaps = [
-    "https://api.kolsherut.org.il/sitemap/cards.xml",
-    "https://api.kolsherut.org.il/sitemap/taxonomy.xml",
-    "https://api.kolsherut.org.il/sitemap/mixedtaxonomy.xml"
+    "/sitemap/cards.xml",
+    "/sitemap/taxonomy.xml",
+    "/sitemap/mixedtaxonomy.xml",
 ];
 
-// Get current date in ISO format
+// Helper: join base + path safely (exactly one slash between them)
+const joinUrl = (base, relativePath) =>
+    base.replace(/\/+$/, "") + "/" + relativePath.replace(/^\/+/, "");
+
 const getCurrentISODate = () => new Date().toISOString();
 
 // Build sitemap index XML
@@ -23,9 +32,9 @@ const buildSitemapIndexXML = () => {
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
     xml += `<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
-    sitemaps.forEach((loc) => {
+    sitemaps.forEach((relativePath) => {
         xml += `  <sitemap>\n`;
-        xml += `    <loc>${loc}</loc>\n`;
+        xml += `    <loc>${joinUrl(baseUrl, relativePath)}</loc>\n`;
         xml += `    <lastmod>${lastmod}</lastmod>\n`;
         xml += `  </sitemap>\n`;
     });
@@ -38,4 +47,4 @@ const buildSitemapIndexXML = () => {
 const sitemapPath = path.join(publicFolder, "sitemap.xml");
 fs.writeFileSync(sitemapPath, buildSitemapIndexXML(), "utf-8");
 
-console.log(`✅ sitemap.xml generated and overwritten at: ${sitemapPath}`);
+console.log(`✅ sitemap.xml generated at: ${sitemapPath} \n on environment: ${env}`);
