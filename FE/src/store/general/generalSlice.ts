@@ -23,7 +23,6 @@ export const generalSlice = createSlice({
         },
         setSearchQuery(state: GeneralStore, action) {
             state.searchQuery = action.payload;
-            // If search is cleared, user is effectively leaving results
             if (!action.payload) {
                 state.oldURL = false;
             }
