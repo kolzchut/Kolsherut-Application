@@ -1,11 +1,17 @@
 const fs = require('fs');
 const path = require('path');
 
+// Ensure the sitemap folder exists
+const sitemapFolder = path.join(__dirname, "../public/sitemap");
+if (!fs.existsSync(sitemapFolder)) {
+    fs.mkdirSync(sitemapFolder, { recursive: true });
+}
+
 const env = process.env.ENVIRONMENT || 'local';
 
 const dataPath = path.join(__dirname, '../public/configs/homepage.json'); // main data
 const envConfigPath = path.join(__dirname, `../public/configs/${env}.json`); // env-specific config
-const sitemapPath = path.join(__dirname, '../public/hpsitemap.xml'); // output XML
+const sitemapPath = path.join(__dirname, '../public/sitemap/hpsitemap.xml'); // output XML
 
 const data = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
 const envConfig = JSON.parse(fs.readFileSync(envConfigPath, 'utf-8'));

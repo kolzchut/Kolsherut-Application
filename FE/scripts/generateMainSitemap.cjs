@@ -18,6 +18,7 @@ const sitemaps = [
     "/sitemap/cards.xml",
     "/sitemap/taxonomy.xml",
     "/sitemap/mixedtaxonomy.xml",
+    "/sitemap/hpsitemap.xml"
 ];
 
 // Helper: join base + path safely (exactly one slash between them)
