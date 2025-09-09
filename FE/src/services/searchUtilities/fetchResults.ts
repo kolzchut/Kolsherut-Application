@@ -2,7 +2,13 @@ import sendMessage from "../sendMessage/sendMessage.ts";
 import resultsAnalytics from "../gtag/resultsEvents.ts";
 
 
-const getResultsFromServer = async (searchQuery: string, isFast: boolean, responseId: string, situationId: string, by:string) => {
+const getResultsFromServer = async (
+    searchQuery: string,
+    isFast: boolean,
+    responseId: string,
+    situationId: string,
+    by: string,
+) => {
     if (!searchQuery) return [];
     const results = await sendMessage({
         method: 'post',
@@ -12,19 +18,25 @@ const getResultsFromServer = async (searchQuery: string, isFast: boolean, respon
             isFast,
             responseId,
             situationId,
-            by
+            by,
         }
     });
     if (!results.success) return [];
     return results.data;
 }
 
-const fetchResults = async ({searchQuery = "", responseId = "", situationId = "", by="",isFast}: {
+const fetchResults = async ({
+    searchQuery = "",
+    responseId = "",
+    situationId = "",
+    by = "",
+    isFast,
+}: {
     searchQuery?: string,
     responseId?: string,
     situationId?: string,
     by?: string,
-    isFast: boolean
+    isFast: boolean,
 }) => {
     const fetchedResults = await getResultsFromServer(searchQuery, isFast, responseId, situationId, by);
     const responseCount = responseId ? 1 : 0;
