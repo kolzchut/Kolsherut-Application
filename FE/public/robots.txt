@@ -1,3 +1,3 @@
 User-agent: *
 Disallow:
-Sitemap: https://www.kolsherut.org.il/sitemap_index.xml
+Sitemap: https://www.kolsherut.org.il/sitemap.xml
