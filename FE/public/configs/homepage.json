@@ -105,10 +105,10 @@
     "group_link": "לכל שירותי הבריאות",
     "labels": [
       {
-        "situation_id":"human_situations:health:neoplasm"
-        "response_id":null,
-        "title":"חולי סרטן",
-        "query":"חולי_סרטן"
+        "situation_id": "human_situations:health:neoplasm",
+        "response_id": null,
+        "title": "חולי סרטן",
+        "query": "חולי_סרטן"
       },
       {
         "situation_id": "human_situations:disability:visual_impairment",
