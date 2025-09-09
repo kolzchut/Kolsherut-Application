@@ -80,12 +80,9 @@ export const settingToResults = async ({value}: { value: ILabel}) => {
     if(old){
         const requestURL = window.config.routes.autocomplete.replace('%%search%%', value.query?.replace(/_/g, " "));
         const response = await sendMessage({method: 'get', requestURL});
-        console.log('autocomplete response', response)
         const closestAutocomplete :IStructureAutocomplete | IUnStructuredAutocomplete = response.data.structured?.[0] || response.data.unstructured?.[0];
-        console.log('closestAutocomplete', closestAutocomplete)
         if(closestAutocomplete) fetchBaseData = updateStoreWithSearchParametersAndGetNewFetchData(closestAutocomplete as IStructureAutocomplete);
     }
-    console.log('fetchBaseData', fetchBaseData)
     const startResults = fetchResults({...fetchBaseData, isFast: true});
     const restResults = fetchResults({...fetchBaseData, isFast: false});
     updateFirstResults({startResults});
