@@ -78,7 +78,7 @@ export const settingToResults = async ({value}: { value: ILabel}) => {
     }
     const old = store.getState().general.oldURL;
     if(old){
-        const requestURL = window.config.routes.autocomplete.replace('%%search%%',value.query?.replace(/_/g, " "));
+        const requestURL = window.config.routes.autocomplete.replace('%%search%%', value.query?.replace(/_/g, " "));
         const response = await sendMessage({method: 'get', requestURL});
         console.log('autocomplete response', response)
         const closestAutocomplete :IStructureAutocomplete | IUnStructuredAutocomplete = response.data.structured?.[0] || response.data.unstructured?.[0];
