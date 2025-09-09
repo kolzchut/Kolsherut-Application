@@ -16,7 +16,7 @@ import {IStructureAutocomplete, IUnStructuredAutocomplete} from "../../types/aut
 
 const updateStoreWithSearchParametersAndGetNewFetchData = (value: IStructureAutocomplete)=>{
     if (value?.query) store.dispatch(setSearchQuery(value.query));
-    setBackendFilters({response:value?.responseId, situation:value?.situationId, by:value?.by});
+    store.dispatch(setBackendFilters({response:value?.responseId, situation:value?.situationId, by:value?.by}));
     const filters: {location?: {key: string, bounds: [number,number,number,number]}} = {}
     if(value?.cityName && value?.bounds) filters.location = {key: value.cityName, bounds: value.bounds};
     store.dispatch(setFilters(filters));
