@@ -11,7 +11,23 @@ import {setResults} from "../data/dataSlice";
 import fetchResults from "../../services/searchUtilities/fetchResults";
 import {resetFilters, setBackendFilters, setFilters} from "../filter/filterSlice";
 import {IService} from "../../types/serviceType";
+import sendMessage from "../../services/sendMessage/sendMessage.ts";
+import {IStructureAutocomplete, IUnStructuredAutocomplete} from "../../types/autocompleteType.ts";
 
+const updateStoreWithSearchParametersAndGetNewFetchData = (value: IStructureAutocomplete)=>{
+    if (value?.query) store.dispatch(setSearchQuery(value.query));
+    store.dispatch(setBackendFilters({response:value?.responseId, situation:value?.situationId, by:value?.by}));
+    const filters: {location?: {key: string, bounds: [number,number,number,number]}} = {}
+    if(value?.cityName && value?.bounds) filters.location = {key: value.cityName, bounds: value.bounds};
+    store.dispatch(setFilters(filters));
+    return {
+        searchQuery: value?.query,
+        responseId: value?.responseId || "",
+        situationId: value?.situationId || "",
+        by: value?.by || "",
+    };
+
+}
 
 const updateFirstResults = async ({startResults}: {
     startResults: Promise<IService[]>
@@ -54,14 +70,21 @@ export const settingToResults = async ({value}: { value: ILabel}) => {
     store.dispatch(setLoading(true));
     store.dispatch(settingURLParamsToResults(value.query))
 
-    const fetchBaseData = {
+    let fetchBaseData = {
         responseId: value.response_id,
         situationId: value.situation_id,
         searchQuery: value.query,
         by: value.by,
     }
-    const startResults = fetchResults({...fetchBaseData, isFast: true,});
-    const restResults = fetchResults({...fetchBaseData, isFast: false,});
+    const old = store.getState().general.oldURL;
+    if(old){
+        const requestURL = window.config.routes.autocomplete.replace('%%search%%', value.query?.replace(/_/g, " "));
+        const response = await sendMessage({method: 'get', requestURL});
+        const closestAutocomplete: IStructureAutocomplete | IUnStructuredAutocomplete = response.data.structured?.[0] || response.data.unstructured?.[0];
+        if(closestAutocomplete) fetchBaseData = updateStoreWithSearchParametersAndGetNewFetchData(closestAutocomplete as IStructureAutocomplete);
+    }
+    const startResults = fetchResults({...fetchBaseData, isFast: true});
+    const restResults = fetchResults({...fetchBaseData, isFast: false});
     updateFirstResults({startResults});
     updateAllResults({startResults, restResults})
 }

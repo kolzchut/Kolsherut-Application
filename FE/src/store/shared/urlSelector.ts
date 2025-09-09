@@ -1,6 +1,6 @@
 import {createSelector} from "@reduxjs/toolkit";
 import UrlParams from "../../types/urlParams";
-import {getCardId, getModal, getPage, getSearchQuery} from "../general/general.selector";
+import {getCardId, getModal, getOldURL, getPage, getSearchQuery} from "../general/general.selector";
 import {
     getBackendByFilter,
     getBackendResponseFilter, getBackendSituationFilter,
@@ -10,8 +10,8 @@ import {
 } from "../filter/filter.selector";
 import {stringifyLocation} from "../../services/url/parseURL";
 
-export const getUrlParams = createSelector([getPage, getModal, getCardId, getSearchQuery, getLocationFilter, getSituationsFilter, getResponsesFilter, getBackendResponseFilter, getBackendSituationFilter, getBackendByFilter],
-    (page, modal, cardId, searchQuery, locationFilter, situationFilter, responseFilter, beResponseFilter, beSituationFilter, beByFilter) => {
+export const getUrlParams = createSelector([getPage, getModal, getCardId, getSearchQuery, getLocationFilter, getSituationsFilter, getResponsesFilter, getBackendResponseFilter, getBackendSituationFilter, getBackendByFilter, getOldURL],
+    (page, modal, cardId, searchQuery, locationFilter, situationFilter, responseFilter, beResponseFilter, beSituationFilter, beByFilter,oldURL) => {
         const params: UrlParams = {};
         if (page != 'home') params.p = page;
         if (modal) params.m = modal;
@@ -23,6 +23,7 @@ export const getUrlParams = createSelector([getPage, getModal, getCardId, getSea
         if (page === 'results' && beResponseFilter) params.brf = beResponseFilter;
         if (page === 'results' && beSituationFilter) params.bsf = beSituationFilter;
         if (page === 'results' && beByFilter) params.by = beByFilter;
+        if(page === 'results' && oldURL) params.old = 'true';
 
         return params;
     });
