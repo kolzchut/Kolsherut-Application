@@ -38,8 +38,8 @@ jobs:
       - name: Generate Sitemaps (stage)
         working-directory: FE
         run: |
-          cross-env ENVIRONMENT=stage npm run sitemap:homepage
-          cross-env ENVIRONMENT=stage npm run sitemap:main
+          npx cross-env ENVIRONMENT=stage npm run sitemap:homepage
+          npx cross-env ENVIRONMENT=stage npm run sitemap:main
           
 
       - name: Build FE (Vite)
