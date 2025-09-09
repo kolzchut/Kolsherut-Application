@@ -15,12 +15,6 @@
         "response_id": "human_services:legal:advocacy_legal_aid:understand_government_programs",
         "title": "הכנסה נמוכה וקשיים כלכליים ",
         "query": "מיצוי_זכויות_עבור_בעלי_הכנסה_נמוכה"
-      },
-      {
-        "situation_id": "human_situations:survivors:victims_of_terror",
-        "response_id": "human_services:legal:advocacy_legal_aid:understand_government_programs",
-        "title": "נפגעי פעולות איבה",
-        "query": "מיצוי_זכויות_עבור_נפגעי_פעולות_איבה"
       }
     ]
   },
@@ -44,16 +38,10 @@
     ]
   },
   {
-    "group": "מלחמת חרבות ברזל",
+    "group": "מצב החירום",
     "response_id": "human_services:internal_emergency_services",
     "group_link": "לכל השירותים למצב החירום",
     "labels": [
-      {
-        "situation_id": "human_situations:survivors:evacuees",
-        "response_id": "human_services:internal_emergency_services",
-        "title": "מפונים",
-        "query": "שירותים_למצב_החירום_עבור_מפונים"
-      },
       {
         "situation_id": "human_situations:armed_forces:bereaved_families",
         "response_id": "human_services:internal_emergency_services",
@@ -117,6 +105,12 @@
     "group_link": "לכל שירותי הבריאות",
     "labels": [
       {
+        "situation_id":"human_situations:health:neoplasm"
+        "response_id":null,
+        "title":"חולי סרטן",
+        "query":"חולי_סרטן"
+      },
+      {
         "situation_id": "human_situations:disability:visual_impairment",
         "response_id": "human_services:health",
         "title": "בעלי ליקוי ראיה",
@@ -149,12 +143,6 @@
     "labels": [
       {
         "situation_id": "human_situations:disability:mental_illness",
-        "response_id": "human_services:health",
-        "title": "שירותי בריאות",
-        "query": "שירותי_בריאות_עבור_מתמודדי_נפש"
-      },
-      {
-        "situation_id": "human_situations:disability:mental_illness",
         "response_id": "human_services:health:mental_health_care:hospitalization:hospitalization_alternative:balancing_house",
         "title": "בתים מאזנים",
         "query": "בית_מאזן_עבור_מתמודדי_נפש"
@@ -176,12 +164,6 @@
         "response_id": "human_services:work",
         "title": "תעסוקה",
         "query": "עבודה_עבור_מתמודדי_נפש"
-      },
-      {
-        "situation_id": "human_situations:benefit_holders:ministry_of_health:rehabilitation_basket",
-        "title": "סל שיקום",
-        "score": 35,
-        "query": "זכאי_סל_שיקום"
       }
     ]
   },
@@ -243,31 +225,6 @@
     ]
   },
   {
-    "group": "ניצולי שואה",
-    "situation_id": "human_situations:benefit_holders:holocaust_survivors",
-    "group_link": "לכל השירותים עבור ניצולי שואה",
-    "labels": [
-      {
-        "situation_id": "human_situations:benefit_holders:holocaust_survivors",
-        "response_id": "human_services:legal",
-        "title": "מיצוי זכויות",
-        "query": "משפטי_עבור_ניצולי_שואה"
-      },
-      {
-        "situation_id": "human_situations:benefit_holders:holocaust_survivors",
-        "response_id": "human_services:community_services:social_club",
-        "title": "מועדון חברתי",
-        "query": "מועדון_חברתי_עבור_ניצולי_שואה"
-      },
-      {
-        "situation_id": "human_situations:benefit_holders:holocaust_survivors",
-        "response_id": "human_services:health",
-        "title": "שירותי בריאות",
-        "query": "שירותי_בריאות_עבור_ניצולי_שואה"
-      }
-    ]
-  },
-  {
     "group": "צעירים וצעירות",
     "situation_id": "human_situations:age_group:young_adults",
     "group_link": "לכל השירותים עבור צעירים וצעירות",
@@ -314,6 +271,12 @@
   {
     "group": "אוכלוסיות נוספות",
     "labels": [
+      {
+        "situation_id": "human_situations:benefit_holders:holocaust_survivors",
+        "title": "ניצולי שואה",
+        "response_id": null,
+        "query": "ניצולי_שואה"
+      },
       {
         "situation_id": "human_situations:survivors:prostition_survivors",
         "title": "שורדות זנות",
