@@ -10,16 +10,23 @@ export const generalSlice = createSlice({
             state.modal = action.payload.m || state.modal;
             state.cardId = action.payload.c || state.cardId;
             state.searchQuery = action.payload.sq || state.searchQuery;
+            state.oldURL = action.payload.old === 'true' || false;
         },
         setPage(state: GeneralStore, action) {
             if (!action.payload) {
                 state.page = 'home'
+                state.oldURL = false;
                 return;
             }
             state.page = action.payload;
+            if (action.payload !== 'results') state.oldURL = false;
         },
         setSearchQuery(state: GeneralStore, action) {
             state.searchQuery = action.payload;
+            // If search is cleared, user is effectively leaving results
+            if (!action.payload) {
+                state.oldURL = false;
+            }
         },
         setModal(state: GeneralStore, action) {
             state.modal = action.payload;
@@ -33,6 +40,8 @@ export const generalSlice = createSlice({
         setCardIdAndCardPage(state: GeneralStore, action) {
             state.cardId = action.payload;
             state.page = 'card'
+            // Leaving results: clear oldURL flag
+            state.oldURL = false;
         },
         setAccessibility(state: GeneralStore, action) {
             state.accessibilityActive = action.payload;
@@ -49,6 +58,9 @@ export const generalSlice = createSlice({
         setSelectedFeatureId(state: GeneralStore, action) {
             if (typeof action.payload !== 'string' && action.payload !== null) return;
             state.selectedFeatureId = action.payload;
+        },
+        setOldURL(state: GeneralStore, action) {
+            state.oldURL = action.payload;
         }
     },
 });
@@ -64,7 +76,8 @@ export const {
     setAccessibility,
     setFirstVisitedUrl,
     setLoading,
-    setSelectedFeatureId
+    setSelectedFeatureId,
+    setOldURL
 } = generalSlice.actions;
 
 export default generalSlice.reducer;
