@@ -10,7 +10,7 @@ import {
 } from "../filter/filter.selector";
 import {stringifyLocation} from "../../services/url/parseURL";
 
-export const getUrlParams = createSelector([getPage, getModal, getCardId, getSearchQuery, getLocationFilter, getSituationsFilter, getResponsesFilter, getBackendResponseFilter, getBackendSituationFilter, getBackendByFilter,getOldURL],
+export const getUrlParams = createSelector([getPage, getModal, getCardId, getSearchQuery, getLocationFilter, getSituationsFilter, getResponsesFilter, getBackendResponseFilter, getBackendSituationFilter, getBackendByFilter, getOldURL],
     (page, modal, cardId, searchQuery, locationFilter, situationFilter, responseFilter, beResponseFilter, beSituationFilter, beByFilter,oldURL) => {
         const params: UrlParams = {};
         if (page != 'home') params.p = page;
