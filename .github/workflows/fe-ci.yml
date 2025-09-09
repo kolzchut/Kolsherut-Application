@@ -35,6 +35,13 @@ jobs:
         working-directory: FE
         run: npm ci
 
+      - name: Generate Sitemaps (stage)
+        working-directory: FE
+        run: |
+          cross-env ENVIRONMENT=stage npm run sitemap:homepage
+          cross-env ENVIRONMENT=stage npm run sitemap:main
+          
+
       - name: Build FE (Vite)
         working-directory: FE
         run: npm run build
