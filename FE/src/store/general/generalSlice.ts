@@ -10,22 +10,17 @@ export const generalSlice = createSlice({
             state.modal = action.payload.m || state.modal;
             state.cardId = action.payload.c || state.cardId;
             state.searchQuery = action.payload.sq || state.searchQuery;
-            state.oldURL = action.payload.old === 'true' || false;
+            state.oldURL = action.payload?.old === 'true' || false;
         },
         setPage(state: GeneralStore, action) {
             if (!action.payload) {
-                state.page = 'home'
-                state.oldURL = false;
+                state.page = 'home';
                 return;
             }
             state.page = action.payload;
-            if (action.payload !== 'results') state.oldURL = false;
         },
         setSearchQuery(state: GeneralStore, action) {
             state.searchQuery = action.payload;
-            if (!action.payload) {
-                state.oldURL = false;
-            }
         },
         setModal(state: GeneralStore, action) {
             state.modal = action.payload;
@@ -38,9 +33,7 @@ export const generalSlice = createSlice({
         },
         setCardIdAndCardPage(state: GeneralStore, action) {
             state.cardId = action.payload;
-            state.page = 'card'
-            // Leaving results: clear oldURL flag
-            state.oldURL = false;
+            state.page = 'card';
         },
         setAccessibility(state: GeneralStore, action) {
             state.accessibilityActive = action.payload;

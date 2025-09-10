@@ -17,17 +17,23 @@ const routeParamsToStore = (routeParams: Record<string, string>) => {
     store.dispatch(setFilterRouteParams(routeParams));
 };
 
-const handlePopState = (event: { state: any }) => {
-    if (!event.state) return;
-    routeParamsToStore(event.state);
+const hydrateFromLocation = () => {
+    window.__suppressHistoryPush = true;
+    const currentParams = getRouteParams();
+    routeParamsToStore(currentParams);
+    setTimeout(() => { window.__suppressHistoryPush = false; }, 0);
 };
+
+const handlePopState = () => {
+    hydrateFromLocation();
+};
+
 export default async (main: React.ReactNode) => {
-    const routeParams = getRouteParams();
-    if(routeParams) routeParamsToStore(routeParams);
+    hydrateFromLocation();
 
     if(await loadConfig()) {
         analytics.init();
-        mapService.init({mapInteractions, viewInteractions})
+        mapService.init({mapInteractions, viewInteractions});
         setAllLocationsInStore();
     }
 

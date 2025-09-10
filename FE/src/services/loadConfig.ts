@@ -16,6 +16,7 @@ declare global {
         metaTags: any
         environment: any;
         handleMapFeatureClick: (event: Event, cardId: string, lengthOfFeatures: number) => void;
+        __suppressHistoryPush: boolean
     }
 }
 

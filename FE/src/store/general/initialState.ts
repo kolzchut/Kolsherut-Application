@@ -1,5 +1,5 @@
 export const initialState = {
-    page: "card",
+    page: "home",
     modal: null,
     cardId: "",
     searchQuery:"",
