@@ -180,9 +180,9 @@
       },
       {
         "situation_id": "human_situations:age_group:seniors",
-        "response_id": "human_services:community_services:social_club",
+        "response_id": "human_services:community_services:recreation",
         "title": "מועדון ופנאי",
-        "query": "מועדון_חברתי_עבור_אזרחים_ותיקים"
+        "query": "פעילויות_פנאי_עבור_אזרחים_ותיקים"
       },
       {
         "situation_id": "human_situations:age_group:seniors",
