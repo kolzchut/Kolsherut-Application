@@ -88,10 +88,14 @@ These files control app behavior, appearance, and content.
 - `situation_id`
 - `group_link` (for navigation)
 - `labels` (array of display options)
+  - `response_id` : response backend filter
+  - `situation_id` : situation backend filter
+  - `title` : text displayed
+  - `query` : search query string, make sure you write with underscore
 
 **How to maintain:**
 - Add a new group for new homepage sections.
-- Make sure `labels` point to valid `situation_id` values.
+- Make sure `labels` point to valid `situation_id` and `response_id` values.
 
 
 ##### 6. `linksBelow.json`
@@ -187,10 +191,102 @@ requests from the frontend, process data, and interact with the database.
 
 ### CI CD
 
-#### Upload to stage:
-In order to upload to staging environment you need to push to the `main` branch.
+Current automated behavior:
+- Push to `main` updates **staging** (FE + BE independently, only if their folders changed).
+- Creating a Git tag (and publishing a GitHub Release) triggers **production** build & deploy (again only for changed component paths).
 
-#### Upload to production:
-In order to upload to production environment you need to create a release in the `main` branch
-and tag it with the version you want to upload (the version should be higher than the current production version).
+---
+## Deployment & Release Guide (For All Team Members)
+Simple steps for staging (test) and production (live). No local build needed.
+
+### 1. Staging Deployment (Automatic on push to main)
+Use when: You want updated code on the staging environment.
+Steps:
+1. Ensure your feature branch was merged into `main` via a Pull Request (PR).
+2. After merge, go to GitHub → Repository → “Actions” tab.
+3. Look for workflows:
+   - `FE CI (staging)` (runs if `FE/` changed)
+   - `BE CI (staging)` (runs if `be/` changed)
+4. Open the workflow run (top of the list) and watch the steps. A green check means success.
+5. When finished, images are pushed to GHCR:
+   - FE: `ghcr.io/kolzchut/kol-sherut-fe:latest` and `:<commit-sha>`
+   - BE: `ghcr.io/kolzchut/kol-sherut-be:latest` and `:<commit-sha>`
+6. Helm values in `srm-devops` repo are auto-updated for staging (values.auto-updated.yaml / etl/api & site).
+7. Validate staging:
+   - Open staging URL (internal) & sanity-check: homepage, search, card page.
+   - Optional: Open browser dev tools → Network → confirm new commit SHA in `config.json` request (if exposed) or inspect page footer/build indicator if present.
+
+If something is wrong: Fix code → new PR → merge → staging redeploys automatically.
+
+### 2. Production Deployment (Manual via Release Tag)
+Use when: You approve staging and want to publish to production.
+Steps:
+1. Confirm staging is healthy (basic flows OK, no blocking bugs).
+2. Decide a new semantic version (e.g. `v1.3.0`). Do not reuse an existing tag.
+3. GitHub → “Releases” → “Draft a new release”.
+4. In “Tag version”: type the new tag (e.g. `v1.3.0`) and target branch = `main`.
+5. Title: e.g. `Release v1.3.0`.
+6. Description: bullet list of notable changes (copy from merged PR titles if needed).
+7. Click “Publish release”.
+8. This triggers:
+   - `FE Release (production)` (if `FE/` changed at/just before the tag)
+   - `BE Release (production)` (if `be/` changed)
+9. Monitor under “Actions” like staging. Wait for green check.
+10. Production images produced:
+    - FE: `ghcr.io/kolzchut/kol-sherut-fe:<commit-sha>` and `:<tag>-<commit-sha>`
+    - BE: `ghcr.io/kolzchut/kol-sherut-be:<commit-sha>` and `:<tag>-<commit-sha>`
+11. Helm production values file (`values.auto-updated.production.yaml`) in `srm-devops` repo auto-updated to point to the `<tag>-<sha>` image.
+12. Validate production: open site, run smoke checks (search, open card, any critical flows).
+
+Rollback (simple):
+- Create a new release with an older known-good tag name incremented (e.g. if `v1.3.0` bad, re-release code from earlier commit as `v1.3.1` pointing to stable commit). The workflow will publish new images and update Helm.
+- OR (DevOps only) manually adjust image in production Helm values repo and deploy.
+
+### 3. Quick Trigger Reference
+| Action | Folder Changed? | Workflow | Environment | History Tag Examples |
+|--------|-----------------|----------|-------------|------------------|
+| Push to main | FE/ changed | FE CI (staging) | Staging | latest + <sha> |
+| Push to main | be/ changed | BE CI (staging) | Staging | latest + <sha> |
+| Tag (e.g. v1.2.0) | FE/ changed | FE Release (production) | Production | <sha>v1.2.0<sha> |
+| Tag (e.g. v1.2.0) | be/ changed | BE Release (production) | Production | <sha>v1.2.0<sha> |
+
+### 4. Versioning Rules
+- Use `vMAJOR.MINOR.PATCH` (e.g. `v1.4.2`).
+- Increment:
+  - MAJOR: breaking changes
+  - MINOR: new features (backward compatible)
+  - PATCH: fixes / small changes
+- Never reuse or delete tags.
+
+### 5. What Gets Deployed
+- Only components whose folders changed since last commit/tag run build & publish.
+- Sitemaps are generated during FE workflows (stage vs production use environment variable `ENVIRONMENT`).
+
+### 6. Common Questions
+Q: I pushed to main, but no FE workflow?  
+A: No changes under `FE/` → workflow won’t run. Same for `be/`.
+
+Q: Release created but FE didn’t deploy?  
+A: Tag commit had no FE changes relative to previous; only BE (or neither) deployed.
+
+Q: Can I edit a release note after publishing?  
+A: Yes. Editing text doesn’t redeploy. To redeploy you must create a new tag.
+
+Q: How do I know which image is live?  
+A: Check the updated `values.auto-updated*.yaml` in `srm-devops` repo (image field) or visiting argoCD.
+
+### 7. Pre-Production Checklist
+- [ ] All intended PRs merged to main
+- [ ] Staging smoke tests pass
+- [ ] Version chosen (unique tag)
+- [ ] Release notes written
+- [ ] No open critical issues
+
+### 8. After Deployment Checklist
+- [ ] Homepage loads
+- [ ] Search returns results
+- [ ] Card page loads
+- [ ] (If changed) New sitemap served
+- [ ] Analytics events visible (if applicable)
+
 
