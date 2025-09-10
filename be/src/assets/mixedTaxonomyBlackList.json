@@ -1,0 +1,9 @@
+{
+  "human_services:housing:residential_housing:long_term_housing:old_age_home": [
+    "human_situations:employment:self_employed",
+    "human_situations:health:pregnant"
+  ],
+  "human_services:money:financial_assistance:help_pay_for_school:transportation_for_school": [
+    "human_situations:life_events:birth"
+  ]
+}
