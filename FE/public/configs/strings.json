@@ -42,8 +42,8 @@
   "quickActionWebsite": "אתר",
   "results": {
     "numOfBranches": "סניפים",
-    "noResults": "אין תוצאות",
-    "noResultsDescription": "אפשר לחפש באזורים נוספים או לשנות את מילות החיפוש או הסננים.",
+    "noResults": "לא נמצאו תוצאות",
+    "noResultsDescription": "אפשר לחפש באזורים נוספים או לשנות את מילות החיפוש.",
     "nationalBranch": "שירות ארצי",
     "notAccurateLocation": "(במיקום לא מדויק)",
     "hideMapOnDesktop": "הסתר מפה",

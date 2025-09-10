@@ -31,7 +31,7 @@ import getResultsMetaTags from "./getResultsMetaTags";
 import {useOnce} from "../../hooks/useOnce";
 import {allowChangeStoreLocation} from "../../services/map/events/mapInteraction";
 import { settingToResults} from "../../store/shared/sharedSlice";
-import noResultsIcon from "../../assets/noResults.svg";
+import noResultsIcon from "../../assets/magnifyingGlass.svg";
 import Loader from "./loader/loader.tsx";
 import {isMobileScreen} from "../../services/media.ts";
 import BranchServicesForMobile from "./branchServicesForMobile/branchServicesForMobile.tsx";
