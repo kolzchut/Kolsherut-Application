@@ -1,21 +1,20 @@
 import vars from "../vars";
 
 interface IProps {
-    responses: { id: string, name: string }[],
-    situations: { id: string, name: string }[]
+    responses: { query: string, slug: string }[],
+    situations: { query: string, slug: string }[]
 }
 
-const transformSiteMapToListOfResponseAndSituationLinks = (sitemap: IProps) => {
-    const {responses, situations} = sitemap;
-    
+const transformSiteMapToListOfResponseAndSituationLinks = ({responses,situations}: IProps) => {
+
     const responseUrls = responses.map(response =>({
-        name: response.name || response.id,
-        link:`${vars.serverSetups.origin}/?p=results&sq=${encodeURIComponent(response.name || response.id)}&brf=${encodeURIComponent(response.id)}`
+        name: response.query || response.slug,
+        link:`${vars.serverSetups.origin}/?p=results&sq=${encodeURIComponent(response.query || response.slug)}&brf=${encodeURIComponent(response.slug)}`
     }));
 
     const situationsUrls = situations.map(situation => ({
-        name: situation.name || situation.id,
-        link:`${vars.serverSetups.origin}/?p=results&sq=${encodeURIComponent(situation.name || situation.id)}&bsf=${encodeURIComponent(situation.id)}`
+        name: situation.query || situation.slug,
+        link:`${vars.serverSetups.origin}/?p=results&sq=${encodeURIComponent(situation.query || situation.slug)}&bsf=${encodeURIComponent(situation.slug)}`
     }));
 
     return {
