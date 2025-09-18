@@ -15,6 +15,7 @@ declare global {
         modules: any;
         metaTags: any
         environment: any;
+        dataLayer: any;
         handleMapFeatureClick: (event: Event, cardId: string, lengthOfFeatures: number) => void;
         __suppressHistoryPush: boolean
     }

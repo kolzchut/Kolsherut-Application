@@ -11,7 +11,12 @@ const init = () => {
 
 const logEvent = ({event, params}: LogEventArgs) => {
     ReactGA.event(event, {
-        ...params
+        ...params,
+    });
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+        event,
+        ...params,
     });
 };
 

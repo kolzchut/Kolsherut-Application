@@ -19,7 +19,7 @@ interface IViewItemListEventProps {
     organizationName: string
 }
 
-export const searchEvent = ({responseCount, searchQuery, filtersCount}: ISearchEventProps) => {
+const searchEvent = ({responseCount, searchQuery, filtersCount}: ISearchEventProps) => {
     const isFirstPage = getIsLandingPage(store.getState());
     const eventParams = {
         search_term: searchQuery,
@@ -33,7 +33,7 @@ export const searchEvent = ({responseCount, searchQuery, filtersCount}: ISearchE
     });
 }
 
-export const viewItemListEvent = ({
+const viewItemListEvent = ({
                                       responsesCount,
                                       filtersCount,
                                       organizationName,
@@ -67,7 +67,7 @@ export const viewItemListEvent = ({
         params: eventParams,
     });
 }
-export const geoFilterLocationSelect = (location: ILocation) => {
+const geoFilterLocationSelect = (location: ILocation) => {
     let where = 'select-place';
     if (location.key == window.config.defaultLocations[0].key)
         where = 'geo_my_location';
@@ -75,18 +75,18 @@ export const geoFilterLocationSelect = (location: ILocation) => {
         where = 'geo_nation_wide';
     analytics.interactionEvent('geo-widget', where, location.key);
 }
-export const moreFiltersModalEvent = () => {
+const moreFiltersModalEvent = () => {
     analytics.interactionEvent('open-filters', window.location.href);
 }
-export const gotoCardFromBranchList = (cardId: string) => {
+const gotoCardFromBranchList = (cardId: string) => {
     analytics.interactionEvent(cardId, 'branch-services');
 }
 
-export const onFocusOnSearchInput = () => {
+const onFocusOnSearchInput = () => {
     analytics.interactionEvent('regular-searchbar', window.location.href);
 }
 
-export const scrollOnceEvent = () => {
+const scrollOnceEvent = () => {
     analytics.logEvent({
         event: 'scroll-in-results',
         params: {
@@ -95,7 +95,7 @@ export const scrollOnceEvent = () => {
     })
 }
 
-export const quickFilterActivatedEvent = () => {
+const quickFilterActivatedEvent = () => {
     analytics.logEvent({
         event: 'srm:quick_filter', params: {
             landing_page: getIsLandingPage(store.getState()) ? 'yes' : 'no'
