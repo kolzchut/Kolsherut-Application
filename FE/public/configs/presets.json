@@ -5,7 +5,7 @@
     "label": "הכוונה לשירותים בחירום",
     "labelHighlighted": null,
     "query": "הכוונה לשירותים בחירום",
-    "responseId": null,
+    "responseId": "human_services:emergency:emergency_helpline",
     "situationId": null,
     "by": null
   },
