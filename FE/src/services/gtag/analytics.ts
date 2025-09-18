@@ -9,10 +9,9 @@ const init = () => {
     logger.log({message: `Initializing Google Analytics on ${analyticsId}`});
 }
 
-const logEvent = ({ event, params }: LogEventArgs) => {
-    ReactGA.event({
-        name: event,
-        params: { ...params }
+const logEvent = ({event, params}: LogEventArgs) => {
+    ReactGA.event(event, {
+        ...params
     });
 };
 
