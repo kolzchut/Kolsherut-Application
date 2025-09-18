@@ -10,7 +10,6 @@ import logRoute from "./routes/logRoute";
 import searchRoute from "./routes/searchRoute";
 import autoCompleteRoute from "./routes/autoCompleteRoute";
 import siteMapForModalRoute from "./routes/siteMapForModalRoute";
-import initialAutoComplete from "./routes/initialAutoCompleteRoute";
 import sitemapRouter from "./routes/sitemapRouter";
 
 const app = express();
@@ -24,7 +23,6 @@ app.use(cors({origin}));
 app.get('/test', (req: Request, res: Response) => {
     res.status(200).json({message:'Server is running 🍍☺', success: true});
 });
-app.get('/initialAutoComplete', initialAutoComplete);
 app.get('/autocomplete/:search', autoCompleteRoute);
 app.get('/card/:card_id', cardRoute);
 app.post('/search', searchRoute);
