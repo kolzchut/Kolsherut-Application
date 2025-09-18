@@ -13,6 +13,11 @@ const logEvent = ({event, params}: LogEventArgs) => {
     ReactGA.event(event, {
         ...params,
     });
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+        event,
+        ...params,
+    });
 };
 
 const interactionEvent = (what: string, where: string, content?: string) => {
