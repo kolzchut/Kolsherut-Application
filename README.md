@@ -126,12 +126,60 @@ These files control app behavior, appearance, and content.
 **How to maintain:**
 - Add a new module as a new object with fields like `title`, `description`, and optional `links`.
 
-#### 9. `Presets.json`
-**Purpose** Defines the default Search options.
-**Structure:** Array of objects (each representing a preset).
+#### 9. `presets.json`
+**Purpose:** Defines the default search options (shown before the user types).  
+**Structure:** Array of preset objects. Each object becomes a selectable SearchOption.
 
-**How to maintain:**
-- Make sure you always have label and query, the rest of the fields are optional.
+Required fields per preset:
+- `label` (string, displayed text in the list)
+- `query` (string, the search query executed when selected)
+
+Optional fields:
+- `responseId` (string) : Pre-filters results by a specific response taxonomy.
+- `situationId` (string) : Pre-filters results by a situation taxonomy.
+- `cityName` (string) : Used for location‑scoped context / display.
+- `bounds` (array of 4 numbers) : Geographic bounding box `[minLon, minLat, maxLon, maxLat]`.
+- `by` (string) : Narrows search by provider/organization name.
+- `labelHighlighted` (string) : Highlights what not marked with `<em>` in the label. for instance: if label is "Medical services in Jerusalem" and you want to highlight "Jerusalem" you can set labelHighlighted to "Medical services in" and the FE will render it as "<em>Medical services in</em> Jerusalem".
+
+How the FE uses it:
+- A preset is treated as "structured" if it has any of: `responseId`, `situationId`, `cityName`, `bounds`, `by`.
+- The `query` value must be unique; it's used as the React list key. Avoid duplicates.
+
+Editing guidelines:
+1. Keep the array valid JSON (no trailing commas, use `null` instead of omitting only if you intentionally want an explicit null).
+2. Prefer omitting optional keys rather than setting them to `null` unless downstream logic depends on key existence (current code is fine with both).
+3. If adding geographic bounds, confirm the order: lon/lat pairs, not lat/lon.
+4. Large coordinate precision is fine; keep 6–7 decimals max for readability.
+5. Avoid bounds that are too broad or too narrow—they reduce result relevance.
+6. If both `responseId` and `situationId` are present, the search will be filtered by both (intended narrowing). Only include both when meaningful.
+7. Use `by` for organization / provider scoped presets (e.g. a known NGO name) when you want free text plus a supplier constraint.
+8. Remove an entry to hide it; commenting is not allowed in JSON.
+9. Order matters: the array order is the display order.
+
+Testing a change locally:
+- Edit `public/configs/presets.json`.
+- Reload the page (hard refresh if needed). Because of the `cacheBuster`, no additional cache clearing is required.
+- Verify new preset appears and clicking it triggers the expected structured search.
+
+Example preset object:
+```json
+{
+  "bounds": [35.0852011, 31.7096214, 35.2650458, 31.8826655],
+  "cityName": "ירושלים",
+  "label": "ציוד רפואי בירושלים",
+  "labelHighlighted": null,
+  "query": "ציוד רפואי בירושלים",
+  "responseId": "human_services:health:medical_supplies",
+  "situationId": null,
+  "by": null
+}
+```
+
+Common pitfalls:
+- Using lat/lon instead of lon/lat (will shift map area).
+- Duplicate `query` causing React key collisions (only last one effectively renders).
+- Forgetting to remove a trailing comma after deleting the last item.
 
 ##### 10. `stage.json`, `production.json`, `local.json`
 **Purpose:** Environment-specific configuration files.  
@@ -288,5 +336,3 @@ A: Check the updated `values.auto-updated*.yaml` in `srm-devops` repo (image fie
 - [ ] Card page loads
 - [ ] (If changed) New sitemap served
 - [ ] Analytics events visible (if applicable)
-
-
