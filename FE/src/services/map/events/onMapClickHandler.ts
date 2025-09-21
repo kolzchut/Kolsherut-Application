@@ -8,14 +8,17 @@ import {setSelectedFeatureId} from "../../../store/general/generalSlice.ts";
 import {reRouteToCard} from "../../routes/reRoute.ts";
 
 const onMapClickHandler = (selectedFeature: Feature<Geometry>, onClickPopUp: boolean) => {
-    const featureProperties = selectedFeature.getProperties();
-    mapAnalytics.onMapBranchClicked({
-        cardId: featureProperties.cardId,
-        branchName: featureProperties.name || 'סניף ללא שם'
-    });
+    const featuresProperties = selectedFeature.getProperties();
+    const firstFeatureProperty = featuresProperties.features[0]?.getProperties();
+    if (onClickPopUp) {
+        mapAnalytics.onMapBranchClicked({
+            cardId: firstFeatureProperty.cardId,
+            branchName: firstFeatureProperty.branch_name || 'סניף ללא שם'
+        });
+    }
     if (isMobileScreen()) return store.dispatch(setSelectedFeatureId(selectedFeature.getId()));
-    if (featureProperties.features.length < 2 && onClickPopUp) {
-        const cardId = featureProperties.features[0].getProperties().cardId;
+    if (featuresProperties.features.length < 2 && onClickPopUp) {
+        const cardId = firstFeatureProperty.cardId;
         mapAnalytics.enterServiceFromMapPopupSingleBranchEvent(cardId);
         return reRouteToCard({cardId});
     }
