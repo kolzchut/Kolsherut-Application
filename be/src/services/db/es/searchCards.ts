@@ -12,6 +12,7 @@ export default async ({fixedSearchQuery, isFast, responseId, situationId,by}: {
     situationId: string,
     by:string
 }) => {
+    const searchedWithOnlyResponse = !(!!situationId) && !!responseId
     const mustConditions = [];
     const freeSearch = !!(fixedSearchQuery && responseId === "" && situationId === "" && by === "")
     if (freeSearch) {
@@ -54,6 +55,7 @@ export default async ({fixedSearchQuery, isFast, responseId, situationId,by}: {
         });
     }
 
+
     const propsForQuery = isFast ? vars.defaultParams.searchCards.fast : vars.defaultParams.searchCards.rest;
 
     let query;
@@ -79,7 +81,7 @@ export default async ({fixedSearchQuery, isFast, responseId, situationId,by}: {
 
     try {
         const response = await executeESQuery(query);
-        return mapElasticsearchHitsToServiceHierarchy({elasticsearchResponse:response, sortByScore:!freeSearch, searchedWithOnlyResponse: (!(!!situationId) && !!responseId) });
+        return mapElasticsearchHitsToServiceHierarchy({elasticsearchResponse:response, sortByScore:!freeSearch, searchedWithOnlyResponse });
     } catch (error) {
         console.error('Error executing query:', error);
         throw error;
