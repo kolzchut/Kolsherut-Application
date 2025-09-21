@@ -8,19 +8,25 @@ export const mapStateEvent = ({isOpen}: { isOpen: boolean }) => {
     });
 }
 export const onMapBranchClicked = ({cardId, branchName}: { cardId: string, branchName: string }) => {
-    analytics.interactionEvent('map-branch-clicked', cardId, branchName);
+    analytics.logEvent({
+        event: 'map-branch-clicked',
+        params: {
+            cardId,
+            branchName
+        }
+    });
 }
 
 export const enterServiceFromMapPopupSingleBranchEvent = (cardId: string) => {
-    analytics.interactionEvent(cardId, 'map-popup-single-branch');
+    analytics.logEvent({params: {cardId}, event: 'map-popup-single-branch'});
 };
 
 export const enterServiceFromMapPopupMultiBranchEvent = (cardId: string) => {
-    analytics.interactionEvent(cardId, 'map-popup-multi-branch');
+    analytics.logEvent({params: {cardId}, event: 'map-popup-multi-branch'});
 };
 
 export const mapDragEvent = (zoomLevel: number) => {
-    analytics.interactionEvent('map-drag', 'map', Math.round(zoomLevel).toString());
+    analytics.logEvent({event: 'map-drag', params: {zoomLevel: Math.round(zoomLevel).toString()}});
 };
 
 

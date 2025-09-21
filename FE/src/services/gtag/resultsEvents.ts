@@ -68,22 +68,22 @@ export const viewItemListEvent = ({
     });
 }
 export const geoFilterLocationSelect = (location: ILocation) => {
-    let where = 'select-place';
+    let kind = 'select-place';
     if (location.key == window.config.defaultLocations[0].key)
-        where = 'geo_my_location';
+        kind = 'geo_my_location';
     if (location.key == israelLocation.key)
-        where = 'geo_nation_wide';
-    analytics.interactionEvent('geo-widget', where, location.key);
+        kind = 'geo_nation_wide';
+    analytics.logEvent({event: 'geo-widget', params: {kind, where: location.key}});
 }
 export const moreFiltersModalEvent = () => {
-    analytics.interactionEvent('open-filters', window.location.href);
+    analytics.logEvent({event:'open-filters', params: {currentPage: window.location.href}});
 }
 export const gotoCardFromBranchList = (cardId: string) => {
-    analytics.interactionEvent(cardId, 'branch-services');
+    analytics.logEvent({event: 'goto_card_from_branch_list', params: {cardId}});
 }
 
 export const onFocusOnSearchInput = () => {
-    analytics.interactionEvent('regular-searchbar', window.location.href);
+    analytics.logEvent({event:'regular-searchbar-focus',params:{currentPage: window.location.href}});
 }
 
 export const scrollOnceEvent = () => {
