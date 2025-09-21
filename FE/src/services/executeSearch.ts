@@ -26,11 +26,12 @@ const executeSearch = ({value, isStructured, onClose,refreshPage}:IProps) => {
         const unstructuredValue = value as IUnStructuredAutocomplete;
         if (unstructuredValue.cardId) {
             settingToCardAndFittingSearchQuery(value.query, unstructuredValue.cardId);
+            generalAnalytics.enterCardFromSearchAutocomplete(unstructuredValue.cardId);
             onClose();
             return;
         }
     }
-    generalAnalytics.enterServiceFromSearchAutocomplete(value.query)
+    generalAnalytics.searchFromSearchAutocomplete(value.query)
     changingPageToResults({value: customValueAsLabel, removeOldFilters: true, refreshPage});
     onClose();
 };

@@ -1,23 +1,16 @@
 import analytics from "./analytics.ts";
 
-const internalSearchClickedEvent = ({query, where}: { query: string, where: string }) => {
-    analytics.logEvent({
-        event: 'srm:interaction',
 
-        params: {
-            interaction_what: 'regular-searchbar',
-            search_term: query,
-            interaction_where: where
-        }
-    });
+const searchFromSearchAutocomplete = (query: string) => {
+    analytics.logEvent({params: {query}, event: 'search-autocomplete'});
+};
+const enterCardFromSearchAutocomplete = (cardId: string) => {
+    analytics.logEvent({params: {cardId}, event: 'search-autocomplete-direct'});
 }
 
-const enterServiceFromSearchAutocomplete = (query: string) => {
-    analytics.logEvent({params: {query}, event: 'search-autocomplete-direct'});
-};
 
 export default {
-    internalSearchClickedEvent,
-    enterServiceFromSearchAutocomplete
+    searchFromSearchAutocomplete,
+    enterCardFromSearchAutocomplete
 }
 

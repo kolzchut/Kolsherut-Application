@@ -6,8 +6,7 @@ import SearchOption from "../../../pages/home/search/searchInput/searchOption/se
 import resultsAnalytics from "../../../services/gtag/resultsEvents";
 import useOnClickedOutside from "../../../hooks/useOnClickedOutside";
 import {useSelector} from "react-redux";
-import {getPage, getSearchQuery} from "../../../store/general/general.selector";
-import generalAnalytics from "../../../services/gtag/generalEvents";
+import {getSearchQuery} from "../../../store/general/general.selector";
 import {useTheme} from "react-jss";
 import IDynamicThemeApp from "../../../types/dynamicThemeApp.ts";
 import useStyles from "./searchInput.css.ts";
@@ -22,7 +21,6 @@ const SearchInput = ({refreshPage}:{refreshPage?: ()=>void}) => {
     const theme = useTheme<IDynamicThemeApp>();
     const classes = useStyles({theme});
     const searchQuery = useSelector(getSearchQuery);
-    const page = useSelector(getPage);
     const [isInputFocused, setIsInputFocused] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const [optionalSearchValues, setOptionalSearchValues] = useState<AutocompleteType>(emptyAutocomplete);
@@ -55,7 +53,6 @@ const SearchInput = ({refreshPage}:{refreshPage?: ()=>void}) => {
     }
     const onClickPlaceHolder = () => {
         setIsInputFocused(true);
-        generalAnalytics.internalSearchClickedEvent({query: searchQuery, where: page});
         resultsAnalytics.onFocusOnSearchInput();
         setTimeout(() => {
             if (inputRef.current) {
