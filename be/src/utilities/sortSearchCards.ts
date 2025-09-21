@@ -20,9 +20,8 @@ const calculateServiceScore = (service: IService, searchedWithOnlyResponse: bool
     score += Math.min(countBranches, 999);
     if (isServiceHasGovernmentType) score += 500;
 
-    if (searchedWithOnlyResponse && countSituations === 0) score += 10000;
+    if (searchedWithOnlyResponse && countSituations === 0) score += 6000;
     if (countSituations >= 1 && countSituations <= 9) score += (10 - countSituations) * 100;
-
     return score;
 }
 
