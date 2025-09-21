@@ -27,9 +27,13 @@ const calculateServiceScore = (service: IService, searchedWithOnlyResponse: bool
 }
 
 const sortSearchCards = (services: IService[], searchedWithOnlyResponse: boolean) => {
-    return services.sort((a, b) => {
-        const scoreA = calculateServiceScore(a, searchedWithOnlyResponse);
-        const scoreB = calculateServiceScore(b, searchedWithOnlyResponse);
+    const servicesWithScores = services.map(service => ({
+        ...service,
+        calculatedScore: calculateServiceScore(service, searchedWithOnlyResponse)
+    }));
+    return servicesWithScores.sort((a, b) => {
+        const scoreA = a.calculatedScore;
+        const scoreB = b.calculatedScore;
         return scoreB - scoreA;
     });
 }
