@@ -1,6 +1,5 @@
 import mapAnalytics from "../../gtag/mapEvents.ts";
 import {reRouteToCard} from "../../routes/reRoute.ts";
-import logger from "../../logger/logger.ts";
 
 const handleMapFeatureClick = (event: Event, cardId: string, lengthOfFeatures:number) => {
     event.preventDefault();
@@ -9,7 +8,6 @@ const handleMapFeatureClick = (event: Event, cardId: string, lengthOfFeatures:nu
     } else {
         mapAnalytics.enterServiceFromMapPopupMultiBranchEvent(cardId);
     }
-    logger.log({message: `rerouting to card:${cardId}`});
     reRouteToCard({cardId});
 };
 
