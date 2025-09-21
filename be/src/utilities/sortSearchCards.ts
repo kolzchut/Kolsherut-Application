@@ -11,7 +11,7 @@ const calculateServiceScore = (service: IService, searchedWithOnlyResponse: bool
     const isServiceHasGovernmentType = GovernmentTypes.includes(service.organization_kind)
     const countSituations = service.situations.length;
     const serviceScore = Math.min(service.score || 0, 3000);
-    const serviceBoost = Math.min(service.service_boost || 0, 10000);
+    const serviceBoost = Math.min(service.service_boost || 0, 100000);
 
     let score = serviceScore + serviceBoost;
 
@@ -20,7 +20,7 @@ const calculateServiceScore = (service: IService, searchedWithOnlyResponse: bool
     score += Math.min(countBranches, 999);
     if (isServiceHasGovernmentType) score += 500;
 
-    if (searchedWithOnlyResponse && countSituations === 0) score += 6000;
+    if (searchedWithOnlyResponse && countSituations === 0) score += 10000;
     if (countSituations >= 1 && countSituations <= 9) score += (10 - countSituations) * 100;
 
     return score;
