@@ -22,7 +22,7 @@ const Card = () => {
             if (cardData !== null) {
                 setFullCard(cardData);
                 setCardOnMap(cardData)
-                cardAnalytics.cardEvent(cardData, 0, false, 'card');
+                cardAnalytics.cardEvent(cardData, 0, false);
                 return;
             }
             backToHome();

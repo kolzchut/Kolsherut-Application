@@ -8,7 +8,6 @@ const cardEvent = (
     card: ICard,
     index: number,
     select: boolean,
-    from: string | null = null
 ) => {
     if (select) {
         analytics.logEvent({
@@ -27,17 +26,12 @@ const cardEvent = (
             landing_page: getIsLandingPage(store.getState()) ? 'yes' : 'no'
         };
         analytics.logEvent({
-            event: 'srm:card',
-            params: eventParams,
-        });
-        analytics.logEvent({
             event: 'view_item',
             params: {
                 ...eventParams,
                 items: [cardToItem(card, index)],
             },
         });
-        analytics.interactionEvent('card', from || 'unknown', undefined);
     }
 };
 
