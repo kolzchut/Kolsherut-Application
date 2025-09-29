@@ -74,10 +74,10 @@ export const geoFilterLocationSelect = (location: ILocation) => {
         kind = 'geo_my_location';
     if (location.key == israelLocation.key)
         kind = 'geo_nation_wide';
-    analytics.logEvent({event: 'geo-widget', params: {kind, where: location.key}});
+    analytics.logEvent({event: 'geo-widget', params: {kind, where: location.key, device: (isMobileScreen() ? 'mobile' : 'desktop')}});
 }
 export const moreFiltersModalEvent = () => {
-    analytics.logEvent({event:'open-filters', params: {currentPage: window.location.href, device: '' + (isMobileScreen() ? 'mobile' : 'desktop')}});
+    analytics.logEvent({event:'open-filters', params: {currentPage: window.location.href}});
 }
 export const gotoCardFromBranchList = (cardId: string) => {
     analytics.logEvent({event: 'goto_card_from_branch_list', params: {cardId}});
