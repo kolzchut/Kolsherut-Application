@@ -4,6 +4,7 @@ import {store} from "../../store/store";
 import {getIsLandingPage} from "../../store/general/general.selector";
 import ILocation from "../../types/locationType";
 import israelLocation from "../../constants/israelLocation";
+import {isMobileScreen} from "../media.ts";
 
 interface ISearchEventProps {
     responseCount: number;
@@ -76,7 +77,7 @@ export const geoFilterLocationSelect = (location: ILocation) => {
     analytics.logEvent({event: 'geo-widget', params: {kind, where: location.key}});
 }
 export const moreFiltersModalEvent = () => {
-    analytics.logEvent({event:'open-filters', params: {currentPage: window.location.href}});
+    analytics.logEvent({event:'open-filters', params: {currentPage: window.location.href, device: '' + (isMobileScreen() ? 'mobile' : 'desktop')}});
 }
 export const gotoCardFromBranchList = (cardId: string) => {
     analytics.logEvent({event: 'goto_card_from_branch_list', params: {cardId}});
