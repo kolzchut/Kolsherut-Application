@@ -7,7 +7,6 @@ import homepageBackground from '../../../assets/homepage-background.svg';
 import {isMobileScreen} from "../../../services/media.ts";
 import {useTheme} from "react-jss";
 import IDynamicThemeApp from "../../../types/dynamicThemeApp.ts";
-import {usePreload} from "../../../hooks/usePreload.ts";
 
 const kolsherutLogo = "/icons/logo-white.svg"
 const nationalDigitalLogo = "/icons/logo-digital-israel.png"
@@ -18,9 +17,6 @@ const Search = () => {
     const theme = useTheme<IDynamicThemeApp>();
     const classes = useStyle({accessibilityActive: theme.accessibilityActive});
     const isMobile = isMobileScreen();
-
-    usePreload({ href: homepageBackground, as: "image", fetchPriority: "high" });
-
     const handleIconClick = () => {
         if (!isMobile) return store.dispatch(setPage('home'))
         return store.dispatch(setShowSidebar(true));
