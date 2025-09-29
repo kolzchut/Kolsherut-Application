@@ -43,7 +43,7 @@ const addToCartEvent = (card: ICard, action: string, action_url: string) => {
         card_name: card.service_name,
         card_org: card.organization_id,
         cta_action: action,
-        landing_page: 'no',
+        landing_page: getIsLandingPage(store.getState()) ? 'yes' : 'no',
         items: [cardToItem(card, 0)],
     };
     analytics.logEvent({

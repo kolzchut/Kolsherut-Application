@@ -7,7 +7,6 @@ export const generalSlice = createSlice({
     reducers: {
         setRouteParams(state: GeneralStore, action) {
             state.page = action.payload.p || 'home';
-            state.modal = action.payload.m || state.modal;
             state.cardId = action.payload.c || state.cardId;
             state.searchQuery = action.payload.sq || state.searchQuery;
             state.oldURL = action.payload?.old === 'true' || false;

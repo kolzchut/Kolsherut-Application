@@ -36,5 +36,5 @@ export const getHrefForResults = ({
 export const getHrefForLinkBelow = (modal?: string) => {
     const currentUrl = window.location.href;
     if(currentUrl.includes('p=') || !modal) return currentUrl;
-    return `${currentUrl}&m=${modal}`;
+    return `${currentUrl}`;
 }
