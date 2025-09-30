@@ -123,12 +123,6 @@
         "query": "שירותי_בריאות_עבור_התמכרויות"
       },
       {
-        "response_id": "human_services:emergency:emergency_mental_assistance",
-        "title": "סיוע נפשי מיידי",
-        "situation_id": null,
-        "query": "סיוע_נפשי_בחירום"
-      },
-      {
         "response_id": "human_services:health:medical_supplies",
         "title": "ציוד רפואי",
         "situation_id": null,
