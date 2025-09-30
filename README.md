@@ -323,6 +323,9 @@ A: Yes. Editing text doesn’t redeploy. To redeploy you must create a new tag.
 Q: How do I know which image is live?  
 A: Check the updated `values.auto-updated*.yaml` in `srm-devops` repo (image field) or visiting argoCD.
 
+Q: I can't find the correct json config file, where is it?  
+A: The config files are located in the `public/configs` folder of the FE project, but some of them, that are not frequently changed, are located in the `src/assets` folder of the FE project.
+
 ### 7. Pre-Production Checklist
 - [ ] All intended PRs merged to main
 - [ ] Staging smoke tests pass
