@@ -64,4 +64,8 @@ export default createUseStyles({
         marginRight:15,
         top:10,
     },
+    linkIcon:{
+        width:'16px',
+        height:'16px'
+    }
 });

@@ -32,7 +32,7 @@ const Footer = ({hideLinks=false}: {hideLinks?: boolean}) => {
             </span>
             <p className={classes.secondAndThirdParagraphs}>{runBy}
                 <a href={kzLink} target='_blank'>
-                    <img className={classes.icons} src={logoKZ} alt={"logo kol zchut"}/>
+                    <img className={classes.icons} src={logoKZ} alt={"logo kolzchut"}/>
                     {nameOfOrganization}
                 </a>
             </p>

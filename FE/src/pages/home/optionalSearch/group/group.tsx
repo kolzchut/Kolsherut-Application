@@ -46,7 +46,7 @@ const Group = ({group}: { group: IGroup }) => {
                 role="button"
                 aria-label={`Search for ${group.group_link}`}
             >
-                <img src={linkIcon} alt={'Link Icon'}/>
+                <img src={linkIcon} alt={'Link Icon'} className={classes.linkIcon}/>
                 <span>{group.group_link}</span>
             </div>}
         </div>

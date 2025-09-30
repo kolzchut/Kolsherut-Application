@@ -27,8 +27,8 @@ export default createUseStyles({
         objectFit: 'cover',
         zIndex: -2,
     },
-    hamburger:{
-      height: '30px'
+    hamburger: {
+        height: '30px'
     },
     aboveDiv: {
         display: 'flex',
@@ -38,9 +38,10 @@ export default createUseStyles({
         gap: '20px',
         padding: '24px',
     },
-    kolsherutLogo: {
-        height: '90%',
-    },
+    kolsherutLogo: ({accessibilityActive}: IProps) => ({
+        height: accessibilityActive ? '50px' : '45px',
+        width: accessibilityActive ? '78px' : '70px'
+    }),
     aboveDivText: ({accessibilityActive}: IProps) => ({
         color: primaryBackgroundColorOne,
         fontSize: accessibilityActive ? 20 : 16,
