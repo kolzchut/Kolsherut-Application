@@ -37,7 +37,7 @@ export default async (main: React.ReactNode) => {
         setAllLocationsInStore();
     }
 
+    ReactDOM.createRoot(document.getElementById('root')!).render(main);
     setSiteMapInStore();
     window.addEventListener('popstate', handlePopState);
-    ReactDOM.createRoot(document.getElementById('root')!).render(main);
 };
