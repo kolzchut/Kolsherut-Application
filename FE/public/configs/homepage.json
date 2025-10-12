@@ -55,10 +55,10 @@
         "query": "שירותים_למצב_החירום_עבור_אנשי_צבא_וביטחון"
       },
       {
-        "response_id": "human_services:emergency:emergency_mental_assistance",
+        "response_id": "human_services:health:emergency_mental_assistance",
         "title": "סיוע נפשי",
         "situation_id": null,
-        "query": "סיוע_נפשי_בחירום"
+        "query": "סיוע_נפשי_מיידי"
       },
       {
         "response_id": "human_services:emergency:financial_aid_in_emergencies",
