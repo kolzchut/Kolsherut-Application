@@ -51,15 +51,15 @@
     ]
   },
   "results": {
-    "title": "חיפוש %%search%% | כל שירות",
+    "title": "%%search%% | כל שירות",
     "properties": [
       {
         "property": "og:title",
-        "content": "חיפוש %%search%% | כל שירות"
+        "content": "%%search%% | כל שירות"
       },
       {
         "property": "og:description",
-        "content": "חיפוש %%search%% | כל שירות"
+        "content": "%%search%% | כל שירות"
       },
       {
         "property": "og:image",
@@ -85,7 +85,7 @@
     "names": [
       {
         "name": "description",
-        "content": "תוצאות חיפוש %%search%%"
+        "content": "%%search%%"
       },
       {
         "name": "robots",
