@@ -11,6 +11,7 @@ import searchRoute from "./routes/searchRoute";
 import autoCompleteRoute from "./routes/autoCompleteRoute";
 import siteMapForModalRoute from "./routes/siteMapForModalRoute";
 import sitemapRouter from "./routes/sitemapRouter";
+import {initEmailService} from "./services/email/emailService";
 
 const app = express();
 const httpServer = createServer(app);
@@ -37,6 +38,7 @@ httpServer.listen(port, () => {
 
 const start = async () => {
     console.log('Starting server...');
+    initEmailService();
     await dbInit();
 };
 

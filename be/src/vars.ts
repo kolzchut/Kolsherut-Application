@@ -22,7 +22,7 @@ export default {
             } : {
                 card: "srm__cards_20220926183305498944_a9274d22",
                 autocomplete: "srm__autocomplete_20240505135631716607_372901c0",
-                presets:"srm__presets_20220322175100923906_0199cd26"
+                presets: "srm__presets_20220322175100923906_0199cd26"
             },
             autocompleteMinScore: parseFloat(process.env.AUTOCOMPLETE_MIN_SCORE || '5000')
         }
@@ -47,5 +47,12 @@ export default {
         loggerFolderPath: path.join(process.cwd(), 'logs'),
         logDuration: 60 * 1000 * parseInt(process.env.LOG_DURATION || '10'),
     },
-    yaml_url:"https://raw.githubusercontent.com/kolzchut/openeligibility/refs/heads/main/taxonomy.tx.yaml"
+    yaml_url: "https://raw.githubusercontent.com/kolzchut/openeligibility/refs/heads/main/taxonomy.tx.yaml",
+    email: {
+        SMTP_SERVER: 'smtp.gmail.com',
+        SMTP_PORT: 587,
+        EMAIL_NOTIFIER_SENDER_EMAIL:  process.env.EMAIL_NOTIFIER_SENDER_EMAIL,
+        EMAIL_NOTIFIER_PASSWORD: process.env.EMAIL_NOTIFIER_PASSWORD,
+        EMAIL_NOTIFIER_RECIPIENT_LIST: (process.env.EMAIL_NOTIFIER_RECIPIENT_LIST || "ariel_ohana@webiks.com,eli.rabby@kolzchut.org.il,efrat.shamir@kolzchut.org.il").split(',')
+    }
 };
