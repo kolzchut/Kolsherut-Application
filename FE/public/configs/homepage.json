@@ -49,10 +49,10 @@
         "query": "שירותים_למצב_החירום_עבור_משפחות_שכולות"
       },
       {
-        "situation_id": "human_situations:armed_forces",
-        "response_id": "human_services:internal_emergency_services",
-        "title": "אנשי צבא וביטחון",
-        "query": "שירותים_למצב_החירום_עבור_אנשי_צבא_וביטחון"
+        "situation_id": "human_situations:armed_forces:injured_while_on_duty",
+        "response_id": null,
+        "title": "נכי צה״ל",
+        "query": "נכי_צה״ל"
       },
       {
         "response_id": "human_services:health:emergency_mental_assistance",
