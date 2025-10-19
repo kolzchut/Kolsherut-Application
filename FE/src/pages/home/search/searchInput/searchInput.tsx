@@ -85,6 +85,7 @@ const SearchInput = () => {
                 placeholder={window.strings.search.label}
                 aria-label={inputDescription}
                 autoComplete="off"
+                name={"search service"}
             />
             {searchTerm &&
                 <button className={classes.closeIconButton} onClick={onClose}>

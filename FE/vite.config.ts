@@ -10,6 +10,7 @@ export default defineConfig({
         target: 'esnext',
         manifest: true,
         assetsDir: 'assets',
+        sourcemap: true,
         rollupOptions: {
             output: {
                 entryFileNames: `assets/[name]-${buildId}-[hash].js`,
