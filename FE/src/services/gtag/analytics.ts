@@ -5,9 +5,13 @@ import logger from "../logger/logger";
 
 const init = () => {
     const analyticsId = window.environment.analyticsId;
-    ReactGA.initialize(analyticsId);
-    logger.log({message: `Initializing Google Analytics on ${analyticsId}`});
-}
+    ReactGA.initialize(analyticsId, {
+        gtagOptions: {
+            cookie_flags: "SameSite=None;Secure",
+        }
+    });
+    logger.log({ message: `Initializing Google Analytics on ${analyticsId}` });
+};
 
 const logEvent = ({event, params}: LogEventArgs) => {
     ReactGA.event(event, {
