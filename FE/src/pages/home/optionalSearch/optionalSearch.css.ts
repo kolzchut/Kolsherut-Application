@@ -2,7 +2,7 @@ import {createUseStyles} from 'react-jss';
 import {primaryBackgroundColorOne} from "../../../services/theme";
 
 export default createUseStyles({
-    root: {
+    root:({minHeight}:{minHeight: number})=> ({
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'wrap',
@@ -12,6 +12,10 @@ export default createUseStyles({
         padding: 20,
         backgroundColor: primaryBackgroundColorOne,
         borderRadius: 10,
-        direction: 'rtl'
-    },
+        direction: 'rtl',
+        minHeight: minHeight,
+        height: '100%',
+        width: '100%',
+        boxSizing: 'border-box',
+    }),
 });
