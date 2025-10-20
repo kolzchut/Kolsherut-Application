@@ -3,7 +3,7 @@ name: BE CI (staging)
 on:
   push:
     branches:
-      - '**'
+      - 'main'
     paths:
       - 'be/**'
       - '.github/workflows/be-ci.yml'
