@@ -11,7 +11,7 @@ interface IProps {
 }
 
 export default createUseStyles({
-    root: ({isMobile})=> {
+    root: ({isMobile}:IProps)=> {
         const style ={
             position: 'relative',
             display: 'flex',

@@ -120,7 +120,8 @@
     "title": "מפת אתר כל שירות",
     "subtitle": "קטלוג מענים ומצבים",
     "responses": "מענים",
-    "situations": "מצבים"
+    "situations": "מצבים",
+    "loading": "טוען מפת אתר..."
   },
   "searchQueryTextDefaults": {
     "serviceSentence": "כל שירות",
