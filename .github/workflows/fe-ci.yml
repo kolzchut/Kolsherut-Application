@@ -4,7 +4,7 @@ name: FE CI (staging)
 on:
   push:
     branches:
-      - '**'
+      - 'main'
     paths:
       - 'FE/**'
       - '.github/workflows/fe-ci.yml'
