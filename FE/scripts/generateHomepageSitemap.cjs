@@ -43,8 +43,6 @@ data.forEach(group => {
 
         xml += `  <url>\n`;
         xml += `    <loc>${loc}</loc>\n`;
-        xml += `    <changefreq>monthly</changefreq>\n`;
-        xml += `    <priority>0.85</priority>\n`;
         xml += `  </url>\n`;
     });
 });

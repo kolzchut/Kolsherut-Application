@@ -23,8 +23,6 @@ const mixedTaxonomyToXML = ({responses, situations}: {
             if (mixedTaxonomyBlackList[response.slug]?.includes(situation.slug)) return;
             xml += `<url>\n`;
             xml += `<loc>${escapeXML(buildLoc({response,situation}))}</loc>\n`;
-            xml += `<priority>0.4</priority>\n`;
-            xml += `<changefreq>monthly</changefreq>\n`;
             xml += `</url>\n`;
         })
 

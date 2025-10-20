@@ -1,4 +1,4 @@
-# kolSherut-WIP
+# kolSherut
 
 ### FE
 
