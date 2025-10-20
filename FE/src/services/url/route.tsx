@@ -15,7 +15,7 @@ export const getRouteParams = () => {
     while(pathParams.length > 0){
         key = pathParams.shift();
         value = pathParams.shift();
-        params[key] = decodeURI(value);
+        params[key as string] = decodeURI(value || '');
     }
     return params
 };
