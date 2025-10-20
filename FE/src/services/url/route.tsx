@@ -9,7 +9,15 @@ const globals = {
 
 export const getRouteParams = () => {
     const searchParams = new URLSearchParams(window.location.search);
-    return Object.fromEntries(searchParams);
+    const params = Object.fromEntries(searchParams);
+    let key, value;
+    const pathParams= window.location.pathname.split("/").filter(part=>!!part);
+    while(pathParams.length > 0){
+        key = pathParams.shift();
+        value = pathParams.shift();
+        params[key] = decodeURI(value);
+    }
+    return params
 };
 
 const buildUrl = (params: Record<string,string>) => {
