@@ -18,7 +18,7 @@ const SiteMap = () => {
     const texts = window.strings.siteMap;
     useEffect(() => {
         homepageEvents.openedSiteMapEvent();
-        if(siteMapData?.responseUrls?.length === 0 && siteMapData?.situationsUrls?.length === 0)
+        if(!siteMapData?.responseUrls?.length && !siteMapData?.situationsUrls?.length)
             setSiteMapInStore();
     }, []);
     if (!siteMapData) return <></>;
