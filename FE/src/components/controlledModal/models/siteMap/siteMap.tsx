@@ -15,12 +15,10 @@ const SiteMap = () => {
     const classes = useStyle(theme);
     const close = () => store.dispatch(setModal(null));
     const siteMapData = useSelector(getSitemap);
-    console.log("siteMapData", siteMapData);
     const texts = window.strings.siteMap;
     useEffect(() => {
         homepageEvents.openedSiteMapEvent();
         if(siteMapData?.responseUrls?.length === 0 && siteMapData?.situationsUrls?.length === 0)
-            console.log("Setting site map in store");
             setSiteMapInStore();
     }, []);
     if (!siteMapData) return <></>;
