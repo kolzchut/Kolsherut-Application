@@ -13,10 +13,17 @@ export const getRouteParams = () => {
 };
 
 const buildUrl = (params: Record<string,string>) => {
-    const qs = new URLSearchParams(params).toString();
-    const base = window.location.pathname;
+    const base = `${window.location.protocol}//${window.location.host}`;
     const hash = window.location.hash;
-    return qs ? base + "?" + qs + hash : base + hash;
+    let paramString = '';
+    const routeParams = {...params};
+    if(!routeParams.p) return base +  hash;
+    paramString += `p/${routeParams.p}`;
+    delete routeParams.p;
+    Object.keys(routeParams).forEach((key) => {
+        paramString += `/${key}/${routeParams[key]}`;
+    })
+    return base + '/' + paramString + hash;
 };
 
 const navKey = (params: Record<string,string>) => {
