@@ -24,8 +24,6 @@ const recursiveTaxonomyToXML = ({taxonomy, recursive = 0, isResponse}: Recursive
     taxonomy.forEach(item => {
         xml += `<url>\n`;
         xml += `<loc>${escapeXML(transformSlugToURL({slug: item.slug, query: item.name.tx.he, isResponse}))}</loc>\n`;
-        xml += `<priority>${(0.8 - recursive * 0.1).toFixed(1)}</priority>\n`;
-        xml += `<changefreq>monthly</changefreq>\n`;
         xml += `</url>\n`;
 
         if (item.items && item.items.length > 0) {
