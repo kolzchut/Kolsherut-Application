@@ -11,10 +11,12 @@ export const getRouteParams = () => {
     const searchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(searchParams);
     let key, value;
-    const pathParams= window.location.pathname.split("/").filter(part=>!!part);
-    while(pathParams.length > 0){
+    const pathParams= window.location.pathname.split("/");
+    if(pathParams[0] === '') pathParams.shift(); // Remove leading empty element
+    while(pathParams.length > 1){
         key = pathParams.shift();
         value = pathParams.shift();
+        if(!key) continue;
         params[key as string] = decodeURI(value || '');
     }
     return params
