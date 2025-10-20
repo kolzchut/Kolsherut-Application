@@ -1,12 +1,6 @@
 import vars from "../vars";
 import escapeXML from "./escapeXML";
 
-export const sigmoid = (value: number): number => {
-    if (!Number.isFinite(value)) return 0.5;
-    const p = 1 / (1 + Math.exp(-value));
-    return Math.min(1, Math.max(0, p));
-};
-
 const formatLastMod = (lastmod?: string): string => {
     if (!lastmod || lastmod === "unknown") return "";
     const date = new Date(lastmod);
@@ -14,17 +8,15 @@ const formatLastMod = (lastmod?: string): string => {
     return `<lastmod>${date.toISOString().slice(0, 10)}</lastmod>`; // YYYY-MM-DD
 };
 
-const buildUrlXML = (loc: string, lastmod?: string, changefreq = "monthly", priority = 0.5) =>
+const buildUrlXML = (loc: string, lastmod?: string) =>
     `<url>
     <loc>${escapeXML(loc)}</loc>
     ${formatLastMod(lastmod)}
-    <changefreq>${changefreq}</changefreq>
-    <priority>${priority.toFixed(2)}</priority>
 </url>`;
 
 const buildCardXML = (card: { card_id: string; service_boost: number; last_modified: string }) => {
     const loc = `${vars.serverSetups.origin}/?p=card&c=${encodeURIComponent(card.card_id)}`;
-    return buildUrlXML(loc, card.last_modified, "monthly", sigmoid(card.service_boost));
+    return buildUrlXML(loc, card.last_modified);
 };
 
 const transformSiteMapFromJSONToXML = (cards: {
