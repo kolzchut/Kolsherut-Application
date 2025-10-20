@@ -1,5 +1,4 @@
-# Use OpenResty instead of plain Nginx to support Lua
-FROM openresty/openresty:alpine
+FROM nginx
 
 # Accept environment selection as a build argument (production|stage|local)
 ARG environment=local
