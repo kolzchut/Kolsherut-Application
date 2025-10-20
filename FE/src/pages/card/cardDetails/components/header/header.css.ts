@@ -78,5 +78,6 @@ export default createUseStyles({
     },
     headerIcon:{
         height:40,
+        width:'auto'
     }
 });

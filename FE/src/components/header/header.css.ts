@@ -24,6 +24,7 @@ export default createUseStyles((theme: IDynamicThemeApp) => ({
     logo: {
         flex: 1,
         height: 40,
+        width: 'auto',
         '&:hover': {
             cursor: 'pointer',
         }
@@ -71,6 +72,7 @@ export default createUseStyles((theme: IDynamicThemeApp) => ({
             '2px 2px 5px rgba(0, 0, 0, 0.3)',
     },
     accIcon: {
-        height: '100%',
+        height: 40,
+        width: 'auto',
     },
 }));

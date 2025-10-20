@@ -29,6 +29,7 @@ export default  createUseStyles({
         color: secondaryTextColorTwo
     }),
     icons:{
-        height:13
+        height:13,
+        width:'auto'
     }
 });

@@ -73,8 +73,5 @@ export default createUseStyles({
         background: '#208Ff3',
         boxShadow: 'inset 2px 2px 5px rgba(0, 0, 0, 0.6)',
     },
-    accIcon: {
-        height: '100%'
-    }
 });
 

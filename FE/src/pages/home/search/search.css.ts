@@ -60,6 +60,7 @@ export default createUseStyles({
     },
     bottomLogos: {
         height: '30px',
+        width: 'auto',
         boxSizing: 'border-box',
     }
 });
