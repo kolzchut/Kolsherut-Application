@@ -256,9 +256,9 @@
       },
       {
         "situation_id": "human_situations:language:arabic_speaking",
-        "response_id": "human_services:emergency:emergency_mental_assistance",
+        "response_id": "human_services:health:emergency_mental_assistance",
         "title": "مساعدة نفسية خلال الطوارئ",
-        "query": "סיוע_נפשי_בחירום_עבור_דוברי_ערבית"
+        "query": "סיוע_נפשי_מיידי_עבור_דוברי_ערבית"
       }
     ]
   },
