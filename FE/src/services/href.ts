@@ -4,7 +4,7 @@ import {stringifyLocation} from "./url/parseURL.ts";
 
 export const getHrefForCard = (cardId: string) => {
     const baseUrl = window.location.origin;
-    return `${baseUrl}/?p=card&c=${cardId}`;
+    return `${baseUrl}/p/card/c/${cardId}`;
 }
 
 export const getHrefForResults = ({

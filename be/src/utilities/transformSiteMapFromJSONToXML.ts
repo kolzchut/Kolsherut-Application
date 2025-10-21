@@ -1,5 +1,6 @@
 import vars from "../vars";
 import escapeXML from "./escapeXML";
+import encodeForURL from "./encodeForURL";
 
 const formatLastMod = (lastmod?: string): string => {
     if (!lastmod || lastmod === "unknown") return "";
@@ -15,7 +16,7 @@ const buildUrlXML = (loc: string, lastmod?: string) =>
 </url>`;
 
 const buildCardXML = (card: { card_id: string; service_boost: number; last_modified: string }) => {
-    const loc = `${vars.serverSetups.origin}/?p=card&c=${encodeURIComponent(card.card_id)}`;
+    const loc = `${vars.serverSetups.origin}/p/card/c/${encodeForURL(card.card_id)}`;
     return buildUrlXML(loc, card.last_modified);
 };
 
