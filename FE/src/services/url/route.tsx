@@ -11,7 +11,7 @@ export const getRouteParams = () => {
     const searchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(searchParams);
     let key, value;
-    const pathParams= window.location.pathname.split("/");
+    const pathParams= decodeURI(window.location.pathname).split("/");
     if(pathParams[0] === '') pathParams.shift(); // Remove leading empty element
     while(pathParams.length > 1){
         key = pathParams.shift();

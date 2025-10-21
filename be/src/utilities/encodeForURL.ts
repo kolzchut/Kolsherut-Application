@@ -1,4 +1,4 @@
 const encodeForURL = (str: string): string => {
-    return encodeURIComponent(str).replace(/%3A/g, ':').replace(/%20/g, '_');
+    return encodeURIComponent(str);
 }
 export default encodeForURL;
