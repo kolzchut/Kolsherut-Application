@@ -33,9 +33,7 @@ const buildUrl = (params: Record<string,string>) => {
     Object
         .keys(routeParams)
         .filter(key => !!routeParams[key])
-        .forEach((key) => {
-            paramString += `/${key}/${routeParams[key]}`;
-        })
+        .forEach((key) => paramString += `/${key}/${routeParams[key]}`)
     return base + '/' + paramString + hash;
 };
 
