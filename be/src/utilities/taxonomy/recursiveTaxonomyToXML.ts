@@ -9,8 +9,8 @@ interface RecursiveTaxonomyToXMLParams {
     isResponse: boolean;
 }
 
-const transformSituationSlugToURL = ({slug,query}:{slug: string, query:string}) :string=> `${vars.serverSetups.origin}/?p=results&sq=${encodeURIComponent(query)}&bsf=${encodeURIComponent(slug)}`
-const transformResponseSlugToURL = ({slug,query}:{slug: string, query:string}) :string=> `${vars.serverSetups.origin}/?p=results&sq=${encodeURIComponent(query)}&brf=${encodeURIComponent(slug)}`
+const transformSituationSlugToURL = ({slug,query}:{slug: string, query:string}) :string=> `${vars.serverSetups.origin}/p/results/sq/${encodeURI(query)}/bsf/${encodeURI(slug)}`
+const transformResponseSlugToURL = ({slug,query}:{slug: string, query:string}) :string=> `${vars.serverSetups.origin}/p/results/sq/${encodeURI(query)}/brf/${encodeURI(slug)}`
 
 
 const transformSlugToURL = ({slug, query, isResponse}:{slug: string, query:string, isResponse: boolean}): string => {

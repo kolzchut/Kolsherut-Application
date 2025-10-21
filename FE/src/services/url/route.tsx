@@ -9,14 +9,32 @@ const globals = {
 
 export const getRouteParams = () => {
     const searchParams = new URLSearchParams(window.location.search);
-    return Object.fromEntries(searchParams);
+    const params = Object.fromEntries(searchParams);
+    let key, value;
+    const pathParams= decodeURI(window.location.pathname).split("/");
+    if(pathParams[0] === '') pathParams.shift(); // Remove leading empty element
+    while(pathParams.length > 1){
+        key = pathParams.shift();
+        value = pathParams.shift();
+        if(!key) continue;
+        params[key as string] = decodeURI(value || '');
+    }
+    return params
 };
 
 const buildUrl = (params: Record<string,string>) => {
-    const qs = new URLSearchParams(params).toString();
-    const base = window.location.pathname;
+    const base = `${window.location.protocol}//${window.location.host}`;
     const hash = window.location.hash;
-    return qs ? base + "?" + qs + hash : base + hash;
+    let paramString = '';
+    const routeParams = {...params};
+    if(!routeParams.p) return base +  hash;
+    paramString += `p/${routeParams.p}`;
+    delete routeParams.p;
+    Object
+        .keys(routeParams)
+        .filter(key => !!routeParams[key])
+        .forEach((key) => paramString += `/${key}/${routeParams[key]}`)
+    return base + '/' + paramString + hash;
 };
 
 const navKey = (params: Record<string,string>) => {

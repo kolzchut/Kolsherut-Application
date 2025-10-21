@@ -18,7 +18,6 @@ const envConfig = JSON.parse(fs.readFileSync(envConfigPath, 'utf-8'));
 
 const baseUrl = envConfig.currentURL;
 
-const encodeParam = (str) => encodeURIComponent(str).replace(/%20/g, '+');
 
 // Helper to XML-escape URL text content for <loc>
 const xmlEscape = (str) => str
@@ -34,11 +33,11 @@ data.forEach(group => {
     group.labels.forEach(label => {
         if (!label.query) return;
 
-        const params = [`sq=${encodeParam(label.query)}`];
-        if (label.response_id) params.push(`brf=${encodeParam(label.response_id)}`);
-        if (label.situation_id) params.push(`bsf=${encodeParam(label.situation_id)}`);
+        const params = [`sq/${encodeURI(label.query)}`];
+        if (label.response_id) params.push(`brf/${encodeURI(label.response_id)}`);
+        if (label.situation_id) params.push(`bsf/${encodeURI(label.situation_id)}`);
 
-        const rawUrl = `${baseUrl.replace(/\/$/, '')}/?p=results&${params.join('&')}`; // ensure single slash
+        const rawUrl = `${baseUrl.replace(/\/$/, '')}/p/results/${params.join('/')}`; // ensure single slash
         const loc = xmlEscape(rawUrl); // escape special chars for XML
 
         xml += `  <url>\n`;

@@ -10,7 +10,7 @@ interface FixedTaxonomy {
 const mixedTaxonomyBlackList: Record<string, string[]> = mixedTaxonomyBlackListRaw;
 
 const buildLoc = ({response,situation}:{response: FixedTaxonomy,situation: FixedTaxonomy}): string => {
-    return `${vars.serverSetups.origin}/?p=results&sq=${encodeURIComponent(response.query+ " "+situation.query)}&bsf=${encodeURIComponent(situation.slug)}&brf=${encodeURIComponent(response.slug)}`;
+    return `${vars.serverSetups.origin}/p/results/sq/${encodeURI(response.query+ " "+situation.query)}/bsf/${encodeURI(situation.slug)}/brf/${encodeURI(response.slug)}`;
 }
 
 const mixedTaxonomyToXML = ({responses, situations}: {
