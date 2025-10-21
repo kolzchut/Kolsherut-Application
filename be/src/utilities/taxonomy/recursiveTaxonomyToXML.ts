@@ -1,7 +1,6 @@
 import vars from "../../vars";
 import Taxonomy from "../../types/taxonomy";
 import escapeXML from "../escapeXML";
-import encodeForURL from "../encodeForURL";
 
 
 interface RecursiveTaxonomyToXMLParams {
@@ -10,8 +9,8 @@ interface RecursiveTaxonomyToXMLParams {
     isResponse: boolean;
 }
 
-const transformSituationSlugToURL = ({slug,query}:{slug: string, query:string}) :string=> `${vars.serverSetups.origin}/p/results/sq/${encodeForURL(query)}/bsf/${encodeForURL(slug)}`
-const transformResponseSlugToURL = ({slug,query}:{slug: string, query:string}) :string=> `${vars.serverSetups.origin}/p/results/sq/${encodeForURL(query)}/brf/${encodeForURL(slug)}`
+const transformSituationSlugToURL = ({slug,query}:{slug: string, query:string}) :string=> `${vars.serverSetups.origin}/p/results/sq/${encodeURI(query)}/bsf/${encodeURI(slug)}`
+const transformResponseSlugToURL = ({slug,query}:{slug: string, query:string}) :string=> `${vars.serverSetups.origin}/p/results/sq/${encodeURI(query)}/brf/${encodeURI(slug)}`
 
 
 const transformSlugToURL = ({slug, query, isResponse}:{slug: string, query:string, isResponse: boolean}): string => {

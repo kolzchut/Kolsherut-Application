@@ -33,9 +33,9 @@ data.forEach(group => {
     group.labels.forEach(label => {
         if (!label.query) return;
 
-        const params = [`sq/${encodeURIComponent(label.query)}`];
-        if (label.response_id) params.push(`brf/${encodeURIComponent(label.response_id)}`);
-        if (label.situation_id) params.push(`bsf/${encodeURIComponent(label.situation_id)}`);
+        const params = [`sq/${encodeURI(label.query)}`];
+        if (label.response_id) params.push(`brf/${encodeURI(label.response_id)}`);
+        if (label.situation_id) params.push(`bsf/${encodeURI(label.situation_id)}`);
 
         const rawUrl = `${baseUrl.replace(/\/$/, '')}/p/results/${params.join('/')}`; // ensure single slash
         const loc = xmlEscape(rawUrl); // escape special chars for XML

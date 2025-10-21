@@ -1,7 +1,6 @@
 import escapeXML from "../escapeXML";
 import vars from "../../vars";
 import mixedTaxonomyBlackListRaw from "../../assets/mixedTaxonomyBlackList.json";
-import encodeForURL from "../encodeForURL";
 
 interface FixedTaxonomy {
     slug: string;
@@ -11,7 +10,7 @@ interface FixedTaxonomy {
 const mixedTaxonomyBlackList: Record<string, string[]> = mixedTaxonomyBlackListRaw;
 
 const buildLoc = ({response,situation}:{response: FixedTaxonomy,situation: FixedTaxonomy}): string => {
-    return `${vars.serverSetups.origin}/p/results/sq/${encodeForURL(response.query+ " "+situation.query)}/bsf/${encodeForURL(situation.slug)}/brf/${encodeForURL(response.slug)}`;
+    return `${vars.serverSetups.origin}/p/results/sq/${encodeURI(response.query+ " "+situation.query)}/bsf/${encodeURI(situation.slug)}/brf/${encodeURI(response.slug)}`;
 }
 
 const mixedTaxonomyToXML = ({responses, situations}: {

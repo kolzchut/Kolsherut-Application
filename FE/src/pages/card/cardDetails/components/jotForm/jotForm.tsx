@@ -10,7 +10,7 @@ interface IProps {
 
 const JotForm = ({serviceName, cardId}:IProps) => {
     const title = window.strings.cardDetails.jotForm;
-    const link = `${window.config.redirects.jotFormBaseLink}?service_name=${encodeURIComponent(serviceName)}&id=${encodeURIComponent(cardId)}&url=${encodeURIComponent(window.location.href)}`;
+    const link = `${window.config.redirects.jotFormBaseLink}?service_name=${encodeURI(serviceName)}&id=${encodeURI(cardId)}&url=${encodeURI(window.location.href)}`;
     const theme = useTheme<IDynamicThemeApp>();
     const classes = useStyle({accessibilityActive: theme.accessibilityActive});
     return (
