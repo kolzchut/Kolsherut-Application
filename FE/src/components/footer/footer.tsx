@@ -24,7 +24,7 @@ const Footer = ({hideLinks=false}: {hideLinks?: boolean}) => {
     const nationalDigitalLink = window.config.redirects.nationalDigitalLink;
     const policyLink = window.config.redirects.policyLink;
 
-    return (<footer>
+    return (<footer className={classes.root}>
         <div className={classes.disclaimer}>
             <span className={classes.firstParagraph}>
                 <span className={classes.bolder}>{nameOfWebsite} </span>

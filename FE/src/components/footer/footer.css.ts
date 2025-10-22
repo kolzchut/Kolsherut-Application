@@ -31,5 +31,9 @@ export default  createUseStyles({
     icons:{
         height:13,
         width:'auto'
+    },
+    root:{
+        height: 320,
+        width:'auto'
     }
 });
