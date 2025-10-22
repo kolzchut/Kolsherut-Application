@@ -11,23 +11,26 @@ export const getRouteParams = () => {
     const searchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(searchParams);
     let key, value;
-    const pathParams= decodeURI(window.location.pathname).split("/");
-    if(pathParams[0] === '') pathParams.shift(); // Remove leading empty element
-    while(pathParams.length > 1){
+    const pathParams = decodeURI(window.location.pathname).split("/");
+    if (pathParams[0] === '') pathParams.shift(); // Remove leading empty element
+    while (pathParams.length > 1) {
         key = pathParams.shift();
         value = pathParams.shift();
-        if(!key) continue;
+        if (!key) continue;
         params[key as string] = decodeURI(value || '');
+    }
+    if (params.sq) {
+        params.sq = params.sq.split('&')[0];
     }
     return params
 };
 
-const buildUrl = (params: Record<string,string>) => {
+const buildUrl = (params: Record<string, string>) => {
     const base = `${window.location.protocol}//${window.location.host}`;
     const hash = window.location.hash;
     let paramString = '';
     const routeParams = {...params};
-    if(!routeParams.p) return base +  hash;
+    if (!routeParams.p) return base + hash;
     paramString += `p/${routeParams.p}`;
     delete routeParams.p;
     Object
@@ -37,13 +40,13 @@ const buildUrl = (params: Record<string,string>) => {
     return base + '/' + paramString + hash;
 };
 
-const navKey = (params: Record<string,string>) => {
+const navKey = (params: Record<string, string>) => {
     const p = params.p || 'home';
     if (p === 'card') return `card|${params.c || ''}`;
     return p + '|';
 };
 
-const applyHistory = (params: Record<string,string>) => {
+const applyHistory = (params: Record<string, string>) => {
     const qs = new URLSearchParams(params).toString();
     const key = navKey(params);
     const suppress = window.__suppressHistoryPush;
@@ -77,6 +80,6 @@ const applyHistory = (params: Record<string,string>) => {
 };
 
 export const useRouteUpdater = () => {
-    const params = useSelector(getUrlParams) as Record<string,string>;
+    const params = useSelector(getUrlParams) as Record<string, string>;
     applyHistory(params);
 };
