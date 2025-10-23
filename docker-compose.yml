@@ -23,7 +23,7 @@ services:
     image: kolsherut_fe:0.0.0
     restart: unless-stopped
     ports:
-      - 5173:80
+      - 5173:4000
     volumes:
       - ./volumes/fe/configs/config.json:/usr/share/nginx/html/configs/config.json
       - ./volumes/fe/configs/strings.json:/usr/share/nginx/html/configs/strings.json
