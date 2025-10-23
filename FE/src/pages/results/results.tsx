@@ -141,7 +141,7 @@ const Results = () => {
                     </div>
                 </div>
                 <div className={classes.mapContainer}>
-                    <LazyMap/>
+                    {displayResultsMap && <LazyMap />}
                 </div>
             </div>
         </div>
