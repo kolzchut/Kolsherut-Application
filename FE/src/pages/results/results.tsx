@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {lazy, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     getSelectedOrganization
@@ -16,7 +16,6 @@ import {
     isAccessibilityActive,
     isLoading
 } from "../../store/general/general.selector";
-import Map from "../../components/map/map";
 import {useDisplayResultsMap} from "./context/contextFunctions";
 import {removeAllPOIs} from "../../services/map/poiInteraction";
 import {
@@ -32,14 +31,16 @@ import {useOnce} from "../../hooks/useOnce";
 import {allowChangeStoreLocation} from "../../services/map/events/mapInteraction";
 import { settingToResults} from "../../store/shared/sharedSlice";
 import noResultsIcon from "../../assets/magnifyingGlass.svg";
-import Loader from "./loader/loader.tsx";
-import {isMobileScreen} from "../../services/media.ts";
-import BranchServicesForMobile from "./branchServicesForMobile/branchServicesForMobile.tsx";
-import BranchList from "./branchList/branchList.tsx";
-import {setPopupOffsetForBigMap, setPopupOffsetForSmallMap} from "../../services/map/events/popup.ts";
-import {ILabel} from "../../types/homepageType.ts";
+import Loader from "./loader/loader";
+import {isMobileScreen} from "../../services/media";
+import BranchServicesForMobile from "./branchServicesForMobile/branchServicesForMobile";
+import BranchList from "./branchList/branchList";
+import {setPopupOffsetForBigMap, setPopupOffsetForSmallMap} from "../../services/map/events/popup";
+import {ILabel} from "../../types/homepageType";
 import mapService from "../../services/map/map";
-import logger from "../../services/logger/logger.ts";
+import logger from "../../services/logger/logger";
+
+const LazyMap = lazy(()=>import("../../components/map/map"));
 
 const Results = () => {
     const [newPage, setNewPage] = useState(0);
@@ -140,7 +141,7 @@ const Results = () => {
                     </div>
                 </div>
                 <div className={classes.mapContainer}>
-                    <Map/>
+                    <LazyMap/>
                 </div>
             </div>
         </div>
