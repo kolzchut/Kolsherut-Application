@@ -11,7 +11,7 @@ import ResponseSection from "./responseSection/responseSection";
 import {store} from "../../../../../../store/store";
 import {setModal} from "../../../../../../store/general/generalSlice";
 import closeIcon from "../../../../../../assets/icon-close-black.svg";
-import IDynamicThemeApp from "../../../../../../types/dynamicThemeApp.ts";
+import IDynamicThemeApp from "../../../../../../types/dynamicThemeApp";
 import {useTheme} from "react-jss";
 
 

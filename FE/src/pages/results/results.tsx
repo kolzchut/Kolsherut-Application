@@ -80,7 +80,7 @@ const Results = () => {
     const conditionToShowLoading = isResultsLoading && !conditionToShowResults;
     const conditionToShowNoResults = !isResultsLoading && filteredResults.length === 0;
     const backendFilters = useSelector(getBackendFilters)
-
+    const finedSearchQuery = searchQuery.trim().replace(/_/g, ' ');
     useEffect(() => {
         newResults();
     }, [filteredResults]);
@@ -128,7 +128,7 @@ const Results = () => {
                         {conditionToShowNoResults && (
                             <div className={classes.noResults}>
                                 <img className={classes.noResultsIcon} src={noResultsIcon} alt={"no results"}/>
-                                <span className={classes.noResultsTitle}>{window.strings.results.noResults}</span>
+                                <span className={classes.noResultsTitle}>{window.strings.results.noResults}<span className={classes.noResultsSearchQuery}>{" "+finedSearchQuery}</span></span>
                                 <span
                                     className={classes.noResultsSubtitle}>{window.strings.results.noResultsDescription}</span>
                             </div>

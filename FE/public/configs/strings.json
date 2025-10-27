@@ -42,7 +42,7 @@
   "quickActionWebsite": "אתר",
   "results": {
     "numOfBranches": "סניפים",
-    "noResults": "לא נמצאו תוצאות",
+    "noResults": "לא נמצאו תוצאות עבור:",
     "noResultsDescription": "אפשר לחפש באזורים נוספים או לשנות את מילות החיפוש.",
     "nationalBranch": "שירות ארצי",
     "notAccurateLocation": "(במיקום לא מדויק)",
