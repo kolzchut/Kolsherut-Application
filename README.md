@@ -205,6 +205,79 @@ Common pitfalls:
 - Test changes locally (`local.json`) before moving to staging or production.
 - Use macros (`%%MACRO%%`) instead of hardcoding values when possible.
 
+### Synonyms & Meta Tags Integration
+
+The project enriches search results meta tags using synonym data for situations and responses. This allows dynamic, SEO-friendly descriptions and Open Graph tags that reflect the user's query context.
+
+#### How the `synonyms:update` Script Works
+
+Script location: `FE/scripts/updateSynonyms.cjs`
+
+What it does:
+1. Reads all `.csv` files from `FE/public/synonyms/`.
+2. Parses each CSV (expects at least the columns: `id`, `synonyms`, `name`).
+3. Keeps only rows that have both `id` and `synonyms`.
+4. Cleans the `synonyms` field (trims surrounding quotes, normalizes embedded quotes).
+5. Writes a JSON file for each CSV into `FE/src/assets/synonyms/` with the same base filename (e.g. `Situations-synonyms.csv` -> `Situations-synonyms.json`).
+
+Automatic execution:
+- Runs automatically before every FE build via the `prebuild` npm script (`"prebuild": "npm run synonyms:update"`).
+
+Manual execution:
+- From `FE/` run: `npm run synonyms:update`.
+
+#### Files Involved
+
+Imported in code (e.g. `FE/src/pages/results/getResultsMetaTags.ts`):
+- `FE/src/assets/synonyms/Situations-synonyms.json`
+- `FE/src/assets/synonyms/Responses-synonyms.json`
+
+Source CSVs located at:
+- `FE/public/synonyms/Situations-synonyms.csv`
+- `FE/public/synonyms/Responses-synonyms.csv`
+
+IMPORTANT: Keep CSV filenames EXACT. Renaming them changes the generated JSON names and breaks static imports unless you update the import paths accordingly. Adding new synonym CSVs requires adding corresponding imports/usages.
+
+#### Editing / Adding Synonym Data
+
+To modify:
+1. Edit the CSV under `FE/public/synonyms/`.
+2. Ensure headers `id`, `name`, `synonyms` exist (order unimportant).
+3. Each row: unique `id`, readable `name`.
+4. `synonyms` can be comma-separated phrases; script normalizes quotes.
+5. Save file and run `npm run synonyms:update` (or any build).
+
+To add new set:
+1. Create `FE/public/synonyms/MyNewType-synonyms.csv` with required headers.
+2. Run update script.
+3. Import `FE/src/assets/synonyms/MyNewType-synonyms.json` where needed (e.g. extend meta tag logic).
+
+#### How Meta Tags Use Synonyms
+
+- Definitions live in `FE/public/configs/metaTags.json` using macros like `%%search%%`, `%%situations%%`, `%%responses%%`, `%%location%%`.
+- `getResultsMetaTags.ts` imports the generated JSON, matches active backend filters (`situation`, `response`, `by`), and builds replacement strings for macros.
+- The `MetaTags` component consumes `{ metaTags, macrosAndReplacements }` to inject `<title>` and `<meta>` tags.
+
+#### Adding / Changing Meta Tag Macros
+1. Add logic in `getResultsMetaTags.ts` to create a new macro (e.g. `%%myMacro%%`).
+2. Insert placeholder in `metaTags.json` for relevant pages.
+3. Ensure returned `macrosAndReplacements` object includes a mapping for the macro.
+
+#### Validation Checklist
+- Run `npm run synonyms:update`; confirm new/updated JSON in `FE/src/assets/synonyms/`.
+- Start dev server (`npm run dev`).
+- Visit results page; inspect `<head>` for expanded meta tags (no raw `%%macro%%`).
+- Check browser network panel: JSON synonym files load (no 404).
+
+#### Common Pitfalls
+- Renaming CSV without updating imports → build/runtime import error.
+- Missing `id` or `synonyms` column → row omitted.
+- Trailing spaces in `id` → filter mismatch.
+- Forgetting to run update script before local test.
+
+#### Summary
+Maintain stable CSV filenames and headers. The build transforms CSV synonym data into JSON used to enrich dynamic meta tags, improving SEO/contextual relevance of search result pages.
+
 ---
 #### while using the Hasadna cloud we do not have the possibility to mount volumes and update the mounted files.
 - using BE to emulate files and rerouting nginx.conf to use BE as a file server.
