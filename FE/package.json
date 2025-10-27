@@ -22,9 +22,9 @@
     "docker:build": "npm run build && npx cross-var docker build --build-arg environment=local -t kolsherut_fe:$npm_package_version .",
     "docker:save": "npx cross-var docker save -o ../tars/kolsherut_fe.$npm_package_version.tar kolsherut_fe:$npm_package_version",
     "tar": "npm run docker:build && npm run docker:save",
-    "docker:build:local": "cross-env ENVIRONMENT=local npm run sitemap:homepage && cross-env ENVIRONMENT=local npm run sitemap:main && npm run build && npx cross-var docker build --build-arg environment=local -t kolsherut_fe:$npm_package_version-local .",
-    "docker:build:stage": "cross-env ENVIRONMENT=stage npm run sitemap:homepage && cross-env ENVIRONMENT=stage npm run sitemap:main && npm run build && npx cross-var docker build --build-arg environment=stage -t kolsherut_fe:$npm_package_version-stage .",
-    "docker:build:prod": "cross-env ENVIRONMENT=production npm run sitemap:homepage && cross-env ENVIRONMENT=production  npm run sitemap:main && npm run build && npx cross-var docker build --build-arg environment=production -t kolsherut_fe:$npm_package_version-prod .",
+    "docker:build:local": "cross-env ENVIRONMENT=local npm run synonyms:update && npm run sitemap:homepage && cross-env ENVIRONMENT=local npm run sitemap:main && npm run build && npx cross-var docker build --build-arg environment=local -t kolsherut_fe:$npm_package_version-local .",
+    "docker:build:stage": "cross-env ENVIRONMENT=stage npm run synonyms:update && npm run sitemap:homepage && cross-env ENVIRONMENT=stage npm run sitemap:main && npm run build && npx cross-var docker build --build-arg environment=stage -t kolsherut_fe:$npm_package_version-stage .",
+    "docker:build:prod": "cross-env ENVIRONMENT=production npm run synonyms:update && npm run sitemap:homepage && cross-env ENVIRONMENT=production  npm run sitemap:main && npm run build && npx cross-var docker build --build-arg environment=production -t kolsherut_fe:$npm_package_version-prod .",
     "docker:save:local": "npx cross-var docker save -o ../tars/kolsherut_fe.$npm_package_version-local.tar kolsherut_fe:$npm_package_version-local",
     "docker:save:stage": "npx cross-var docker save -o ../tars/kolsherut_fe.$npm_package_version-stage.tar kolsherut_fe:$npm_package_version-stage",
     "docker:save:prod": "npx cross-var docker save -o ../tars/kolsherut_fe.$npm_package_version-prod.tar kolsherut_fe:$npm_package_version-prod",
@@ -32,7 +32,8 @@
     "tar:stage": "npm run docker:build:stage && npm run docker:save:stage",
     "tar:prod": "npm run docker:build:prod && npm run docker:save:prod",
     "sitemap:homepage": "node scripts/generateHomepageSitemap.cjs",
-    "sitemap:main": "node scripts/generateMainSitemap.cjs"
+    "sitemap:main": "node scripts/generateMainSitemap.cjs",
+    "synonyms:update": "node scripts/updateSynonyms.cjs"
   },
   "dependencies": {
     "@fontsource/poppins": "^5.2.5",

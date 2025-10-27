@@ -5,7 +5,7 @@ import OptionalSearch from "./optionalSearch/optionalSearch";
 import Footer from "../../components/footer/footer";
 import getHomeMetaTags from "./getHomeMetaTags";
 import MetaTags from "../../services/metaTags";
-import {isMobileScreen} from "../../services/media.ts";
+import {isMobileScreen} from "../../services/media";
 
 const Home = () => {
     const isMobile = isMobileScreen();

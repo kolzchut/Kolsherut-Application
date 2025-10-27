@@ -85,7 +85,7 @@
     "names": [
       {
         "name": "description",
-        "content": "%%search%%"
+        "content": "כל השירותים | כל השירותים החברתיים, לכל מצב, בכל מקום. חיפוש תוצאות עבור %%search%% %%situations%% %%responses%% %%by%% %%location%%"
       },
       {
         "name": "robots",

@@ -53,6 +53,7 @@ const Results = () => {
     const isMobile = isMobileScreen();
     const selectedFeatureId = useSelector(getSelectedFeatureId);
     const branchesForMapWithoutLocationFilter = useSelector(getFilteredBranchesByResponseAndFilter)
+    const backendFilters = useSelector(getBackendFilters)
     const accessibilityActive = useSelector(isAccessibilityActive);
     const showBranchFilterForMobile = !!selectedFeatureId && isMobile && !selectedOrganization;
     const classes = useStyles({
@@ -61,7 +62,7 @@ const Results = () => {
         isMobile,
         accessibilityActive
     });
-    const metaTagsData = getResultsMetaTags({searchQuery})
+    const metaTagsData = getResultsMetaTags({searchQuery, locationFilter:location.key,backendFilters })
     const dispatch = useDispatch();
     const reportOnce = useOnce(() => resultsAnalytics.scrollOnceEvent());
     const refreshPage = () => setNewPage(prev => prev + 1);
@@ -79,7 +80,6 @@ const Results = () => {
     const conditionToShowResults = filteredResults.length > 0;
     const conditionToShowLoading = isResultsLoading && !conditionToShowResults;
     const conditionToShowNoResults = !isResultsLoading && filteredResults.length === 0;
-    const backendFilters = useSelector(getBackendFilters)
     const finedSearchQuery = searchQuery.trim().replace(/_/g, ' ');
     useEffect(() => {
         newResults();

@@ -4,7 +4,7 @@ import {store} from "../../store/store";
 import {getIsLandingPage} from "../../store/general/general.selector";
 import ILocation from "../../types/locationType";
 import israelLocation from "../../constants/israelLocation";
-import {isMobileScreen} from "../media.ts";
+import {isMobileScreen} from "../media";
 
 interface ISearchEventProps {
     responseCount: number;
