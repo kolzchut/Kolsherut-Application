@@ -30,7 +30,16 @@
       "role": "תפקיד",
       "ageGroups": "קבוצות גיל",
       "gender": "מיועד עבור",
-      "languages": "לדוברי שפות (שאינן עברית)"
+      "languages": "לדוברי שפות (שאינן עברית)",
+      "others.employment": "מצב תעסוקתי",
+      "others.gender": "מיועד עבור",
+      "age_groups": "קבוצות גיל",
+      "health_issues": "מצבים רפואים ומוגבליות",
+      "others.role": "תפקיד",
+      "others.urgency": "דחיפות",
+      "others.community": "קהילה",
+      "others.life_events": "אירועים",
+      "others.benefit_holders": "מוכרות ממשלתיות"
     },
     "situationsMap": {
       "audiences": [
