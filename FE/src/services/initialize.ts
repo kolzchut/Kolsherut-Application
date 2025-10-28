@@ -9,6 +9,7 @@ import {getRouteParams} from "./url/route";
 import  {setAllLocationsInStore} from "./geoLogic";
 import analytics from "./gtag/analytics";
 import {setFilterRouteParams} from "../store/filter/filterSlice";
+import hotjar from "./hotjar/hotjar";
 
 
 const routeParamsToStore = (routeParams: Record<string, string>) => {
@@ -34,6 +35,7 @@ export default async (main: React.ReactNode) => {
         analytics.init();
         mapService.init({mapInteractions, viewInteractions});
         setAllLocationsInStore();
+        hotjar.init();
     }
 
     ReactDOM.createRoot(document.getElementById('root')!).render(main);

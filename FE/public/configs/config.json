@@ -87,5 +87,9 @@
   "searchQueryBySeparators": [
     "של"
   ],
-  "clusterDefaultColor": "#3399CC"
+  "clusterDefaultColor": "#3399CC",
+  "hotjar": {
+    "siteId": 3379123,
+    "hotjarVersion": 6
+  }
 }
