@@ -1,11 +1,11 @@
 import {Feature} from "ol";
 import {Geometry, Point} from "ol/geom";
 import map from "../map";
-import cardPopUp from "../style/PopupContent/cardPopUp/cardPopup.ts";
-import branchServicesPopup from "../style/PopupContent/branchServicesPopup/branchServicesPopup.ts";
-import branchSummaryPopup from "../style/PopupContent/branchSummaryPopup/branchSummaryPopup.ts";
+import cardPopUp from "../style/PopupContent/cardPopUp/cardPopup";
+import branchServicesPopup from "../style/PopupContent/branchServicesPopup/branchServicesPopup";
+import branchSummaryPopup from "../style/PopupContent/branchSummaryPopup/branchSummaryPopup";
 import addPopupInteractionGuards from "../utils/popupInteractionGuards";
-import singleServicePopup from "../style/PopupContent/singleServicePopup/singleServicePopup.ts";
+import singleServicePopup from "../style/PopupContent/singleServicePopup/singleServicePopup";
 
 const globals = {
     popUpLocked: false,

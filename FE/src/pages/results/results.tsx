@@ -29,7 +29,7 @@ import MetaTags from "../../services/metaTags";
 import getResultsMetaTags from "./getResultsMetaTags";
 import {useOnce} from "../../hooks/useOnce";
 import {allowChangeStoreLocation} from "../../services/map/events/mapInteraction";
-import { settingToResults} from "../../store/shared/sharedSlice";
+import {settingToResults} from "../../store/shared/sharedSlice";
 import noResultsIcon from "../../assets/magnifyingGlass.svg";
 import Loader from "./loader/loader";
 import {isMobileScreen} from "../../services/media";
@@ -40,7 +40,7 @@ import {ILabel} from "../../types/homepageType";
 import mapService from "../../services/map/map";
 import logger from "../../services/logger/logger";
 
-const LazyMap = lazy(()=>import("../../components/map/map"));
+const LazyMap = lazy(() => import("../../components/map/map"));
 
 const Results = () => {
     const [newPage, setNewPage] = useState(0);
@@ -62,7 +62,7 @@ const Results = () => {
         isMobile,
         accessibilityActive
     });
-    const metaTagsData = getResultsMetaTags({searchQuery, locationFilter:location.key,backendFilters })
+    const metaTagsData = getResultsMetaTags({searchQuery, locationFilter: location.key, backendFilters})
     const dispatch = useDispatch();
     const reportOnce = useOnce(() => resultsAnalytics.scrollOnceEvent());
     const refreshPage = () => setNewPage(prev => prev + 1);
@@ -110,7 +110,7 @@ const Results = () => {
             try {
                 mapService.ol.updateSize();
             } catch (e) {
-                logger.log({message:" map update size failed", payload: e});
+                logger.log({message: " map update size failed", payload: e});
             }
         }
     }, [displayResultsMap]);
@@ -128,7 +128,8 @@ const Results = () => {
                         {conditionToShowNoResults && (
                             <div className={classes.noResults}>
                                 <img className={classes.noResultsIcon} src={noResultsIcon} alt={"no results"}/>
-                                <span className={classes.noResultsTitle}>{window.strings.results.noResults}<span className={classes.noResultsSearchQuery}>{" "+finedSearchQuery}</span></span>
+                                <span className={classes.noResultsTitle}>{window.strings.results.noResults}<span
+                                    className={classes.noResultsSearchQuery}>{" " + finedSearchQuery}</span></span>
                                 <span
                                     className={classes.noResultsSubtitle}>{window.strings.results.noResultsDescription}</span>
                             </div>
@@ -141,7 +142,7 @@ const Results = () => {
                     </div>
                 </div>
                 <div className={classes.mapContainer}>
-                    {displayResultsMap && <LazyMap />}
+                    <LazyMap/>
                 </div>
             </div>
         </div>
