@@ -3,7 +3,7 @@ import responsesSynonyms from "../../assets/synonyms/Responses-synonyms.json";
 
 type Synonyms ={
     id: string;
-    synonyms: string;
+    synonyms: string[];
     name:string;
 }
 
@@ -17,8 +17,8 @@ const getResultsMetaTags = ({searchQuery, locationFilter, backendFilters}:{searc
     let situation = "";
     let by = "";
     let location = "";
-    if(situationSynonyms) situation = "עבור " +situationSynonyms.name +" " +situationSynonyms.synonyms +" ";
-    if (responseSynonyms) response = "המענים " +responseSynonyms.name +" " +responseSynonyms.synonyms +" ";
+    if(situationSynonyms) situation = "עבור " +situationSynonyms.name +" " +situationSynonyms.synonyms.join(', ') +" ";
+    if (responseSynonyms) response = "המענים " +responseSynonyms.name +" " +responseSynonyms.synonyms.join(', ') +" ";
     if(backendFilters.by) by = "של " +backendFilters.by +" ";
     if(locationFilter) location = "ב" +locationFilter +" ";
 

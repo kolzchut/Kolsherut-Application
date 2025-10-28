@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
+
+const NEW_LINE_REGEX = /\n(?=(?:(?:[^"]*"){2})*[^"]*$)/;
 // Input and output directories
 const rawDir = path.join(__dirname, "../public/synonyms");
 const outputDir = path.join(__dirname, "../src/assets/synonyms");
@@ -18,36 +20,22 @@ const readCSVFiles = (dir) =>
 
 // Parse CSV text into array of objects
 const parseCSV = (data) => {
-    const rows = data.trim().split("\n");
-    const headers = rows[0].split(",");
-    return rows.slice(1).map(row => {
+    const rows = data.trim().split(NEW_LINE_REGEX);
+    const headers = rows.shift().split(",");
+    return rows.map(row => {
         const values = row.split(",");
+        values[2] = values[2].split('\n').map(val=> val.trim().replace('"', ''));
         const obj = {};
         headers.forEach((header, i) => {
-            obj[header.trim()] = values[i]?.trim();
+            obj[header] = values[i];
         });
         return obj;
     });
 };
 
-// Clean synonyms field
-const cleanSynonyms = (s) => {
-    if (!s) return s;
-    // Remove leading/trailing quotes
-    s = s.replace(/^"+|"+$/g, "");
-    // Replace double double-quotes inside with single
-    s = s.replace(/""/g, '"');
-    return s;
-};
-
-// Refine parsed data (keep rows with "synonyms" and "id")
 const refineData = (parsed) =>
     parsed
         .filter(row => row["synonyms"] && row["id"])
-        .map(row => ({
-            ...row,
-            synonyms: cleanSynonyms(row["synonyms"])
-        }));
 
 // Save refined data as JSON
 const saveJSON = (data, fileName, outputDir) => {
@@ -74,9 +62,7 @@ const processAllCSVs = (rawDir, outputDir) => {
 
         saveJSON(refined, file, outputDir);
     });
-
     console.log("✅ All files refined and saved!");
-    return allData;
 };
 
 // Run the script
