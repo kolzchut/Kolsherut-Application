@@ -2,11 +2,10 @@ import {Request, Response} from "express";
 import {asyncHandler} from "../middlewares/errorHandler";
 import recursiveTaxonomyToXML from "../utilities/taxonomy/recursiveTaxonomyToXML";
 import getTaxonomy from "../utilities/taxonomy/getTaxonomy";
-import breakdownTaxonomy from "../utilities/taxonomy/breakdownTaxonomy";
 import mixedTaxonomyToXML from "../utilities/taxonomy/mixedTaxonomyToXML";
 import {fetchAllCardFields} from "../services/db/es/getAllCardIds";
 import transformSiteMapFromJSONToXML from "../utilities/transformSiteMapFromJSONToXML";
-import getTaxonomiesFromElastic from "../utilities/taxonomy/getTaxonomiesFromElastic";
+import getProcessedTaxonomies from "../utilities/taxonomy/getProcessedTaxonomies";
 
 
 export const cardsSitemap = asyncHandler(async (req: Request, res: Response) => {
@@ -33,7 +32,7 @@ export const taxonomySitemap = asyncHandler(async (req: Request, res: Response) 
 
 export const mixedTaxonomySitemap = asyncHandler(async (req: Request, res: Response) => {
     try {
-        const {responses, situations} = await getTaxonomiesFromElastic()
+        const {responses, situations} = await getProcessedTaxonomies()
         const mixedXML = mixedTaxonomyToXML({responses, situations});
         const fullXML = `<?xml version="1.0" encoding="UTF-8"?>
         <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

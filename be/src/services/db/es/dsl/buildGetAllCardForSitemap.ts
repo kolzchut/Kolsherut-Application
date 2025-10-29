@@ -6,7 +6,7 @@ interface BuildCardFieldsQueryParams {
 }
 
 export default ({pageSize = 9000, scrollTime = "30s"}: BuildCardFieldsQueryParams = {}) => {
-    const sourceFields = ["card_id", "service_boost", "last_modified"];
+    const sourceFields = ["card_id", "service_boost", "airtable_last_modified"];
 
     return {
         index: vars.serverSetups.elastic.indices.card,

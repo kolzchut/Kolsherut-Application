@@ -25,7 +25,7 @@ export const fetchAllCardFields = async ({pageSize = 9000, scrollTime = "30s"}: 
         ...hits.map((hit:any) => ({
             card_id: hit._source.card_id,
             service_boost: hit._source.service_boost,
-            last_modified: hit._source.last_modified
+            last_modified: hit._source.airtable_last_modified
         }))
     );
 
@@ -39,7 +39,7 @@ export const fetchAllCardFields = async ({pageSize = 9000, scrollTime = "30s"}: 
             ...hits.map((hit:any) => ({
                 card_id: hit._source.card_id,
                 service_boost: hit._source.service_boost,
-                last_modified: hit._source.last_modified
+                last_modified: hit._source.airtable_last_modified
             }))
         );
     }
