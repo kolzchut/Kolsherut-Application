@@ -13,4 +13,7 @@ export const initialState = {
         by: ""
     }
 };
+
+
 export type FilterStore = typeof initialState;
+export type BeFilters = typeof initialState.backendFilters;
