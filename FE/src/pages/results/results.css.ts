@@ -5,7 +5,6 @@ interface IProps {
     displayResultsMap: boolean,
     openSecondList: boolean,
     isMobile: boolean,
-    accessibilityActive: boolean
 }
 
 export default createUseStyles({
@@ -31,23 +30,7 @@ export default createUseStyles({
         flexDirection: 'row',
         scrollbarWidth: "none"
     },
-    hits: ({displayResultsMap, openSecondList, isMobile}: IProps) => {
-        if (!isMobile) return ({
-            width: displayResultsMap && !openSecondList ? "100%" : "70%",
-        })
-        return ({
-            height: 'calc(100vh - 191px)',
-            overflowY: 'auto',
-            display: (displayResultsMap || openSecondList) ? 'none' : 'flex',
-            flexDirection: 'column',
-            width: !openSecondList ? "100%" : "0%",
-        })
-    },
-    branchList: ({displayResultsMap, openSecondList, isMobile}: {
-        displayResultsMap: boolean,
-        openSecondList: boolean,
-        isMobile: boolean
-    }) => {
+    branchList: ({displayResultsMap, openSecondList, isMobile}:IProps) => {
         if (!isMobile) return ({
             width: openSecondList ? "30%" : "0%",
             position: 'relative',
@@ -60,11 +43,7 @@ export default createUseStyles({
             width: openSecondList ? "100%" : "0%",
         })
     },
-    mapContainer: ({openSecondList, displayResultsMap, isMobile}: {
-        displayResultsMap: boolean,
-        openSecondList: boolean,
-        isMobile: boolean
-    }) => {
+    mapContainer: ({openSecondList, displayResultsMap, isMobile}: IProps) => {
         const showLargeMap = displayResultsMap && !openSecondList;
         const showSmallMap = displayResultsMap && openSecondList;
         const mapFlex = showLargeMap ? 10 : showSmallMap ? 4 : 0;
@@ -80,51 +59,6 @@ export default createUseStyles({
             display: displayResultsMap ? 'block' : 'none',
             top: 0,
             left: 0,
-        })
-    },
-    noResults: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        width: '100%',
-        height: '100%',
-        position: 'relative'
-    },
-    noResultsIcon: {
-        width: '20%',
-        marginTop: '20px',
-    },
-    noResultsTitle: ({accessibilityActive, isMobile}: IProps) => {
-        const fontSizeMobile = accessibilityActive ? 28:24;
-        const fontSizeDesktop = accessibilityActive ? 38 : 34;
-        const fontSize = isMobile ? fontSizeMobile : fontSizeDesktop;
-
-        return ({
-            fontSize,
-            textAlign: 'center',
-            fontWeight: 700,
-        })
-    },
-    noResultsSearchQuery: ({accessibilityActive, isMobile}: IProps) => {
-        const fontSizeMobile = accessibilityActive ? 28:24;
-        const fontSizeDesktop = accessibilityActive ? 38 : 34;
-        const fontSize = isMobile ? fontSizeMobile : fontSizeDesktop;
-
-        return ({
-            fontSize,
-            textAlign: 'center',
-            fontWeight: 500,
-        })
-    },
-    noResultsSubtitle: ({accessibilityActive, isMobile}: IProps) => {
-        const fontSizeMobile = accessibilityActive ? 24:20;
-        const fontSizeDesktop = accessibilityActive ? 34 : 30;
-        const fontSize = isMobile ? fontSizeMobile : fontSizeDesktop;
-        return ({
-            marginTop: 10,
-            fontSize,
-            fontWeight: 500,
-            textAlign: 'center',
         })
     },
     loading: {
