@@ -10,12 +10,14 @@ import cardAnalytics from "../../services/gtag/cardEvents";
 import Header from "../../components/header/header";
 import getCardMetaTags from "./getCardMetaTags";
 import MetaTags from "../../services/metaTags";
+import {useGetCurrentRoute} from "../../services/url/route";
 
 const Card = () => {
     const classes = useStyle();
     const [fullCard, setFullCard] = useState<ICard | null>(null)
     const cardId = useSelector(getCardId)
-    const metaTagsData = fullCard ? getCardMetaTags(fullCard) : null;
+    const cardUrl = useGetCurrentRoute();
+    const metaTagsData = fullCard ? getCardMetaTags({card: fullCard, cardUrl}) : null;
     useEffect(() => {
         const fetchCard = async () => {
             const cardData = await getFullCard(cardId);
