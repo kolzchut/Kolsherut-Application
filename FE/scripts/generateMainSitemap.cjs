@@ -25,18 +25,15 @@ const sitemaps = [
 const joinUrl = (base, relativePath) =>
     base.replace(/\/+$/, "") + "/" + relativePath.replace(/^\/+/, "");
 
-const getCurrentISODate = () => new Date().toISOString();
 
 // Build sitemap index XML
 const buildSitemapIndexXML = () => {
-    const lastmod = getCurrentISODate();
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
     xml += `<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
     sitemaps.forEach((relativePath) => {
         xml += `  <sitemap>\n`;
         xml += `    <loc>${joinUrl(baseUrl, relativePath)}</loc>\n`;
-        xml += `    <lastmod>${lastmod}</lastmod>\n`;
         xml += `  </sitemap>\n`;
     });
 
