@@ -12,14 +12,14 @@ const getCardMetaTags = (card: ICard) => {
     const metaTags = window.metaTags.card;
     const serviceDescription = card.service_description;
     const cardId = card.card_id;
-    const serviceName = card.service_name;
+    const serviceName = card.service_name
     const content = buildContent(card);
 
     const macrosAndReplacements: { [key: string]: string } = {
         '%%content%%': content,
         '%%serviceDescription%%': serviceDescription ?? '',
         '%%serviceId%%': cardId,
-        'S%%serviceName%%': serviceName ?? ""
+        '%%serviceName%%': serviceName ?? ""
     };
     return {metaTags, macrosAndReplacements}
 }
