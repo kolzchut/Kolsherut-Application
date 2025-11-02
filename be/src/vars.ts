@@ -55,5 +55,8 @@ export default {
         EMAIL_NOTIFIER_PASSWORD: process.env.EMAIL_NOTIFIER_PASSWORD,
         EMAIL_NOTIFIER_RECIPIENT_LIST: (process.env.EMAIL_NOTIFIER_RECIPIENT_LIST || "ariel_ohana@webiks.com,eli.rabby@kolzchut.org.il,efrat.shamir@kolzchut.org.il").split(','),
         EMAIL_INTERVAL_HOURS: parseInt(process.env.EMAIL_INTERVAL_HOURS || '6'),
+    },
+    sitemap:{
+        minimumLastModifiedForCards: process.env.SITEMAP_MINIMUM_LAST_MODIFIED_FOR_CARDS || '2025-11-02T12:00:00',
     }
 };
