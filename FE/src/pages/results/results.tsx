@@ -39,6 +39,7 @@ import {setPopupOffsetForBigMap, setPopupOffsetForSmallMap} from "../../services
 import {ILabel} from "../../types/homepageType";
 import mapService from "../../services/map/map";
 import logger from "../../services/logger/logger";
+import {useGetCurrentRoute} from "../../services/url/route.tsx";
 
 const LazyMap = lazy(() => import("../../components/map/map"));
 
@@ -56,13 +57,14 @@ const Results = () => {
     const backendFilters = useSelector(getBackendFilters)
     const accessibilityActive = useSelector(isAccessibilityActive);
     const showBranchFilterForMobile = !!selectedFeatureId && isMobile && !selectedOrganization;
+    const pageUrl = useGetCurrentRoute();
     const classes = useStyles({
         displayResultsMap,
         openSecondList: !!selectedOrganization || showBranchFilterForMobile,
         isMobile,
         accessibilityActive
     });
-    const metaTagsData = getResultsMetaTags({searchQuery, locationFilter: location.key, backendFilters})
+    const metaTagsData = getResultsMetaTags({searchQuery, locationFilter: location.key, backendFilters, pageUrl})
     const dispatch = useDispatch();
     const reportOnce = useOnce(() => resultsAnalytics.scrollOnceEvent());
     const refreshPage = () => setNewPage(prev => prev + 1);

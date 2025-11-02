@@ -8,7 +8,7 @@ const buildContent = (card: ICard): string => {
     return contentArray.join(' / ');
 }
 
-const getCardMetaTags = (card: ICard) => {
+const getCardMetaTags = ({card, cardUrl}:{card:ICard, cardUrl:string}) => {
     const metaTags = window.metaTags.card;
     const serviceDescription = card.service_description;
     const cardId = card.card_id;
@@ -21,6 +21,6 @@ const getCardMetaTags = (card: ICard) => {
         '%%serviceId%%': cardId,
         'S%%serviceName%%': serviceName ?? ""
     };
-    return {metaTags, macrosAndReplacements}
+    return {metaTags, macrosAndReplacements, pageUrl:cardUrl}
 }
 export default getCardMetaTags;

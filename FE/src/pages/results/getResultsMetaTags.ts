@@ -7,7 +7,7 @@ type Synonyms ={
     name:string;
 }
 
-const getResultsMetaTags = ({searchQuery, locationFilter, backendFilters}:{searchQuery:string, locationFilter:string, backendFilters:{response:string | null,situation:string | null, by:string}}) =>{
+const getResultsMetaTags = ({searchQuery, locationFilter, backendFilters, pageUrl}:{searchQuery:string, locationFilter:string, backendFilters:{response:string | null,situation:string | null, by:string}, pageUrl:string}) =>{
 
 
     const metaTags = window.metaTags.results
@@ -31,7 +31,7 @@ const getResultsMetaTags = ({searchQuery, locationFilter, backendFilters}:{searc
         "%%by%%": by,
         "%%location%%": location
     };
-    return {metaTags, macrosAndReplacements}
+    return {metaTags, macrosAndReplacements, pageUrl}
 }
 
 export default getResultsMetaTags;
