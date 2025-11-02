@@ -88,6 +88,10 @@
     ],
     "names": [
       {
+        "name": "title",
+        "content": "%%search%% | כל שירות"
+      },
+      {
         "name": "description",
         "content": "%%search%% %%situations%% %%responses%% %%by%% %%location%%"
       },
