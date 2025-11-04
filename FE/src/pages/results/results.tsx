@@ -39,7 +39,7 @@ import {setPopupOffsetForBigMap, setPopupOffsetForSmallMap} from "../../services
 import {ILabel} from "../../types/homepageType";
 import mapService from "../../services/map/map";
 import logger from "../../services/logger/logger";
-import {useGetCurrentRoute} from "../../services/url/route.tsx";
+import {useGetCurrentRoute} from "../../services/url/route";
 
 const LazyMap = lazy(() => import("../../components/map/map"));
 

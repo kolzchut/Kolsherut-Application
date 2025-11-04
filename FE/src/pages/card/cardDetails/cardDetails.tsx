@@ -13,7 +13,7 @@ import Footer from "../../../components/footer/footer";
 import QuickAction from "./components/quickActions/quickAction";
 import {useEffect, useRef, useState} from "react";
 import {useTheme} from 'react-jss';
-import IDynamicThemeApp from "../../../types/dynamicThemeApp.ts";
+import IDynamicThemeApp from "../../../types/dynamicThemeApp";
 
 const CardDetails = ({card}: { card: ICard }) => {
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -76,7 +76,7 @@ const CardDetails = ({card}: { card: ICard }) => {
 
         </div>
         {card.servicesInSameBranch.length > 0 &&
-            <MoreServicesInBranch moreServicesInBranch={card.servicesInSameBranch}/>}
+            <MoreServicesInBranch moreServicesInBranch={card.servicesInSameBranch} scrollRef={scrollRef}/>}
         <Footer hideLinks={true}/>
         <div className={`${classes.quickActionContainer} ${isScrollUp ? classes.hidden : ""}`}>
             <QuickAction email={email} phoneNumber={phoneNumbers[0]} websiteURL={websites[0]?.href}/>
