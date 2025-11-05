@@ -59,8 +59,8 @@ const CardDetails = ({card}: { card: ICard }) => {
             <h1 className={classes.serviceNameText}>{card.service_name}</h1>
             {card.branch_name && <h2 className={classes.branchNameText}>{card.branch_name}</h2>}
             <p className={classes.serviceDescriptionText}>{card.service_description}</p>
-            <ServiceEssence responses={card.responses}/>
-            <TargetAudience situations={card.situations}/>
+            <ServiceEssence responses={card.responses} cardId={card.card_id}/>
+            <TargetAudience situations={card.situations} cardId={card.card_id}/>
             <Contact card={card} email={email} phoneNumbers={phoneNumbers} address={address}
                      websites={websites}/>
             <ServiceEligibility serviceDetails={card.service_details}
