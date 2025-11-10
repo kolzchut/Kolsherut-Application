@@ -1,0 +1,7 @@
+{
+  "makeBlackList": {
+    "sitemapUrl": "https://www.kolsherut.org.il/sitemap/mixedtaxonomy.xml",
+    "searchUrl": "https://api.kolsherut.org.il/search",
+    "outputFile": "./src/assets/mixedTaxonomyBlackList.json"
+  }
+}
