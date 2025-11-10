@@ -9,13 +9,13 @@
   },
   "scripts": {
     "start": "node dist/index.js",
-    "prebuild": "node scripts/makeBlackList.mjs",
     "build": "tsc",
     "dev": "nodemon src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "docker:build": "npm run build && npx cross-var docker build -t kolsherut_be:$npm_package_version .",
     "docker:save": "npx cross-var docker save -o ../tars/kolsherut_be.$npm_package_version.tar kolsherut_be:$npm_package_version",
-    "tar": "npm run docker:build && npm run docker:save"
+    "tar": "npm run docker:build && npm run docker:save",
+    "makeBlackList": "node scripts/makeBlackList.mjs"
   },
   "keywords": [],
   "author": "",
