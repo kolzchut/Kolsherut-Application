@@ -94,6 +94,17 @@ const shrinkDescriptionEvent = (card_id: string) => {
     });
 };
 
+const clickOnLabelEvent = ({cardId, labelId, labelName}: { cardId: string, labelId: string, labelName: string}) => {
+    analytics.logEvent({
+        event:'click_on_label',
+        params:{
+            card_id:cardId,
+            label_id:labelId,
+            label_name:labelName,
+        }
+    })
+};
+
 export default {
     cardEvent,
     addToCartEvent,
@@ -101,4 +112,5 @@ export default {
     copyToClipboard,
     extendDescriptionEvent,
     shrinkDescriptionEvent,
+    clickOnLabelEvent
 }

@@ -79,6 +79,12 @@ const applyHistory = (params: Record<string, string>) => {
     globals.lastNavKey = key;
 };
 
+export const useGetCurrentRoute = () => {
+    const params = useSelector(getUrlParams) as Record<string, string>;
+    return buildUrl(params);
+
+}
+
 export const useRouteUpdater = () => {
     const params = useSelector(getUrlParams) as Record<string, string>;
     applyHistory(params);

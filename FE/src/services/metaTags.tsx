@@ -1,6 +1,12 @@
-import {replaceMacros} from "./str.ts";
+import {replaceMacros} from "./str";
 
-const MetaTags = ({metaTags, macrosAndReplacements}: {metaTags:any, macrosAndReplacements:{ [key: string]: string }}) => {
+interface Iprops{
+    metaTags:any,
+    macrosAndReplacements:{ [key: string]: string }
+    pageUrl:string
+}
+
+const MetaTags = ({metaTags, macrosAndReplacements, pageUrl}: Iprops ) => {
 
     const fixedProperties = metaTags.properties.map((property: { property: string, content: string }) => ({
         property: property.property,
@@ -13,6 +19,7 @@ const MetaTags = ({metaTags, macrosAndReplacements}: {metaTags:any, macrosAndRep
     const title = replaceMacros({stringWithMacros: metaTags.title, macrosAndReplacements})
     return (
         <>
+            <link rel="canonical" href={pageUrl}/>
             <title>{title}</title>
             {fixedNames && fixedNames.map((tag: { name: string, content: string }, index: number) => (
                 <meta name={tag.name} content={tag.content} key={index}/>

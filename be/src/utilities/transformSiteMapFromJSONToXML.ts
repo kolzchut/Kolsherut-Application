@@ -14,9 +14,16 @@ const buildUrlXML = (loc: string, lastmod?: string) =>
     ${formatLastMod(lastmod)}
 </url>`;
 
+const minimumDate = ({minimum, compareTo}: {minimum: string; compareTo: string}): string => {
+    const minDate = new Date(minimum);
+    const compDate = new Date(compareTo);
+    return isNaN(minDate.getTime()) ? compareTo : isNaN(compDate.getTime()) ? minimum : (minDate > compDate ? minimum : compareTo);
+}
+
 const buildCardXML = (card: { card_id: string; service_boost: number; last_modified: string }) => {
     const loc = `${vars.serverSetups.origin}/p/card/c/${encodeURI(card.card_id)}`;
-    return buildUrlXML(loc, card.last_modified);
+    const date = minimumDate({minimum: vars.sitemap.minimumLastModifiedForCards, compareTo: card.last_modified});
+    return buildUrlXML(loc,date);
 };
 
 const transformSiteMapFromJSONToXML = (cards: {

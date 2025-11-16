@@ -33,8 +33,12 @@
     ],
     "names": [
       {
-        "name": "description",
+        "name": "title",
         "content": "מידע על שירות %%serviceName%%, כולל מיקום, קטגוריה ופרטי יצירת קשר."
+      },
+      {
+        "name": "description",
+        "content": "%%serviceDescription%%"
       },
       {
         "name": "robots",
@@ -83,6 +87,10 @@
       }
     ],
     "names": [
+      {
+        "name": "title",
+        "content": "%%search%% | כל שירות"
+      },
       {
         "name": "description",
         "content": "%%search%% %%situations%% %%responses%% %%by%% %%location%%"

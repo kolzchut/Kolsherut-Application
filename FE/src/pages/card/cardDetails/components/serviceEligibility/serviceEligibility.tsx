@@ -1,6 +1,7 @@
 import useStyle from "./serviceEligibility.css";
-import { useTheme } from 'react-jss';
-import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
+import {useTheme} from 'react-jss';
+import IDynamicThemeApp from "../../../../../types/dynamicThemeApp";
+import sanitizeHTML from "../../../../../services/sanitizeHTML";
 
 const ServiceEligibility = ({serviceDetails, servicePaymentDetails, branchDescription}: {
     serviceDetails: string | null,
@@ -11,10 +12,26 @@ const ServiceEligibility = ({serviceDetails, servicePaymentDetails, branchDescri
     const theme = useTheme<IDynamicThemeApp>();
     const classes = useStyle({accessibilityActive: theme.accessibilityActive});
     return <div>
-        <span className={classes.title}>{serviceEligibilityTitle}</span>
-        {serviceDetails && <p className={classes.paragraphText}>{serviceDetails}</p>}
-        {servicePaymentDetails && <p className={classes.paragraphText}>{servicePaymentDetails}</p>}
-        {branchDescription && <p className={classes.paragraphText}>{branchDescription}</p>}
+        {(serviceDetails || servicePaymentDetails || branchDescription) &&
+            <span className={classes.title}>{serviceEligibilityTitle}</span>}
+        {serviceDetails && (
+            <div
+                className={classes.paragraphText}
+                dangerouslySetInnerHTML={{__html: sanitizeHTML(serviceDetails)}}
+            />
+        )}
+        {servicePaymentDetails && (
+            <div
+                className={classes.paragraphText}
+                dangerouslySetInnerHTML={{__html: sanitizeHTML(servicePaymentDetails)}}
+            />
+        )}
+        {branchDescription && (
+            <div
+                className={classes.paragraphText}
+                dangerouslySetInnerHTML={{__html: sanitizeHTML(branchDescription)}}
+            />
+        )}
     </div>
 }
 export default ServiceEligibility;

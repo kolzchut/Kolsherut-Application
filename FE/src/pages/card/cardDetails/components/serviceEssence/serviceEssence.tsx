@@ -3,10 +3,11 @@ import useStyle from "./serviceEssence.css";
 import Label from "../../../../../components/label/label";
 import {getHrefForResults} from "../../../../../services/href";
 import { useTheme } from 'react-jss';
-import {changingPageToResults} from "../../../../../store/shared/sharedSlice.ts";
-import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
+import {changingPageToResults} from "../../../../../store/shared/sharedSlice";
+import IDynamicThemeApp from "../../../../../types/dynamicThemeApp";
+import cardAnalytics from "../../../../../services/gtag/cardEvents";
 
-const ServiceEssence = ({responses}: { responses: Response[] }) => {
+const ServiceEssence = ({responses, cardId}: { responses: Response[], cardId:string }) => {
     const serviceEssenceTitle = window.strings.cardDetails.serviceEssence
     const theme = useTheme<IDynamicThemeApp>();
     const classes = useStyle({accessibilityActive: theme.accessibilityActive});
@@ -18,6 +19,7 @@ const ServiceEssence = ({responses}: { responses: Response[] }) => {
                 const href = getHrefForResults({searchQuery: response.name,responseFilter: [response.id]});
                 const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
                     e.preventDefault();
+                    cardAnalytics.clickOnLabelEvent({cardId:cardId, labelId:response.id, labelName:response.name});
                     changingPageToResults({value: {response_id:response.id, query:response.name}, removeOldFilters:true});
                 }
                 return <a href={href} key={response.id} className={classes.link}

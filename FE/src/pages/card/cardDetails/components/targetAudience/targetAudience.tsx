@@ -2,11 +2,12 @@ import {Situation} from "../../../../../types/cardType";
 import useStyle from "./targetAudience.css";
 import Label from "../../../../../components/label/label";
 import {getHrefForResults} from "../../../../../services/href";
-import {changingPageToResults} from "../../../../../store/shared/sharedSlice.ts";
+import {changingPageToResults} from "../../../../../store/shared/sharedSlice";
 import { useTheme } from 'react-jss';
-import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
+import IDynamicThemeApp from "../../../../../types/dynamicThemeApp";
+import cardAnalytics from "../../../../../services/gtag/cardEvents";
 
-const TargetAudience = ({situations}: { situations: Situation[] }) => {
+const TargetAudience = ({situations, cardId}: { situations: Situation[], cardId:string }) => {
     const targetAudienceTitle = window.strings.cardDetails.targetAudience;
 
     const theme = useTheme<IDynamicThemeApp>();
@@ -19,6 +20,7 @@ const TargetAudience = ({situations}: { situations: Situation[] }) => {
                 const href = getHrefForResults({searchQuery: situation.name, situationFilter: [situation.id]});
                 const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
                     e.preventDefault()
+                    cardAnalytics.clickOnLabelEvent({cardId:cardId, labelId:situation.id, labelName:situation.name});
                     changingPageToResults({
                         value: {situation_id: situation.id, query: situation.name},
                         removeOldFilters: true
