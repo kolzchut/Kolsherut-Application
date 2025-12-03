@@ -47,7 +47,7 @@ const CardDetails = ({card}: { card: ICard }) => {
     const classes = useStyle({accessibilityActive: theme.accessibilityActive});
     const email: string = card.branch_email_address || card.service_email_address || card.organization_email_address;
     const websites: ServiceURL[] = card.service_urls || [];
-    const phoneNumbers: string[] = [card.branch_phone_numbers, card.organization_phone_numbers, card.service_phone_numbers].find(arr => arr.length > 0) || [];
+    const phoneNumbers: string[] = [card.service_phone_numbers, card.organization_phone_numbers, card.branch_phone_numbers].find(arr => arr.length > 0) || [];
     const address = {text: card.branch_address, geom: card.branch_geometry};
     return <section ref={scrollRef} className={classes.root}>
         <Header branchOperatingUnit={card.branch_operating_unit|| ""}
