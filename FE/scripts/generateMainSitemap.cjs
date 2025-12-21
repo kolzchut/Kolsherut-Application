@@ -17,7 +17,7 @@ if (!fs.existsSync(publicFolder)) {
 const sitemaps = [
     "/sitemap/cards.xml",
     "/sitemap/taxonomy.xml",
-    "/sitemap/mixedtaxonomy.xml",
+    // "/sitemap/mixedtaxonomy.xml", EXCLUDED for now, Eli requested - issue #369
     "/sitemap/hpsitemap.xml"
 ];
 
