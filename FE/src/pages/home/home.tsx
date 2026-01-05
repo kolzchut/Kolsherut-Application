@@ -10,18 +10,17 @@ import {isMobileScreen} from "../../services/media";
 const Home = () => {
     const isMobile = isMobileScreen();
     const metaTagsData = getHomeMetaTags();
-    const classes = useStyle();
+    const classes = useStyle({isMobile});
 
     return <>
         {metaTagsData && <MetaTags {...metaTagsData}/>}
         <main className={classes.root}>
+            <Search/>
             <section className={classes.main}>
-
                 {!isMobile && <Header showSearchbar={false} showLogo={false} key={'homeHeader'}/>}
                 <OptionalSearch/>
                 <Footer/>
             </section>
-            <Search/>
         </main>
     </>
 }
