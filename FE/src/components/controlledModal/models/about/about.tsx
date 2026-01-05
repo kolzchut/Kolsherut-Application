@@ -6,7 +6,7 @@ import JusticeLink from "../../../links/justiceLink";
 import DigitalLink from "../../../links/digitalLink";
 import KZLink from "../../../links/kzLink";
 import {useTheme} from "react-jss";
-import IDynamicThemeApp from "../../../../types/dynamicThemeApp.ts";
+import IDynamicThemeApp from "../../../../types/dynamicThemeApp";
 
 const About = () => {
     const theme = useTheme<IDynamicThemeApp>();

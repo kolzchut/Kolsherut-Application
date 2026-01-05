@@ -24,13 +24,10 @@ export const useModalAccessibility = (
             document.addEventListener('keydown', handleGlobalKeyDown);
             return () => {
                 document.removeEventListener('keydown', handleGlobalKeyDown);
+                document.body.style.overflow = 'unset';
+                if (lastActiveElementRef.current) lastActiveElementRef.current.focus();
             };
         }
-
-        return () => {
-            document.body.style.overflow = 'unset';
-            if (lastActiveElementRef.current && !isOpen) lastActiveElementRef.current.focus();
-        };
     }, [isOpen, onClose]);
 
     return {

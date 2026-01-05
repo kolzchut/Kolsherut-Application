@@ -1,7 +1,7 @@
 import openIcon from "../../../../../assets/icon-chevron-down-blue.svg";
 import useStyle from "./addServiceBox.css";
 import { useTheme } from 'react-jss';
-import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
+import IDynamicThemeApp from "../../../../../types/dynamicThemeApp";
 import {createKeyboardHandler} from "../../../../../services/keyboardHandler";
 
 const AddServiceBox = ({title, content, isExtendedBox, onClick}: {

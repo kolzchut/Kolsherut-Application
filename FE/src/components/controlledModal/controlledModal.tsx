@@ -5,7 +5,7 @@ import {getModal} from "../../store/general/general.selector";
 import {setModal} from "../../store/general/generalSlice";
 import {store} from "../../store/store";
 import {useTheme} from 'react-jss';
-import IDynamicThemeApp from "../../types/dynamicThemeApp.ts";
+import IDynamicThemeApp from "../../types/dynamicThemeApp";
 import {useModalAccessibility} from "./utils/useModalAccessibility";
 
 const ControlledModal = () => {
