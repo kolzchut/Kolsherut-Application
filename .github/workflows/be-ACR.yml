@@ -1,0 +1,19 @@
+name: BE ACR Pipeline
+
+on:
+  push:
+    branches: ['master', 'dev']
+    paths: ['BE/**', '.github/workflows/be.yml']
+    tags: ['v*']
+
+jobs:
+  run-be-pipeline:
+    uses: ./.github/workflows/reusable-build-deploy.yml
+    secrets: inherit
+    with:
+      service_path: 'BE'
+      image_name: 'Kolsherut-BE'
+      # UPDATE THESE with your actual K8s deployment names for BE:
+      deployment_dev: 'kolsherut-be-dev'
+      deployment_stage: 'kolsherut-be-stage'
+      deployment_prod: 'kolsherut-be-prod'
