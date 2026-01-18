@@ -7,8 +7,9 @@ import {Response} from "../../../../types/cardType";
 import {getColor} from "../../../../services/colorLogic";
 import homepageAnalytics from "../../../../services/gtag/homepageEvents";
 import {useTheme} from "react-jss";
-import IDynamicThemeApp from "../../../../types/dynamicThemeApp.ts";
+import IDynamicThemeApp from "../../../../types/dynamicThemeApp";
 import {createKeyboardHandler} from "../../../../services/keyboardHandler";
+import buildUrlForSearchLabel from "./searchLabel/buildUrlForSearchLabel";
 
 const Group = ({group}: { group: IGroup }) => {
     const showGroupLink = (group: IGroup) => group.group_link && (group.response_id || group.situation_id);
@@ -17,7 +18,8 @@ const Group = ({group}: { group: IGroup }) => {
     const theme = useTheme<IDynamicThemeApp>();
 
     const classes = useStyles({wrapColor, showBorder: !!group.showBorder, accessibilityActive: theme.accessibilityActive});
-    const onClick = () => {
+    const onClick = (e?: React.MouseEvent<HTMLAnchorElement>) => {
+        e?.preventDefault();
         const groupAsLabel: ILabel = {
             situation_id: group.situation_id,
             response_id: group.response_id,
@@ -27,6 +29,7 @@ const Group = ({group}: { group: IGroup }) => {
         homepageAnalytics.clickOnOptionalSearch(group)
         changingPageToResults({value: groupAsLabel, removeOldFilters: true});
     }
+    const href = buildUrlForSearchLabel({response: group.response_id, situation: group.situation_id, searchQuery:group.group_link});
 
     const handleKeyDown = createKeyboardHandler(onClick);
 
@@ -38,9 +41,10 @@ const Group = ({group}: { group: IGroup }) => {
             {group?.labels?.map((value: ILabel, index: number) => (
                 <SearchLabel key={index} value={value}/>
             ))}
-            {showGroupLink(group) && <div
+            {showGroupLink(group) && <a
                 className={classes.groupLinkDiv}
                 onClick={onClick}
+                href={href}
                 onKeyDown={handleKeyDown}
                 tabIndex={0}
                 role="button"
@@ -48,7 +52,7 @@ const Group = ({group}: { group: IGroup }) => {
             >
                 <img src={linkIcon} alt={'Link Icon'} className={classes.linkIcon}/>
                 <span>{group.group_link}</span>
-            </div>}
+            </a>}
         </div>
     </div>
 }

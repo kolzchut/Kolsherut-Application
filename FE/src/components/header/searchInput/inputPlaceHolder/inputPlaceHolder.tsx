@@ -1,12 +1,12 @@
 import {useTheme} from "react-jss";
-import IDynamicThemeApp from "../../../../types/dynamicThemeApp.ts";
-import useStyles from "./inputPlaceHolder.css.ts";
+import IDynamicThemeApp from "../../../../types/dynamicThemeApp";
+import useStyles from "./inputPlaceHolder.css";
 import {useSelector} from "react-redux";
-import {getBackendByFilter} from "../../../../store/filter/filter.selector.ts";
+import {getBackendByFilter} from "../../../../store/filter/filter.selector";
 import {createKeyboardHandler} from "../../../../services/keyboardHandler";
 
-import {getBackendFiltersNamesByResults} from "../../../../store/shared/utilities/header.selector.ts";
-import {getSearchQuery} from "../../../../store/general/general.selector.ts";
+import {getBackendFiltersNamesByResults} from "../../../../store/shared/utilities/header.selector";
+import {getSearchQuery} from "../../../../store/general/general.selector";
 
 interface IPlaceHolderText {
     responseSentence?: string;
@@ -42,7 +42,7 @@ const InputPlaceHolder = ({onClick}: { onClick: () => void }) => {
         role="button"
         aria-label="Search input placeholder"
     >
-        {text.responseSentence && <h1 className={classes.firstSentence}>{text.responseSentence}</h1>}
+        {text.responseSentence && <h2 className={classes.firstSentence}>{text.responseSentence}</h2>}
         <div className={classes.bottomDiv}>
             {text.situationSentence &&
                 <h2 className={classes.secondSentence}>{baseSituationSentence + " " + text.situationSentence}</h2>}

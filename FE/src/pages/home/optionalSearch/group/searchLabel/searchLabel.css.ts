@@ -12,6 +12,7 @@ export default createUseStyles({
         justifyContent: 'center',
         fontFamily: "RAG SANS ,Arial, sans-serif",
         width: 'fit-content',
+        textDecoration:"none",
         padding:8,
         border: `1px solid ${primaryBorderColorTwo}`,
         borderRadius: 4,

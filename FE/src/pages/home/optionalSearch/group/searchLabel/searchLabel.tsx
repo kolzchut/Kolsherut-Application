@@ -2,13 +2,15 @@ import useStyles from "./searchLabel.css"
 import {ILabel} from "../../../../../types/homepageType";
 import {changingPageToResults} from "../../../../../store/shared/sharedSlice";
 import {useTheme} from "react-jss";
-import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
-import homepageAnalytics from "../../../../../services/gtag/homepageEvents.ts";
+import IDynamicThemeApp from "../../../../../types/dynamicThemeApp";
+import homepageAnalytics from "../../../../../services/gtag/homepageEvents";
+import buildUrlForSearchLabel from "./buildUrlForSearchLabel";
 
 const SearchLabel = ({value}: { value: ILabel }) => {
     const theme = useTheme<IDynamicThemeApp>();
     const classes = useStyles({accessibilityActive: theme.accessibilityActive});
-    const onClick = () => {
+    const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault();
         changingPageToResults({value, removeOldFilters: true})
         homepageAnalytics.clickOnOptionalSearch({
             group: value.title || "",
@@ -19,11 +21,12 @@ const SearchLabel = ({value}: { value: ILabel }) => {
         })
 
     }
-    return <button
+    const href = buildUrlForSearchLabel({response: value.response_id, situation: value.situation_id, searchQuery:value.title});
+    return <a href={href}
         className={classes.optionalSearchValue}
         onClick={onClick}>
         <span>{value.title}</span>
-    </button>
+    </a>
 
 }
 export default SearchLabel;

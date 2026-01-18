@@ -1,5 +1,6 @@
 import {useSelector} from "react-redux";
 import {getUrlParams} from "../../store/shared/urlSelector";
+import filtersUrlParams from "./filtersUrlParams";
 
 const globals = {
     initialized: false,
@@ -37,7 +38,7 @@ const buildUrl = (params: Record<string, string>) => {
         .keys(routeParams)
         .filter(key => !!routeParams[key])
         .forEach((key) => paramString += `/${key}/${routeParams[key]}`);
-    return `${base}/${paramString}${hash}${window.location.search}`;
+    return `${base}/${paramString}${hash}${filtersUrlParams(['p', 'c'])}`;
 };
 
 const navKey = (params: Record<string, string>) => {

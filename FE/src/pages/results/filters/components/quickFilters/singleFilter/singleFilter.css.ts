@@ -12,6 +12,7 @@ export default createUseStyles({
         flexDirection:'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+        textDecoration: 'none',
         borderRadius: 3,
         '&:hover':{
         backgroundColor: secondaryBackgroundColorOne

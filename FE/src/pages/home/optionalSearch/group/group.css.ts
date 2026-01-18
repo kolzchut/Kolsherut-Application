@@ -52,6 +52,7 @@ export default createUseStyles({
         display: "flex",
         alignItems: "center",
         height: 'fit-content',
+        textDecoration:'none',
         width: "100%",
         fontSize: accessibilityActive ? 20: 16,
         color: primaryTextColorThree,
