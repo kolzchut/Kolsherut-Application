@@ -42,7 +42,7 @@ const InputPlaceHolder = ({onClick}: { onClick: () => void }) => {
         role="button"
         aria-label="Search input placeholder"
     >
-        {text.responseSentence && <h1 className={classes.firstSentence}>{text.responseSentence}</h1>}
+        {text.responseSentence && <h2 className={classes.firstSentence}>{text.responseSentence}</h2>}
         <div className={classes.bottomDiv}>
             {text.situationSentence &&
                 <h2 className={classes.secondSentence}>{baseSituationSentence + " " + text.situationSentence}</h2>}
