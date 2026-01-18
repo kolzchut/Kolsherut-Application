@@ -2,7 +2,7 @@ import SingleFilter from "./singleFilter/singleFilter";
 import {addSituationFilter, removeSituationFilter} from "../../../../../store/filter/filterSlice";
 import {store} from "../../../../../store/store";
 import resultsAnalytics from "../../../../../services/gtag/resultsEvents";
-import addFilterTagToUrl from "./addFilterTagToUrl.ts";
+import updateFilterTagToUrl from "./updateFilterTagToUrl";
 
 interface FilterProps {
     id: string;
@@ -19,7 +19,7 @@ const SituationQuickFilter= ({id, value, situationFilters}:FilterProps) => {
         if (isFilterActive) return store.dispatch(removeSituationFilter(id));
         return store.dispatch(addSituationFilter(id));
     };
-    const href = addFilterTagToUrl({url:window.location.href, newValue:value?.name, isResponse:false })
+    const href = updateFilterTagToUrl({url:window.location.href, value:id, isResponse:false, isFilterActive })
 
     return (
         <SingleFilter

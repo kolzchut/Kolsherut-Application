@@ -1,5 +1,5 @@
 import useStyles from "./singleFilter.css";
-import IDynamicThemeApp from "../../../../../../types/dynamicThemeApp.ts";
+import IDynamicThemeApp from "../../../../../../types/dynamicThemeApp";
 import {useTheme} from "react-jss";
 
 const SingleFilter = ({value, onClick, href, isFilterActive}: {

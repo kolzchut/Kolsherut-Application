@@ -2,7 +2,7 @@ import SingleFilter from "./singleFilter/singleFilter";
 import {addResponseFilter, removeResponseFilter} from "../../../../../store/filter/filterSlice";
 import {store} from "../../../../../store/store";
 import resultsAnalytics from "../../../../../services/gtag/resultsEvents";
-import addFilterTagToUrl from "./addFilterTagToUrl.ts";
+import updateFilterTagToUrl from "./updateFilterTagToUrl.ts";
 
 interface FilterProps {
     id: string;
@@ -18,7 +18,7 @@ const ResponseQuickFilter= ({id, value, responseFilters}:FilterProps) => {
         if (isFilterActive) return store.dispatch(removeResponseFilter(id));
         return store.dispatch(addResponseFilter(id));
     };
-    const href = addFilterTagToUrl({url:window.location.href, newValue:value?.name, isResponse:true })
+    const href = updateFilterTagToUrl({url:window.location.href, value:id, isResponse:true, isFilterActive})
 
     return <SingleFilter href={href} value={value} onClick={handleClick} isFilterActive={isFilterActive}/>
 }
