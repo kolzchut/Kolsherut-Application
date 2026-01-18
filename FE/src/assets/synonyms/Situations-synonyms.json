@@ -1,0 +1,1382 @@
+[
+  {
+    "id": "human_situations:age_group:adults",
+    "name": "מבוגרים",
+    "synonyms": [
+      "מבוגרות"
+    ]
+  },
+  {
+    "id": "human_situations:age_group:children",
+    "name": "ילדים",
+    "synonyms": [
+      "ילדות"
+    ]
+  },
+  {
+    "id": "human_situations:age_group:infants",
+    "name": "הגיל הרך",
+    "synonyms": [
+      "פעוטות",
+      "תינוקות",
+      "פעוטון",
+      "מעון"
+    ]
+  },
+  {
+    "id": "human_situations:age_group:seniors",
+    "name": "אזרחים ותיקים",
+    "synonyms": [
+      "הגיל השלישי",
+      "זקנים",
+      "קשישים",
+      "גיל הזהב",
+      "ישישים",
+      "סבא",
+      "סבתא",
+      "אזרחות ותיקות"
+    ]
+  },
+  {
+    "id": "human_situations:age_group:teens",
+    "name": "נוער",
+    "synonyms": [
+      "תיכוניסטים",
+      "נערים",
+      "נערות"
+    ]
+  },
+  {
+    "id": "human_situations:age_group:young_adults",
+    "name": "צעירים",
+    "synonyms": [
+      "צעירות"
+    ]
+  },
+  {
+    "id": "human_situations:armed_forces",
+    "name": "אנשי צבא וביטחון",
+    "synonyms": [
+      "מילואים",
+      "מילואימניקים",
+      "משטרה",
+      "נשות צבא וביטחון",
+      "מילואימניקיות"
+    ]
+  },
+  {
+    "id": "human_situations:armed_forces:active_duty",
+    "name": "משרתי צבא סדיר",
+    "synonyms": [
+      "חיילים",
+      "חיילות",
+      "משרתות צבא סדיר"
+    ]
+  },
+  {
+    "id": "human_situations:armed_forces:bereaved_families",
+    "name": "משפחות שכולות",
+    "synonyms": [
+      "חללים",
+      "נרצחים",
+      "טרור",
+      "איבה",
+      "ששכלו",
+      "שכולה"
+    ]
+  },
+  {
+    "id": "human_situations:armed_forces:ex_soldiers",
+    "name": "חיילים משוחררים",
+    "synonyms": [
+      "חיילות משוחררות"
+    ]
+  },
+  {
+    "id": "human_situations:armed_forces:injured_while_on_duty",
+    "name": "\"נכי צה\"\"ל\"",
+    "synonyms": [
+      "נכות צה\"\"ל\""
+    ]
+  },
+  {
+    "id": "human_situations:armed_forces:professional_duty",
+    "name": "משרתי צבא קבע",
+    "synonyms": [
+      "משרתות צבא קבע"
+    ]
+  },
+  {
+    "id": "human_situations:armed_forces:reserves",
+    "name": "משרתי מילואים",
+    "synonyms": [
+      "מילואימניקים",
+      "משרתות מילואים"
+    ]
+  },
+  {
+    "id": "human_situations:armed_forces:veterans",
+    "name": "\"גמלאי צה\"\"ל\"",
+    "synonyms": [
+      "גמלאיות צה\"\"ל\""
+    ]
+  },
+  {
+    "id": "human_situations:benefit_holders",
+    "name": "מקבלי קצבאות והטבות",
+    "synonyms": [
+      "מקבלי קצבאות",
+      "מקבלות קצבאות"
+    ]
+  },
+  {
+    "id": "human_situations:benefit_holders:social_security",
+    "name": "מוכרות מביטוח לאומי",
+    "synonyms": [
+      "מקבלי קצבאות הביטוח הלאומי",
+      "מקבלות קצבאות הביטוח הלאומי"
+    ]
+  },
+  {
+    "id": "human_situations:benefit_holders:social_security:disability",
+    "name": "מקבלי קצבאת נכות",
+    "synonyms": [
+      "נכים",
+      "מקבלות קצבאת נכות",
+      "קצבת נכות",
+      "",
+      ""
+    ]
+  },
+  {
+    "id": "human_situations:benefit_holders:social_security:income_security",
+    "name": "מקבלי הבטחת הכנסה",
+    "synonyms": [
+      "השלמת הכנסה",
+      "מקבלות הבטחת הכנסה"
+    ]
+  },
+  {
+    "id": "human_situations:benefit_holders:social_security:nursing_care",
+    "name": "מקבלי קצבת סיעוד",
+    "synonyms": [
+      "מקבלי גמלת סיעוד",
+      "מקבלות קצבת סיעוד",
+      "מקבלות גמלת סיעוד",
+      ""
+    ]
+  },
+  {
+    "id": "human_situations:benefit_holders:social_security:righteous_among_the_nations",
+    "name": "חסידי אומות עולם",
+    "synonyms": [
+      "חסידות אומות עולם"
+    ]
+  },
+  {
+    "id": "human_situations:benefit_holders:social_security:ussr_veterans",
+    "name": "וטרנים",
+    "synonyms": [
+      "וטרניות"
+    ]
+  },
+  {
+    "id": "human_situations:benefit_holders:social_security:zion_prisoners",
+    "name": "אסירי ציון",
+    "synonyms": [
+      "אסירות ציון"
+    ]
+  },
+  {
+    "id": "human_situations:citizenship:citizens",
+    "name": "בעלי אזרחות ישראלית",
+    "synonyms": [
+      "אזרחים",
+      "אזרחי ישראל",
+      "אזרח ישראלי",
+      "בעלות אזרחות ישראלית"
+    ]
+  },
+  {
+    "id": "human_situations:citizenship:foreign_residents",
+    "name": "תושבי חוץ",
+    "synonyms": [
+      "תושבות חוץ"
+    ]
+  },
+  {
+    "id": "human_situations:citizenship:foreign_workers",
+    "name": "מהגרי עבודה",
+    "synonyms": [
+      "מהגרים",
+      "מהגרות",
+      "מהגרות עבודה"
+    ]
+  },
+  {
+    "id": "human_situations:citizenship:foreign_workers:agriculture_and_building",
+    "name": "מהגרי חקלאות ובנייה",
+    "synonyms": [
+      "תאילנדים",
+      "מהגרות חקלאות ובנייה"
+    ]
+  },
+  {
+    "id": "human_situations:citizenship:foreign_workers:experts",
+    "name": "בעלי ויזת מומחה",
+    "synonyms": [
+      "בעלות ויזת מומחה"
+    ]
+  },
+  {
+    "id": "human_situations:citizenship:foreign_workers:nursing",
+    "name": "מהגרים עובדים סיעודיים",
+    "synonyms": [
+      "פיליפיניות",
+      "מהגרות עובדיות סיעודיות"
+    ]
+  },
+  {
+    "id": "human_situations:citizenship:olim",
+    "name": "עולים",
+    "synonyms": [
+      "עולות"
+    ]
+  },
+  {
+    "id": "human_situations:citizenship:palestinians_workers",
+    "name": "עובדים פלסטינים",
+    "synonyms": [
+      "עובדי שטחים"
+    ]
+  },
+  {
+    "id": "human_situations:citizenship:refugees",
+    "name": "פליטים",
+    "synonyms": [
+      " מבקשי מקלט",
+      "מבקשות מקלט",
+      "פליטות"
+    ]
+  },
+  {
+    "id": "human_situations:citizenship:residents",
+    "name": "תושבים (ללא אזרחות)",
+    "synonyms": [
+      "תושבים",
+      "תושבי קבע",
+      "בעלי א/5",
+      "תושבות"
+    ]
+  },
+  {
+    "id": "human_situations:citizenship:statusless",
+    "name": "מחוסרי מעמד",
+    "synonyms": [
+      "חסרי מעמד",
+      "סודנים",
+      "דרפורדארפור",
+      "אריתראים",
+      "פליטים",
+      "פלסטינים",
+      "פלשטינאים",
+      "שוהים בלתי חוקיים",
+      "מחוסרות מעמד"
+    ]
+  },
+  {
+    "id": "human_situations:community:activists",
+    "name": "פעילים חברתיים",
+    "synonyms": [
+      "פעילות חברתיות"
+    ]
+  },
+  {
+    "id": "human_situations:criminal_history:ex_offenders",
+    "name": "בעלי עבר פלילי",
+    "synonyms": [
+      "פושעים",
+      "עבריינים",
+      "בעלות עבר פלילי"
+    ]
+  },
+  {
+    "id": "human_situations:criminal_history:ex_offenders_youth",
+    "name": "נוער בעל עבר פלילי",
+    "synonyms": [
+      "נוער עבריין",
+      "נוער בסיכון"
+    ]
+  },
+  {
+    "id": "human_situations:criminal_history:prisoners",
+    "name": "אסירים",
+    "synonyms": [
+      "אסירות"
+    ]
+  },
+  {
+    "id": "human_situations:deprivation",
+    "name": "רקע אישי",
+    "synonyms": [
+      "חסכים",
+      ""
+    ]
+  },
+  {
+    "id": "human_situations:deprivation:geographical_periphery",
+    "name": "אנשים מפריפריה גיאוגרפית",
+    "synonyms": [
+      "נשים מפריפריה גיאוגרפית"
+    ]
+  },
+  {
+    "id": "human_situations:deprivation:social_periphary",
+    "name": "אנשים מפריפריה חברתית",
+    "synonyms": [
+      "נשים מפריפריה חברתית"
+    ]
+  },
+  {
+    "id": "human_situations:disability",
+    "name": "מוגבלויות",
+    "synonyms": [
+      "נכים",
+      "נכויות",
+      "נכות"
+    ]
+  },
+  {
+    "id": "human_situations:disability:autistic_spectrum",
+    "name": "אוטיסטים",
+    "synonyms": [
+      "אוטיזם",
+      "אספרגר",
+      "על הרצף",
+      "הרצף האוטיסטי",
+      "הספקטרום",
+      "אוטיסטיות"
+    ]
+  },
+  {
+    "id": "human_situations:disability:deaf_or_hard_of_hearing",
+    "name": "בעלי חרשות או שמיעה מוגבלת",
+    "synonyms": [
+      "חירשים",
+      "כבדי שמיעה",
+      ""
+    ]
+  },
+  {
+    "id": "human_situations:disability:intellectual_disability",
+    "name": "בעלי מוגבלות שכלית והתפתחותית",
+    "synonyms": [
+      "פיגור",
+      "מפגרים",
+      "מש\"ה",
+      "מוש\"ה",
+      "תסמונת דאון",
+      ""
+    ]
+  },
+  {
+    "id": "human_situations:disability:learning_disability:add_adhd",
+    "name": "בעלי הפרעות קשב וריכוז",
+    "synonyms": [
+      "הפרעת קשב וריכוז",
+      "קשב וריכוז",
+      "צרכים מיוחדים",
+      ""
+    ]
+  },
+  {
+    "id": "human_situations:disability:limited_mobility",
+    "name": "בעלי מוגבלות בתנועה",
+    "synonyms": [
+      "נכים",
+      "נכות"
+    ]
+  },
+  {
+    "id": "human_situations:disability:mental_illness",
+    "name": "מתמודדי נפש",
+    "synonyms": [
+      "משוגעים",
+      "חולי נפש",
+      "מתמודדות נפש",
+      "נפגעי נפש",
+      "מחלות נפש"
+    ]
+  },
+  {
+    "id": "human_situations:disability:physical_disability",
+    "name": "אנשים עם מוגבלות פיזית",
+    "synonyms": [
+      "נכים",
+      "נכות",
+      "נשים עם מוגבלות פיזית"
+    ]
+  },
+  {
+    "id": "human_situations:disability:visual_impairment",
+    "name": "בעלי ליקוי ראיה",
+    "synonyms": [
+      "עיוורים",
+      "כבדי ראיה",
+      "עיוורון",
+      "עיוורות"
+    ]
+  },
+  {
+    "id": "human_situations:education:dropouts",
+    "name": "נושרים ממערכת החינוך",
+    "synonyms": [
+      "נושרות ממערכת החינוך"
+    ]
+  },
+  {
+    "id": "human_situations:education:gifted_students",
+    "name": "ילדים מחוננים",
+    "synonyms": [
+      "ילדות מחוננות"
+    ]
+  },
+  {
+    "id": "human_situations:education:students",
+    "name": "סטודנטים",
+    "synonyms": [
+      "סטודנטים",
+      "סטודנטיות"
+    ]
+  },
+  {
+    "id": "human_situations:employment:employed",
+    "name": "שכירים",
+    "synonyms": [
+      "שכירות"
+    ]
+  },
+  {
+    "id": "human_situations:employment:retirement",
+    "name": "אנשים בגמלאות",
+    "synonyms": [
+      "גמלאים",
+      "פנסיונרים",
+      "נשים בגמלאות",
+      "פנסיונריות",
+      ""
+    ]
+  },
+  {
+    "id": "human_situations:employment:self_employed",
+    "name": "עצמאים",
+    "synonyms": [
+      "עצמאיים",
+      "עצמאיות"
+    ]
+  },
+  {
+    "id": "human_situations:employment:unemployed",
+    "name": "מובטלים",
+    "synonyms": [
+      "מובטלות"
+    ]
+  },
+  {
+    "id": "human_situations:gender:men",
+    "name": "גברים בלבד",
+    "synonyms": [
+      "גברים"
+    ]
+  },
+  {
+    "id": "human_situations:gender:transgender",
+    "name": "טרנסג'נדר",
+    "synonyms": [
+      "טרנסים",
+      "טראנסג'נדרים",
+      "טרנס",
+      "שינוי מין",
+      "טרנסיות",
+      ""
+    ]
+  },
+  {
+    "id": "human_situations:gender:women",
+    "name": "נשים בלבד",
+    "synonyms": [
+      "נשים",
+      ""
+    ]
+  },
+  {
+    "id": "human_situations:health",
+    "name": "מצבים בריאותיים",
+    "synonyms": [
+      "חולים",
+      "חולות"
+    ]
+  },
+  {
+    "id": "human_situations:health:chronic_illness",
+    "name": "חולים כרוניים",
+    "synonyms": [
+      "חולות כרוניות"
+    ]
+  },
+  {
+    "id": "human_situations:health:endocrine_nutritional_or_metabolic_diseases",
+    "name": "חולי מחלות אנדוקריניות",
+    "synonyms": [
+      "חולות מחלות אנדוקריניות"
+    ]
+  },
+  {
+    "id": "human_situations:health:endocrine_nutritional_or_metabolic_diseases:type_1_diabetes",
+    "name": "חולי סכרת נעורים",
+    "synonyms": [
+      "חולות סכרת נעורים"
+    ]
+  },
+  {
+    "id": "human_situations:health:endocrine_nutritional_or_metabolic_diseases:type_2_diabetes",
+    "name": "חולי סכרת",
+    "synonyms": [
+      "סוכרת",
+      "חולות סכרת"
+    ]
+  },
+  {
+    "id": "human_situations:health:fertility",
+    "name": "בעיות פוריות",
+    "synonyms": [
+      "טיפולי פוריות",
+      "הפריה"
+    ]
+  },
+  {
+    "id": "human_situations:health:genetic_disorder",
+    "name": "חולים במחלה גנטית",
+    "synonyms": [
+      "חולות במחלה גנטית"
+    ]
+  },
+  {
+    "id": "human_situations:health:heart_diseases",
+    "name": "חולי מחלות לב",
+    "synonyms": [
+      "חולות מחלות לב"
+    ]
+  },
+  {
+    "id": "human_situations:health:infectious_disease:covid19",
+    "name": "חולי קורונה",
+    "synonyms": [
+      "קוביד",
+      "Covid",
+      "Covid 19",
+      "חולות קורונה"
+    ]
+  },
+  {
+    "id": "human_situations:health:infectious_disease:hiv_aids",
+    "name": "חולי איידס",
+    "synonyms": [
+      "HIV",
+      "חולות איידס"
+    ]
+  },
+  {
+    "id": "human_situations:health:neoplasm",
+    "name": "חולי סרטן",
+    "synonyms": [
+      "חולות סרטן"
+    ]
+  },
+  {
+    "id": "human_situations:health:nervous_system_disease",
+    "name": "חולי מחלות של מערכת העצבים והמח",
+    "synonyms": [
+      "מחלות עצבים",
+      "חולות מחלות של מערכת העצבים והמח"
+    ]
+  },
+  {
+    "id": "human_situations:health:nervous_system_disease:alzheimer_disease",
+    "name": "חולי אלצהיימר ומחלות דמנציה",
+    "synonyms": [
+      "דמנטים",
+      "אלצהיימר",
+      "דמנציה",
+      "חולות אלצהיימר ומחלות דמנציה"
+    ]
+  },
+  {
+    "id": "human_situations:health:nervous_system_disease:epilepsy",
+    "name": "חולי אפיליפסיה",
+    "synonyms": [
+      "חולות אפיליפסיה"
+    ]
+  },
+  {
+    "id": "human_situations:health:nervous_system_disease:parkinsons",
+    "name": "חולי פרקינסון",
+    "synonyms": [
+      "פרקינסון",
+      "חולות פרקינסון",
+      ""
+    ]
+  },
+  {
+    "id": "human_situations:health:nervous_system_disease:stroke",
+    "name": "אנשים שעברו אירוע מוחי",
+    "synonyms": [
+      "נשים שעברו אירוע מוחי"
+    ]
+  },
+  {
+    "id": "human_situations:health:neurodevelopmental_disorders",
+    "name": "אנשים עם לקות נוירו-התפתחותית",
+    "synonyms": [
+      "נשים עם לקות נוירו-התפתחותית"
+    ]
+  },
+  {
+    "id": "human_situations:health:rare_diseases",
+    "name": "חולי מחלות יתומות",
+    "synonyms": [
+      "חולות מחלות יתומות"
+    ]
+  },
+  {
+    "id": "human_situations:health:rare_diseases:familial_dysautonomia",
+    "name": "אנשים עם דיסאוטונומיה משפחתית (FD)",
+    "synonyms": [
+      "נשים עם דיסאוטונומיה משפחתית"
+    ]
+  },
+  {
+    "id": "human_situations:health:respiratory_system_disease",
+    "name": "חולי מחלות דרכי נשימה",
+    "synonyms": [
+      "חולות מחלות דרכי נשימה"
+    ]
+  },
+  {
+    "id": "human_situations:health:respiratory_system_disease:asthma",
+    "name": "חולי אסתמה",
+    "synonyms": [
+      "חולות אסתמה",
+      "אסטמה"
+    ]
+  },
+  {
+    "id": "human_situations:health:rheumatic_diseases",
+    "name": "חולי מחלות ראומטיות",
+    "synonyms": [
+      "חולות מחלות ראומטיות"
+    ]
+  },
+  {
+    "id": "human_situations:health:rheumatic_diseases:fibromyalgia",
+    "name": "חולי פיברומיאלגיה",
+    "synonyms": [
+      "חולות פיברומיאלגיה"
+    ]
+  },
+  {
+    "id": "human_situations:health:treatment_phases:facing_end_of_life",
+    "name": "אנשים על ערש דווי",
+    "synonyms": [
+      "מצב סופני",
+      "פליאטיבי",
+      "גוססים",
+      "גסיסה",
+      "סוף החיים",
+      "נשים על ערש דווי"
+    ]
+  },
+  {
+    "id": "human_situations:health:treatment_phases:home_care",
+    "name": "אשפוז ביתי",
+    "synonyms": [
+      "טיפול בבית",
+      "הוספיס ביתי"
+    ]
+  },
+  {
+    "id": "human_situations:health:treatment_phases:hospitalized",
+    "name": "מאושפזים",
+    "synonyms": [
+      "מאושפזות"
+    ]
+  },
+  {
+    "id": "human_situations:health:treatment_phases:nursing_care",
+    "name": "אנשים במצב סיעודי",
+    "synonyms": [
+      "נשים במצב סיעודי"
+    ]
+  },
+  {
+    "id": "human_situations:health:treatment_phases:post_treatment",
+    "name": "אנשים בשיקום",
+    "synonyms": [
+      "שיקום",
+      "נשים בשיקום"
+    ]
+  },
+  {
+    "id": "human_situations:household:families:divorced",
+    "name": "גירושים",
+    "synonyms": [
+      "פרודים",
+      "גרושים",
+      "גרושות",
+      ""
+    ]
+  },
+  {
+    "id": "human_situations:household:families:siblings",
+    "name": "אחים",
+    "synonyms": [
+      "אחיות"
+    ]
+  },
+  {
+    "id": "human_situations:household:families:single_parent",
+    "name": "משפחות שבראשן הורה עצמאי",
+    "synonyms": [
+      "חד הוריות",
+      "משפחות חד הוריות",
+      "אם יחידנית",
+      "אב יחידני",
+      ""
+    ]
+  },
+  {
+    "id": "human_situations:household:individuals",
+    "name": "רווקים",
+    "synonyms": [
+      "בדידות",
+      "רווקות"
+    ]
+  },
+  {
+    "id": "human_situations:household:loneliness",
+    "name": "בודדים",
+    "synonyms": [
+      "ערירים",
+      "בדידות",
+      "בודדות"
+    ]
+  },
+  {
+    "id": "human_situations:housing:home_owners",
+    "name": "בעלי בתים",
+    "synonyms": [
+      "בעלות בתים"
+    ]
+  },
+  {
+    "id": "human_situations:housing:home_renters",
+    "name": "שוכרי דירות",
+    "synonyms": [
+      "שוכרים",
+      "שוכרות דירות",
+      "שוכרות"
+    ]
+  },
+  {
+    "id": "human_situations:housing:homeless",
+    "name": "מחוסרי בית",
+    "synonyms": [
+      "דרי רחוב",
+      "חסרי בית",
+      "מחוסרות בית",
+      "חסרות בית"
+    ]
+  },
+  {
+    "id": "human_situations:housing:public_housing_tenants",
+    "name": "דיירי דיור ציבורי",
+    "synonyms": [
+      "דיירות דיור ציבורי"
+    ]
+  },
+  {
+    "id": "human_situations:housing:recipients_of_housing_assistance",
+    "name": "מקבלי סיוע בדיור",
+    "synonyms": [
+      "מקבלות סיוע בדיור"
+    ]
+  },
+  {
+    "id": "human_situations:language:amharic_speaking",
+    "name": "דוברי אמהרית",
+    "synonyms": [
+      "דוברות אמהרית"
+    ]
+  },
+  {
+    "id": "human_situations:language:arabic_speaking",
+    "name": "דוברי ערבית",
+    "synonyms": [
+      "العربية",
+      "דוברות ערבית"
+    ]
+  },
+  {
+    "id": "human_situations:language:english_speaking",
+    "name": "דוברי אנגלית",
+    "synonyms": [
+      "english speaking",
+      "speakers",
+      "דוברות אנגלית"
+    ]
+  },
+  {
+    "id": "human_situations:language:french_speaking",
+    "name": "דוברי צרפתית",
+    "synonyms": [
+      "דוברות צרפתית"
+    ]
+  },
+  {
+    "id": "human_situations:language:hebrew_speaking",
+    "name": "דוברי עברית",
+    "synonyms": [
+      "דוברות עברית"
+    ]
+  },
+  {
+    "id": "human_situations:language:russian_speaking",
+    "name": "דוברי רוסית",
+    "synonyms": [
+      "דוברות רוסית"
+    ]
+  },
+  {
+    "id": "human_situations:language:sign_language",
+    "name": "דוברי שפת הסימנים",
+    "synonyms": [
+      "דוברות שפת הסימנים"
+    ]
+  },
+  {
+    "id": "human_situations:language:spanish_speaking",
+    "name": "דוברי ספרדית",
+    "synonyms": [
+      "דוברות ספרדית"
+    ]
+  },
+  {
+    "id": "human_situations:life_events:divorce",
+    "name": "גירושין",
+    "synonyms": [
+      "גירושים"
+    ]
+  },
+  {
+    "id": "human_situations:life_events:grief",
+    "name": "אבל",
+    "synonyms": [
+      "שבעה"
+    ]
+  },
+  {
+    "id": "human_situations:mental_health:mental_conditions_and_diseases:anxiety",
+    "name": "בעלי הפרעות חרדה",
+    "synonyms": [
+      "בעלות הפרעות חרדה"
+    ]
+  },
+  {
+    "id": "human_situations:mental_health:mental_conditions_and_diseases:bipolar",
+    "name": "בעלי הפרעה קוטבית",
+    "synonyms": [
+      "בעלות הפרעה קוטבית"
+    ]
+  },
+  {
+    "id": "human_situations:mental_health:mental_conditions_and_diseases:brain_injury",
+    "name": "בעלי פציעת ראש",
+    "synonyms": [
+      "בעלות פציעת ראש"
+    ]
+  },
+  {
+    "id": "human_situations:mental_health:mental_conditions_and_diseases:depression",
+    "name": "אנשים עם דיכאון",
+    "synonyms": [
+      "נשים עם דיכאון"
+    ]
+  },
+  {
+    "id": "human_situations:mental_health:mental_conditions_and_diseases:eating_disorder",
+    "name": "בעלי הפרעות אכילה",
+    "synonyms": [
+      "אנורקסיה",
+      "אנורקסים",
+      "בולימיה",
+      "בולמיה",
+      "בעלות הפרעות אכילה"
+    ]
+  },
+  {
+    "id": "human_situations:mental_health:mental_conditions_and_diseases:ptsd",
+    "name": "בעלי הפרעת דחק פוסט טראומתית (PTSD)",
+    "synonyms": [
+      "פוסט טראומה",
+      "בעלות הפרעת דחק פוסט טראומתית (PTSD)"
+    ]
+  },
+  {
+    "id": "human_situations:mental_health:mental_conditions_and_diseases:schizophrenia",
+    "name": "חולי סכיזופרניה",
+    "synonyms": [
+      "חולות סכיזופרניה"
+    ]
+  },
+  {
+    "id": "human_situations:mental_health:mental_conditions_and_diseases:suicidal_thoughts",
+    "name": "בעלי מחשבות אובדניות",
+    "synonyms": [
+      "בעלות מחשבות אובדניות"
+    ]
+  },
+  {
+    "id": "human_situations:role:caregivers",
+    "name": "מטפלים",
+    "synonyms": [
+      "",
+      ""
+    ]
+  },
+  {
+    "id": "human_situations:role:dependents",
+    "name": "תלויים",
+    "synonyms": [
+      "תלויות"
+    ]
+  },
+  {
+    "id": "human_situations:sectors:arabs",
+    "name": "החברה הערבית",
+    "synonyms": [
+      "ערבים",
+      "חברה ערבית",
+      "המגזר",
+      "המגזר הערבי",
+      "ערביות"
+    ]
+  },
+  {
+    "id": "human_situations:sectors:bedouin",
+    "name": "החברה הבדואית",
+    "synonyms": [
+      "בדואים",
+      "בדואיות"
+    ]
+  },
+  {
+    "id": "human_situations:sectors:christians",
+    "name": "נוצרים",
+    "synonyms": [
+      "קתולים",
+      "נוצרים",
+      "יוונים אורתודוכסים",
+      "פרוטסטנטים",
+      "נוצריות"
+    ]
+  },
+  {
+    "id": "human_situations:sectors:circassians",
+    "name": "החברה הצ'רקסית",
+    "synonyms": [
+      "צ'רקסים",
+      "צ'רקסיות",
+      ""
+    ]
+  },
+  {
+    "id": "human_situations:sectors:druze",
+    "name": "החברה הדרוזית",
+    "synonyms": [
+      "דרוזים",
+      "דרוזיות"
+    ]
+  },
+  {
+    "id": "human_situations:sectors:jews",
+    "name": "יהודים",
+    "synonyms": [
+      "יהודיות"
+    ]
+  },
+  {
+    "id": "human_situations:sectors:jews:dati_leumi",
+    "name": "דתיים לאומיים",
+    "synonyms": [
+      "דתיות לאומיות"
+    ]
+  },
+  {
+    "id": "human_situations:sectors:jews:hozer_betshuva",
+    "name": "חוזרים בתשובה",
+    "synonyms": [
+      "חוזרות בתשובה"
+    ]
+  },
+  {
+    "id": "human_situations:sectors:jews:progressives",
+    "name": "יהדות מתקדמת",
+    "synonyms": [
+      "רפורמים",
+      ""
+    ]
+  },
+  {
+    "id": "human_situations:sectors:jews:secular",
+    "name": "חילונים",
+    "synonyms": [
+      "חילוניות"
+    ]
+  },
+  {
+    "id": "human_situations:sectors:jews:ultra_orthodox",
+    "name": "חרדים",
+    "synonyms": [
+      "חרדים",
+      "חרדיות"
+    ]
+  },
+  {
+    "id": "human_situations:sectors:jews:yotze_beshela",
+    "name": "יוצאים בשאלה",
+    "synonyms": [
+      "חוזרים בשאלה",
+      "יוצאות בשאלה",
+      "חוזרות בשאלה"
+    ]
+  },
+  {
+    "id": "human_situations:sectors:muslims",
+    "name": "מוסלמים",
+    "synonyms": [
+      "מוסלמים",
+      "מוסלמיות"
+    ]
+  },
+  {
+    "id": "human_situations:sexuality:lgbtq",
+    "name": "\"להט\"\"ב\"",
+    "synonyms": [
+      "הומוסקסואלים",
+      "הומואים",
+      "לסביות",
+      ""
+    ]
+  },
+  {
+    "id": "human_situations:substance_dependency:alcohol_dependency",
+    "name": "מכורים לאלכוהול",
+    "synonyms": [
+      "אלכוהוליסטים",
+      "מכורות לאלכוהול",
+      "אלכוהוליסטיות",
+      ""
+    ]
+  },
+  {
+    "id": "human_situations:substance_dependency:gambling",
+    "name": "מכורים להימורים",
+    "synonyms": [
+      "מהמרים",
+      "מהמרות",
+      "מכורות להימורים"
+    ]
+  },
+  {
+    "id": "human_situations:substance_dependency:opioid_dependency",
+    "name": "מכורים לסמים",
+    "synonyms": [
+      "מכורות לסמים"
+    ]
+  },
+  {
+    "id": "human_situations:substance_dependency:smoker",
+    "name": "מעשנים",
+    "synonyms": [
+      "מעשנות"
+    ]
+  },
+  {
+    "id": "human_situations:survivors",
+    "name": "ניצולים ונפגעים",
+    "synonyms": [
+      "ניצולות ונפגעות"
+    ]
+  },
+  {
+    "id": "human_situations:survivors:abuse_or_neglect_survivors",
+    "name": "נפגעי התעללות או הזנחה",
+    "synonyms": [
+      "נפגעות התעללות או הזנחה"
+    ]
+  },
+  {
+    "id": "human_situations:survivors:burn_survivors",
+    "name": "נפגעי כוויה",
+    "synonyms": [
+      "נפגעות כוויה"
+    ]
+  },
+  {
+    "id": "human_situations:survivors:car_accidents_survivors",
+    "name": "נפגעי תאונות דרכים",
+    "synonyms": [
+      "נפגעות תאונות דרכים"
+    ]
+  },
+  {
+    "id": "human_situations:survivors:human_trafficking_survivors",
+    "name": "נפגעי סחר בבני אדם",
+    "synonyms": [
+      "נפגעות סחר בבני אדם"
+    ]
+  },
+  {
+    "id": "human_situations:survivors:natural_disaster_survivors",
+    "name": "נפגעי אסון טבע",
+    "synonyms": [
+      "נפגעות אסון טבע"
+    ]
+  },
+  {
+    "id": "human_situations:survivors:trauma_survivors",
+    "name": "נפגעי טראומה",
+    "synonyms": [
+      "PTSD",
+      "נפגעות טראומה"
+    ]
+  },
+  {
+    "id": "human_situations:urgency:in_crisis",
+    "name": "אנשים במשבר נפשי",
+    "synonyms": [
+      "נשים במשבר נפשי"
+    ]
+  },
+  {
+    "id": "human_situations:criminal_history:sexual_perpetrators",
+    "name": "עברייני מין",
+    "synonyms": [
+      "עברייניות מין"
+    ]
+  },
+  {
+    "id": "human_situations:criminal_history:violent_tendencies",
+    "name": "עברייני אלימות במשפחה",
+    "synonyms": [
+      "עברייניות אלימות במשפחה"
+    ]
+  },
+  {
+    "id": "human_situations:household:orphans",
+    "name": "יתומים",
+    "synonyms": [
+      "יתומים",
+      "יתומות"
+    ]
+  },
+  {
+    "id": "human_situations:role:family_caregivers",
+    "name": "בני משפחה מטפלים",
+    "synonyms": [
+      "משפחות תומכות",
+      "בנות משפחה מטפלות",
+      "סיוע למטפלים",
+      ""
+    ]
+  },
+  {
+    "id": "human_situations:armed_forces:police",
+    "name": "כוחות המשטרה",
+    "synonyms": [
+      "שוטרים",
+      "שוטרות"
+    ]
+  },
+  {
+    "id": "human_situations:disability:mentally_debilitated",
+    "name": "תשושי נפש",
+    "synonyms": [
+      "תשושות נפש"
+    ]
+  },
+  {
+    "id": "human_situations:disability:in_need_for_nursing_care",
+    "name": "אנשים במצב סיעודי",
+    "synonyms": [
+      "נשים במצב סיעודי"
+    ]
+  },
+  {
+    "id": "human_situations:survivors:violence_survivors:domestic_violence_survivors",
+    "name": "נפגעות אלימות במשפחה",
+    "synonyms": [
+      "נפגעי אלימות במשפחה"
+    ]
+  },
+  {
+    "id": "human_situations:benefit_holders:holocaust_survivors",
+    "name": "ניצולי שואה",
+    "synonyms": [
+      "ניצולות שואה"
+    ]
+  },
+  {
+    "id": "human_situations:benefit_holders:ministry_of_health",
+    "name": "מוכרי משרד הבריאות",
+    "synonyms": [
+      "מוכרות משרד הבריאות"
+    ]
+  },
+  {
+    "id": "human_situations:benefit_holders:ministry_of_health:rehabilitation_basket",
+    "name": "זכאי סל שיקום",
+    "synonyms": [
+      "זכאית סל שיקום",
+      ""
+    ]
+  },
+  {
+    "id": "human_situations:sectors:jews:ethiopians",
+    "name": "יוצאי אתיופיה",
+    "synonyms": [
+      "אתיופים",
+      "יוצאות אתיופיה",
+      "אתיופיות"
+    ]
+  },
+  {
+    "id": "human_situations:citizenship:returned_residents",
+    "name": "תושבים חוזרים",
+    "synonyms": [
+      "תושבות חוזרות"
+    ]
+  },
+  {
+    "id": "human_situations:criminal_history:ex_prisoners",
+    "name": "אסירים לשעבר",
+    "synonyms": [
+      "אסירות לשעבר"
+    ]
+  },
+  {
+    "id": "human_situations:survivors:offence_survivors",
+    "name": "נפגעי עבירה",
+    "synonyms": [
+      "נפגעות עבירה"
+    ]
+  },
+  {
+    "id": "human_situations:survivors:evacuees",
+    "name": "מפונים",
+    "synonyms": [
+      "מפונות"
+    ]
+  },
+  {
+    "id": "human_situations:survivors:wounded",
+    "name": "פצועים",
+    "synonyms": [
+      "פצועות"
+    ]
+  },
+  {
+    "id": "human_situations:survivors:families_of_missing_persons",
+    "name": "משפחות של נעדרים",
+    "synonyms": [
+      "משפחות של נעדרות"
+    ]
+  },
+  {
+    "id": "human_situations:survivors:victims_of_terror",
+    "name": "נפגעי פעולות איבה",
+    "synonyms": [
+      "נפגעות פעולות איבה"
+    ]
+  },
+  {
+    "id": "human_situations:employment:farmers",
+    "name": "חקלאים",
+    "synonyms": [
+      "חקלאיות"
+    ]
+  },
+  {
+    "id": "human_situations:deprivation:low_income",
+    "name": "בעלי הכנסה נמוכה",
+    "synonyms": [
+      "קושי כלכלי",
+      "קשיים כלכליים",
+      "עניים",
+      "עני",
+      "בעלות הכנסה נמוכה",
+      "עוני"
+    ]
+  },
+  {
+    "id": "human_situations:education:struggling_students",
+    "name": "תלמידים מתקשים",
+    "synonyms": [
+      "תלמידות מתקשות"
+    ]
+  },
+  {
+    "id": "human_situations:education:learning_disorders",
+    "name": "בעלי הפרעות למידה",
+    "synonyms": [
+      "בעלות הפרעות למידה"
+    ]
+  },
+  {
+    "id": "human_situations:substance_dependency:painkillers",
+    "name": "מכורים למשככי כאבים",
+    "synonyms": [
+      "מכורות למשככי כאבים"
+    ]
+  },
+  {
+    "id": "human_situations:deprivation:at_risk:at_risk_children",
+    "name": "ילדים בסיכון",
+    "synonyms": [
+      "ילדות בסיכון"
+    ]
+  },
+  {
+    "id": "human_situations:deprivation:at_risk:at_risk_teens",
+    "name": "נערים בסיכון",
+    "synonyms": [
+      "צעירים בסיכון",
+      "חסרי עורף משפחתי",
+      "נערות בסיכון"
+    ]
+  },
+  {
+    "id": "human_situations:deprivation:at_risk:at_risk_youth",
+    "name": "צעירים בסיכון",
+    "synonyms": [
+      "צעירות בסיכון"
+    ]
+  },
+  {
+    "id": "human_situations:survivors:bereaved_families_of_terror",
+    "name": "משפחות של נפגעי פעולות איבה",
+    "synonyms": [
+      "משפחות של נפגעות פעולות איבה"
+    ]
+  }
+]
