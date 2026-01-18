@@ -8,11 +8,11 @@ import useOnClickedOutside from "../../../hooks/useOnClickedOutside";
 import {useSelector} from "react-redux";
 import {getSearchQuery} from "../../../store/general/general.selector";
 import {useTheme} from "react-jss";
-import IDynamicThemeApp from "../../../types/dynamicThemeApp.ts";
-import useStyles from "./searchInput.css.ts";
-import InputPlaceHolder from "./inputPlaceHolder/inputPlaceHolder.tsx";
+import IDynamicThemeApp from "../../../types/dynamicThemeApp";
+import useStyles from "./searchInput.css";
+import InputPlaceHolder from "./inputPlaceHolder/inputPlaceHolder";
 import useSearchAutocomplete from "../../../hooks/useSearchAutocomplete";
-import executeSearch from "../../../services/executeSearch.ts";
+import executeSearch from "../../../services/executeSearch";
 
 const inputDescription = "Search for services, organizations, branches, and more"
 const emptyAutocomplete: AutocompleteType = {structured: [], unstructured: []};

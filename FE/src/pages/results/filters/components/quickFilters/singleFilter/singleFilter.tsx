@@ -2,15 +2,17 @@ import useStyles from "./singleFilter.css";
 import IDynamicThemeApp from "../../../../../../types/dynamicThemeApp.ts";
 import {useTheme} from "react-jss";
 
-const SingleFilter = ({value, onClick, isFilterActive}: {
+const SingleFilter = ({value, onClick, href, isFilterActive}: {
     value: { count?: number | string, name: string },
-    onClick: () => void,
+    onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void,
+    href: string,
     isFilterActive: boolean
 }) => {
     const theme = useTheme<IDynamicThemeApp>();
     const classes = useStyles({accessibilityActive: theme.accessibilityActive});
 
-    return <div onClick={onClick} className={classes.optionDiv}>
+
+    return <a onClick={onClick} href={href} className={classes.optionDiv}>
                     <span className={classes.optionText}>
                         <input
                             id={`checkbox-${value.name}`}
@@ -26,7 +28,7 @@ const SingleFilter = ({value, onClick, isFilterActive}: {
                     </span>
         {!isFilterActive && value.count != undefined &&
             <span className={classes.optionValue}>{value.count}</span>}
-    </div>
+    </a>
 
 }
 export default SingleFilter;

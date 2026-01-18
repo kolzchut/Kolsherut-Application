@@ -1,6 +1,6 @@
 import {useSelector} from "react-redux";
 import {getUrlParams} from "../../store/shared/urlSelector";
-import filtersUrlParams from "./filtersUrlParams.ts";
+import filtersUrlParams from "./filtersUrlParams";
 
 const globals = {
     initialized: false,
