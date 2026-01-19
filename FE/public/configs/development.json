@@ -1,6 +1,6 @@
 {
-  "state": "stage",
-  "server": "https://srm-staging-api.whiletrue.industries",
+  "state": "development",
+  "server": "http://localhost:5000",
   "analyticsId": "G-GYV3YZ00Z8",
-  "currentURL": "https://srm-staging.whiletrue.industries"
+  "currentURL": "https://orange-forest-0544f8503.1.azurestaticapps.net"
 }
