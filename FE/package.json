@@ -18,6 +18,7 @@
     "dev": "vite",
     "prebuild": "npm run sitemap:homepage && npm run sitemap:main && npm run synonyms:update",
     "build": "vite build",
+    "postbuild": "node scripts/postbuild.cjs",
     "build:development": "cross-env ENVIRONMENT=development npm run build",
     "build:local": "cross-env ENVIRONMENT=local npm run build",
     "build:stage": "cross-env ENVIRONMENT=stage npm run build",
