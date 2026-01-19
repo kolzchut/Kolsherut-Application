@@ -1,16 +1,12 @@
 {
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/assets/*", "/icons/*", "/configs/*", "/sitemap/*", "*.{css,js,json,xml,txt,svg,png,jpg,jpeg,gif,ico,woff,woff2,ttf,eot}"]
+    "exclude": ["/assets/*", "/icons/*", "/configs/*", "/sitemap/*", "/sitemap.xml", "*.{css,js,json,xml,txt,svg,png,jpg,jpeg,gif,ico,woff,woff2,ttf,eot}"]
   },
   "routes": [
     {
       "route": "/p/*",
       "rewrite": "/index.html"
-    },
-    {
-      "route": "/sitemap.xml",
-      "rewrite": "/sitemap/sitemap.xml"
     }
   ],
   "responseOverrides": {

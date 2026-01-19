@@ -1,7 +1,7 @@
 {
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/assets/*", "/icons/*", "/configs/*", "/sitemap/*", "*.{css,js,json,xml,txt,svg,png,jpg,jpeg,gif,ico,woff,woff2,ttf,eot}"]
+    "exclude": ["/assets/*", "/icons/*", "/configs/*", "/sitemap/*", "/sitemap.xml", "*.{css,js,json,xml,txt,svg,png,jpg,jpeg,gif,ico,woff,woff2,ttf,eot}"]
   },
   "routes": [
     {
@@ -26,7 +26,7 @@
     },
     {
       "route": "/s/אוטיסטים",
-      "redirect": "/p/results/sq/%D7%90%D7%95%D7%98%D7%99%D7%A1%D7%98%D7%99%D7%9D/lf/%D7%9B%D7%9C+%D7%94%D7%90%D7%A8%D7%A5%7C34.2%2C29.5%2C35.6%2C33.3/bsf/human_situations%3Adisability%3Aautistic_spectrum",
+      "redirect": "/p/results/sq/%D7%90%D7%95%D7%98%D7%99%D7%A1%D7%98%D7%99%D7%9D&lf=%D7%9B%D7%9C+%D7%94%D7%90%D7%A8%D7%A5%7C34.2%2C29.5%2C35.6%2C33.3/bsf/human_situations%3Adisability%3Aautistic_spectrum",
       "statusCode": 302
     },
     {
