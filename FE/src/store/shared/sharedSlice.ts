@@ -11,8 +11,8 @@ import {setResults} from "../data/dataSlice";
 import fetchResults from "../../services/searchUtilities/fetchResults";
 import {resetFilters, setBackendFilters, setFilters} from "../filter/filterSlice";
 import {IService} from "../../types/serviceType";
-import sendMessage from "../../services/sendMessage/sendMessage.ts";
-import {IStructureAutocomplete, IUnStructuredAutocomplete} from "../../types/autocompleteType.ts";
+import sendMessage from "../../services/sendMessage/sendMessage";
+import {IStructureAutocomplete, IUnStructuredAutocomplete} from "../../types/autocompleteType";
 
 const updateStoreWithSearchParametersAndGetNewFetchData = (value: IStructureAutocomplete)=>{
     if (value?.query) store.dispatch(setSearchQuery(value.query));

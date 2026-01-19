@@ -3,7 +3,7 @@ import {store} from "../../../../store/store";
 import {setModal} from "../../../../store/general/generalSlice";
 import closeIcon from "../../../../assets/icon-close-black.svg";
 import { useTheme } from 'react-jss';
-import IDynamicThemeApp from "../../../../types/dynamicThemeApp.ts";
+import IDynamicThemeApp from "../../../../types/dynamicThemeApp";
 
 const Partners = () => {
     const theme = useTheme<IDynamicThemeApp>();

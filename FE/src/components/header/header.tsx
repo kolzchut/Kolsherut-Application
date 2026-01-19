@@ -6,9 +6,9 @@ import SearchInput from "./searchInput/searchInput";
 import {useDispatch, useSelector} from "react-redux";
 import {useTheme} from 'react-jss';
 import {isAccessibilityActive} from "../../store/general/general.selector";
-import {isMobileScreen} from "../../services/media.ts";
-import useStyles from "./header.css.ts"
-import IDynamicThemeApp from "../../types/dynamicThemeApp.ts";
+import {isMobileScreen} from "../../services/media";
+import useStyles from "./header.css"
+import IDynamicThemeApp from "../../types/dynamicThemeApp";
 
 
 const logo = "/icons/logo.svg"

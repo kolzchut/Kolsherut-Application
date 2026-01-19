@@ -5,8 +5,8 @@ import logger from "../../../services/logger/logger";
 import {useDispatch} from "react-redux";
 import {setModal} from "../../../store/general/generalSlice";
 import { useTheme } from 'react-jss';
-import IDynamicThemeApp from "../../../types/dynamicThemeApp.ts";
-import {getHrefForLinkBelow} from "../../../services/href.ts";
+import IDynamicThemeApp from "../../../types/dynamicThemeApp";
+import {getHrefForLinkBelow} from "../../../services/href";
 
 interface ILinks {
     title: string,
@@ -32,7 +32,7 @@ const LinksMenu = () => {
         getLinks();
     }, []);
     const onClick = (e: React.MouseEvent<HTMLAnchorElement>, link: ILinks) => {
-        if (link.url || !link.modal) return;
+        if ((link.url && link.url.includes("http"))|| !link.modal) return; // external link or no modal to open
         e.preventDefault();
         dispatch(setModal(link.modal));
     }

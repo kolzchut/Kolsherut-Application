@@ -15,7 +15,7 @@ import wideLocationIcon from "../../../../../../assets/wideLocation.svg"
 import {setModal} from "../../../../../../store/general/generalSlice";
 import {getOptionalLocations} from "../../../../../../store/shared/locationFilters.selector";
 import resultsAnalytics from "../../../../../../services/gtag/resultsEvents";
-import IDynamicThemeApp from "../../../../../../types/dynamicThemeApp.ts";
+import IDynamicThemeApp from "../../../../../../types/dynamicThemeApp";
 import {useTheme} from "react-jss";
 import {createKeyboardHandler} from "../../../../../../services/keyboardHandler";
 import LocationDiv from "./locationDiv/locationDiv";

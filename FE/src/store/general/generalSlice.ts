@@ -23,6 +23,8 @@ export const generalSlice = createSlice({
         },
         setModal(state: GeneralStore, action) {
             state.modal = action.payload;
+            if (action.payload && action.payload.toLowerCase() === "sitemap")
+                state.page = 'sitemap';
         },
         setShowSidebar(state: GeneralStore, action) {
             state.showSidebar = action.payload;
@@ -37,11 +39,6 @@ export const generalSlice = createSlice({
         setAccessibility(state: GeneralStore, action) {
             state.accessibilityActive = action.payload;
         },
-        setFirstVisitedUrl(state: GeneralStore, action) {
-            if (state.firstVisitedUrl === null) {
-                state.firstVisitedUrl = action.payload;
-            }
-        },
         setLoading(state: GeneralStore, action) {
             if (typeof action.payload != 'boolean') return;
             state.loading = action.payload;
@@ -49,9 +46,6 @@ export const generalSlice = createSlice({
         setSelectedFeatureId(state: GeneralStore, action) {
             if (typeof action.payload !== 'string' && action.payload !== null) return;
             state.selectedFeatureId = action.payload;
-        },
-        setOldURL(state: GeneralStore, action) {
-            state.oldURL = action.payload;
         }
     },
 });
@@ -65,10 +59,8 @@ export const {
     settingURLParamsToResults,
     setShowSidebar,
     setAccessibility,
-    setFirstVisitedUrl,
     setLoading,
     setSelectedFeatureId,
-    setOldURL
 } = generalSlice.actions;
 
 export default generalSlice.reducer;

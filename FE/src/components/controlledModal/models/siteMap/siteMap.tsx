@@ -1,14 +1,14 @@
-import useStyle from "./siteMap.css.ts"
+import useStyle from "./siteMap.css"
 import {store} from "../../../../store/store";
 import {setModal} from "../../../../store/general/generalSlice";
 import closeIcon from "../../../../assets/icon-close-black.svg";
 import {useEffect} from "react";
 import {useTheme} from 'react-jss';
-import IDynamicThemeApp from "../../../../types/dynamicThemeApp.ts";
-import {getSitemap} from "../../../../store/data/data.selector.ts";
+import IDynamicThemeApp from "../../../../types/dynamicThemeApp";
+import {getSitemap} from "../../../../store/data/data.selector";
 import {useSelector} from "react-redux";
-import homepageEvents from "../../../../services/gtag/homepageEvents.ts";
-import setSiteMapInStore from "../../../../services/setSiteMapInStore.ts";
+import homepageEvents from "../../../../services/gtag/homepageEvents";
+import setSiteMapInStore from "../../../../services/setSiteMapInStore";
 
 const SiteMap = () => {
     const theme = useTheme<IDynamicThemeApp>();
@@ -31,7 +31,7 @@ const SiteMap = () => {
         <div>
             <h3>{texts.responses}</h3>
             <ul className={classes.mapDiv}>
-                {siteMapData.responseUrls?.map((response) => (
+                {siteMapData.responseUrls?.map((response: {link:string, name:string}) => (
                     <a className={classes.text} href={response.link} key={response.link}>{response.name}</a>
                 ))}
                 {
@@ -40,7 +40,7 @@ const SiteMap = () => {
             </ul>
             <h3>{texts.situations}</h3>
             <ul className={classes.mapDiv}>
-                {siteMapData.situationsUrls?.map((situation) => (
+                {siteMapData.situationsUrls?.map((situation: {link:string, name:string}) => (
                     <a className={classes.text} href={situation.link} key={situation.link}>{situation.name}</a>
                 ))}
                 {

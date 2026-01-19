@@ -1,6 +1,6 @@
-import ILocation from "../types/locationType.ts";
-import israelLocation from "../constants/israelLocation.ts";
-import {stringifyLocation} from "./url/parseURL.ts";
+import ILocation from "../types/locationType";
+import israelLocation from "../constants/israelLocation";
+import {stringifyLocation} from "./url/parseURL";
 
 export const getHrefForCard = (cardId: string) => {
     const baseUrl = window.location.origin;
@@ -35,6 +35,6 @@ export const getHrefForResults = ({
 
 export const getHrefForLinkBelow = (modal?: string) => {
     const currentUrl = window.location.href;
-    if(currentUrl.includes('p=') || !modal) return currentUrl;
+    if(currentUrl.includes('p/') || !modal) return currentUrl;
     return `${currentUrl}`;
 }

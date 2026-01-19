@@ -1,7 +1,7 @@
 import useStyle from './footer.css';
 import LinksMenu from "./linksMenu/linksMenu";
 import { useTheme } from 'react-jss';
-import IDynamicThemeApp from "../../types/dynamicThemeApp.ts";
+import IDynamicThemeApp from "../../types/dynamicThemeApp";
 
 const israelIcon = "/icons/icon-state-of-israel.svg"
 const logoKZ = "/icons/icon-kz.svg"

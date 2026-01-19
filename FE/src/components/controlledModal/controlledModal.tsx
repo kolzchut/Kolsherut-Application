@@ -1,9 +1,8 @@
 import useStyles from "./controlledModal.css";
 import modals, {IModals, modalKeys} from "./models/modals";
-import {useSelector} from "react-redux";
-import {getModal} from "../../store/general/general.selector";
-import {setModal} from "../../store/general/generalSlice";
-import {store} from "../../store/store";
+import {useDispatch, useSelector} from "react-redux";
+import {getModal, getPage} from "../../store/general/general.selector";
+import {setModal, setPage} from "../../store/general/generalSlice";
 import {useTheme} from 'react-jss';
 import IDynamicThemeApp from "../../types/dynamicThemeApp";
 import {useModalAccessibility} from "./utils/useModalAccessibility";
@@ -12,8 +11,15 @@ const ControlledModal = () => {
     const theme = useTheme<IDynamicThemeApp>();
     const classes = useStyles(theme);
     const modal = useSelector(getModal);
+    const page = useSelector(getPage);
+    const dispatch = useDispatch()
 
-    const onClose = () => store.dispatch(setModal(null));
+
+    const onClose = () => {
+        dispatch(setModal(null))
+        if (page === "sitemap")
+            dispatch(setPage(null))
+    };
     const {modalRef} = useModalAccessibility(!!modal, onClose);
 
     if (!modal || !modalKeys.includes(modal as IModals)) return <></>;
