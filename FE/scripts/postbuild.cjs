@@ -12,9 +12,11 @@ try {
 
     // Source files
     const envJsonSource = path.join(configsDir, `${env}.json`);
+    const swaConfigSource = path.join(__dirname, `../staticwebapp-${env}.config.json`);
 
     // Destination files
     const envJsonDest = path.join(configsDir, 'environment.json');
+    const swaConfigDest = path.join(distDir, 'staticwebapp.config.json');
 
     // Ensure dist directory exists
     if (!fs.existsSync(distDir)) {
@@ -29,6 +31,14 @@ try {
     } else {
         console.error(`❌ configs/${env}.json not found`);
         process.exit(1);
+    }
+
+    // Copy staticwebapp.config.json (for Azure Static Web Apps)
+    if (fs.existsSync(swaConfigSource)) {
+        fs.copyFileSync(swaConfigSource, swaConfigDest);
+        console.log(`✅ Copied staticwebapp-${env}.config.json → dist/staticwebapp.config.json`);
+    } else {
+        console.warn(`⚠️  staticwebapp-${env}.config.json not found (will use default SWA routing)`);
     }
 
     console.log(`🎉 Postbuild completed successfully for ${env} environment`);

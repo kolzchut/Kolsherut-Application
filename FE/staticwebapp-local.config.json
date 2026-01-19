@@ -1,0 +1,33 @@
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/assets/*", "/icons/*", "/configs/*", "/sitemap/*", "*.{css,js,json,xml,txt,svg,png,jpg,jpeg,gif,ico,woff,woff2,ttf,eot}"]
+  },
+  "routes": [
+    {
+      "route": "/p/*",
+      "rewrite": "/index.html"
+    },
+    {
+      "route": "/sitemap.xml",
+      "rewrite": "/sitemap/sitemap.xml"
+    }
+  ],
+  "responseOverrides": {
+    "404": {
+      "rewrite": "/index.html",
+      "statusCode": 200
+    }
+  },
+  "globalHeaders": {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Credentials": "true",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "x-request-id,Accept,Authorization,Cache-Control,Content-Type,DNT,If-Modified-Since,Keep-Alive,Origin,User-Agent,X-Requested-With",
+    "Access-Control-Max-Age": "1728000"
+  },
+  "mimeTypes": {
+    ".json": "application/json",
+    ".xml": "application/xml"
+  }
+}
