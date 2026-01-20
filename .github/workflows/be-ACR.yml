@@ -13,11 +13,8 @@ jobs:
     with:
       service_path: 'BE'
       image_name: 'Kolsherut-BE'
-      # UPDATE THIS: The name of the container INSIDE your deployment YAML
-      # Check your k8s yaml under spec -> containers -> name
       container_name: 'kolsherut-backend-container'
 
-      # Your Deployment names
       deployment_dev: 'kolsherut-be-dev'
       deployment_stage: 'kolsherut-be-stage'
       deployment_prod: 'kolsherut-be-prod'
