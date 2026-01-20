@@ -3,7 +3,7 @@ name: BE ACR Pipeline
 on:
   push:
     branches: ['master', 'dev']
-    paths: ['BE/**', '.github/workflows/be.yml']
+    paths: ['BE/**', '.github/workflows/be-ACR.yml']
     tags: ['v*']
 
 jobs:
