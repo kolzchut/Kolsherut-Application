@@ -138,7 +138,7 @@ jobs:
           fi
 
           # 2. Connect to Cluster
-          az aks get-credentials --resource-group $RG --name $CLUSTER --overwrite-existing
+          az aks get-credentials --resource-group $RG --name $CLUSTER --admin --overwrite-existing
 
           # 3. Update Env Vars (Safely)
           # We use 'kubectl set env' which is safer than JSON patching
