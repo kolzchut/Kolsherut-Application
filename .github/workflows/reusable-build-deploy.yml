@@ -85,6 +85,12 @@ jobs:
           npm install
           npm run build
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Log in to ACR
         uses: docker/login-action@v3
         with:
@@ -111,6 +117,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           build-args: |
             ENVIRONMENT=${{ steps.get_version.outputs.VERSION }}
+          platforms: linux/amd64,linux/arm64
+          provenance: false
 
       # --- DEPLOYMENT STEP FOR DEV / STAGE ---
       - name: Azure Login
@@ -141,11 +149,9 @@ jobs:
           az aks get-credentials --resource-group $RG --name $CLUSTER --admin --overwrite-existing
 
           # 3. Update Env Vars (Safely)
-          # We use 'kubectl set env' which is safer than JSON patching
           kubectl set env deployment/$DEPLOYMENT ENVIRONMENT=$TARGET_ENV -n default
           
           # 4. Force Restart
-          # Since the image TAG (dev/stage) doesn't change string-wise, we must force a rollout
           kubectl rollout restart deployment/$DEPLOYMENT -n default
           
           # 5. Wait for status
@@ -178,7 +184,6 @@ jobs:
           echo "Deploying version $VERSION to Production..."
 
           # 1. Update the Image
-          # This triggers the rollout because the image string is new
           kubectl set image deployment/$DEPLOYMENT $CONTAINER=$FULL_IMAGE_NAME -n default
 
           # 2. Update Code Version Env Var
