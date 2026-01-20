@@ -1,5 +1,4 @@
 name: BE ACR Pipeline
-
 on:
   push:
     branches: ['master', 'dev']
