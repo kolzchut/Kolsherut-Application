@@ -15,6 +15,6 @@ jobs:
       image_name: 'Kolsherut-BE'
       container_name: 'kolsherut-backend-container'
 
-      deployment_dev: 'kolsherut-be-dev'
+      deployment_dev: 'development-kolsherut-be'
       deployment_stage: 'kolsherut-be-stage'
       deployment_prod: 'kolsherut-be-prod'
