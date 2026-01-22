@@ -21,7 +21,6 @@ router.use(asyncHandler(async (req: Request, res: Response) => {
         message: `Rendering path: ${fullPath} from origin: ${origin}`,
         payload: { fullUrl },
     });
-    console.log(`SSR Request for: ${fullUrl}`);
     const html = await renderPage(fullUrl);
 
     res.setHeader('Content-Type', 'text/html');
