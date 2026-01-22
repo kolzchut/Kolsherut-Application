@@ -1,5 +1,6 @@
 FROM node:lts
 
+## This row is for Demo SSR with Puppeteer - No need in production where you actually have SSR
 RUN apt-get update && apt-get install -y \
     wget \
     gnupg \
