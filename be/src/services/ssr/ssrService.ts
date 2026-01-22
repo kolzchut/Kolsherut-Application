@@ -3,23 +3,28 @@ import logger from '../logger/logger';
 
 let browserInstance: Browser | null = null;
 
-const getBrowser = async (): Promise<Browser> => {
-    if (browserInstance && browserInstance.isConnected()) {
-        return browserInstance;
-    }
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-    browserInstance = await puppeteer.launch({
-        headless: true,
-        args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage',
-            '--disable-gpu',
-            '--no-first-run',
-            '--no-zygote',
-            '--single-process',
-        ],
-    });
+const getBrowser = async (): Promise<Browser> => {
+    if (!browserInstance || !browserInstance.isConnected()) {
+        browserInstance = await puppeteer.launch({
+            headless: true,
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-gpu',
+            ],
+        });
+
+        browserInstance.on('disconnected', () => {
+            browserInstance = null;
+            logger.log({
+                service: 'SSR Service',
+                message: 'Browser disconnected',
+            });
+        });
+    }
 
     return browserInstance;
 };
@@ -34,9 +39,11 @@ const renderPage = async (url: string): Promise<string> => {
         );
 
         await page.goto(url, {
-            waitUntil: 'networkidle0',
+            waitUntil: 'networkidle2',
             timeout: 30000,
         });
+
+        await delay(1000);
 
         const content = await page.content();
 
@@ -54,7 +61,7 @@ const renderPage = async (url: string): Promise<string> => {
         });
         throw error;
     } finally {
-        await page.close();
+        await page.close().catch(() => {});
     }
 };
 
