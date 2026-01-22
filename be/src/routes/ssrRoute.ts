@@ -13,7 +13,7 @@ router.use(asyncHandler(async (req: Request, res: Response) => {
 
     const origin = vars.serverSetups.origin;
     const fullUrl = `${origin}${fullPath}`;
-
+    console.log('SSR Request for URL:', fullUrl);
     logger.log({
         service: 'SSR Route',
         message: `Rendering path: ${fullPath} from origin: ${origin}`,
