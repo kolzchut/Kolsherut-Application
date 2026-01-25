@@ -18,7 +18,7 @@ export const getRouteParams = () => {
         key = pathParams.shift();
         value = pathParams.shift();
         if (!key) continue;
-        params[key as string] = decodeURI(value || '');
+        params[key as string] = decodeURIComponent(value || '');
     }
     if (params.sq) {
         params.sq = params.sq.split('&')[0];

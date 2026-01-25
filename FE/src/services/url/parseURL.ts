@@ -1,4 +1,5 @@
 export const stringifyLocation = (location: {key: string, bounds: number[]}) => {
+    if (!location.bounds || location.bounds.some(isNaN)) return '';
     return `${location.key}|${location.bounds.join(',')}`;
 };
 
@@ -7,4 +8,3 @@ export const parseLocation = (location: string) =>{
     const bounds = boundsString.split(',').map(Number) as [number,number,number,number];
     return ({key, bounds});
 };
-

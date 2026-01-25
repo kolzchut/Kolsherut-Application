@@ -11,7 +11,9 @@ import searchRoute from "./routes/searchRoute";
 import autoCompleteRoute from "./routes/autoCompleteRoute";
 import siteMapForModalRoute from "./routes/siteMapForModalRoute";
 import sitemapRouter from "./routes/sitemapRouter";
+import ssrRoute from "./routes/ssrRoute";
 import {initEmailService} from "./services/email/emailService";
+import {closeBrowser} from "./services/ssr/ssrService";
 
 const app = express();
 const httpServer = createServer(app);
@@ -29,7 +31,8 @@ app.get('/card/:card_id', cardRoute);
 app.post('/search', searchRoute);
 app.post('/logs/:provider', logRoute);
 app.get('/siteMapForModal', siteMapForModalRoute);
-app.use('/sitemap', sitemapRouter)
+app.use('/sitemap', sitemapRouter);
+app.use('/ssr', ssrRoute);
 app.use(errorHandler);
 
 httpServer.listen(port, () => {
@@ -41,5 +44,17 @@ const start = async () => {
     initEmailService();
     await dbInit();
 };
+
+process.on('SIGTERM', async () => {
+    logger.logAlways({service: "Server", message: "SIGTERM received, closing browser..."});
+    await closeBrowser();
+    process.exit(0);
+});
+
+process.on('SIGINT', async () => {
+    logger.logAlways({service: "Server", message: "SIGINT received, closing browser..."});
+    await closeBrowser();
+    process.exit(0);
+});
 
 start();
