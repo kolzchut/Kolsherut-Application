@@ -19,7 +19,7 @@
     "prebuild": "npm run synonyms:update",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
+    "preview": "vite preview --host",
     "docker:build:local": "cross-env ENVIRONMENT=local npm run sitemap:homepage && cross-env ENVIRONMENT=local npm run sitemap:main && npm run build && node scripts/docker-tasks.cjs build local",
     "docker:build:stage": "cross-env ENVIRONMENT=stage npm run sitemap:homepage && cross-env ENVIRONMENT=stage npm run sitemap:main && npm run build && node scripts/docker-tasks.cjs build stage",
     "docker:build:prod": "cross-env ENVIRONMENT=production npm run sitemap:homepage && cross-env ENVIRONMENT=production npm run sitemap:main && npm run build && node scripts/docker-tasks.cjs build production",

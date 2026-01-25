@@ -7,7 +7,7 @@ interface IProps {
 
 export default createUseStyles({
     headerText: ({accessibilityActive}: IProps) => ({
-        fontSize: accessibilityActive ? 17 : 13,
+        fontSize: accessibilityActive ? 19 : 15,
         fontWeight: 600,
         lineHeight: 1.2,
         color: secondaryTextColorTwo,

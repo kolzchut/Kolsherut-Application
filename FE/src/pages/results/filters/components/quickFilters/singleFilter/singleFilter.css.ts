@@ -7,7 +7,7 @@ interface IProps {
 
 export default createUseStyles({
     optionDiv:{
-      height:30,
+      height:35,
         display: 'flex',
         flexDirection:'row',
         alignItems: 'center',
@@ -46,7 +46,9 @@ export default createUseStyles({
         border: 0,
     },
     checkBox: {
-        height: '100%' ,
+        height: '10px',
+        width: '10px',
+        margin: '0 4px',
         appearance: 'none',
         WebkitAppearance: 'none',
         MozAppearance: 'none',
@@ -59,7 +61,7 @@ export default createUseStyles({
         '&:checked': {
             backgroundColor: primaryTextColorTwo[500],
             borderColor: primaryTextColorTwo[500],
-            border: `4px solid ${primaryTextColorTwo}`,
+            border: `5px solid ${primaryTextColorTwo}`,
         },
     },
 });
