@@ -1,8 +1,6 @@
 import {ICard} from "../../types/cardType";
 import analytics from "./analytics";
 import {cardToItem} from "./gtagUtilities";
-import {getIsLandingPage} from "../../store/general/general.selector";
-import {store} from "../../store/store";
 
 const cardEvent = (
     card: ICard,
@@ -23,7 +21,7 @@ const cardEvent = (
             card_id: card.card_id,
             card_name: card.service_name,
             card_org: card.organization_id,
-            landing_page: getIsLandingPage(store.getState()) ? 'yes' : 'no'
+            landing_page:analytics.getIsLandingPageAsString()
         };
         analytics.logEvent({
             event: 'view_item',
@@ -43,7 +41,7 @@ const addToCartEvent = (card: ICard, action: string, action_url: string) => {
         card_name: card.service_name,
         card_org: card.organization_id,
         cta_action: action,
-        landing_page: getIsLandingPage(store.getState()) ? 'yes' : 'no',
+        landing_page: analytics.getIsLandingPageAsString,
         items: [cardToItem(card, 0)],
     };
     analytics.logEvent({

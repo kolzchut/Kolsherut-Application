@@ -6,7 +6,6 @@ export const initialState = {
     loading: false,
     showSidebar: false,
     accessibilityActive: false,
-    firstVisitedUrl: null as string | null,
     selectedFeatureId: null as string | null,
     oldURL: false
 };

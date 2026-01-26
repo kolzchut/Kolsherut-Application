@@ -1,7 +1,5 @@
 import analytics from "./analytics";
 import {IBranch} from "../../types/serviceType";
-import {store} from "../../store/store";
-import {getIsLandingPage} from "../../store/general/general.selector";
 import ILocation from "../../types/locationType";
 import israelLocation from "../../constants/israelLocation";
 import {isMobileScreen} from "../media";
@@ -21,12 +19,11 @@ interface IViewItemListEventProps {
 }
 
 export const searchEvent = ({responseCount, searchQuery, filtersCount}: ISearchEventProps) => {
-    const isFirstPage = getIsLandingPage(store.getState());
     const eventParams = {
         search_term: searchQuery,
         filter_count: filtersCount,
         filter_responses_count: responseCount,
-        landing_page: isFirstPage ? 'yes' : 'no',
+        landing_page: analytics.getIsLandingPageAsString()
     };
     analytics.logEvent({
         event: 'search',
@@ -41,12 +38,11 @@ export const viewItemListEvent = ({
                                       searchQuery,
                                       branches
                                   }: IViewItemListEventProps) => {
-    const isFirstPage = getIsLandingPage(store.getState());
     const eventParams = {
         search_term: searchQuery,
         filter_count: filtersCount,
         filter_responses_count: responsesCount,
-        landing_page: isFirstPage ? 'yes' : 'no',
+        landing_page:analytics.getIsLandingPageAsString(),
         items: (branches || []).map((branch, index) => {
             const itemCategories: { [key: string]: string } = {}
             const arrOfCategories = [...branch.responses, ...branch.situations].map((category) => category.id)
@@ -91,7 +87,7 @@ export const scrollOnceEvent = () => {
     analytics.logEvent({
         event: 'scroll-in-results',
         params: {
-            landing_page: getIsLandingPage(store.getState()) ? 'yes' : 'no'
+            landing_page: analytics.getIsLandingPageAsString()
         }
     })
 }
@@ -99,7 +95,7 @@ export const scrollOnceEvent = () => {
 export const quickFilterActivatedEvent = () => {
     analytics.logEvent({
         event: 'srm:quick_filter', params: {
-            landing_page: getIsLandingPage(store.getState()) ? 'yes' : 'no'
+            landing_page: analytics.getIsLandingPageAsString()
         }
     })
 }

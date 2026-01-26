@@ -1,4 +1,4 @@
-import analytics from "./analytics.ts";
+import analytics from "./analytics";
 
 
 const searchFromSearchAutocomplete = (query: string) => {
@@ -13,4 +13,3 @@ export default {
     searchFromSearchAutocomplete,
     enterCardFromSearchAutocomplete
 }
-
