@@ -11,7 +11,8 @@ router.use(asyncHandler(async (req: Request, res: Response) => {
     const queryString = req.url.includes('?') ? req.url.split('?')[1] : '';
     const fullPath = queryString ? `${requestPath}?${queryString}` : requestPath;
 
-    const origin =  vars.serverSetups.origin;
+    const originConf = vars.serverSetups.origin;
+    const origin = Array.isArray(originConf) ? originConf[0] : originConf;
     const fullUrl = origin.startsWith('http')
         ? `${origin}${fullPath}`
         : `https://${origin}${fullPath}`;
