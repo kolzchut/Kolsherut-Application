@@ -18,8 +18,8 @@
     "makeBlackList": "node scripts/makeBlackList.mjs"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Kolzchut Org",
+  "license": "For internal use only",
   "dependencies": {
     "@elastic/elasticsearch": "^9.0.2",
     "@types/express": "^5.0.0",
