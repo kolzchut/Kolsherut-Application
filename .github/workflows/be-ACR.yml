@@ -1,0 +1,20 @@
+name: BE ACR Pipeline
+
+on:
+  push:
+    branches: ['master', 'dev']
+    paths: ['be/**', '.github/workflows/be-ACR.yml']
+    tags: ['v*']
+
+jobs:
+  run-be-pipeline:
+    uses: ./.github/workflows/reusable-build-deploy.yml
+    secrets: inherit
+    with:
+      service_path: 'be'
+      image_name: 'Kolsherut-BE'
+      container_name: 'kolsherut-backend-container'
+
+      deployment_dev: 'kolsherut-be'
+      deployment_stage: 'kolsherut-be'
+      deployment_prod: 'kolsherut-be'

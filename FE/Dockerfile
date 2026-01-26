@@ -1,6 +1,6 @@
 FROM nginx
 
-# Accept environment selection as a build argument (production|stage|local)
+# Accept environment selection as a build argument (production|stage|local|development)
 ARG environment=local
 ENV environment=${environment}
 

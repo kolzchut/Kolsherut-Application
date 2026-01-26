@@ -5,7 +5,7 @@ import {getFilters} from "../../../../../store/filter/filter.selector";
 import ResponseQuickFilter from "./responseQuickFilter";
 import SituationQuickFilter from "./situationQuickFilter";
 import {getQuickFilterOptions} from "../../../../../store/shared/quickFilter.selector";
-import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
+import IDynamicThemeApp from "../../../../../types/dynamicThemeApp";
 import {useTheme} from "react-jss";
 
 const QuickFilters = () => {
