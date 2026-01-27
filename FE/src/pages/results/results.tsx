@@ -90,7 +90,7 @@ const Results = () => {
 
     return <>
         <MetaTags {...metaTagsData}/>
-        <div>
+        <main>
             <Header key={'resultHeader'} refreshPage={refreshPage}/>
             <div className={classes.mainDiv}>
                 {isMobile ? <FiltersForMobile/> : <FiltersForDesktop/>}
@@ -105,7 +105,7 @@ const Results = () => {
                     <LazyMap/>
                 </div>
             </div>
-        </div>
+        </main>
     </>
 }
 export default Results;
