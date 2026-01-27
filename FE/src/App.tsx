@@ -6,8 +6,9 @@ import ControlledModal from "./components/controlledModal/controlledModal";
 import Sidebar from "./components/sidebar/sidebar";
 import {isMobileScreen} from "./services/media";
 import {ThemeProvider} from 'react-jss';
-import {setModal} from "./store/general/generalSlice";
+import {setFirstVisitedUrl, setModal} from "./store/general/generalSlice";
 import {useEffect} from "react";
+import {useOnce} from "./hooks/useOnce";
 
 function App() {
     useRouteUpdater();
@@ -28,6 +29,11 @@ function App() {
         }
     }, [page, dispatch]);
 
+
+    const captureFirstUrl = useOnce(() => {
+        dispatch(setFirstVisitedUrl(window.location.href));
+    });
+    captureFirstUrl();
 
     return <>
         <ThemeProvider theme={dynamicTheme}>

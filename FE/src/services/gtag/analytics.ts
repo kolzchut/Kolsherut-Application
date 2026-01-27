@@ -1,9 +1,8 @@
 import ReactGA from "react-ga4";
 import { LogEventArgs } from "../../types/gTagTypes";
 import logger from "../logger/logger";
-
-// Arbitrary name for our storage flag
-const SESSION_FLAG_KEY = 'analytics_session_has_started';
+import {store} from "../../store/store";
+import {getIsLandingPage} from "../../store/general/general.selector";
 
 const init = () => {
     const analyticsId = window.environment.analyticsId;
@@ -30,30 +29,13 @@ const interactionEvent = (what: string, where: string, content?: string) => {
     logEvent({ event: 'srm:interaction', params });
 };
 
-const getIsLandingPage = (): boolean => {
-    try {
-        if (typeof window === 'undefined') return false;
-
-        const hasStarted = sessionStorage.getItem(SESSION_FLAG_KEY);
-
-        if (!hasStarted) {
-            sessionStorage.setItem(SESSION_FLAG_KEY, 'true');
-            return true;
-        }
-
-        return false;
-    } catch (error) {
-        logger.log({message:"Error checking landing page status", payload:error});
-        return false;
-    }
-};
 
 const getIsLandingPageAsString = (): string => {
-    return getIsLandingPage() ? 'yes' : 'no';
+    return getIsLandingPage(store.getState()) ? 'yes' : 'no';
 }
 
 const onPageView = (page: string) => {
-    const isLanding = getIsLandingPage();
+    const isLanding = getIsLandingPageAsString();
 
     ReactGA.send({
         hitType: "pageview",
