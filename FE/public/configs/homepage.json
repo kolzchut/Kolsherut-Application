@@ -15,25 +15,12 @@
         "response_id": "human_services:legal:advocacy_legal_aid:understand_government_programs",
         "title": "הכנסה נמוכה וקשיים כלכליים ",
         "query": "מיצוי_זכויות_עבור_בעלי_הכנסה_נמוכה"
-      }
-    ]
-  },
-  {
-    "group": "סיוע משפטי",
-    "response_id": "human_services:legal:advocacy_legal_aid",
-    "group_link": "לכל שירותי הסיוע המשפטי",
-    "labels": [
-      {
-        "situation_id": "human_situations:survivors:families_of_missing_persons",
-        "response_id": "human_services:legal:advocacy_legal_aid",
-        "query": "סיוע_משפטי_עבור_משפחות_של_נעדרים",
-        "title": "משפחות של נעדרים"
       },
-      {
-        "situation_id": "human_situations:survivors:victims_of_terror",
+          {
+        "situation_id": null,
         "response_id": "human_services:legal:advocacy_legal_aid",
-        "title": "נפגעי פעולות איבה",
-        "query": "סיוע_משפטי_עבור_נפגעי_פעולות_איבה"
+        "title": "סיוע משפטי ",
+        "query": "סיוע_משפטי"
       }
     ]
   },
