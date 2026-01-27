@@ -46,6 +46,7 @@ export default createUseStyles({
         border: 0,
     },
     checkBox: {
+        pointerEvents: 'none',
         height: '10px',
         width: '10px',
         margin: '0 4px',
