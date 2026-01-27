@@ -43,15 +43,9 @@ jobs:
         working-directory: FE
         run: npm ci
 
-      - name: Generate Sitemaps (production)
-        working-directory: FE
-        run: |
-          npx cross-env ENVIRONMENT=production npm run sitemap:homepage
-          npx cross-env ENVIRONMENT=production npm run sitemap:main
-
       - name: Build FE (Vite prod)
         working-directory: FE
-        run: npm run build
+        run: npm run build:production
 
       - name: Docker Build
         working-directory: FE
