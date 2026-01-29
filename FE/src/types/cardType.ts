@@ -85,6 +85,7 @@ export interface ICard {
     service_description: string | null;
     branch_name: string | null;
     service_name: string| null;
+    service_id: string | null;
 
     // Context / Metadata
     situation_ids: string[];

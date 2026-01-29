@@ -1,10 +1,12 @@
 [
   {
     "organizationName": "משרד הרווחה",
+    "servicePrefix": "meser",
     "organizationLogo": "/icons/logo_misrad_revaha.png"
   },
   {
     "organizationName": "משרד העבודה",
+    "servicePrefix": "mol",
     "organizationLogo": "/icons/logo_misrad_havoda.png"
   }
 ]

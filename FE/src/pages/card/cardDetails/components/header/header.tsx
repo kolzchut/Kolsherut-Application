@@ -1,24 +1,25 @@
 import useStyle from "./header.css";
 import backIcon from "../../../../../assets/icon-arrow-right.svg";
 import {useTheme} from "react-jss";
-import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
-import {AddressParts, OrganizationNameParts} from "../../../../../types/cardType.ts";
-import cardHeaderIcon from "../../../../../assets/cardHeaderIcon.json";
+import IDynamicThemeApp from "../../../../../types/dynamicThemeApp";
+import {AddressParts, OrganizationNameParts} from "../../../../../types/cardType";
 import {createKeyboardHandler} from "../../../../../services/keyboardHandler";
-import {backToResults} from "../../../../../store/shared/sharedSlice.ts";
+import {backToResults} from "../../../../../store/shared/sharedSlice";
+import getHeaderIcon from "./getHeaderIcon";
 
-const Header = ({branchOperatingUnit, addressParts, isNational, organizationName, organizationNameParts}: {
+const Header = ({branchOperatingUnit, addressParts, isNational, organizationName,serviceId, organizationNameParts}: {
     branchOperatingUnit: string,
     addressParts: AddressParts | string,
     organizationName: string,
     organizationNameParts: OrganizationNameParts,
+    serviceId: string,
     isNational: boolean
 }) => {
     const serviceGivenNationWide = window.strings.cardDetails.serviceGivenNationWide
     const onBackButtonClick = () => backToResults();
     const handleKeyDown = createKeyboardHandler(onBackButtonClick);
     const theme = useTheme<IDynamicThemeApp>();
-    const iconSource = cardHeaderIcon.find(icon => icon.organizationName === organizationName);
+    const iconSource = getHeaderIcon({serviceId, organizationName});
     const isStringAddressParts = typeof addressParts === 'string';
 
     const classes = useStyle({accessibilityActive: theme.accessibilityActive});

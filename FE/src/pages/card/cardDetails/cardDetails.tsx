@@ -54,6 +54,7 @@ const CardDetails = ({card}: { card: ICard }) => {
                 isNational={card.national_service}
                 organizationName={card.organization_name}
                 organizationNameParts={card.organization_name_parts}
+                serviceId={card.service_id || ""}
                 addressParts={card.address_parts || card.branch_address}/>
         <div className={classes.content}>
             <h1 className={classes.serviceNameText}>{card.service_name}</h1>

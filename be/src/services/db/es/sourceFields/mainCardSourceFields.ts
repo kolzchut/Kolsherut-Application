@@ -35,6 +35,6 @@ export const mainCardSourceFields = [
     "situation_ids",
     "responses",
     "point_id",
-    "address_parts"
+    "address_parts",
+    "service_id"
 ];
-
