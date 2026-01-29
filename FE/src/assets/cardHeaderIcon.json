@@ -2,5 +2,9 @@
   {
     "organizationName": "משרד הרווחה",
     "organizationLogo": "/icons/logo_misrad_revaha.png"
+  },
+  {
+    "organizationName": "משרד העבודה",
+    "organizationLogo": "/icons/logo_misrad_havoda.png"
   }
 ]
