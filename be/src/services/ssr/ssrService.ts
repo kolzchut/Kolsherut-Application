@@ -33,6 +33,7 @@ const getBrowser = async (): Promise<Browser> => {
 const renderPage = async (url: string): Promise<string> => {
     const browser = await getBrowser();
     const page = await browser.newPage();
+    await page.setRequestInterception(true);
 
     page.on('request', (request) => {
         const blockAnalytics = blockedAnalyticsDomains.some(domain => request.url().includes(domain));
