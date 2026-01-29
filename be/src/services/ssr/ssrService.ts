@@ -1,5 +1,6 @@
-import puppeteer, { Browser } from 'puppeteer';
+import puppeteer, {Browser} from 'puppeteer';
 import logger from '../logger/logger';
+import blockedAnalyticsDomains from '../../assets/blockAnalytics.json';
 
 let browserInstance: Browser | null = null;
 
@@ -33,17 +34,23 @@ const renderPage = async (url: string): Promise<string> => {
     const browser = await getBrowser();
     const page = await browser.newPage();
 
+    page.on('request', (request) => {
+        const blockAnalytics = blockedAnalyticsDomains.some(domain => request.url().includes(domain));
+        if(blockAnalytics) return request.abort();
+        request.continue();
+    })
+
     try {
         await page.setUserAgent(
             'KolSherutBot/1.0'
         );
 
         await page.goto(url, {
-            waitUntil: 'networkidle2',
-            timeout: 30000,
+            waitUntil: 'networkidle0',
+            timeout: 40000,
         });
 
-        await delay(1000);
+        // await delay(2000);
 
         const content = await page.content();
 
@@ -61,7 +68,8 @@ const renderPage = async (url: string): Promise<string> => {
         });
         throw error;
     } finally {
-        await page.close().catch(() => {});
+        await page.close().catch(() => {
+        });
     }
 };
 
@@ -76,4 +84,4 @@ const closeBrowser = async (): Promise<void> => {
     }
 };
 
-export { renderPage, closeBrowser };
+export {renderPage, closeBrowser};
