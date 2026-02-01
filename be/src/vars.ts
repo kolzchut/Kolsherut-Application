@@ -1,5 +1,20 @@
 import path from "path";
 
+const indices :any = {
+    production: {
+        card: "srm__cards_20240417210351058073_bb6360fd",
+        autocomplete: "srm__autocomplete_20230214172220805473_23f43e2a",
+    },
+    stage: {
+        card: "srm__cards_20220926183305498944_a9274d22",
+        autocomplete: "srm__autocomplete_20240505135631716607_372901c0",
+    },
+    development:{
+        card:"srm__cards_20260129133731521567_4f7801a8",
+        autocomplete:"srm__autocomplete_20260129134047850681_2e67cc4e",
+    }
+}
+
 export default {
     serverSetups: {
         origin: process.env.ORIGIN && process.env.ORIGIN.includes(',') ? process.env.ORIGIN.split(',').map(o => o.trim()) : (process.env.ORIGIN || '*'),
@@ -15,15 +30,7 @@ export default {
                 }
             },
             reconnectTimeout: parseInt(process.env.ELASTIC_RECONNECT_TIMEOUT || '5') * 1000,
-            indices: process.env.ENV === 'prod' ? {
-                card: "srm__cards_20240417210351058073_bb6360fd",
-                autocomplete: "srm__autocomplete_20230214172220805473_23f43e2a",
-                presets: "srm__presets_20211201201949753432_1915f3c0"
-            } : {
-                card: "srm__cards_20220926183305498944_a9274d22",
-                autocomplete: "srm__autocomplete_20240505135631716607_372901c0",
-                presets: "srm__presets_20220322175100923906_0199cd26"
-            },
+            indices: indices[process.env.ENV as keyof typeof indices] || indices.dev,
             autocompleteMinScore: parseFloat(process.env.AUTOCOMPLETE_MIN_SCORE || '5000')
         }
     },
