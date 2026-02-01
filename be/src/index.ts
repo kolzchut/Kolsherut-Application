@@ -14,6 +14,7 @@ import sitemapRouter from "./routes/sitemapRouter";
 import ssrRoute from "./routes/ssrRoute";
 import {initEmailService} from "./services/email/emailService";
 import {closeBrowser} from "./services/ssr/ssrService";
+import {sanitizeCardRoute} from "./utilities/sanitizeRoutes";
 
 const app = express();
 const httpServer = createServer(app);
@@ -27,7 +28,7 @@ app.get('/test', (req: Request, res: Response) => {
     res.status(200).json({message:'Server is running 🍍☺', success: true});
 });
 app.get('/autocomplete/:search', autoCompleteRoute);
-app.get('/card/:card_id', cardRoute);
+app.get('/card/:card_id', [sanitizeCardRoute, cardRoute]);
 app.post('/search', searchRoute);
 app.post('/logs/:provider', logRoute);
 app.get('/siteMapForModal', siteMapForModalRoute);

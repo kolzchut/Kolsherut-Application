@@ -1,0 +1,17 @@
+[
+  {
+    "field": "organization_phone_numbers",
+    "value": "118",
+    "replacementValue": "&"
+  },
+  {
+    "field": "service_phone_numbers",
+    "value": "118",
+    "replacementValue": "&"
+  },
+  {
+    "field": "branch_phone_numbers",
+    "value": "118",
+    "replacementValue": "&"
+  }
+]
