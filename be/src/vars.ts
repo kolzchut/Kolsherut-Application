@@ -1,7 +1,7 @@
 import path from "path";
 
 const indices :any = {
-    production: {
+    prod: {
         card: "srm__cards_20240417210351058073_bb6360fd",
         autocomplete: "srm__autocomplete_20230214172220805473_23f43e2a",
     },
