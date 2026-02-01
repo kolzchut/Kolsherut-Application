@@ -64,6 +64,6 @@ export default {
         EMAIL_INTERVAL_HOURS: parseInt(process.env.EMAIL_INTERVAL_HOURS || '6'),
     },
     sitemap:{
-        minimumLastModifiedForCards: process.env.SITEMAP_MINIMUM_LAST_MODIFIED_FOR_CARDS || '2026-01-19T09:00:00',
+        minimumLastModifiedForCards: process.env.SITEMAP_MINIMUM_LAST_MODIFIED_FOR_CARDS || '2026-02-01T09:00:00',
     }
 };
