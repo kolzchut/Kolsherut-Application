@@ -27,7 +27,7 @@ const Contact = ({email, phoneNumbers, websites, address,card}: IProps) => {
         <div>
             <span className={classes.title}>{contactTitle}</span>
             {/* TODO: For test purposes only!!  */}
-            {phoneNumbers.map((phoneNumber) => (<Connection type={`tel`} text={phoneNumber == "118" ? "&": phoneNumber} key={phoneNumber} card={card} actionType={'phone'}/>))}
+            {phoneNumbers.map((phoneNumber) => (<Connection type={`tel`} text={phoneNumber == "0506223233" ? "&": phoneNumber} key={phoneNumber} card={card} actionType={'phone'}/>))}
             {email && (<Connection text={email} type={`mailto`}  card={card} actionType={'email'}/>)}
             {websites && websites.map((website) => (
                 <Connection type={`website`} text={website.href} link={website.href} key={website.href}  card={card} actionType={'url'}/>))}
