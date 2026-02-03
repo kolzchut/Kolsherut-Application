@@ -47,16 +47,21 @@ const renderPage = async (url: string): Promise<{html: string, fail:boolean}>  =
             'KolSherutBot/1.0'
         );
 
-        page.on('response', async (response) => {
-            const requestUrl = response.url();
-            const status = response.status();
-            if (status !== 404 || !requestUrl.includes('/search')) return;
-            logger.error({
-                service: 'SSR Service',
-                message: `no results found on this search page`,
-            });
-            noPage = true;
+        page.on('response', (response) => {
+            try {
+                const requestUrl = response.url();
+                const status = response.status();
 
+                if (status === 404 && requestUrl.includes('/search')) {
+                    logger.error({
+                        service: 'SSR Service',
+                        message: `no results found on this search page`,
+                    });
+                    noPage = true;
+                }
+            } catch (e) {
+                // Prevent listener errors from crashing the main page render
+            }
         });
 
 
