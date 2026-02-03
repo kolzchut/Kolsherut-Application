@@ -38,5 +38,4 @@ const ResponseSection = () => {
         </div>
     );
 };
-
 export default ResponseSection;

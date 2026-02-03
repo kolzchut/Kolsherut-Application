@@ -31,4 +31,5 @@ router.use(asyncHandler(async (req: Request, res: Response) => {
     res.status(200).send(page.html);
 }));
 
+
 export default router;
