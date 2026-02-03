@@ -22,10 +22,10 @@ router.use(asyncHandler(async (req: Request, res: Response) => {
         message: `Rendering path: ${fullPath} from origin: ${origin}`,
         payload: { fullUrl },
     });
-    const html = await renderPage(fullUrl);
-
+    const page = await renderPage(fullUrl);
+    if(page.fail) res.status(404).end();
     res.setHeader('Content-Type', 'text/html');
-    res.status(200).send(html);
+    res.status(200).send(page.html);
 }));
 
 export default router;

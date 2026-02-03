@@ -7,7 +7,7 @@ import {useEffect, useState} from "react";
 import openIcon from "../../../../../assets/icon-chevron-down-blue.svg";
 import ArrowDirection from "./arrowDirectionEnum";
 import {useTheme} from "react-jss";
-import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
+import IDynamicThemeApp from "../../../../../types/dynamicThemeApp";
 
 interface IProps {
     organizationNameParts: OrganizationNameParts;
@@ -32,7 +32,7 @@ const ProvidedBy = ({
     const [arrowDirection, setArrowDirection] = useState<ArrowDirection>(ArrowDirection.Close);
 
     useEffect(() => {
-    if (noEmailAndNoPhone) setArrowDirection(ArrowDirection.NotDisplayed);
+        if (noEmailAndNoPhone) setArrowDirection(ArrowDirection.NotDisplayed);
     }, []);
 
     const handleToggle = () => setArrowDirection((prevState) => prevState === ArrowDirection.Open ? ArrowDirection.Close : ArrowDirection.Open)

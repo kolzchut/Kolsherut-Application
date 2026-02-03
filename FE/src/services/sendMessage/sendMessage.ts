@@ -1,8 +1,8 @@
 import axios from 'axios';
 import logger from "../logger/logger";
 import SendMessageType from "../../types/sendMessageType";
-import {store} from "../../store/store";
-import {setPage} from "../../store/general/generalSlice";
+// import {store} from "../../store/store";
+// import {setPage} from "../../store/general/generalSlice";
 
 
 const getBaseURL = (): string => {
@@ -22,7 +22,7 @@ const sendMessage =
         return response.data;
     } catch (error) {
         logger.error({message: `Error in request to - ${requestURL} `, payload: error});
-        store.dispatch(setPage("maintenance"));
+        // store.dispatch(setPage("maintenance"));
         return {error};
     }
 };
