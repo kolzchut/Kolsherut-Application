@@ -23,7 +23,7 @@ router.use(asyncHandler(async (req: Request, res: Response) => {
         payload: { fullUrl },
     });
     const page = await renderPage(fullUrl);
-    if(page.fail) res.status(404).end();
+    if(page.fail) return res.status(404).end();
     res.setHeader('Content-Type', 'text/html');
     res.status(200).send(page.html);
 }));
