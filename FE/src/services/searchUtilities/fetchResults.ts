@@ -1,5 +1,5 @@
-import sendMessage from "../sendMessage/sendMessage.ts";
-import resultsAnalytics from "../gtag/resultsEvents.ts";
+import sendMessage from "../sendMessage/sendMessage";
+import resultsAnalytics from "../gtag/resultsEvents";
 
 
 const getResultsFromServer = async (
@@ -9,7 +9,7 @@ const getResultsFromServer = async (
     situationId: string,
     by: string,
 ) => {
-    if (!searchQuery) return [];
+if (!searchQuery) return [];
     const results = await sendMessage({
         method: 'post',
         requestURL: window.config.routes.search,
@@ -21,7 +21,7 @@ const getResultsFromServer = async (
             by,
         }
     });
-    if (!results.success) return [];
+    if (!results?.success) return [];
     return results.data;
 }
 

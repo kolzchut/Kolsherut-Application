@@ -7,7 +7,7 @@ import useStyle from "./connection.css";
 import {ICard} from "../../types/cardType";
 import cardAnalytics from "../../services/gtag/cardEvents";
 import {useTheme} from "react-jss";
-import IDynamicThemeApp from "../../types/dynamicThemeApp.ts";
+import IDynamicThemeApp from "../../types/dynamicThemeApp";
 
 type ConnectionType = 'tel' | 'mailto' | 'address' | 'website';
 type ActionType = 'phone' | 'email' | 'url' | 'nav';

@@ -3,7 +3,7 @@ import telIcon from "../../../../../assets/icon-call-white.svg"
 import mailIcon from "../../../../../assets/icon-mail-blue.svg"
 import websiteIcon from "../../../../../assets/icon-external-link-blue.svg";
 import { useTheme } from 'react-jss';
-import IDynamicThemeApp from "../../../../../types/dynamicThemeApp.ts";
+import IDynamicThemeApp from "../../../../../types/dynamicThemeApp";
 
 const QuickAction = ({phoneNumber, email, websiteURL}:{phoneNumber?: string, email?: string, websiteURL?:string}) =>{
     const theme = useTheme<IDynamicThemeApp>();
