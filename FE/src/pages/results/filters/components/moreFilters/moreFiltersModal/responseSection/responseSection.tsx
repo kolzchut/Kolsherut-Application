@@ -9,7 +9,7 @@ import {
     removeMultipleResponseFilters
 } from "../../../../../../../store/filter/filterSlice";
 import {useTheme} from "react-jss";
-import IDynamicThemeApp from "../../../../../../../types/dynamicThemeApp.ts";
+import IDynamicThemeApp from "../../../../../../../types/dynamicThemeApp";
 
 const ResponseSection = () => {
     const theme = useTheme<IDynamicThemeApp>();

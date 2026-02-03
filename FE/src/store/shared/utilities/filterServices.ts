@@ -2,7 +2,7 @@ import {IBranch, IOrganization, IService} from "../../../types/serviceType";
 import ILocation from "../../../types/locationType";
 import {checkTags} from "./checkTags";
 import israelLocation from "../../../constants/israelLocation";
-import {checkIfCoordinatesInBounds} from "../../../services/geoLogic.ts";
+import {checkIfCoordinatesInBounds} from "../../../services/geoLogic";
 
 interface IFilters {
     responses: string[],
