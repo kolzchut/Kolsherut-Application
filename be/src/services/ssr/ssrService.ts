@@ -62,7 +62,7 @@ const renderPage = async (url: string): Promise<{html: string, fail:boolean}>  =
 
         await page.goto(url, {
             waitUntil: 'networkidle0',
-            timeout: 40000,
+            timeout: 30000,
         });
 
         // await delay(2000);
