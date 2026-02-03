@@ -30,7 +30,7 @@ const getBrowser = async (): Promise<Browser> => {
     return browserInstance;
 };
 
-const renderPage = async (url: string): Promise<{html: string, fail:boolean}>  => {
+const renderPage = async (url: string): Promise<{ html: string; fail: boolean }> => {
     const browser = await getBrowser();
     const page = await browser.newPage();
     let noPage = false;
@@ -38,29 +38,26 @@ const renderPage = async (url: string): Promise<{html: string, fail:boolean}>  =
 
     page.on('request', (request) => {
         const blockAnalytics = blockedAnalyticsDomains.some(domain => request.url().includes(domain));
-        if(blockAnalytics) return request.abort();
+        if (blockAnalytics) {
+            return request.abort();
+        }
         request.continue();
-    })
+    });
 
     try {
-        await page.setUserAgent(
-            'KolSherutBot/1.0'
-        );
+        await page.setUserAgent('KolSherutBot/1.0');
 
-        page.on('response', (response) => {
+        page.on('response', async (response) => {
             try {
                 const requestUrl = response.url();
                 const status = response.status();
-
-                if (status === 404 && requestUrl.includes('/search')) {
-                    logger.error({
-                        service: 'SSR Service',
-                        message: `no results found on this search page`,
-                    });
-                    noPage = true;
-                }
+                if (status !== 404 || !requestUrl.includes('/search')) return;
+                logger.error({
+                    service: 'SSR Service',
+                    message: `no results found on this search page`,
+                });
+                noPage = true;
             } catch (e) {
-                // Prevent listener errors from crashing the main page render
             }
         });
 
@@ -78,7 +75,8 @@ const renderPage = async (url: string): Promise<{html: string, fail:boolean}>  =
             service: 'SSR Service',
             message: `Successfully rendered page: ${url}`,
         });
-        return {html:content, fail: noPage};
+
+        return { html: content, fail: noPage };
     } catch (error) {
         logger.error({
             service: 'SSR Service',
@@ -87,8 +85,7 @@ const renderPage = async (url: string): Promise<{html: string, fail:boolean}>  =
         });
         throw error;
     } finally {
-        await page.close().catch(() => {
-        });
+        await page.close().catch(() => {});
     }
 };
 
@@ -103,4 +100,4 @@ const closeBrowser = async (): Promise<void> => {
     }
 };
 
-export {renderPage, closeBrowser};
+export { renderPage, closeBrowser };
