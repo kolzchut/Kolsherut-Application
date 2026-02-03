@@ -30,9 +30,10 @@ const getBrowser = async (): Promise<Browser> => {
     return browserInstance;
 };
 
-const renderPage = async (url: string): Promise<string> => {
+const renderPage = async (url: string): Promise<{html: string, fail:boolean}>  => {
     const browser = await getBrowser();
     const page = await browser.newPage();
+    let noPage = false;
     await page.setRequestInterception(true);
 
     page.on('request', (request) => {
@@ -45,6 +46,19 @@ const renderPage = async (url: string): Promise<string> => {
         await page.setUserAgent(
             'KolSherutBot/1.0'
         );
+
+        page.on('response', async (response) => {
+            const requestUrl = response.url();
+            const status = response.status();
+            if (status !== 404 || !requestUrl.includes('/search')) return;
+            logger.error({
+                service: 'SSR Service',
+                message: `no results found on this search page`,
+            });
+            noPage = true;
+
+        });
+
 
         await page.goto(url, {
             waitUntil: 'networkidle0',
@@ -59,8 +73,7 @@ const renderPage = async (url: string): Promise<string> => {
             service: 'SSR Service',
             message: `Successfully rendered page: ${url}`,
         });
-
-        return content;
+        return {html:content, fail: noPage};
     } catch (error) {
         logger.error({
             service: 'SSR Service',
