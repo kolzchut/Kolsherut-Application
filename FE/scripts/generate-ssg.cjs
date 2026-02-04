@@ -1,4 +1,4 @@
-const {Cluster} = require('puppeteer-cluster'); // NEW: Import Cluster
+const { Cluster } = require('puppeteer-cluster');
 const fs = require('fs-extra');
 const path = require('path');
 const handler = require('serve-handler');
@@ -26,7 +26,6 @@ const LOCAL_BASE_URL = `http://localhost:${PORT}`;
 const LOCAL_SITEMAP_INDEX = `${LOCAL_BASE_URL}/sitemap.xml`;
 
 // CONCURRENCY SETTINGS
-// 5 is safe for GitHub Actions (2 cores). Higher might crash the runner.
 const MAX_CONCURRENCY = 5;
 
 console.log(`🎯 Target Domain: ${TARGET_DOMAIN}`);
@@ -51,7 +50,7 @@ function extractTags(xml, tagName) {
 
 async function fetchXml(url) {
     try {
-        const {data} = await axios.get(url);
+        const { data } = await axios.get(url);
         if (typeof data === 'string' && (data.includes('<?xml') || data.includes('<urlset') || data.includes('<sitemapindex'))) {
             return data;
         }
@@ -63,7 +62,7 @@ async function fetchXml(url) {
 
 
 // ==========================================
-// 3. SITEMAP DISCOVERY (Unchanged)
+// 3. SITEMAP DISCOVERY (With Strict Domain Filter)
 // ==========================================
 
 async function getRoutesToCrawl() {
@@ -85,7 +84,7 @@ async function getRoutesToCrawl() {
         const filename = path.basename(originalUrl);
         let urls = [];
 
-        // A. Try Local
+        // A. Try Local Fetch
         const localUrl = originalUrl.replace(TARGET_DOMAIN, LOCAL_BASE_URL);
         const localData = await fetchXml(localUrl);
 
@@ -93,7 +92,7 @@ async function getRoutesToCrawl() {
             urls = extractTags(localData, 'loc');
         }
 
-        // B. Fallback Remote
+        // B. Fallback to Remote Fetch (if local failed/empty)
         if (urls.length > 0) {
             console.log(`   ✅ Loaded locally: ${filename} (${urls.length} URLs)`);
         } else {
@@ -107,19 +106,26 @@ async function getRoutesToCrawl() {
             }
         }
 
-        // C. Add to Set (Domain Agnostic)
+        // C. Process URLs with STRICT Domain Filtering
         urls.forEach(fullUrl => {
             try {
-                const urlObj = new URL(fullUrl);
-                const pathName = urlObj.pathname;
-                if (pathName && pathName !== '/') routes.add(pathName);
-            } catch (e) { /* skip */
-            }
+                // STRICT FILTER: Only process URLs that match the Target Domain
+                if (fullUrl.includes(TARGET_DOMAIN)) {
+                    // Extract relative path
+                    const relative = fullUrl.replace(TARGET_DOMAIN, '');
+                    // Normalize to ensure leading slash
+                    const pathName = relative.startsWith('/') ? relative : `/${relative}`;
+
+                    if (pathName && pathName !== '/') {
+                        routes.add(pathName);
+                    }
+                }
+            } catch (e) { /* skip invalid URLs */ }
         });
     }
 
     const finalRoutes = Array.from(routes);
-    console.log(`   ✅ Total unique pages found: ${finalRoutes.length}`);
+    console.log(`   ✅ Total unique pages found (matching ${TARGET_DOMAIN}): ${finalRoutes.length}`);
     return finalRoutes;
 }
 
@@ -133,7 +139,7 @@ function startLocalServer() {
         return handler(req, res, {
             public: DIST_DIR,
             rewrites: [
-                {source: '**', destination: '/index.html'}
+                { source: '**', destination: '/index.html' }
             ]
         });
     });
@@ -168,17 +174,17 @@ function startLocalServer() {
 
         // 1. Launch Cluster
         cluster = await Cluster.launch({
-            concurrency: Cluster.CONCURRENCY_CONTEXT, // Uses Incognito tabs (fast & isolated)
+            concurrency: Cluster.CONCURRENCY_CONTEXT,
             maxConcurrency: MAX_CONCURRENCY,
             puppeteerOptions: {
                 headless: "new",
                 args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
             },
-            monitor: false // We will use our own simple logging
+            monitor: false
         });
 
         // 2. Define the Crawl Task
-        await cluster.task(async ({page, data: route}) => {
+        await cluster.task(async ({ page, data: route }) => {
             const url = `${LOCAL_BASE_URL}${route}`;
             const safeRoute = decodeURIComponent(route);
             const filePath = route === '/'
@@ -186,10 +192,9 @@ function startLocalServer() {
                 : path.join(DIST_DIR, safeRoute, 'index.html');
 
             try {
-                // Optimize page load
+                // Optimize: block heavy assets
                 await page.setRequestInterception(true);
                 page.on('request', (req) => {
-                    // Abort images/fonts/css to speed up generation - we only need HTML structure
                     if (['image', 'stylesheet', 'font'].includes(req.resourceType())) {
                         req.abort();
                     } else {
@@ -197,8 +202,13 @@ function startLocalServer() {
                     }
                 });
 
-                await page.goto(url, {waitUntil: 'networkidle0', timeout: 60000});
-                await page.waitForSelector('#root', {timeout: 30000});
+                await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
+
+                // CRITICAL FIX: Wait for actual content, not just the empty #root div
+                await page.waitForFunction(
+                    'document.getElementById("root") && document.getElementById("root").innerHTML.trim().length > 0',
+                    { timeout: 30000 }
+                );
 
                 const html = await page.content();
                 await fs.ensureDir(path.dirname(filePath));
@@ -206,7 +216,6 @@ function startLocalServer() {
 
             } catch (err) {
                 console.error(`   ❌ Failed: ${route} (${err.message})`);
-                // Optional: throw err if you want to retry
             }
         });
 
@@ -214,24 +223,16 @@ function startLocalServer() {
         let completed = 0;
         const total = routes.length;
 
-        // Progress logger
         const logProgress = setInterval(() => {
-            console.log(`   ⏳ Progress: ${completed}/${total} (${Math.round(completed / total * 100)}%)`);
-        }, 5000); // Log every 5 seconds
-
-        // Add Event listener for task completion to increment counter
-        cluster.on('taskerror', (err, data) => {
-            console.error(`   Error crawling ${data}: ${err.message}`);
-        });
+            console.log(`   ⏳ Progress: ${completed}/${total} (${Math.round(completed/total*100)}%)`);
+        }, 5000);
 
         routes.forEach(route => {
             cluster.queue(route, async () => {
-                // Task is done (success or fail)
                 completed++;
             });
         });
 
-        // 4. Wait for completion
         await cluster.idle();
         await cluster.close();
         clearInterval(logProgress);
