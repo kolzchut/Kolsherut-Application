@@ -23,9 +23,9 @@ const SITEMAP_URL = `${TARGET_DOMAIN}/sitemap.xml`;
 const DIST_DIR = path.join(__dirname, '../dist');
 
 // USER AGENT: This triggers your Nginx @bot_ssr location
-const BOT_USER_AGENT = 'KolsherutSSG';
+const BOT_USER_AGENT = 'KolsherutTestBot';
 
-
+// const LIMIT = 50; // Uncomment to test with only 50 pages
 
 console.log(`🎯 Target Domain: ${TARGET_DOMAIN}`);
 console.log(`🤖 User Agent:   ${BOT_USER_AGENT}`);
@@ -107,23 +107,27 @@ async function getRoutesToCrawl() {
         let routes = await getRoutesToCrawl();
         if (routes.length === 0) process.exit(0);
 
-        console.log(`\n🕷️  --- Step 2: Starting Remote Crawl ---`);
-        console.log("⚠️  Look at the Chrome window to ensure it sees the SSR version!");
+        // 2. Apply Limit (Optional)
+        if (typeof LIMIT !== 'undefined') {
+            console.log(`⚠️  TEST MODE: Limiting to first ${LIMIT} pages.`);
+            routes = routes.slice(0, LIMIT);
+        }
 
-        // 3. Launch Browser
+        console.log(`\n🕷️  --- Step 2: Starting Remote Crawl ---`);
+
+        // 3. Launch Browser (HEADLESS for CI/CD)
         browser = await puppeteer.launch({
-            headless: false, // Visible for debugging
+            headless: "new", // <--- CRITICAL FIX FOR LINUX/CI
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
                 '--disable-web-security',
-                '--window-size=1280,800',
-                `--user-agent=${BOT_USER_AGENT}` // <--- THE MAGIC KEY
+                '--disable-dev-shm-usage', // <--- PREVENTS CRASHES IN DOCKER
+                `--user-agent=${BOT_USER_AGENT}` // <--- TRIGGERS NGINX SSR
             ]
         });
 
         const page = await browser.newPage();
-        await page.setViewport({ width: 1280, height: 800 });
 
         // Log Console errors (Remote)
         page.on('console', msg => {
@@ -144,6 +148,7 @@ async function getRoutesToCrawl() {
 
             try {
                 // Navigate to REMOTE url
+                // Note: We use 'domcontentloaded' because SSR should be fast
                 const response = await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
                 const status = response.status();
 
@@ -151,15 +156,14 @@ async function getRoutesToCrawl() {
                     throw new Error(`Remote server returned ${status}`);
                 }
 
-                // Check if we got SSR content
-                // (SSR usually puts content in #root immediately, CSR waits)
+                // Check for content
                 try {
                     await page.waitForFunction(
                         'document.getElementById("root") && document.getElementById("root").innerHTML.trim().length > 0',
-                        { timeout: 5000 } // Short timeout because SSR should be fast
+                        { timeout: 5000 }
                     );
                 } catch(e) {
-                    console.warn("   ⚠️  Content appeared slow (or Client Side Rendering fallback triggered)");
+                    console.warn("   ⚠️  Content appeared slow (or fallback trigger)");
                 }
 
                 const html = await page.content();
@@ -179,8 +183,12 @@ async function getRoutesToCrawl() {
 
         console.log(`\n✨ Done! Success: ${successCount}, Failed: ${failCount}`);
 
+        // Fail build if nothing generated
+        if (successCount === 0) process.exit(1);
+
     } catch (error) {
         console.error('\n❌ Fatal Error:', error);
+        process.exit(1);
     } finally {
         if (browser) await browser.close();
     }
