@@ -25,7 +25,14 @@ const PORT = 3000;
 const LOCAL_BASE_URL = `http://localhost:${PORT}`;
 const LOCAL_SITEMAP_INDEX = `${LOCAL_BASE_URL}/sitemap.xml`;
 
-// CONCURRENCY SETTINGS
+// Known Production Domains (to allow crawling content even if sitemap uses Prod URL)
+const ALLOWED_DOMAINS = [
+    TARGET_DOMAIN,
+    'www.kolsherut.org.il',
+    'kolsherut.org.il',
+    'api.kolsherut.org.il'
+];
+
 const MAX_CONCURRENCY = 5;
 
 console.log(`🎯 Target Domain: ${TARGET_DOMAIN}`);
@@ -62,7 +69,7 @@ async function fetchXml(url) {
 
 
 // ==========================================
-// 3. SITEMAP DISCOVERY (With Strict Domain Filter)
+// 3. SITEMAP DISCOVERY
 // ==========================================
 
 async function getRoutesToCrawl() {
@@ -82,50 +89,64 @@ async function getRoutesToCrawl() {
 
     for (const originalUrl of subSitemapUrls) {
         const filename = path.basename(originalUrl);
-        let urls = [];
+        let rawUrls = [];
 
-        // A. Try Local Fetch
+        // A. Try Local
         const localUrl = originalUrl.replace(TARGET_DOMAIN, LOCAL_BASE_URL);
         const localData = await fetchXml(localUrl);
 
         if (localData) {
-            urls = extractTags(localData, 'loc');
+            rawUrls = extractTags(localData, 'loc');
         }
 
-        // B. Fallback to Remote Fetch (if local failed/empty)
-        if (urls.length > 0) {
-            console.log(`   ✅ Loaded locally: ${filename} (${urls.length} URLs)`);
+        // B. Fallback Remote
+        if (rawUrls.length > 0) {
+            console.log(`   ✅ Loaded locally: ${filename} (${rawUrls.length} raw URLs)`);
         } else {
             console.log(`   ⚠️  Local ${filename} empty/missing. Fetching remote...`);
             const remoteData = await fetchXml(originalUrl);
             if (remoteData) {
-                urls = extractTags(remoteData, 'loc');
-                console.log(`   🌍 Loaded remotely: ${filename} (${urls.length} URLs)`);
+                rawUrls = extractTags(remoteData, 'loc');
+                console.log(`   🌍 Loaded remotely: ${filename} (${rawUrls.length} raw URLs)`);
             } else {
                 console.error(`   ❌ Failed to load ${filename} from Remote.`);
             }
         }
 
-        // C. Process URLs with STRICT Domain Filtering
-        urls.forEach(fullUrl => {
-            try {
-                // STRICT FILTER: Only process URLs that match the Target Domain
-                if (fullUrl.includes(TARGET_DOMAIN)) {
-                    // Extract relative path
-                    const relative = fullUrl.replace(TARGET_DOMAIN, '');
-                    // Normalize to ensure leading slash
-                    const pathName = relative.startsWith('/') ? relative : `/${relative}`;
+        // C. Process & Filter
+        let addedCount = 0;
+        let skippedCount = 0;
+        let sampleSkipped = '';
 
+        rawUrls.forEach(fullUrl => {
+            try {
+                const urlObj = new URL(fullUrl);
+
+                // CHECK: Is the domain in our Allowed List?
+                // We check if the hostname includes any of our allowed domains
+                const isAllowed = ALLOWED_DOMAINS.some(d => fullUrl.includes(d));
+
+                if (isAllowed) {
+                    const pathName = urlObj.pathname;
                     if (pathName && pathName !== '/') {
                         routes.add(pathName);
+                        addedCount++;
                     }
+                } else {
+                    skippedCount++;
+                    if (!sampleSkipped) sampleSkipped = fullUrl;
                 }
-            } catch (e) { /* skip invalid URLs */ }
+            } catch (e) { /* skip invalid */ }
         });
+
+        if (skippedCount > 0) {
+            console.log(`      ⚠️  Skipped ${skippedCount} URLs (Domain mismatch). Sample: ${sampleSkipped}`);
+        }
+        console.log(`      ➡️  Queued ${addedCount} pages from ${filename}`);
     }
 
     const finalRoutes = Array.from(routes);
-    console.log(`   ✅ Total unique pages found (matching ${TARGET_DOMAIN}): ${finalRoutes.length}`);
+    console.log(`\n✅ Total unique pages to generate: ${finalRoutes.length}`);
     return finalRoutes;
 }
 
@@ -170,7 +191,12 @@ function startLocalServer() {
         server = await startLocalServer();
         const routes = await getRoutesToCrawl();
 
-        console.log(`\n🕷️  --- Step 3: Starting Parallel Crawl ---`);
+        if (routes.length === 0) {
+            console.log('⚠️ No pages found to crawl. Exiting.');
+            process.exit(0);
+        }
+
+        console.log(`\n🕷️  --- Step 3: Starting Parallel Crawl (${routes.length} pages) ---`);
 
         // 1. Launch Cluster
         cluster = await Cluster.launch({
@@ -183,7 +209,7 @@ function startLocalServer() {
             monitor: false
         });
 
-        // 2. Define the Crawl Task
+        // 2. Define Task
         await cluster.task(async ({ page, data: route }) => {
             const url = `${LOCAL_BASE_URL}${route}`;
             const safeRoute = decodeURIComponent(route);
@@ -192,7 +218,7 @@ function startLocalServer() {
                 : path.join(DIST_DIR, safeRoute, 'index.html');
 
             try {
-                // Optimize: block heavy assets
+                // Optimization: Block heavy assets
                 await page.setRequestInterception(true);
                 page.on('request', (req) => {
                     if (['image', 'stylesheet', 'font'].includes(req.resourceType())) {
@@ -204,7 +230,7 @@ function startLocalServer() {
 
                 await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
 
-                // CRITICAL FIX: Wait for actual content, not just the empty #root div
+                // CRITICAL: Wait for #root to have content
                 await page.waitForFunction(
                     'document.getElementById("root") && document.getElementById("root").innerHTML.trim().length > 0',
                     { timeout: 30000 }
@@ -223,8 +249,10 @@ function startLocalServer() {
         let completed = 0;
         const total = routes.length;
 
+        // Console progress bar
         const logProgress = setInterval(() => {
-            console.log(`   ⏳ Progress: ${completed}/${total} (${Math.round(completed/total*100)}%)`);
+            const percent = Math.round((completed / total) * 100);
+            console.log(`   ⏳ Progress: ${completed}/${total} (${percent}%)`);
         }, 5000);
 
         routes.forEach(route => {
