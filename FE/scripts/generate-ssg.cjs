@@ -6,7 +6,7 @@ const http = require('http');
 const axios = require('axios');
 
 // ==========================================
-// 1. CONFIGURATION & ENVIRONMENT
+// 1. CONFIGURATION
 // ==========================================
 
 const env = process.env.ENVIRONMENT || 'local';
@@ -22,10 +22,11 @@ const envConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
 const TARGET_DOMAIN = envConfig.currentURL;
 const DIST_DIR = path.join(__dirname, '../dist');
 const PORT = 3000;
-const LOCAL_BASE_URL = `http://localhost:${PORT}`;
+
+// Use 127.0.0.1 to be safe on all OSs
+const LOCAL_BASE_URL = `http://127.0.0.1:${PORT}`;
 const LOCAL_SITEMAP_INDEX = `${LOCAL_BASE_URL}/sitemap.xml`;
 
-// Known Production Domains (to allow crawling content even if sitemap uses Prod URL)
 const ALLOWED_DOMAINS = [
     TARGET_DOMAIN,
     'www.kolsherut.org.il',
@@ -38,8 +39,6 @@ const MAX_CONCURRENCY = 5;
 
 console.log(`🎯 Target Domain: ${TARGET_DOMAIN}`);
 console.log(`🏠 Local Build Server: ${LOCAL_BASE_URL}`);
-console.log(`⚡ Parallel Threads: ${MAX_CONCURRENCY}`);
-
 
 // ==========================================
 // 2. HELPER FUNCTIONS
@@ -68,7 +67,6 @@ async function fetchXml(url) {
     }
 }
 
-
 // ==========================================
 // 3. SITEMAP DISCOVERY
 // ==========================================
@@ -77,7 +75,7 @@ async function getRoutesToCrawl() {
     console.log('\n🔍 --- Step 1: Discovering Pages ---');
     const routes = new Set(['/']);
 
-    console.log(`   📄 Fetching Index from Local: ${LOCAL_SITEMAP_INDEX}`);
+    console.log(`   📄 Fetching Index: ${LOCAL_SITEMAP_INDEX}`);
     const indexXml = await fetchXml(LOCAL_SITEMAP_INDEX);
 
     if (!indexXml) {
@@ -86,70 +84,35 @@ async function getRoutesToCrawl() {
     }
 
     const subSitemapUrls = extractTags(indexXml, 'loc').filter(u => u.endsWith('.xml'));
-    console.log(`   📋 Found ${subSitemapUrls.length} sub-sitemaps.`);
 
     for (const originalUrl of subSitemapUrls) {
-        const filename = path.basename(originalUrl);
         let rawUrls = [];
-
-        // A. Try Local
         const localUrl = originalUrl.replace(TARGET_DOMAIN, LOCAL_BASE_URL);
         const localData = await fetchXml(localUrl);
 
         if (localData) {
             rawUrls = extractTags(localData, 'loc');
-        }
-
-        // B. Fallback Remote
-        if (rawUrls.length > 0) {
-            console.log(`   ✅ Loaded locally: ${filename} (${rawUrls.length} raw URLs)`);
         } else {
-            console.log(`   ⚠️  Local ${filename} empty/missing. Fetching remote...`);
             const remoteData = await fetchXml(originalUrl);
-            if (remoteData) {
-                rawUrls = extractTags(remoteData, 'loc');
-                console.log(`   🌍 Loaded remotely: ${filename} (${rawUrls.length} raw URLs)`);
-            } else {
-                console.error(`   ❌ Failed to load ${filename} from Remote.`);
-            }
+            if (remoteData) rawUrls = extractTags(remoteData, 'loc');
         }
-
-        // C. Process & Filter
-        let addedCount = 0;
-        let skippedCount = 0;
-        let sampleSkipped = '';
 
         rawUrls.forEach(fullUrl => {
             try {
-                const urlObj = new URL(fullUrl);
-
-                // CHECK: Is the domain in our Allowed List?
                 const isAllowed = ALLOWED_DOMAINS.some(d => fullUrl.includes(d));
-
                 if (isAllowed) {
+                    const urlObj = new URL(fullUrl);
                     const pathName = urlObj.pathname;
-                    if (pathName && pathName !== '/') {
-                        routes.add(pathName);
-                        addedCount++;
-                    }
-                } else {
-                    skippedCount++;
-                    if (!sampleSkipped) sampleSkipped = fullUrl;
+                    if (pathName && pathName !== '/') routes.add(pathName);
                 }
-            } catch (e) { /* skip invalid */ }
+            } catch (e) { }
         });
-
-        if (skippedCount > 0) {
-            console.log(`      ⚠️  Skipped ${skippedCount} URLs (Domain mismatch). Sample: ${sampleSkipped}`);
-        }
-        console.log(`      ➡️  Queued ${addedCount} pages from ${filename}`);
     }
 
     const finalRoutes = Array.from(routes);
-    console.log(`\n✅ Total unique pages to generate: ${finalRoutes.length}`);
+    console.log(`✅ Total unique pages to generate: ${finalRoutes.length}`);
     return finalRoutes;
 }
-
 
 // ==========================================
 // 4. SERVER SETUP
@@ -166,16 +129,15 @@ function startLocalServer() {
     });
 
     return new Promise((resolve) => {
-        server.listen(PORT, () => {
-            console.log(`\n🚀 --- Step 2: Build Server Started ---`);
+        server.listen(PORT, '0.0.0.0', () => {
+            console.log(`\n🚀 --- Step 2: Build Server Started on Port ${PORT} ---`);
             resolve(server);
         });
     });
 }
 
-
 // ==========================================
-// 5. MAIN EXECUTION WITH CLUSTER
+// 5. MAIN EXECUTION
 // ==========================================
 
 (async () => {
@@ -191,31 +153,38 @@ function startLocalServer() {
         server = await startLocalServer();
         const routes = await getRoutesToCrawl();
 
-        if (routes.length === 0) {
-            console.log('⚠️ No pages found to crawl. Exiting.');
-            process.exit(0);
-        }
+        if (routes.length === 0) process.exit(0);
 
-        console.log(`\n🕷️  --- Step 3: Starting Parallel Crawl (${routes.length} pages) ---`);
+        console.log(`\n🕷️  --- Step 3: Starting Parallel Crawl ---`);
 
-        // 1. Launch Cluster
+        // FIX: Comprehensive Stability Flags for Windows/Docker
+        const puppeteerArgs = [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-web-security',
+            '--disable-features=IsolateOrigins,site-per-process',
+            '--disable-dev-shm-usage',
+            '--disable-gpu',                // <--- CRITICAL for Windows
+            '--disable-software-rasterizer' // <--- CRITICAL for Windows
+        ];
+
         cluster = await Cluster.launch({
-            concurrency: Cluster.CONCURRENCY_CONTEXT,
+            concurrency: Cluster.CONCURRENCY_PAGE,
             maxConcurrency: MAX_CONCURRENCY,
             puppeteerOptions: {
                 headless: "new",
-                args: [
-                    '--no-sandbox',
-                    '--disable-setuid-sandbox',
-                    '--disable-dev-shm-usage',
-                    '--disable-web-security',
-                    '--disable-features=IsolateOrigins,site-per-process'
-                ]
+                args: puppeteerArgs
             },
             monitor: false
         });
 
-        // 2. Define Task
+        // Debug: Log specific crash reasons (LOUDLY)
+        cluster.on('taskerror', (err, data) => {
+            console.error(`\n!!!!! CRASH on ${data} !!!!!`);
+            console.error(`REASON: ${err.message}`);
+            console.error(`-----------------------------`);
+        });
+
         await cluster.task(async ({ page, data: route }) => {
             const url = `${LOCAL_BASE_URL}${route}`;
             const safeRoute = decodeURIComponent(route);
@@ -224,7 +193,9 @@ function startLocalServer() {
                 : path.join(DIST_DIR, safeRoute, 'index.html');
 
             try {
-                // Optimization: Block heavy assets
+                // Pre-check to ensure browser is alive
+                if (page.isClosed()) throw new Error('Browser Page is closed!');
+
                 await page.setRequestInterception(true);
                 page.on('request', (req) => {
                     if (['image', 'stylesheet', 'font'].includes(req.resourceType())) {
@@ -236,7 +207,6 @@ function startLocalServer() {
 
                 await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
 
-                // CRITICAL: Wait for #root to have content
                 await page.waitForFunction(
                     'document.getElementById("root") && document.getElementById("root").innerHTML.trim().length > 0',
                     { timeout: 30000 }
@@ -247,22 +217,43 @@ function startLocalServer() {
                 await fs.writeFile(filePath, html);
 
             } catch (err) {
-                console.error(`   ❌ Failed: ${route} (${err.message})`);
+                // Screenshot on first failure
+                if (!fs.existsSync(path.join(DIST_DIR, 'error-screenshot.png'))) {
+                    console.log(`   📸 Screenshotting error at ${route}`);
+                    try {
+                        await page.screenshot({ path: path.join(DIST_DIR, 'error-screenshot.png'), fullPage: true });
+                    } catch (e) {
+                        console.log("   Could not take screenshot (Browser might be dead)");
+                    }
+                }
+                throw err;
             }
         });
 
-        // 3. Queue URLs
+        // Progress Tracking
         let completed = 0;
+        let successCount = 0;
+        let failCount = 0;
         const total = routes.length;
 
-        // Console progress bar
         const logProgress = setInterval(() => {
             const percent = Math.round((completed / total) * 100);
-            console.log(`   ⏳ Progress: ${completed}/${total} (${percent}%)`);
+            console.log(`   ⏳ Progress: ${completed}/${total} (${percent}%) | ✅ Success: ${successCount} | ❌ Failed: ${failCount}`);
         }, 5000);
 
         routes.forEach(route => {
             cluster.queue(route, async () => {
+                const safeRoute = decodeURIComponent(route);
+                const checkPath = route === '/'
+                    ? path.join(DIST_DIR, 'index.html')
+                    : path.join(DIST_DIR, safeRoute, 'index.html');
+
+                // Slight delay to check file system
+                if (fs.existsSync(checkPath) && route !== '/') {
+                    successCount++;
+                } else if (route !== '/') {
+                    failCount++;
+                }
                 completed++;
             });
         });
@@ -271,7 +262,9 @@ function startLocalServer() {
         await cluster.close();
         clearInterval(logProgress);
 
-        console.log('\n✨ Parallel SSG Generation Complete!');
+        console.log(`\n✨ Done! Success: ${successCount}, Failed: ${failCount}`);
+
+        if (successCount === 0) process.exit(1);
 
     } catch (error) {
         console.error('\n❌ Fatal Error:', error);
