@@ -28,9 +28,10 @@ const LOCAL_SITEMAP_INDEX = `${LOCAL_BASE_URL}/sitemap.xml`;
 // Known Production Domains (to allow crawling content even if sitemap uses Prod URL)
 const ALLOWED_DOMAINS = [
     TARGET_DOMAIN,
-    // 'www.kolsherut.org.il',
-    // 'kolsherut.org.il',
-    // 'api.kolsherut.org.il'
+    'www.kolsherut.org.il',
+    'kolsherut.org.il',
+    'api.kolsherut.org.il',
+    'srm-staging.whiletrue.industries'
 ];
 
 const MAX_CONCURRENCY = 5;
@@ -123,7 +124,6 @@ async function getRoutesToCrawl() {
                 const urlObj = new URL(fullUrl);
 
                 // CHECK: Is the domain in our Allowed List?
-                // We check if the hostname includes any of our allowed domains
                 const isAllowed = ALLOWED_DOMAINS.some(d => fullUrl.includes(d));
 
                 if (isAllowed) {
@@ -204,7 +204,13 @@ function startLocalServer() {
             maxConcurrency: MAX_CONCURRENCY,
             puppeteerOptions: {
                 headless: "new",
-                args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+                args: [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--disable-dev-shm-usage',
+                    '--disable-web-security',
+                    '--disable-features=IsolateOrigins,site-per-process'
+                ]
             },
             monitor: false
         });
