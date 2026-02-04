@@ -170,7 +170,9 @@ function startLocalServer() {
                     '--disable-features=IsolateOrigins,site-per-process',
                     '--disable-dev-shm-usage',
                     '--disable-gpu',
-                    '--disable-software-rasterizer'
+                    '--disable-software-rasterizer',
+                    // ADD THIS: Spoof a real browser User-Agent
+                    '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
                 ],
                 dumpio: true
             },
