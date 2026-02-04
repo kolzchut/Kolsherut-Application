@@ -192,7 +192,6 @@ async function crawlPage(page, route) {
             args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
         const page = await browser.newPage();
-
         for (let i = 0; i < routes.length; i++) {
             if (i % 20 === 0) console.log(`   [${i + 1}/${routes.length}] Processing...`);
             await crawlPage(page, routes[i]);
