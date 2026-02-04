@@ -19,6 +19,7 @@ if (!fs.existsSync(configPath)) {
 }
 const envConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
 
+// The API expects requests from THIS domain
 const TARGET_DOMAIN = envConfig.currentURL;
 const DIST_DIR = path.join(__dirname, '../dist');
 const PORT = 3000;
@@ -161,7 +162,6 @@ function startLocalServer() {
                     '--disable-web-security',
                     '--disable-dev-shm-usage',
                     '--disable-gpu',
-                    // ✅ CRITICAL FIX: Pretend to be a real browser to bypass API blocks
                     '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
                 ],
                 dumpio: true
@@ -184,10 +184,29 @@ function startLocalServer() {
                 : path.join(DIST_DIR, safeRoute, 'index.html');
 
             try {
+                // ✅ CRITICAL FIX: Use Request Interception
+                // Only inject headers for the API, not for the main page load.
+                await page.setRequestInterception(true);
+
+                page.on('request', (req) => {
+                    const reqUrl = req.url();
+
+                    // If it is an API call (to whiletrue.industries), spoof the origin
+                    if (reqUrl.includes('whiletrue.industries') || reqUrl.includes('api.kolsherut')) {
+                        const headers = { ...req.headers() };
+                        headers['Origin'] = TARGET_DOMAIN;
+                        headers['Referer'] = TARGET_DOMAIN + '/';
+                        req.continue({ headers });
+                    } else {
+                        // For localhost and assets, let it pass untouched
+                        req.continue();
+                    }
+                });
+
                 // Navigate to LOCAL url
                 await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
 
-                // Wait for React to render (API to finish)
+                // Wait for React to render
                 await page.waitForFunction(
                     'document.getElementById("root") && document.getElementById("root").innerHTML.trim().length > 0',
                     { timeout: 30000 }
