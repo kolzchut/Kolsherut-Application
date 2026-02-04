@@ -23,7 +23,7 @@ const TARGET_DOMAIN = envConfig.currentURL;
 const DIST_DIR = path.join(__dirname, '../dist');
 const PORT = 3000;
 
-// Use 127.0.0.1 to be safe on all OSs
+// Use 127.0.0.1 to avoid Windows/Docker localhost ambiguity
 const LOCAL_BASE_URL = `http://127.0.0.1:${PORT}`;
 const LOCAL_SITEMAP_INDEX = `${LOCAL_BASE_URL}/sitemap.xml`;
 
@@ -66,10 +66,6 @@ async function fetchXml(url) {
         return null;
     }
 }
-
-// ==========================================
-// 3. SITEMAP DISCOVERY
-// ==========================================
 
 async function getRoutesToCrawl() {
     console.log('\n🔍 --- Step 1: Discovering Pages ---');
@@ -115,7 +111,7 @@ async function getRoutesToCrawl() {
 }
 
 // ==========================================
-// 4. SERVER SETUP
+// 3. SERVER SETUP
 // ==========================================
 
 function startLocalServer() {
@@ -137,7 +133,7 @@ function startLocalServer() {
 }
 
 // ==========================================
-// 5. MAIN EXECUTION
+// 4. MAIN EXECUTION
 // ==========================================
 
 (async () => {
@@ -157,34 +153,38 @@ function startLocalServer() {
 
         console.log(`\n🕷️  --- Step 3: Starting Parallel Crawl ---`);
 
-        // FIX: Comprehensive Stability Flags for Windows/Docker
-        const puppeteerArgs = [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-web-security',
-            '--disable-features=IsolateOrigins,site-per-process',
-            '--disable-dev-shm-usage',
-            '--disable-gpu',                // <--- CRITICAL for Windows
-            '--disable-software-rasterizer' // <--- CRITICAL for Windows
-        ];
+        // Counters (Moved to global scope so task can access them)
+        let completed = 0;
+        let successCount = 0;
+        let failCount = 0;
 
         cluster = await Cluster.launch({
             concurrency: Cluster.CONCURRENCY_PAGE,
             maxConcurrency: MAX_CONCURRENCY,
             puppeteerOptions: {
                 headless: "new",
-                args: puppeteerArgs
+                args: [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--disable-web-security',
+                    '--disable-features=IsolateOrigins,site-per-process',
+                    '--disable-dev-shm-usage',
+                    '--disable-gpu',
+                    '--disable-software-rasterizer'
+                ],
+                dumpio: true
             },
             monitor: false
         });
 
-        // Debug: Log specific crash reasons (LOUDLY)
         cluster.on('taskerror', (err, data) => {
-            console.error(`\n!!!!! CRASH on ${data} !!!!!`);
-            console.error(`REASON: ${err.message}`);
-            console.error(`-----------------------------`);
+            console.error(`\n🔴 WORKER CRASHED on route: ${data}`);
+            console.error(`   Reason: ${err.message}`);
+            failCount++;
+            completed++;
         });
 
+        // DEFINING THE MAIN TASK
         await cluster.task(async ({ page, data: route }) => {
             const url = `${LOCAL_BASE_URL}${route}`;
             const safeRoute = decodeURIComponent(route);
@@ -193,16 +193,9 @@ function startLocalServer() {
                 : path.join(DIST_DIR, safeRoute, 'index.html');
 
             try {
-                // Pre-check to ensure browser is alive
-                if (page.isClosed()) throw new Error('Browser Page is closed!');
-
-                await page.setRequestInterception(true);
-                page.on('request', (req) => {
-                    if (['image', 'stylesheet', 'font'].includes(req.resourceType())) {
-                        req.abort();
-                    } else {
-                        req.continue();
-                    }
+                // Log Errors from inside the page
+                page.on('console', msg => {
+                    if (msg.type() === 'error') console.log(`   [JS Error] ${msg.text()}`);
                 });
 
                 await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
@@ -216,47 +209,34 @@ function startLocalServer() {
                 await fs.ensureDir(path.dirname(filePath));
                 await fs.writeFile(filePath, html);
 
+                // ✅ SUCCESS Logic
+                successCount++;
+                // console.log(`   ✅ Saved: ${route}`);
+
             } catch (err) {
-                // Screenshot on first failure
-                if (!fs.existsSync(path.join(DIST_DIR, 'error-screenshot.png'))) {
-                    console.log(`   📸 Screenshotting error at ${route}`);
-                    try {
-                        await page.screenshot({ path: path.join(DIST_DIR, 'error-screenshot.png'), fullPage: true });
-                    } catch (e) {
-                        console.log("   Could not take screenshot (Browser might be dead)");
-                    }
-                }
+                // ❌ FAILURE Logic
+                console.error(`   ❌ Failed Processing: ${route} -> ${err.message}`);
+                failCount++;
                 throw err;
+            } finally {
+                completed++;
             }
         });
 
-        // Progress Tracking
-        let completed = 0;
-        let successCount = 0;
-        let failCount = 0;
+        // 5. QUEUE THE ROUTES (Without inline function!)
         const total = routes.length;
+        console.log("   ➡️ Queuing tasks...");
 
+        routes.forEach(route => {
+            // FIX: Just pass the data. Do NOT pass a callback here.
+            cluster.queue(route);
+        });
+
+        // Progress Bar
         const logProgress = setInterval(() => {
             const percent = Math.round((completed / total) * 100);
             console.log(`   ⏳ Progress: ${completed}/${total} (${percent}%) | ✅ Success: ${successCount} | ❌ Failed: ${failCount}`);
         }, 5000);
-
-        routes.forEach(route => {
-            cluster.queue(route, async () => {
-                const safeRoute = decodeURIComponent(route);
-                const checkPath = route === '/'
-                    ? path.join(DIST_DIR, 'index.html')
-                    : path.join(DIST_DIR, safeRoute, 'index.html');
-
-                // Slight delay to check file system
-                if (fs.existsSync(checkPath) && route !== '/') {
-                    successCount++;
-                } else if (route !== '/') {
-                    failCount++;
-                }
-                completed++;
-            });
-        });
 
         await cluster.idle();
         await cluster.close();
