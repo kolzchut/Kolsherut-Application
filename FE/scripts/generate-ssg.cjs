@@ -1,4 +1,4 @@
-const { Cluster } = require('puppeteer-cluster'); // NEW: Import Cluster
+const {Cluster} = require('puppeteer-cluster'); // NEW: Import Cluster
 const fs = require('fs-extra');
 const path = require('path');
 const handler = require('serve-handler');
@@ -51,7 +51,7 @@ function extractTags(xml, tagName) {
 
 async function fetchXml(url) {
     try {
-        const { data } = await axios.get(url);
+        const {data} = await axios.get(url);
         if (typeof data === 'string' && (data.includes('<?xml') || data.includes('<urlset') || data.includes('<sitemapindex'))) {
             return data;
         }
@@ -113,7 +113,8 @@ async function getRoutesToCrawl() {
                 const urlObj = new URL(fullUrl);
                 const pathName = urlObj.pathname;
                 if (pathName && pathName !== '/') routes.add(pathName);
-            } catch (e) { /* skip */ }
+            } catch (e) { /* skip */
+            }
         });
     }
 
@@ -132,7 +133,7 @@ function startLocalServer() {
         return handler(req, res, {
             public: DIST_DIR,
             rewrites: [
-                { source: '**', destination: '/index.html' }
+                {source: '**', destination: '/index.html'}
             ]
         });
     });
@@ -177,7 +178,7 @@ function startLocalServer() {
         });
 
         // 2. Define the Crawl Task
-        await cluster.task(async ({ page, data: route }) => {
+        await cluster.task(async ({page, data: route}) => {
             const url = `${LOCAL_BASE_URL}${route}`;
             const safeRoute = decodeURIComponent(route);
             const filePath = route === '/'
@@ -196,8 +197,8 @@ function startLocalServer() {
                     }
                 });
 
-                await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
-                await page.waitForSelector('#root', { timeout: 30000 });
+                await page.goto(url, {waitUntil: 'networkidle0', timeout: 60000});
+                await page.waitForSelector('#root', {timeout: 30000});
 
                 const html = await page.content();
                 await fs.ensureDir(path.dirname(filePath));
@@ -215,12 +216,12 @@ function startLocalServer() {
 
         // Progress logger
         const logProgress = setInterval(() => {
-            console.log(`   ⏳ Progress: ${completed}/${total} (${Math.round(completed/total*100)}%)`);
+            console.log(`   ⏳ Progress: ${completed}/${total} (${Math.round(completed / total * 100)}%)`);
         }, 5000); // Log every 5 seconds
 
         // Add Event listener for task completion to increment counter
         cluster.on('taskerror', (err, data) => {
-            // console.error(`   Error crawling ${data}: ${err.message}`);
+            console.error(`   Error crawling ${data}: ${err.message}`);
         });
 
         routes.forEach(route => {
