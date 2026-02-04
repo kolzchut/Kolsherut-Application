@@ -1,8 +1,6 @@
-const { Cluster } = require('puppeteer-cluster');
+const puppeteer = require('puppeteer');
 const fs = require('fs-extra');
 const path = require('path');
-const handler = require('serve-handler');
-const http = require('http');
 const axios = require('axios');
 
 // ==========================================
@@ -10,7 +8,7 @@ const axios = require('axios');
 // ==========================================
 
 const env = process.env.ENVIRONMENT || 'local';
-console.log(`🌍 Starting Parallel SSG for environment: ${env}`);
+console.log(`🌍 Starting Remote SSG for environment: ${env}`);
 
 const configPath = path.join(__dirname, `../public/configs/${env}.json`);
 if (!fs.existsSync(configPath)) {
@@ -19,26 +17,18 @@ if (!fs.existsSync(configPath)) {
 }
 const envConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
 
+// TARGET: The live staging site
 const TARGET_DOMAIN = envConfig.currentURL;
+const SITEMAP_URL = `${TARGET_DOMAIN}/sitemap.xml`;
 const DIST_DIR = path.join(__dirname, '../dist');
-const PORT = 3000;
 
-// Use 127.0.0.1 to avoid Windows/Docker localhost ambiguity
-const LOCAL_BASE_URL = `http://127.0.0.1:${PORT}`;
-const LOCAL_SITEMAP_INDEX = `${LOCAL_BASE_URL}/sitemap.xml`;
+// USER AGENT: This triggers your Nginx @bot_ssr location
+const BOT_USER_AGENT = 'KolsherutSSG';
 
-const ALLOWED_DOMAINS = [
-    TARGET_DOMAIN,
-    'www.kolsherut.org.il',
-    'kolsherut.org.il',
-    'api.kolsherut.org.il',
-    'srm-staging.whiletrue.industries'
-];
 
-const MAX_CONCURRENCY = 5;
 
 console.log(`🎯 Target Domain: ${TARGET_DOMAIN}`);
-console.log(`🏠 Local Build Server: ${LOCAL_BASE_URL}`);
+console.log(`🤖 User Agent:   ${BOT_USER_AGENT}`);
 
 // ==========================================
 // 2. HELPER FUNCTIONS
@@ -57,201 +47,141 @@ function extractTags(xml, tagName) {
 
 async function fetchXml(url) {
     try {
+        console.log(`   📄 Fetching ${url}...`);
         const { data } = await axios.get(url);
         if (typeof data === 'string' && (data.includes('<?xml') || data.includes('<urlset') || data.includes('<sitemapindex'))) {
             return data;
         }
         return null;
     } catch (error) {
+        console.error(`   ⚠️ Failed to fetch ${url}: ${error.message}`);
         return null;
     }
 }
 
 async function getRoutesToCrawl() {
-    console.log('\n🔍 --- Step 1: Discovering Pages ---');
+    console.log('\n🔍 --- Step 1: Discovering Pages (Remote) ---');
     const routes = new Set(['/']);
 
-    console.log(`   📄 Fetching Index: ${LOCAL_SITEMAP_INDEX}`);
-    const indexXml = await fetchXml(LOCAL_SITEMAP_INDEX);
+    // 1. Fetch Remote Sitemap
+    const indexXml = await fetchXml(SITEMAP_URL);
 
     if (!indexXml) {
-        console.error("   ❌ Failed to load local sitemap.xml");
+        console.error("   ❌ Failed to load remote sitemap.xml");
         return Array.from(routes);
     }
 
     const subSitemapUrls = extractTags(indexXml, 'loc').filter(u => u.endsWith('.xml'));
 
-    for (const originalUrl of subSitemapUrls) {
-        let rawUrls = [];
-        const localUrl = originalUrl.replace(TARGET_DOMAIN, LOCAL_BASE_URL);
-        const localData = await fetchXml(localUrl);
-
-        if (localData) {
-            rawUrls = extractTags(localData, 'loc');
-        } else {
-            const remoteData = await fetchXml(originalUrl);
-            if (remoteData) rawUrls = extractTags(remoteData, 'loc');
-        }
-
-        rawUrls.forEach(fullUrl => {
-            try {
-                const isAllowed = ALLOWED_DOMAINS.some(d => fullUrl.includes(d));
-                if (isAllowed) {
+    for (const subUrl of subSitemapUrls) {
+        // 2. Fetch Remote Sub-sitemaps
+        const subData = await fetchXml(subUrl);
+        if (subData) {
+            const rawUrls = extractTags(subData, 'loc');
+            rawUrls.forEach(fullUrl => {
+                try {
                     const urlObj = new URL(fullUrl);
                     const pathName = urlObj.pathname;
                     if (pathName && pathName !== '/') routes.add(pathName);
-                }
-            } catch (e) { }
-        });
+                } catch (e) { }
+            });
+        }
     }
 
     const finalRoutes = Array.from(routes);
-    console.log(`✅ Total unique pages to generate: ${finalRoutes.length}`);
+    console.log(`✅ Total unique pages found: ${finalRoutes.length}`);
     return finalRoutes;
 }
 
 // ==========================================
-// 3. SERVER SETUP
-// ==========================================
-
-function startLocalServer() {
-    const server = http.createServer((req, res) => {
-        return handler(req, res, {
-            public: DIST_DIR,
-            rewrites: [
-                { source: '**', destination: '/index.html' }
-            ]
-        });
-    });
-
-    return new Promise((resolve) => {
-        server.listen(PORT, '0.0.0.0', () => {
-            console.log(`\n🚀 --- Step 2: Build Server Started on Port ${PORT} ---`);
-            resolve(server);
-        });
-    });
-}
-
-// ==========================================
-// 4. MAIN EXECUTION
+// 3. MAIN EXECUTION
 // ==========================================
 
 (async () => {
-    if (!fs.existsSync(DIST_DIR)) {
-        console.error('❌ dist/ folder missing.');
-        process.exit(1);
-    }
-
-    let server;
-    let cluster;
+    let browser;
 
     try {
-        server = await startLocalServer();
-        const routes = await getRoutesToCrawl();
+        if (!fs.existsSync(DIST_DIR)) fs.ensureDirSync(DIST_DIR);
 
+        // 1. Get Routes
+        let routes = await getRoutesToCrawl();
         if (routes.length === 0) process.exit(0);
 
-        console.log(`\n🕷️  --- Step 3: Starting Parallel Crawl ---`);
+        console.log(`\n🕷️  --- Step 2: Starting Remote Crawl ---`);
+        console.log("⚠️  Look at the Chrome window to ensure it sees the SSR version!");
 
-        // Counters (Moved to global scope so task can access them)
-        let completed = 0;
+        // 3. Launch Browser
+        browser = await puppeteer.launch({
+            headless: false, // Visible for debugging
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-web-security',
+                '--window-size=1280,800',
+                `--user-agent=${BOT_USER_AGENT}` // <--- THE MAGIC KEY
+            ]
+        });
+
+        const page = await browser.newPage();
+        await page.setViewport({ width: 1280, height: 800 });
+
+        // Log Console errors (Remote)
+        page.on('console', msg => {
+            if (msg.type() === 'error') console.log(`   [Remote JS Error] ${msg.text()}`);
+        });
+
         let successCount = 0;
         let failCount = 0;
 
-        cluster = await Cluster.launch({
-            concurrency: Cluster.CONCURRENCY_PAGE,
-            maxConcurrency: MAX_CONCURRENCY,
-            puppeteerOptions: {
-                headless: "new",
-                args: [
-                    '--no-sandbox',
-                    '--disable-setuid-sandbox',
-                    '--disable-web-security',
-                    '--disable-features=IsolateOrigins,site-per-process',
-                    '--disable-dev-shm-usage',
-                    '--disable-gpu',
-                    '--disable-software-rasterizer',
-                    // ADD THIS: Spoof a real browser User-Agent
-                    '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-                ],
-                dumpio: true
-            },
-            monitor: false
-        });
-
-        cluster.on('taskerror', (err, data) => {
-            console.error(`\n🔴 WORKER CRASHED on route: ${data}`);
-            console.error(`   Reason: ${err.message}`);
-            failCount++;
-            completed++;
-        });
-
-        // DEFINING THE MAIN TASK
-        await cluster.task(async ({ page, data: route }) => {
-            const url = `${LOCAL_BASE_URL}${route}`;
-            const safeRoute = decodeURIComponent(route);
+        // 4. Crawl Loop
+        for (const route of routes) {
+            const targetUrl = `${TARGET_DOMAIN}${route}`;
             const filePath = route === '/'
                 ? path.join(DIST_DIR, 'index.html')
-                : path.join(DIST_DIR, safeRoute, 'index.html');
+                : path.join(DIST_DIR, decodeURIComponent(route), 'index.html');
+
+            console.log(`\n➡️  Visiting: ${targetUrl}`);
 
             try {
-                // Log Errors from inside the page
-                page.on('console', msg => {
-                    if (msg.type() === 'error') console.log(`   [JS Error] ${msg.text()}`);
-                });
+                // Navigate to REMOTE url
+                const response = await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
+                const status = response.status();
 
-                await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
+                if (status >= 400) {
+                    throw new Error(`Remote server returned ${status}`);
+                }
 
-                await page.waitForFunction(
-                    'document.getElementById("root") && document.getElementById("root").innerHTML.trim().length > 0',
-                    { timeout: 30000 }
-                );
+                // Check if we got SSR content
+                // (SSR usually puts content in #root immediately, CSR waits)
+                try {
+                    await page.waitForFunction(
+                        'document.getElementById("root") && document.getElementById("root").innerHTML.trim().length > 0',
+                        { timeout: 5000 } // Short timeout because SSR should be fast
+                    );
+                } catch(e) {
+                    console.warn("   ⚠️  Content appeared slow (or Client Side Rendering fallback triggered)");
+                }
 
                 const html = await page.content();
+
+                // Save to LOCAL dist folder
                 await fs.ensureDir(path.dirname(filePath));
                 await fs.writeFile(filePath, html);
 
-                // ✅ SUCCESS Logic
                 successCount++;
-                // console.log(`   ✅ Saved: ${route}`);
+                console.log(`   ✅ Saved (${html.length} bytes)`);
 
             } catch (err) {
-                // ❌ FAILURE Logic
-                console.error(`   ❌ Failed Processing: ${route} -> ${err.message}`);
+                console.error(`   ❌ Failed: ${err.message}`);
                 failCount++;
-                throw err;
-            } finally {
-                completed++;
             }
-        });
-
-        // 5. QUEUE THE ROUTES (Without inline function!)
-        const total = routes.length;
-        console.log("   ➡️ Queuing tasks...");
-
-        routes.forEach(route => {
-            // FIX: Just pass the data. Do NOT pass a callback here.
-            cluster.queue(route);
-        });
-
-        // Progress Bar
-        const logProgress = setInterval(() => {
-            const percent = Math.round((completed / total) * 100);
-            console.log(`   ⏳ Progress: ${completed}/${total} (${percent}%) | ✅ Success: ${successCount} | ❌ Failed: ${failCount}`);
-        }, 5000);
-
-        await cluster.idle();
-        await cluster.close();
-        clearInterval(logProgress);
+        }
 
         console.log(`\n✨ Done! Success: ${successCount}, Failed: ${failCount}`);
 
-        if (successCount === 0) process.exit(1);
-
     } catch (error) {
         console.error('\n❌ Fatal Error:', error);
-        process.exit(1);
     } finally {
-        if (server) server.close();
+        if (browser) await browser.close();
     }
 })();
