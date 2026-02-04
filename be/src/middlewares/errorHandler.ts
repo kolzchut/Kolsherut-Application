@@ -10,7 +10,7 @@ const asyncHandler = (fn: Function) => (req: Request, res: Response, next: NextF
 // General error handler middleware
 const errorHandler = (err: any, req: Request, res: Response, _next: NextFunction) => {
     logger.error({ service: "General Error Handler", message: "Unhandled error occurred", payload: err });
-    // sendErrorEmailImmediately(`Error caused by the following url: ${req?.url}\n`+ String(err));
+    sendErrorEmailImmediately(`Error caused by the following url: ${req?.url}\n`+ String(err));
     res.status(500).json({ success: false, message: "An unexpected error occurred", error: err });
 };
 
