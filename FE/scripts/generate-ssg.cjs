@@ -28,9 +28,9 @@ const LOCAL_SITEMAP_INDEX = `${LOCAL_BASE_URL}/sitemap.xml`;
 // Known Production Domains (to allow crawling content even if sitemap uses Prod URL)
 const ALLOWED_DOMAINS = [
     TARGET_DOMAIN,
-    'www.kolsherut.org.il',
-    'kolsherut.org.il',
-    'api.kolsherut.org.il'
+    // 'www.kolsherut.org.il',
+    // 'kolsherut.org.il',
+    // 'api.kolsherut.org.il'
 ];
 
 const MAX_CONCURRENCY = 5;
