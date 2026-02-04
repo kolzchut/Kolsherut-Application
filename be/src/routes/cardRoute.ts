@@ -7,6 +7,6 @@ export default asyncHandler(async (req: Request, res: Response) => {
     const {card_id} = req.params;
     const card = await getCard(card_id);
     logger.log({service: "Card Routes", message: `Fetched card with ID: ${card_id}`, payload: card});
+    if(!card) return res.status(404).end();
     res.status(200).json({success: true, data: card});
 });
-
