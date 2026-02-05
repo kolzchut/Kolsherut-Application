@@ -39,12 +39,12 @@ export default {
             fast: {
                 size: parseInt(process.env.SEARCHCARDS_FIRST_LENGTH || '50'),
                 offset: 0,
-                innerHitsSize: 3000
+                innerHitsSize: 5000
             },
             rest: {
                 size: 300,
                 offset: parseInt(process.env.SEARCHCARDS_FIRST_LENGTH || '50'),
-                innerHitsSize: 3000
+                innerHitsSize: 5000
             }
         }
     },
