@@ -16,7 +16,7 @@ export default (
 
   const size = options?.size ?? 1000;
   const from = options?.from ?? 0;
-  const innerHitsSize = options?.innerHitsSize ?? 1000;
+  const innerHitsSize = options?.innerHitsSize ?? 3000;
   const minScore = options?.minScore ?? 25.0;
 
   const outerBool: any = {
