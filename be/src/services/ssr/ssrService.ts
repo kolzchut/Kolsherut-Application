@@ -51,7 +51,7 @@ const renderPage = async (url: string): Promise<{ html: string; fail: boolean }>
             try {
                 const requestUrl = response.url();
                 const status = response.status();
-                if (status !== 404 || !requestUrl.includes('/search')) return;
+                if (status !== 404 || !requestUrl.includes('/search') || !requestUrl.includes('/card')) return;
                 logger.error({
                     service: 'SSR Service',
                     message: `no results found on this search page`,
