@@ -17,7 +17,7 @@ export default function buildSearchQuery({
     mustConditions,
     size = 1500,
     offset = 0,
-    innerHitsSize = 1000,
+    innerHitsSize = 3000,
     collapseField = "service_id",
     sortField = "score",
     sortOrder = "desc",
