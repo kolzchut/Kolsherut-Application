@@ -70,7 +70,7 @@ export default {
         userAgent: 'KolSherutBot/1.0',
         routesToBlock: [
             "search",
-            "cards"
+            "card"
         ],
         puppeteerLaunchOptions: {
             headless: true,
