@@ -13,5 +13,20 @@
     "field": "branch_phone_numbers",
     "value": "0506223233",
     "replacementValue": "&"
+  },
+  {
+    "field": "organization_phone_numbers",
+    "value": "0",
+    "replacementValue": ""
+  },
+  {
+    "field": "service_phone_numbers",
+    "value": "0",
+    "replacementValue": ""
+  },
+  {
+    "field": "branch_phone_numbers",
+    "value": "0",
+    "replacementValue": ""
   }
 ]
