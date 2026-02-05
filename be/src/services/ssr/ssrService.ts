@@ -1,6 +1,7 @@
 import puppeteer, {Browser} from 'puppeteer';
 import logger from '../logger/logger';
 import blockedAnalyticsDomains from '../../assets/blockAnalytics.json';
+import vars from '../../vars';
 
 let browserInstance: Browser | null = null;
 
@@ -8,15 +9,7 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const getBrowser = async (): Promise<Browser> => {
     if (!browserInstance || !browserInstance.isConnected()) {
-        browserInstance = await puppeteer.launch({
-            headless: true,
-            args: [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage',
-                '--disable-gpu',
-            ],
-        });
+        browserInstance = await puppeteer.launch(vars.ssr.puppeteerLaunchOptions as any);
 
         browserInstance.on('disconnected', () => {
             browserInstance = null;
@@ -45,13 +38,13 @@ const renderPage = async (url: string): Promise<{ html: string; fail: boolean }>
     });
 
     try {
-        await page.setUserAgent('KolSherutBot/1.0');
+        await page.setUserAgent(vars.ssr.userAgent);
 
         page.on('response', async (response) => {
             try {
                 const requestUrl = response.url();
                 const status = response.status();
-                if (status !== 404 || !requestUrl.includes('/search') || !requestUrl.includes('/card')) return;
+                if (status !== 404 || !vars.ssr.routesToBlock.some(route => requestUrl.includes(route))) return;
                 logger.error({
                     service: 'SSR Service',
                     message: `no results found on this search page`,
@@ -62,10 +55,7 @@ const renderPage = async (url: string): Promise<{ html: string; fail: boolean }>
         });
 
 
-        await page.goto(url, {
-            waitUntil: 'networkidle0',
-            timeout: 30000,
-        });
+        await page.goto(url, vars.ssr.pageGotoOptions as any);
 
         // await delay(2000);
 

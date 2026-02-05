@@ -65,5 +65,25 @@ export default {
     },
     sitemap:{
         minimumLastModifiedForCards: process.env.SITEMAP_MINIMUM_LAST_MODIFIED_FOR_CARDS || '2026-02-01T09:00:00',
+    },
+    ssr: {
+        userAgent: 'KolSherutBot/1.0',
+        routesToBlock: [
+            "search",
+            "cards"
+        ],
+        puppeteerLaunchOptions: {
+            headless: true,
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-gpu',
+            ],
+        },
+        pageGotoOptions: {
+            waitUntil: 'networkidle0',
+            timeout: 30000,
+        }
     }
 };
