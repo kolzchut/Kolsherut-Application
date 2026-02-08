@@ -23,7 +23,7 @@ declare global {
 type ConfigType = { type: keyof Window, fileName: string };
 
 const configs: Array<ConfigType> = [
-    {"type": "environment", fileName: "environment.json"},
+    {"type": "environment", "fileName": "environment.json"},
     {"type": "config", "fileName": `config.json`},
     {"type": "strings", "fileName": `strings.json`},
     {"type": "responseColors", "fileName": `responseColors.json`},
@@ -39,7 +39,7 @@ export default async () => {
         );
 
         configs.forEach((config: ConfigType, index: number) => {
-            if (promises[index]['headers']["content-type"] !== "application/json") throw new Error(`${config.type} file is not JSON`);
+            if (!promises[index]['headers']["content-type"].includes("application/json")) throw new Error(`${config.type} file is not JSON`);
             (window[config.type] as unknown) = promises[index].data;
             Object.freeze(window[config.type]);
         });
