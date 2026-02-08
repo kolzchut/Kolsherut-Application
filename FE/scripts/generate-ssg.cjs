@@ -3,6 +3,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const handler = require('serve-handler');
 const http = require('http');
+const https = require('https');
 const axios = require('axios');
 
 // ==========================================
@@ -31,7 +32,9 @@ const ALLOWED_DOMAINS = [
     'www.kolsherut.org.il',
     'kolsherut.org.il',
     'api.kolsherut.org.il',
-    'srm-staging.whiletrue.industries'
+    'srm-staging.whiletrue.industries',
+    `127.0.0.1:${PORT}`,
+    `localhost:${PORT}`
 ];
 
 const MAX_CONCURRENCY = 5;
@@ -42,7 +45,7 @@ const MAX_CONCURRENCY = 5;
 
 function extractTags(xml, tagName) {
     if (!xml) return [];
-    const regex = new RegExp(`<${tagName}>(.*?)<\/${tagName}>`, 'g');
+    const regex = new RegExp(`<${tagName}[^>]*>(.*?)<\/${tagName}>`, 'g');
     const matches = [];
     let match;
     while ((match = regex.exec(xml)) !== null) {
@@ -51,14 +54,48 @@ function extractTags(xml, tagName) {
     return matches;
 }
 
+// Helper for delay
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+// ✅ FIX: Stronger isolation to prevent 421 errors
 async function fetchXml(url) {
     try {
-        const { data } = await axios.get(url);
+        const urlObj = new URL(url);
+        const isHttps = urlObj.protocol === 'https:';
+
+        // ✅ CRITICAL: Create a FRESH agent for every request.
+        // This forces a new TCP connection and handshake, bypassing
+        // Cloudflare's connection reuse logic (which causes the 421).
+        const agentOptions = {
+            keepAlive: false,
+            rejectUnauthorized: false,
+            servername: urlObj.hostname // Explicit SNI matching
+        };
+
+        const agent = isHttps ? new https.Agent(agentOptions) : new http.Agent(agentOptions);
+
+        const { data } = await axios.get(url, {
+            httpsAgent: isHttps ? agent : undefined,
+            httpAgent: !isHttps ? agent : undefined,
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Host': urlObj.hostname,
+                'Connection': 'close', // Force close
+                'Accept-Encoding': 'gzip, deflate' // Simplify encoding
+            },
+            timeout: 15000,
+            validateStatus: () => true // Resolve promise even on errors so we can log status
+        });
+
         if (typeof data === 'string' && (data.includes('<?xml') || data.includes('<urlset') || data.includes('<sitemapindex'))) {
             return data;
         }
         return null;
     } catch (error) {
+        const status = error.response ? error.response.status : (error.code || 'Unknown');
+        if (url.includes('http') && !url.includes('127.0.0.1')) {
+            console.log(`      ❌ Fetch failed: ${url} (Error: ${status})`);
+        }
         return null;
     }
 }
@@ -66,32 +103,98 @@ async function fetchXml(url) {
 async function getRoutesToCrawl() {
     console.log('\n🔍 --- Step 1: Discovering Pages ---');
     const routes = new Set(['/']);
-    const indexXml = await fetchXml(LOCAL_SITEMAP_INDEX);
 
-    if (!indexXml) {
-        console.error("   ❌ Failed to load local sitemap.xml");
+    // ---------------------------------------------------------
+    // PHASE 1: Get the list of Sub-Sitemaps
+    // ---------------------------------------------------------
+
+    let indexXml = await fetchXml(LOCAL_SITEMAP_INDEX);
+    let subSitemapUrls = [];
+
+    if (indexXml) {
+        subSitemapUrls = extractTags(indexXml, 'loc').filter(u => u.endsWith('.xml'));
+    }
+
+    // Fallback to remote index if local is missing/empty
+    if (!indexXml || subSitemapUrls.length === 0) {
+        console.log(`   ⚠️  Local sitemap index missing or empty. Checking remote: ${TARGET_DOMAIN}/sitemap.xml`);
+
+        const remoteIndexUrl = `${TARGET_DOMAIN.replace(/\/$/, '')}/sitemap.xml`;
+        indexXml = await fetchXml(remoteIndexUrl);
+
+        if (indexXml) {
+            subSitemapUrls = extractTags(indexXml, 'loc').filter(u => u.endsWith('.xml'));
+        }
+    }
+
+    if (subSitemapUrls.length === 0) {
+        console.error("   ❌ Failed to load sitemap structure (checked local and remote).");
         return Array.from(routes);
     }
 
-    const subSitemapUrls = extractTags(indexXml, 'loc').filter(u => u.endsWith('.xml'));
+    console.log(`   ✅ Found ${subSitemapUrls.length} sub-sitemaps in index.`);
 
-    for (const originalUrl of subSitemapUrls) {
+    // ---------------------------------------------------------
+    // PHASE 2: Process each Sub-Sitemap
+    // ---------------------------------------------------------
+
+    for (const urlStr of subSitemapUrls) {
+        // ✅ Add small delay to prevent rapid-fire requests triggering 421/WAF
+        await delay(500);
+
+        const filename = urlStr.split('/').pop();
+
+        // 1. Construct LOCAL URL
+        const localSitemapUrl = `${LOCAL_BASE_URL}/${filename}`;
+
+        // 2. Construct REMOTE URL
+        const baseUrl = TARGET_DOMAIN.replace(/\/$/, '');
+        const remoteSitemapUrl = `${baseUrl}/sitemap/${filename}`;
+
+        // --- Fetching Logic ---
+
+        let xmlData = await fetchXml(localSitemapUrl);
         let rawUrls = [];
-        const localUrl = originalUrl.replace(TARGET_DOMAIN, LOCAL_BASE_URL);
-        const localData = await fetchXml(localUrl);
+        let source = 'Local';
 
-        if (localData) {
-            rawUrls = extractTags(localData, 'loc');
-        } else {
-            const remoteData = await fetchXml(originalUrl);
-            if (remoteData) rawUrls = extractTags(remoteData, 'loc');
+        if (xmlData) {
+            rawUrls = extractTags(xmlData, 'loc');
         }
 
+        // 3. If Local failed or was empty, switch to Remote
+        if (!xmlData || rawUrls.length === 0) {
+            if (!xmlData) {
+                console.log(`   ⚠️  Missing local file: ${filename}`);
+            } else {
+                console.log(`   ⚠️  Empty local file: ${filename}`);
+            }
+
+            console.log(`       ☁️  Fetching Remote: ${remoteSitemapUrl}`);
+
+            xmlData = await fetchXml(remoteSitemapUrl);
+            source = 'Remote';
+
+            if (xmlData) {
+                rawUrls = extractTags(xmlData, 'loc');
+            }
+        }
+
+        // --- Logging & Processing ---
+
+        if (rawUrls.length > 0) {
+            if (source === 'Remote') {
+                console.log(`       ✅ Recovered ${rawUrls.length} URLs from remote (${filename}).`);
+            }
+        } else {
+            console.error(`       ❌ Failed to get URLs for ${filename} (Local & Remote failed)`);
+        }
+
+        // Add to Routes
         rawUrls.forEach(fullUrl => {
             try {
                 const isAllowed = ALLOWED_DOMAINS.some(d => fullUrl.includes(d));
-                if (isAllowed) {
-                    const urlObj = new URL(fullUrl);
+                if (isAllowed || fullUrl.startsWith('/')) {
+                    const urlObj = new URL(fullUrl, TARGET_DOMAIN);
                     const pathName = urlObj.pathname;
                     if (pathName && pathName !== '/') routes.add(pathName);
                 }
@@ -164,7 +267,7 @@ function startLocalServer() {
                     '--disable-gpu',
                     '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
                 ],
-                dumpio: true
+                dumpio: false
             },
             monitor: false
         });
@@ -178,35 +281,33 @@ function startLocalServer() {
 
         await cluster.task(async ({ page, data: route }) => {
             const url = `${LOCAL_BASE_URL}${route}`;
-            const safeRoute = decodeURIComponent(route);
+
+            let safeRoute = decodeURIComponent(route);
+            if (process.platform === 'win32') {
+                safeRoute = safeRoute.replace(/[:*?"<>|]/g, '_');
+            }
+
             const filePath = route === '/'
                 ? path.join(DIST_DIR, 'index.html')
                 : path.join(DIST_DIR, safeRoute, 'index.html');
 
             try {
-                // ✅ CRITICAL FIX: Use Request Interception
-                // Only inject headers for the API, not for the main page load.
                 await page.setRequestInterception(true);
 
                 page.on('request', (req) => {
                     const reqUrl = req.url();
-
-                    // If it is an API call (to whiletrue.industries), spoof the origin
                     if (reqUrl.includes('whiletrue.industries') || reqUrl.includes('api.kolsherut')) {
                         const headers = { ...req.headers() };
                         headers['Origin'] = TARGET_DOMAIN;
                         headers['Referer'] = TARGET_DOMAIN + '/';
                         req.continue({ headers });
                     } else {
-                        // For localhost and assets, let it pass untouched
                         req.continue();
                     }
                 });
 
-                // Navigate to LOCAL url
                 await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
 
-                // Wait for React to render
                 await page.waitForFunction(
                     'document.getElementById("root") && document.getElementById("root").innerHTML.trim().length > 0',
                     { timeout: 30000 }
