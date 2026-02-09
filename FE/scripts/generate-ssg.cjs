@@ -27,7 +27,8 @@ const PORT = 3000;
 const LOCAL_BASE_URL = `http://127.0.0.1:${PORT}`;
 const LOCAL_SITEMAP_INDEX = `${LOCAL_BASE_URL}/sitemap.xml`;
 
-const MAX_PAGES_TO_CRAWL = 50;
+// ✅ LIMIT SETTING: Set to specific number (e.g., 50) or Infinity for all
+const MAX_PAGES_TO_CRAWL = Infinity;
 
 const ALLOWED_DOMAINS = [
     TARGET_DOMAIN,
@@ -35,8 +36,6 @@ const ALLOWED_DOMAINS = [
     'kolsherut.org.il',
     'api.kolsherut.org.il',
     'srm-staging.whiletrue.industries',
-    `127.0.0.1:${PORT}`,
-    `localhost:${PORT}`
 ];
 
 const MAX_CONCURRENCY = 5;
@@ -225,7 +224,6 @@ function startLocalServer() {
 
         if (routes.length === 0) process.exit(0);
 
-        // ✅ APPLY LIMIT HERE
         if (MAX_PAGES_TO_CRAWL && routes.length > MAX_PAGES_TO_CRAWL) {
             console.log(`\n⚠️  LIMIT ACTIVE: Reducing from ${routes.length} to ${MAX_PAGES_TO_CRAWL} pages.`);
             routes = routes.slice(0, MAX_PAGES_TO_CRAWL);
@@ -291,7 +289,25 @@ function startLocalServer() {
 
                 await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
 
-                // ✅ FIX 1: Inject <base> tag so CSS/JSS loads correctly on deep paths
+                // ✅ FIX 1: "Bake" CSSOM styles into HTML (Critical for JSS)
+                // This forces styles currently in memory (CSSOM) to be written as text into <style> tags.
+                await page.evaluate(() => {
+                    const styleSheets = Array.from(document.styleSheets);
+                    styleSheets.forEach(sheet => {
+                        try {
+                            if (sheet.cssRules && sheet.ownerNode && sheet.ownerNode.tagName === 'STYLE') {
+                                const rules = Array.from(sheet.cssRules).map(rule => rule.cssText).join(' ');
+                                if (rules && rules.length > 0) {
+                                    sheet.ownerNode.innerHTML = rules;
+                                }
+                            }
+                        } catch (e) {
+                            // Ignore CORS errors for external stylesheets
+                        }
+                    });
+                });
+
+                // ✅ FIX 2: Inject <base> tag to fix relative assets (images/fonts)
                 await page.evaluate(() => {
                     if (!document.querySelector('base')) {
                         const base = document.createElement('base');
@@ -307,14 +323,19 @@ function startLocalServer() {
 
                 let html = await page.content();
 
-                // ✅ FIX 2: Replace localhost/127.0.0.1 with Target Domain in final HTML
+                // ✅ FIX 3: Replace localhost origins with Target Domain (Fixes Href & Assets)
                 const targetDomainNoSlash = TARGET_DOMAIN.replace(/\/$/, '');
-                // Regex to catch http://127.0.0.1:3000 and http://localhost:3000
                 const localBaseRegex = new RegExp(LOCAL_BASE_URL, 'g');
                 const localhostRegex = new RegExp(`http://localhost:${PORT}`, 'g');
 
+                // Standard Replace
                 html = html.replace(localBaseRegex, targetDomainNoSlash)
                     .replace(localhostRegex, targetDomainNoSlash);
+
+                // Aggressive Asset Replace (Ensures assets point to remote if local fails)
+                // Matches src="/assets..." and href="/assets..."
+                html = html.replace(/src="\/assets/g, `src="${targetDomainNoSlash}/assets`)
+                    .replace(/href="\/assets/g, `href="${targetDomainNoSlash}/assets`);
 
                 await fs.ensureDir(path.dirname(filePath));
                 await fs.writeFile(filePath, html);
