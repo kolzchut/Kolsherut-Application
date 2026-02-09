@@ -28,7 +28,7 @@ const LOCAL_BASE_URL = `http://127.0.0.1:${PORT}`;
 const LOCAL_SITEMAP_INDEX = `${LOCAL_BASE_URL}/sitemap.xml`;
 
 // ✅ LIMIT SETTING: Set to specific number (e.g., 50) or Infinity for all
-const MAX_PAGES_TO_CRAWL = Infinity;
+const MAX_PAGES_TO_CRAWL = 100;
 
 const ALLOWED_DOMAINS = [
     TARGET_DOMAIN,
