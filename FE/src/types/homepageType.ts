@@ -6,7 +6,7 @@ export interface ILabel {
     query?: string
     cityName?:string,
     bounds?: [number, number, number, number]
-
+    serviceName?: string
 }
 
 export interface IGroup {

@@ -8,6 +8,7 @@ import {
 } from "../utilities/transformAutocompleteUtilities";
 import {pickTopAutocomplete} from "../utilities/mergeAutocompleteUtilities";
 import ensureAutocompleteFallback from "../utilities/ensureAutocompleteFallback";
+import extractServiceForAutocomplete from "../utilities/extractServiceForAutocomplete";
 
 export default asyncHandler(async (req: Request, res: Response) => {
     const {search} = req.params
@@ -15,6 +16,8 @@ export default asyncHandler(async (req: Request, res: Response) => {
     const autocomplete = transformAutocompleteUtilities(rawAutoComplete.autoCompleteResults, true);
     const autoCompleteFromCard = transformAutoCompleteFromCardStructure(rawAutoComplete.autoCompleteFromCardResults);
     autocomplete.unstructured = [...(autocomplete.unstructured || []), ...(autoCompleteFromCard.unstructured || [])];
+    const autoCompleteOfServices = extractServiceForAutocomplete({search, autocompleteOptions: rawAutoComplete.autoCompleteFromCardResults});
+    if(autoCompleteOfServices) autocomplete.structured.unshift(autoCompleteOfServices)
 
     const ensured = ensureAutocompleteFallback(autocomplete, search);
 

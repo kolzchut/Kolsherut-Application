@@ -8,6 +8,7 @@ const getResultsFromServer = async (
     responseId: string,
     situationId: string,
     by: string,
+    serviceName: string
 ) => {
 if (!searchQuery) return [];
     const results = await sendMessage({
@@ -19,6 +20,7 @@ if (!searchQuery) return [];
             responseId,
             situationId,
             by,
+            serviceName
         }
     });
     if (!results?.success) return [];
@@ -30,15 +32,17 @@ const fetchResults = async ({
     responseId = "",
     situationId = "",
     by = "",
+    serviceName = "",
     isFast,
 }: {
     searchQuery?: string,
     responseId?: string,
     situationId?: string,
     by?: string,
+    serviceName?: string,
     isFast: boolean,
 }) => {
-    const fetchedResults = await getResultsFromServer(searchQuery, isFast, responseId, situationId, by);
+    const fetchedResults = await getResultsFromServer(searchQuery, isFast, responseId, situationId, by, serviceName);
     const responseCount = responseId ? 1 : 0;
     const filtersCount = responseCount + (situationId ? 1 : 0) + (searchQuery ? 1 : 0);
     resultsAnalytics.searchEvent({searchQuery, responseCount, filtersCount});

@@ -48,7 +48,7 @@ export const transformAutoCompleteFromCardStructure = (resultsInElasticFormat: a
 
     results.forEach((item: any) => {
         const result = item.source;
-        const label = `${result.service_name} ${result.branch_city && `(${result.branch_city})` || ""}`;
+        const label = `${result.service_name} ${result.branch_city && `(${result.branch_city})` || result.organization_name && `(${result.organization_name})` || ""}`;
         const labelHighlighted = pickHighlight(item.highlight, label);
         unstructuredResults.push({
             label,

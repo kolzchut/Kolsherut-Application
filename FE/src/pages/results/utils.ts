@@ -23,6 +23,7 @@ export const convertFilterToBeFormat = ({searchQuery, backendFilters}: IConvertF
     if (backendFilters.situation) value.situation_id = backendFilters.situation;
     if (backendFilters.response) value.response_id = backendFilters.response;
     if (backendFilters.by) value.by = backendFilters.by;
+    if (backendFilters.serviceName) value.serviceName = backendFilters.serviceName;
     return {value};
 }
 

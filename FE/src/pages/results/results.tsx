@@ -77,7 +77,7 @@ const Results = () => {
             removeAllPOIs();
             dispatch(setSelectedOrganization(null));
         }
-    }, [newPage, searchQuery, backendFilters.situation, backendFilters.response, backendFilters.by]);
+    }, [newPage, searchQuery, backendFilters.situation, backendFilters.response, backendFilters.by, backendFilters.serviceName]);
 
     useEffect(() => {
         if (!displayResultsMap) return;
