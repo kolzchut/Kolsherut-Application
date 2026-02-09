@@ -12,6 +12,7 @@ interface IPreset {
     responseId?: string,
     situationId?: string,
     by?: string,
+    serviceName?: string,
     bounds?: [number, number, number, number]
 }
 
@@ -24,6 +25,7 @@ const buildSearchOptionFromPreset = (preset: IPreset) => {
         responseId: preset.responseId,
         cityName: preset.cityName,
         by: preset.by,
+        serviceName: preset.serviceName,
         labelHighlighted: preset.labelHighlighted,
     } as IStructureAutocomplete;
 }
@@ -46,7 +48,7 @@ const DefaultSearchOptions = ({onCloseSearchOptions}: { onCloseSearchOptions: ()
 
     const items = useMemo(() => presets.map((preset: IPreset) => {
         const value = buildSearchOptionFromPreset(preset);
-        const isStructured = !!(preset.responseId || preset.situationId || preset.cityName || preset.bounds || preset.by);
+        const isStructured = !!(preset.responseId || preset.situationId || preset.cityName || preset.bounds || preset.by || preset.serviceName);
         const key = `${preset.query}`;
         return (
             <SearchOption

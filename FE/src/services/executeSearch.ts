@@ -14,6 +14,7 @@ const executeSearch = ({value, isStructured, onClose,refreshPage}:IProps) => {
     const customValueAsLabel: ILabel = {
         query: value.query,
         title: value.label,
+        serviceName: value.serviceName
     }
     if (isStructured) {
         const structuredValue = value as IStructureAutocomplete;
@@ -22,6 +23,7 @@ const executeSearch = ({value, isStructured, onClose,refreshPage}:IProps) => {
         customValueAsLabel.cityName = structuredValue.cityName;
         customValueAsLabel.bounds = structuredValue.bounds;
         customValueAsLabel.by = structuredValue.by;
+        customValueAsLabel.serviceName = structuredValue.serviceName;
     } else {
         const unstructuredValue = value as IUnStructuredAutocomplete;
         if (unstructuredValue.cardId) {

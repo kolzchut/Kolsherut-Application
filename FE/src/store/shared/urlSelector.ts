@@ -3,15 +3,15 @@ import UrlParams from "../../types/urlParams";
 import {getCardId, getOldURL, getPage, getSearchQuery} from "../general/general.selector";
 import {
     getBackendByFilter,
-    getBackendResponseFilter, getBackendSituationFilter,
+    getBackendResponseFilter, getBackendServiceNameFilter, getBackendSituationFilter,
     getLocationFilter,
     getResponsesFilter,
     getSituationsFilter
 } from "../filter/filter.selector";
 import {stringifyLocation} from "../../services/url/parseURL";
 
-export const getUrlParams = createSelector([getPage, getCardId, getSearchQuery, getLocationFilter, getSituationsFilter, getResponsesFilter, getBackendResponseFilter, getBackendSituationFilter, getBackendByFilter, getOldURL],
-    (page, cardId, searchQuery, locationFilter, situationFilter, responseFilter, beResponseFilter, beSituationFilter, beByFilter,oldURL) => {
+export const getUrlParams = createSelector([getPage, getCardId, getSearchQuery, getLocationFilter, getSituationsFilter, getResponsesFilter, getBackendResponseFilter, getBackendSituationFilter, getBackendByFilter,getBackendServiceNameFilter, getOldURL],
+    (page, cardId, searchQuery, locationFilter, situationFilter, responseFilter, beResponseFilter, beSituationFilter, beByFilter, beServiceNameFilter,oldURL) => {
         const params: UrlParams = {};
         if (page != 'home') params.p = page;
         if (page === 'card' && cardId) params.c = cardId;
@@ -22,6 +22,7 @@ export const getUrlParams = createSelector([getPage, getCardId, getSearchQuery, 
         if (page === 'results' && beResponseFilter) params.brf = beResponseFilter;
         if (page === 'results' && beSituationFilter) params.bsf = beSituationFilter;
         if (page === 'results' && beByFilter) params.by = beByFilter;
+        if (page === 'results' && beServiceNameFilter) params.bsnf = beServiceNameFilter;
         if(page === 'results' && oldURL) params.old = 'true';
 
         return params;

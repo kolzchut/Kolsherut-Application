@@ -7,6 +7,7 @@ export interface IStructureAutocomplete {
     cityName?: string,
     labelHighlighted?: string,
     by?: string,
+    serviceName?: string
 }
 
 export interface IUnStructuredAutocomplete {
@@ -14,6 +15,7 @@ export interface IUnStructuredAutocomplete {
     query: string,
     labelHighlighted?: string,
     cardId?: string,
+    serviceName?: string
 }
 
 

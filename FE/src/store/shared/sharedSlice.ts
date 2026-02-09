@@ -16,7 +16,7 @@ import {IStructureAutocomplete, IUnStructuredAutocomplete} from "../../types/aut
 
 const updateStoreWithSearchParametersAndGetNewFetchData = (value: IStructureAutocomplete)=>{
     if (value?.query) store.dispatch(setSearchQuery(value.query));
-    store.dispatch(setBackendFilters({response:value?.responseId, situation:value?.situationId, by:value?.by}));
+    store.dispatch(setBackendFilters({response:value?.responseId, situation:value?.situationId, by:value?.by, serviceName: value?.serviceName}));
     const filters: {location?: {key: string, bounds: [number,number,number,number]}} = {}
     if(value?.cityName && value?.bounds) filters.location = {key: value.cityName, bounds: value.bounds};
     store.dispatch(setFilters(filters));
@@ -25,6 +25,7 @@ const updateStoreWithSearchParametersAndGetNewFetchData = (value: IStructureAuto
         responseId: value?.responseId || "",
         situationId: value?.situationId || "",
         by: value?.by || "",
+        serviceName: value?.serviceName || "",
     };
 
 }
@@ -47,7 +48,7 @@ const updateAllResults = async ({startResults, restResults}: {
 };
 
 const settingFilters = ({removeOldFilters, value}: {removeOldFilters:boolean,value:ILabel})=>{
-    store.dispatch(setBackendFilters({response: value.response_id, situation: value.situation_id, by: value.by}));
+    store.dispatch(setBackendFilters({response: value.response_id, situation: value.situation_id, by: value.by, serviceName: value.serviceName}));
     store.dispatch(setPage('results'))
     const filters: {location?: {key: string, bounds: [number,number,number,number]}} = {}
     if(value.cityName && value.bounds) filters.location = {key: value.cityName, bounds: value.bounds};
@@ -75,6 +76,7 @@ export const settingToResults = async ({value}: { value: ILabel}) => {
         situationId: value.situation_id,
         searchQuery: value.query,
         by: value.by,
+        serviceName: value.serviceName
     }
     const old = store.getState().general.oldURL;
     if(old){

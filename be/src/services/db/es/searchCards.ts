@@ -1,31 +1,25 @@
-import {executeESQuery} from './es';
+import { executeESQuery } from './es';
 import mapElasticsearchHitsToServiceHierarchy from "../../../utilities/mapElasticsearchHitsToServiceHierarchy";
 import buildSearchQuery from "./dsl/buildSearchQuery";
 import vars from "../../../vars";
-import {cardSearchSourceFields} from "./sourceFields/cardSearchSourceFields";
+import { cardSearchSourceFields } from "./sourceFields/cardSearchSourceFields";
 import buildFreeSearchQuery from "./dsl/buildFreeSearchQuery";
 
-export default async ({fixedSearchQuery, isFast, responseId, situationId,by}: {
+export default async ({ fixedSearchQuery, isFast, responseId, situationId,serviceName, by }: {
     fixedSearchQuery: string,
     isFast: boolean,
     responseId: string,
     situationId: string,
-    by:string
+    serviceName: string,
+    by: string
 }) => {
-    const searchedWithOnlyResponse = !(!!situationId) && !!responseId
-    const mustConditions = [];
-    const freeSearch = !!(fixedSearchQuery && responseId === "" && situationId === "" && by === "")
-    if (freeSearch) {
-        mustConditions.push({
-            multi_match: {
-                query: fixedSearchQuery,
-                fields: ["service_name", "service_description", "organization_name", "branch_name", "branch_address", "branch_city", "responses.id", "situations.id"],
-                fuzziness: "AUTO"
-            }
-        });
-    }
+    const searchedWithOnlyResponse = !situationId && !!responseId;
+    const freeSearch = !!(fixedSearchQuery && !responseId && !situationId && !by && !serviceName);
 
-    if (responseId && responseId !== "") {
+    const mustConditions = [];
+
+
+    if (responseId) {
         mustConditions.push({
             wildcard: {
                 "responses.id": `*${responseId}*`
@@ -33,7 +27,7 @@ export default async ({fixedSearchQuery, isFast, responseId, situationId,by}: {
         });
     }
 
-    if (situationId && situationId !== "") {
+    if (situationId) {
         mustConditions.push({
             wildcard: {
                 "situations.id": `*${situationId}*`
@@ -41,7 +35,7 @@ export default async ({fixedSearchQuery, isFast, responseId, situationId,by}: {
         });
     }
 
-    if (by && by !== "") {
+    if (by) {
         mustConditions.push({
             bool: {
                 should: [
@@ -54,11 +48,21 @@ export default async ({fixedSearchQuery, isFast, responseId, situationId,by}: {
             }
         });
     }
-
+    if (serviceName) {
+        mustConditions.push({
+            match: {
+                "service_name": {
+                    query: serviceName,
+                    operator: "and"
+                }
+            }
+        });
+    }
 
     const propsForQuery = isFast ? vars.defaultParams.searchCards.fast : vars.defaultParams.searchCards.rest;
 
     let query;
+
     if (freeSearch) {
         query = buildFreeSearchQuery(
             fixedSearchQuery,
@@ -67,7 +71,7 @@ export default async ({fixedSearchQuery, isFast, responseId, situationId,by}: {
                 from: propsForQuery.offset,
                 innerHitsSize: propsForQuery.innerHitsSize,
             }
-        )
+        );
     } else {
         query = buildSearchQuery({
             mustConditions,
@@ -81,7 +85,11 @@ export default async ({fixedSearchQuery, isFast, responseId, situationId,by}: {
 
     try {
         const response = await executeESQuery(query);
-        return mapElasticsearchHitsToServiceHierarchy({elasticsearchResponse:response, sortByScore:!freeSearch, searchedWithOnlyResponse });
+        return mapElasticsearchHitsToServiceHierarchy({
+            elasticsearchResponse: response,
+            sortByScore: !freeSearch,
+            searchedWithOnlyResponse
+        });
     } catch (error) {
         console.error('Error executing query:', error);
         throw error;

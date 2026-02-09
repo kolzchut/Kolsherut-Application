@@ -10,7 +10,8 @@ export const initialState = {
     backendFilters: {
         response: null as string | null,
         situation: null as string | null,
-        by: ""
+        by: "",
+        serviceName:""
     }
 };
 
