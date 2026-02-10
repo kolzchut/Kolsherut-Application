@@ -2,6 +2,10 @@ import {ICard} from "../../types/cardType";
 import analytics from "./analytics";
 import {cardToItem} from "./gtagUtilities";
 
+const getCardName = (card: ICard): string => {
+    return card.service_name || card.card_id || ''
+}
+
 const cardEvent = (
     card: ICard,
     index: number,
@@ -19,7 +23,7 @@ const cardEvent = (
     } else {
         const eventParams = {
             card_id: card.card_id,
-            card_name: card.service_name,
+            card_name: getCardName(card),
             card_org: card.organization_id,
             landing_page:analytics.getIsLandingPageAsString()
         };
@@ -38,7 +42,7 @@ const addToCartEvent = (card: ICard, action: string, action_url: string) => {
         action_type: action,
         action_url: action_url,
         card_id: card.card_id,
-        card_name: card.service_name,
+        card_name: getCardName(card),
         card_org: card.organization_id,
         cta_action: action,
         landing_page: analytics.getIsLandingPageAsString,
@@ -58,7 +62,7 @@ const cardActionEvent = (card: ICard, action: string, action_url: string) => {
         action_type: action,
         action_url: action_url,
         card_id: card.card_id,
-        card_name: card.service_name,
+        card_name: getCardName(card),
         card_org: card.organization_id,
         landing_page: 'no',
     };

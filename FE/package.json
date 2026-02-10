@@ -22,7 +22,7 @@
     "build": "vite build",
     "postbuild": "node scripts/postbuild.cjs",
     "ssg:generate": "node scripts/generate-ssg.cjs",
-    "build:development": "cross-env ENVIRONMENT=development npm run build",
+    "build:development": "cross-env ENVIRONMENT=development npm run build && cross-env ENVIRONMENT=development npm run ssg:generate",
     "build:local": "cross-env ENVIRONMENT=local npm run build",
     "build:stage": "cross-env ENVIRONMENT=stage npm run build && cross-env ENVIRONMENT=stage npm run ssg:generate",
     "build:production": "cross-env ENVIRONMENT=production npm run build && cross-env ENVIRONMENT=production npm run ssg:generate",
