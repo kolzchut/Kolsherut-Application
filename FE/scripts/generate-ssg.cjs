@@ -27,7 +27,7 @@ const PORT = 3000;
 const LOCAL_BASE_URL = `http://127.0.0.1:${PORT}`;
 const LOCAL_SITEMAP_INDEX = `${LOCAL_BASE_URL}/sitemap.xml`;
 
-const MAX_PAGES_TO_CRAWL = 25000;
+const MAX_PAGES_TO_CRAWL = 250;
 
 const ALLOWED_DOMAINS = [
     TARGET_DOMAIN,
@@ -35,6 +35,11 @@ const ALLOWED_DOMAINS = [
     'kolsherut.org.il',
     'api.kolsherut.org.il',
     'srm-staging.whiletrue.industries',
+];
+
+const PROXIED_API_PATTERNS = [
+    'whiletrue.industries',
+    'api.kolsherut'
 ];
 
 const MAX_CONCURRENCY = 5;
@@ -73,7 +78,7 @@ async function fetchXml(url) {
             httpsAgent: isHttps ? agent : undefined,
             httpAgent: !isHttps ? agent : undefined,
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'User-Agent': 'KolsherutTestBot',
                 'Host': urlObj.hostname,
                 'Connection': 'close',
                 'Accept-Encoding': 'gzip, deflate'
@@ -262,10 +267,18 @@ function startLocalServer() {
         await cluster.task(async ({ page, data: route }) => {
             const url = `${LOCAL_BASE_URL}${route}`;
 
-            let safeRoute = decodeURIComponent(route);
-            if (process.platform === 'win32') {
-                safeRoute = safeRoute.replace(/[:*?"<>|]/g, '_');
+            // ✅ FIX 1: Robust Filename Sanitization (Applies to ALL environments)
+            // We decode the URI to get readable Hebrew, but we MUST replace dangerous
+            // filesystem characters like '|' (pipe), ':' and others with '_'.
+            let safeRoute = route;
+            try {
+                safeRoute = decodeURIComponent(route);
+            } catch (e) {
+                console.warn(`   ⚠️ Could not decode route: ${route}, using raw.`);
             }
+
+            // Replace characters that are invalid in file paths (Windows/Linux/S3 friendly)
+            safeRoute = safeRoute.replace(/[:*?"<>|]/g, '_');
 
             const filePath = route === '/'
                 ? path.join(DIST_DIR, 'index.html')
@@ -276,7 +289,7 @@ function startLocalServer() {
 
                 page.on('request', (req) => {
                     const reqUrl = req.url();
-                    if (reqUrl.includes('whiletrue.industries') || reqUrl.includes('api.kolsherut')) {
+                    if (PROXIED_API_PATTERNS.some(pattern => reqUrl.includes(pattern))) {
                         const headers = { ...req.headers() };
                         headers['Origin'] = TARGET_DOMAIN;
                         headers['Referer'] = TARGET_DOMAIN + '/';
@@ -288,25 +301,20 @@ function startLocalServer() {
 
                 await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
 
-                // ✅ FIX 1: "Bake" CSSOM styles into HTML (Critical for JSS)
-                // This forces styles currently in memory (CSSOM) to be written as text into <style> tags.
+                // "Bake" CSSOM styles
                 await page.evaluate(() => {
                     const styleSheets = Array.from(document.styleSheets);
                     styleSheets.forEach(sheet => {
                         try {
                             if (sheet.cssRules && sheet.ownerNode && sheet.ownerNode.tagName === 'STYLE') {
                                 const rules = Array.from(sheet.cssRules).map(rule => rule.cssText).join(' ');
-                                if (rules && rules.length > 0) {
-                                    sheet.ownerNode.innerHTML = rules;
-                                }
+                                if (rules && rules.length > 0) sheet.ownerNode.innerHTML = rules;
                             }
-                        } catch (e) {
-                            // Ignore CORS errors for external stylesheets
-                        }
+                        } catch (e) { }
                     });
                 });
 
-                // ✅ FIX 2: Inject <base> tag to fix relative assets (images/fonts)
+                // Inject <base> tag
                 await page.evaluate(() => {
                     if (!document.querySelector('base')) {
                         const base = document.createElement('base');
@@ -322,21 +330,20 @@ function startLocalServer() {
 
                 let html = await page.content();
 
-                // ✅ FIX 3: Replace localhost origins with Target Domain (Fixes Href & Assets)
+                // Replace localhost with Target Domain
                 const targetDomainNoSlash = TARGET_DOMAIN.replace(/\/$/, '');
                 const localBaseRegex = new RegExp(LOCAL_BASE_URL, 'g');
                 const localhostRegex = new RegExp(`http://localhost:${PORT}`, 'g');
 
-                // Standard Replace
                 html = html.replace(localBaseRegex, targetDomainNoSlash)
-                    .replace(localhostRegex, targetDomainNoSlash);
-
-                // Aggressive Asset Replace (Ensures assets point to remote if local fails)
-                // Matches src="/assets..." and href="/assets..."
-                html = html.replace(/src="\/assets/g, `src="${targetDomainNoSlash}/assets`)
+                    .replace(localhostRegex, targetDomainNoSlash)
+                    .replace(/src="\/assets/g, `src="${targetDomainNoSlash}/assets`)
                     .replace(/href="\/assets/g, `href="${targetDomainNoSlash}/assets`);
 
+                // ✅ FIX 2: Ensure directory exists before writing
                 await fs.ensureDir(path.dirname(filePath));
+
+                // Write file (overwrite if exists)
                 await fs.writeFile(filePath, html);
 
                 successCount++;
