@@ -34,6 +34,7 @@ const buildSitemapIndexXML = () => {
     sitemaps.forEach((relativePath) => {
         xml += `  <sitemap>\n`;
         xml += `    <loc>${joinUrl(baseUrl, relativePath)}</loc>\n`;
+        if(relativePath === "/sitemap/cards.xml") xml += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;
         xml += `  </sitemap>\n`;
     });
 
