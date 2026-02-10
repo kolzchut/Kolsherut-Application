@@ -14,6 +14,7 @@ export default ({search, autocompleteOptions}: {search:string, autocompleteOptio
     return {
         label: relevantOption.service_name,
         query: relevantOption.service_name,
-        serviceName: relevantOption.service_name
+        serviceName: relevantOption.service_name,
+        score: Infinity
     }
 }

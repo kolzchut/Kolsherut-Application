@@ -19,7 +19,7 @@ interface TopOutput {
 }
 
 const normalizeInput = ({structured = [], unstructured = []}: TopInput) => ({structured, unstructured});
-const scoreOf = (x: { score?: number }): number => (Number.isFinite(x.score as number) ? (x.score as number) : 0);
+const scoreOf = (x: { score?: number }): number => (typeof x.score === 'number' && !Number.isNaN(x.score) ? x.score : 0);
 const tag = (type: Kind) => (item: IStructureAutocomplete | IUnStructuredAutocomplete): CombinedItem => ({
     type,
     score: scoreOf(item),
