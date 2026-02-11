@@ -24,7 +24,7 @@ const Group = ({group}: { group: IGroup }) => {
             situation_id: group.situation_id,
             response_id: group.response_id,
             title: group.group,
-            query: group.group_link
+            query: group.group_link.replace(/ /g, "_")
         }
         homepageAnalytics.clickOnOptionalSearch(group)
         changingPageToResults({value: groupAsLabel, removeOldFilters: true});

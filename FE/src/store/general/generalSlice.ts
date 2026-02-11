@@ -19,7 +19,7 @@ export const generalSlice = createSlice({
             state.page = action.payload;
         },
         setSearchQuery(state: GeneralStore, action) {
-            state.searchQuery = action.payload;
+            state.searchQuery = action.payload.replace(/ /g, "_");
         },
         setModal(state: GeneralStore, action) {
             state.modal = action.payload;
