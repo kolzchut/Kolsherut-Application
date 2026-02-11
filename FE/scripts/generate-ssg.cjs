@@ -323,12 +323,18 @@ function startLocalServer() {
         console.log(`\n📝 Generating Nginx Map file for environment: ${env}`);
         const mapFilePath = path.join(DIST_DIR, mapFileName);
 
-        const mapContent = successfulRoutes
+        const uniqueRoutes = [...new Set(successfulRoutes)];
+
+        const mapContent = uniqueRoutes
             .filter(r => r !== '/') // Exclude homepage
-            .map(r => `"${r}" 1;`)  // Format: "/path" 1;
+            .map(r => {
+                const hex = Buffer.from(r, 'utf8').toString('hex').replace(/(..)/g, '\\x$1');
+                return `"${hex}" 1;`;
+            })
             .join('\n');
 
-        await fs.writeFile(mapFilePath, mapContent);
+        // Write as standard utf8 (content is now ASCII-safe characters only)
+        await fs.writeFile(mapFilePath, mapContent, 'utf8');
         console.log(`   ✅ Map file written to: ${mapFilePath}`);
 
         console.log(`\n✨ Done! Success: ${successCount}, Failed: ${failCount}`);
