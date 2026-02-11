@@ -226,8 +226,6 @@ function startLocalServer() {
         server = await startLocalServer();
         let routes = await getRoutesToCrawl();
 
-        routes = routes.filter(r => r.startsWith('/p/results')); // TODO: For testing purposes only, validating results pages.
-
         if (routes.length === 0) process.exit(0);
 
         if (MAX_PAGES_TO_CRAWL && routes.length > MAX_PAGES_TO_CRAWL) {
