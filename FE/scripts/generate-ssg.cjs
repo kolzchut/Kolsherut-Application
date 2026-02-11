@@ -277,7 +277,8 @@ function startLocalServer() {
                 console.warn(`   ⚠️ Could not decode route: ${route}, using raw.`);
             }
 
-            safeRoute = safeRoute.replace(/[:*?"<>|]/g, '_');
+            // Replace characters that are invalid in file paths AND spaces to underscores
+            safeRoute = safeRoute.replace(/[:*?"<>| ]/g, '_');
 
             const filePath = route === '/'
                 ? path.join(DIST_DIR, 'index.html')

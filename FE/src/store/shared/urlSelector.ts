@@ -9,6 +9,7 @@ import {
     getSituationsFilter
 } from "../filter/filter.selector";
 import {stringifyLocation} from "../../services/url/parseURL";
+import validateLocationIsNotMatchingDefault from "../../services/validateLocationIsNotMatchingDefault.ts";
 
 export const getUrlParams = createSelector([getPage, getCardId, getSearchQuery, getLocationFilter, getSituationsFilter, getResponsesFilter, getBackendResponseFilter, getBackendSituationFilter, getBackendByFilter,getBackendServiceNameFilter, getOldURL],
     (page, cardId, searchQuery, locationFilter, situationFilter, responseFilter, beResponseFilter, beSituationFilter, beByFilter, beServiceNameFilter,oldURL) => {
@@ -16,7 +17,7 @@ export const getUrlParams = createSelector([getPage, getCardId, getSearchQuery, 
         if (page != 'home') params.p = page;
         if (page === 'card' && cardId) params.c = cardId;
         if (page === 'results' && searchQuery) params.sq = searchQuery;
-        if (page === 'results' && locationFilter) params.lf = stringifyLocation(locationFilter);
+        if (page === 'results' && locationFilter && validateLocationIsNotMatchingDefault({currentLocation: locationFilter})) params.lf = stringifyLocation(locationFilter);
         if (page === 'results' && situationFilter && situationFilter.length > 0) params.sf = JSON.stringify(situationFilter);
         if (page === 'results' && responseFilter && responseFilter.length > 0) params.rf = JSON.stringify(responseFilter);
         if (page === 'results' && beResponseFilter) params.brf = beResponseFilter;
