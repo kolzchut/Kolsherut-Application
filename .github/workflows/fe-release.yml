@@ -1,9 +1,4 @@
 name: FE Release (production)
-# Builds and deploys FE on tag pushes (production) only if FE files changed.
-# Produces two images:
-#  1. commit SHA: ghcr.io/kolzchut/kol-sherut-fe:<sha>
-#  2. tag-SHA:    ghcr.io/kolzchut/kol-sherut-fe:<tag>-<sha> (used in Helm)
-# (Plain <tag> alias removed per request)
 on:
   push:
     tags:
@@ -12,6 +7,13 @@ on:
       - 'FE/**'
       - '.github/workflows/fe-release.yml'
   workflow_dispatch:
+    inputs:
+      manual_tag_name:
+        description: 'Virtual Tag Name'
+        required: false
+      commit_ref:
+        description: 'SHA to build'
+        required: false
 
 permissions:
   contents: write
@@ -27,10 +29,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # SAFETY CHECK:
+          # 1. If triggered by script (inputs.commit_ref exists) -> Use that SHA.
+          # 2. If triggered by normal tag push -> inputs are empty -> Use github.ref (The Tag).
+          ref: ${{ inputs.commit_ref || github.ref }}
 
-      - name: Derive Tag
+      - name: Derive Tag and SHA
         id: vars
-        run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        run: |
+          # Logic: If manual input exists, use it. Otherwise, use standard tag.
+          if [ -n "${{ inputs.manual_tag_name }}" ]; then
+            echo "tag_name=${{ inputs.manual_tag_name }}" >> $GITHUB_OUTPUT
+          else
+            # Standard behavior: Strip refs/tags/ from the ref
+            echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          fi
+          
+          # We grab the SHA of whatever we just checked out in the previous step.
+          # This ensures the docker image is tagged with the code SHA, not the workflow SHA.
+          echo "real_sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -68,14 +86,20 @@ jobs:
           SRM_DEVOPS_DEPLOY_KEY: ${{ secrets.SRM_DEVOPS_DEPLOY_KEY }}
         run: |
           TAG="${{ steps.vars.outputs.tag_name }}"
-          SHA_IMAGE="ghcr.io/kolzchut/${IMAGE_NAME}:${GITHUB_SHA}"
-          TAG_SHA_IMAGE="ghcr.io/kolzchut/${IMAGE_NAME}:${TAG}-${GITHUB_SHA}"
-          # Push commit-SHA image (for traceability)
+          
+          # Use the SHA calculated in step 2 (The SHA of the code)
+          REAL_SHA="${{ steps.vars.outputs.real_sha }}"
+          
+          SHA_IMAGE="ghcr.io/kolzchut/${IMAGE_NAME}:${REAL_SHA}"
+          TAG_SHA_IMAGE="ghcr.io/kolzchut/${IMAGE_NAME}:${TAG}-${REAL_SHA}"
+          
+          # Push commit-SHA image
           docker tag fe-release "$SHA_IMAGE"
           docker push "$SHA_IMAGE"
           # Push tag-SHA image (used in Helm production values)
           docker tag fe-release "$TAG_SHA_IMAGE"
           docker push "$TAG_SHA_IMAGE"
+          
           echo "${SRM_DEVOPS_DEPLOY_KEY}" > srm_devops_deploy_key
           chmod 400 srm_devops_deploy_key
           export GIT_SSH_COMMAND="ssh -i $(pwd)/srm_devops_deploy_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
