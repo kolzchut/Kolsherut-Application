@@ -278,7 +278,7 @@ function startLocalServer() {
             }
 
             // Replace characters that are invalid in file paths AND spaces to underscores
-            safeRoute = safeRoute.replace(/[:*?"<>| ]/g, '_');
+            safeRoute = safeRoute.replace(/[*?"<>| ]/g, '_');
 
             const filePath = route === '/'
                 ? path.join(DIST_DIR, 'index.html')
