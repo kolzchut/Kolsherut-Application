@@ -32,6 +32,7 @@ function App() {
     const captureFirstUrl = useOnce(() => {
         dispatch(setFirstVisitedUrl(window.location.href));
     });
+
     captureFirstUrl();
 
     return <>

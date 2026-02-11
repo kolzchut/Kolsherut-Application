@@ -1,6 +1,7 @@
 import vars from "../../vars";
 import Taxonomy from "../../types/taxonomy";
 import escapeXML from "../escapeXML";
+import removeSpacesInString from "../removeSpacesInString";
 
 
 interface RecursiveTaxonomyToXMLParams {
@@ -23,7 +24,7 @@ const recursiveTaxonomyToXML = ({taxonomy, recursive = 0, isResponse}: Recursive
     let xml = '';
     taxonomy.forEach(item => {
         xml += `<url>\n`;
-        xml += `<loc>${escapeXML(transformSlugToURL({slug: item.slug, query: item.name.tx.he, isResponse}))}</loc>\n`;
+        xml += `<loc>${escapeXML(transformSlugToURL({slug: item.slug, query:removeSpacesInString(item.name.tx.he), isResponse}))}</loc>\n`;
         xml += `</url>\n`;
 
         if (item.items && item.items.length > 0) {
