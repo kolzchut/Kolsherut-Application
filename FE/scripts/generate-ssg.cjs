@@ -20,14 +20,13 @@ if (!fs.existsSync(configPath)) {
 }
 const envConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
 
-// The API expects requests from THIS domain
 const TARGET_DOMAIN = envConfig.currentURL;
 const DIST_DIR = path.join(__dirname, '../dist');
 const PORT = 3000;
 const LOCAL_BASE_URL = `http://127.0.0.1:${PORT}`;
 const LOCAL_SITEMAP_INDEX = `${LOCAL_BASE_URL}/sitemap.xml`;
 
-const MAX_PAGES_TO_CRAWL = 25000;
+const MAX_PAGES_TO_CRAWL = 250;
 
 const ALLOWED_DOMAINS = [
     TARGET_DOMAIN,
@@ -43,6 +42,9 @@ const PROXIED_API_PATTERNS = [
 ];
 
 const MAX_CONCURRENCY = 5;
+
+const mapFileName = `ssgRoutes-${env}.map`;
+
 
 // ==========================================
 // 2. HELPER FUNCTIONS
@@ -66,23 +68,13 @@ async function fetchXml(url) {
         const urlObj = new URL(url);
         const isHttps = urlObj.protocol === 'https:';
 
-        const agentOptions = {
-            keepAlive: false,
-            rejectUnauthorized: false,
-            servername: urlObj.hostname
-        };
-
+        const agentOptions = { keepAlive: false, rejectUnauthorized: false, servername: urlObj.hostname };
         const agent = isHttps ? new https.Agent(agentOptions) : new http.Agent(agentOptions);
 
         const { data } = await axios.get(url, {
             httpsAgent: isHttps ? agent : undefined,
             httpAgent: !isHttps ? agent : undefined,
-            headers: {
-                'User-Agent': 'KolsherutTestBot',
-                'Host': urlObj.hostname,
-                'Connection': 'close',
-                'Accept-Encoding': 'gzip, deflate'
-            },
+            headers: { 'User-Agent': 'KolsherutTestBot', 'Host': urlObj.hostname, 'Connection': 'close', 'Accept-Encoding': 'gzip, deflate' },
             timeout: 15000,
             validateStatus: () => true
         });
@@ -92,10 +84,6 @@ async function fetchXml(url) {
         }
         return null;
     } catch (error) {
-        const status = error.response ? error.response.status : (error.code || 'Unknown');
-        if (url.includes('http') && !url.includes('127.0.0.1')) {
-            console.log(`      ❌ Fetch failed: ${url} (Error: ${status})`);
-        }
         return null;
     }
 }
@@ -107,23 +95,17 @@ async function getRoutesToCrawl() {
     let indexXml = await fetchXml(LOCAL_SITEMAP_INDEX);
     let subSitemapUrls = [];
 
-    if (indexXml) {
-        subSitemapUrls = extractTags(indexXml, 'loc').filter(u => u.endsWith('.xml'));
-    }
+    if (indexXml) subSitemapUrls = extractTags(indexXml, 'loc').filter(u => u.endsWith('.xml'));
 
     if (!indexXml || subSitemapUrls.length === 0) {
         console.log(`   ⚠️  Local sitemap index missing or empty. Checking remote: ${TARGET_DOMAIN}/sitemap.xml`);
-
         const remoteIndexUrl = `${TARGET_DOMAIN.replace(/\/$/, '')}/sitemap.xml`;
         indexXml = await fetchXml(remoteIndexUrl);
-
-        if (indexXml) {
-            subSitemapUrls = extractTags(indexXml, 'loc').filter(u => u.endsWith('.xml'));
-        }
+        if (indexXml) subSitemapUrls = extractTags(indexXml, 'loc').filter(u => u.endsWith('.xml'));
     }
 
     if (subSitemapUrls.length === 0) {
-        console.error("   ❌ Failed to load sitemap structure (checked local and remote).");
+        console.error("   ❌ Failed to load sitemap structure.");
         return Array.from(routes);
     }
 
@@ -131,7 +113,6 @@ async function getRoutesToCrawl() {
 
     for (const urlStr of subSitemapUrls) {
         await delay(500);
-
         const filename = urlStr.split('/').pop();
         const localSitemapUrl = `${LOCAL_BASE_URL}/${filename}`;
         const baseUrl = TARGET_DOMAIN.replace(/\/$/, '');
@@ -141,33 +122,13 @@ async function getRoutesToCrawl() {
         let rawUrls = [];
         let source = 'Local';
 
-        if (xmlData) {
-            rawUrls = extractTags(xmlData, 'loc');
-        }
+        if (xmlData) rawUrls = extractTags(xmlData, 'loc');
 
         if (!xmlData || rawUrls.length === 0) {
-            if (!xmlData) {
-                console.log(`   ⚠️  Missing local file: ${filename}`);
-            } else {
-                console.log(`   ⚠️  Empty local file: ${filename}`);
-            }
-
             console.log(`       ☁️  Fetching Remote: ${remoteSitemapUrl}`);
-
             xmlData = await fetchXml(remoteSitemapUrl);
             source = 'Remote';
-
-            if (xmlData) {
-                rawUrls = extractTags(xmlData, 'loc');
-            }
-        }
-
-        if (rawUrls.length > 0) {
-            if (source === 'Remote') {
-                console.log(`       ✅ Recovered ${rawUrls.length} URLs from remote (${filename}).`);
-            }
-        } else {
-            console.error(`       ❌ Failed to get URLs for ${filename} (Local & Remote failed)`);
+            if (xmlData) rawUrls = extractTags(xmlData, 'loc');
         }
 
         rawUrls.forEach(fullUrl => {
@@ -195,12 +156,9 @@ function startLocalServer() {
     const server = http.createServer((req, res) => {
         return handler(req, res, {
             public: DIST_DIR,
-            rewrites: [
-                { source: '**', destination: '/index.html' }
-            ]
+            rewrites: [ { source: '**', destination: '/index.html' } ]
         });
     });
-
     return new Promise((resolve) => {
         server.listen(PORT, '0.0.0.0', () => {
             console.log(`\n🚀 --- Step 2: Build Server Started on Port ${PORT} ---`);
@@ -221,6 +179,7 @@ function startLocalServer() {
 
     let server;
     let cluster;
+    const successfulRoutes = [];
 
     try {
         server = await startLocalServer();
@@ -245,11 +204,8 @@ function startLocalServer() {
             puppeteerOptions: {
                 headless: "new",
                 args: [
-                    '--no-sandbox',
-                    '--disable-setuid-sandbox',
-                    '--disable-web-security',
-                    '--disable-dev-shm-usage',
-                    '--disable-gpu',
+                    '--no-sandbox', '--disable-setuid-sandbox', '--disable-web-security',
+                    '--disable-dev-shm-usage', '--disable-gpu',
                     '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
                 ],
                 dumpio: false
@@ -259,7 +215,6 @@ function startLocalServer() {
 
         cluster.on('taskerror', (err, data) => {
             console.error(`\n🔴 WORKER CRASHED on route: ${data}`);
-            console.error(`   Reason: ${err.message}`);
             failCount++;
             completed++;
         });
@@ -269,13 +224,11 @@ function startLocalServer() {
 
             let safeRoute = route;
             try {
-                // Decode and normalize for consistent Hebrew filenames
                 safeRoute = decodeURIComponent(route).normalize('NFC');
             } catch (e) {
                 console.warn(`   ⚠️ Could not decode route: ${route}, using raw.`);
             }
 
-            // Replace characters that are invalid in file paths AND spaces to underscores
             safeRoute = safeRoute.replace(/[*?"<>| ]/g, '_');
 
             const filePath = route === '/'
@@ -338,6 +291,13 @@ function startLocalServer() {
                 await fs.ensureDir(path.dirname(filePath));
                 await fs.writeFile(filePath, html);
 
+                try {
+                    const decodedForMap = decodeURIComponent(route).normalize('NFC');
+                    successfulRoutes.push(decodedForMap);
+                } catch(e) {
+                    successfulRoutes.push(route);
+                }
+
                 successCount++;
 
             } catch (err) {
@@ -359,6 +319,17 @@ function startLocalServer() {
         await cluster.idle();
         await cluster.close();
         clearInterval(logProgress);
+
+        console.log(`\n📝 Generating Nginx Map file for environment: ${env}`);
+        const mapFilePath = path.join(DIST_DIR, mapFileName);
+
+        const mapContent = successfulRoutes
+            .filter(r => r !== '/') // Exclude homepage
+            .map(r => `"${r}" 1;`)  // Format: "/path" 1;
+            .join('\n');
+
+        await fs.writeFile(mapFilePath, mapContent);
+        console.log(`   ✅ Map file written to: ${mapFilePath}`);
 
         console.log(`\n✨ Done! Success: ${successCount}, Failed: ${failCount}`);
         if (successCount === 0) process.exit(1);
