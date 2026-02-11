@@ -226,6 +226,8 @@ function startLocalServer() {
         server = await startLocalServer();
         let routes = await getRoutesToCrawl();
 
+        routes = routes.filter(r => r.startsWith('/p/results')); // TODO: For testing purposes only, validating results pages.
+
         if (routes.length === 0) process.exit(0);
 
         if (MAX_PAGES_TO_CRAWL && routes.length > MAX_PAGES_TO_CRAWL) {
@@ -267,17 +269,14 @@ function startLocalServer() {
         await cluster.task(async ({ page, data: route }) => {
             const url = `${LOCAL_BASE_URL}${route}`;
 
-            // ✅ FIX 1: Robust Filename Sanitization (Applies to ALL environments)
-            // We decode the URI to get readable Hebrew, but we MUST replace dangerous
-            // filesystem characters like '|' (pipe), ':' and others with '_'.
             let safeRoute = route;
             try {
-                safeRoute = decodeURIComponent(route);
+                // Decode and normalize for consistent Hebrew filenames
+                safeRoute = decodeURIComponent(route).normalize('NFC');
             } catch (e) {
                 console.warn(`   ⚠️ Could not decode route: ${route}, using raw.`);
             }
 
-            // Replace characters that are invalid in file paths (Windows/Linux/S3 friendly)
             safeRoute = safeRoute.replace(/[:*?"<>|]/g, '_');
 
             const filePath = route === '/'
@@ -301,7 +300,6 @@ function startLocalServer() {
 
                 await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
 
-                // "Bake" CSSOM styles
                 await page.evaluate(() => {
                     const styleSheets = Array.from(document.styleSheets);
                     styleSheets.forEach(sheet => {
@@ -314,7 +312,6 @@ function startLocalServer() {
                     });
                 });
 
-                // Inject <base> tag
                 await page.evaluate(() => {
                     if (!document.querySelector('base')) {
                         const base = document.createElement('base');
@@ -330,7 +327,6 @@ function startLocalServer() {
 
                 let html = await page.content();
 
-                // Replace localhost with Target Domain
                 const targetDomainNoSlash = TARGET_DOMAIN.replace(/\/$/, '');
                 const localBaseRegex = new RegExp(LOCAL_BASE_URL, 'g');
                 const localhostRegex = new RegExp(`http://localhost:${PORT}`, 'g');
@@ -340,10 +336,7 @@ function startLocalServer() {
                     .replace(/src="\/assets/g, `src="${targetDomainNoSlash}/assets`)
                     .replace(/href="\/assets/g, `href="${targetDomainNoSlash}/assets`);
 
-                // ✅ FIX 2: Ensure directory exists before writing
                 await fs.ensureDir(path.dirname(filePath));
-
-                // Write file (overwrite if exists)
                 await fs.writeFile(filePath, html);
 
                 successCount++;
