@@ -39,7 +39,7 @@ export default async (main: React.ReactNode) => {
     }
 
     const container = document.getElementById('root')!;
-    const hasStaticContent = container.hasChildNodes();
+    const hasStaticContent = container.childElementCount > 0;
 
     if (hasStaticContent) {
         hydrateRoot(container, main);
