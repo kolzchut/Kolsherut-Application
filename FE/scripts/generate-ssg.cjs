@@ -325,16 +325,22 @@ function startLocalServer() {
 
         const uniqueRoutes = [...new Set(successfulRoutes)];
 
-        const mapContent = uniqueRoutes
-            .filter(r => r !== '/') // Exclude homepage
-            .map(r => {
-                const hex = Buffer.from(r, 'utf8').toString('hex').replace(/(..)/g, '\\x$1');
-                return `"${hex}" 1;`;
-            })
-            .join('\n');
+        const writeStream = fs.createWriteStream(mapFilePath, { encoding: 'utf8' });
 
-        // Write as standard utf8 (content is now ASCII-safe characters only)
-        await fs.writeFile(mapFilePath, mapContent, 'utf8');
+        for (const r of uniqueRoutes) {
+            if (r === '/') continue;
+
+            const hex = Buffer.from(r, 'utf8').toString('hex').replace(/(..)/g, '\\x$1');
+            writeStream.write(`"${hex}" 1;\n`);
+        }
+
+        writeStream.end();
+
+        await new Promise((resolve, reject) => {
+            writeStream.on('finish', resolve);
+            writeStream.on('error', reject);
+        });
+
         console.log(`   ✅ Map file written to: ${mapFilePath}`);
 
         console.log(`\n✨ Done! Success: ${successCount}, Failed: ${failCount}`);
