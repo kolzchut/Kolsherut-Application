@@ -21,7 +21,7 @@
     "prebuild": "npm run staticwebapp:generate && npm run sitemap:homepage && npm run sitemap:main && npm run synonyms:update",
     "build": "vite build",
     "postbuild": "node scripts/postbuild.cjs",
-    "ssg:generate": "node scripts/generate-ssg.cjs",
+    "ssg:generate": "node scripts/ssg-crawler/index.cjs",
     "build:development": "cross-env ENVIRONMENT=development npm run build && cross-env ENVIRONMENT=development npm run ssg:generate",
     "build:local": "cross-env ENVIRONMENT=local npm run build",
     "build:stage": "cross-env ENVIRONMENT=stage npm run build && cross-env ENVIRONMENT=stage npm run ssg:generate",
