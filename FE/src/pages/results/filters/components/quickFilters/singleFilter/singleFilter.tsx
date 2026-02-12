@@ -2,7 +2,9 @@ import useStyles from "./singleFilter.css";
 import IDynamicThemeApp from "../../../../../../types/dynamicThemeApp";
 import {useTheme} from "react-jss";
 
-const SingleFilter = ({value, onClick, href, isFilterActive}: {
+// removed Href for SEO reasons
+// const SingleFilter = ({value, onClick, href, isFilterActive}: {
+const SingleFilter = ({value, onClick, isFilterActive}: {
     value: { count?: number | string, name: string },
     onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void,
     href: string,
@@ -12,7 +14,9 @@ const SingleFilter = ({value, onClick, href, isFilterActive}: {
     const classes = useStyles({accessibilityActive: theme.accessibilityActive});
 
 
-    return <a onClick={onClick} href={href} className={classes.optionDiv}>
+    // removed Href for SEO reasons
+    // return <a onClick={onClick} href={href} className={classes.optionDiv}>
+    return <a onClick={onClick} className={classes.optionDiv}>
                     <span className={classes.optionText}>
                         <input
                             id={`checkbox-${value.name}`}
