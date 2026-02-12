@@ -6,14 +6,30 @@ const { savePage } = require('../utils/files.cjs');
 
 async function initCluster() {
     return await Cluster.launch({
-        concurrency: Cluster.CONCURRENCY_PAGE,
+        concurrency: Cluster.CONCURRENCY_CONTEXT, // Use Context (Incognito Tabs) for speed
         maxConcurrency: MAX_CONCURRENCY,
+
+        // STABILITY: These flags allow Chrome to run hard without crashing
         puppeteerOptions: {
             headless: "new",
-            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage', // PREVENTS MEMORY CRASHES
+                '--disable-gpu',
+                '--disable-extensions',
+                '--mute-audio',
+                '--disable-background-timer-throttling',
+                '--disable-backgrounding-occluded-windows',
+                '--disable-breakpad',
+                '--disable-component-update',
+                '--disable-domain-reliability',
+                '--disable-sync',
+            ],
             dumpio: false
         },
-        monitor: false
+        monitor: false,
+        workerCreationDelay: 100, // Small delay to prevent CPU spikes on startup
     });
 }
 
@@ -24,6 +40,8 @@ async function taskHandler({ page, data }, stats, cluster) {
     const url = `${LOCAL_BASE_URL}${route}`;
 
     try {
+        if (global.gc) { global.gc(); }
+
         const rawHtml = await renderPage(page, url);
         const finalHtml = cleanHtmlContent(rawHtml);
 
@@ -54,7 +72,6 @@ async function runCrawler(routes) {
 
     await cluster.task((args) => taskHandler(args, stats, cluster));
 
-    // Initial queue
     routes.forEach(route => cluster.queue({ route, attempt: 1 }));
 
     return { cluster, stats };
