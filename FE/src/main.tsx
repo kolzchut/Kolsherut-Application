@@ -8,7 +8,7 @@ import {JssProvider} from "react-jss";
 
 const main = (
     <Provider store={store}>
-        <JssProvider generateId={() => '' + Math.random()}>
+        <JssProvider>
             <App/>
         </JssProvider>
     </Provider>

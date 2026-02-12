@@ -7,7 +7,7 @@ import Sidebar from "./components/sidebar/sidebar";
 import {isMobileScreen} from "./services/media";
 import {ThemeProvider} from 'react-jss';
 import {setFirstVisitedUrl, setModal} from "./store/general/generalSlice";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {useOnce} from "./hooks/useOnce";
 
 function App() {
@@ -16,7 +16,12 @@ function App() {
     const page = useSelector(getPage) as Pages;
     const Page = pages[page];
     const modal = useSelector(getModal);
-    const isMobile = isMobileScreen();
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        setIsMobile(isMobileScreen());
+    }, []);
+
     const dynamicTheme = {
         isMobile,
         accessibilityActive
