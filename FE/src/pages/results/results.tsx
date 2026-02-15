@@ -13,7 +13,7 @@ import {getFilteredBranchesByResponseAndFilter, getFilteredResults} from "../../
 import resultsAnalytics from "../../services/gtag/resultsEvents";
 import FiltersForMobile from "./filters/filtersForMobile";
 import {getBackendFilters, getLocationFilter} from "../../store/filter/filter.selector";
-import MetaTags from "../../services/metaTags";
+import MetaTags from "../../services/metaTags/metaTags";
 import getResultsMetaTags from "./getResultsMetaTags";
 import {useOnce} from "../../hooks/useOnce";
 import {allowChangeStoreLocation} from "../../services/map/events/mapInteraction";

@@ -9,7 +9,7 @@ import CardDetails from "./cardDetails/cardDetails";
 import cardAnalytics from "../../services/gtag/cardEvents";
 import Header from "../../components/header/header";
 import getCardMetaTags from "./getCardMetaTags";
-import MetaTags from "../../services/metaTags";
+import MetaTags from "../../services/metaTags/metaTags";
 import {useGetCurrentRoute} from "../../services/url/route";
 
 const Card = () => {

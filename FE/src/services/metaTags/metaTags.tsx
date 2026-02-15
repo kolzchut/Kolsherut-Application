@@ -1,4 +1,5 @@
-import {replaceMacros} from "./str";
+import {replaceMacros} from "../str";
+import removeSegmentsFromCanonical from "./removeSegmentsFromCanonical";
 
 interface Iprops{
     metaTags:any,
@@ -17,9 +18,12 @@ const MetaTags = ({metaTags, macrosAndReplacements, pageUrl}: Iprops ) => {
         content: replaceMacros({stringWithMacros: name.content, macrosAndReplacements})
     }))
     const title = replaceMacros({stringWithMacros: metaTags.title, macrosAndReplacements})
+    const href = removeSegmentsFromCanonical({url:pageUrl, removeParameters:window.config.canonicalRemovals})
+    console.log('page url', pageUrl)
+    console.log('canonical href', href)
     return (
         <>
-            <link rel="canonical" href={pageUrl}/>
+            <link rel="canonical" href={href}/>
             <title>{title}</title>
             {fixedNames && fixedNames.map((tag: { name: string, content: string }, index: number) => (
                 <meta name={tag.name} content={tag.content} key={index}/>

@@ -91,5 +91,10 @@
   "hotjar": {
     "siteId": 3379123,
     "hotjarVersion": 6
-  }
+  },
+  "canonicalRemovals": [
+    "lf",
+    "sf",
+    "rf"
+  ]
 }

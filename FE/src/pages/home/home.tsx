@@ -4,7 +4,7 @@ import Search from "./search/search";
 import OptionalSearch from "./optionalSearch/optionalSearch";
 import Footer from "../../components/footer/footer";
 import getHomeMetaTags from "./getHomeMetaTags";
-import MetaTags from "../../services/metaTags";
+import MetaTags from "../../services/metaTags/metaTags";
 import {isMobileScreen} from "../../services/media";
 
 const Home = () => {
