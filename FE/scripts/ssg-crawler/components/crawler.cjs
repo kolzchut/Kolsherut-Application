@@ -6,16 +6,16 @@ const { savePage } = require('../utils/files.cjs');
 
 async function initCluster() {
     return await Cluster.launch({
-        concurrency: Cluster.CONCURRENCY_CONTEXT, // Use Context (Incognito Tabs) for speed
+        concurrency: Cluster.CONCURRENCY_CONTEXT, 
         maxConcurrency: MAX_CONCURRENCY,
 
-        // STABILITY: These flags allow Chrome to run hard without crashing
         puppeteerOptions: {
             headless: "new",
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage', // PREVENTS MEMORY CRASHES
+                '--disable-web-security',
+                '--disable-dev-shm-usage',
                 '--disable-gpu',
                 '--disable-extensions',
                 '--mute-audio',
@@ -29,7 +29,7 @@ async function initCluster() {
             dumpio: false
         },
         monitor: false,
-        workerCreationDelay: 100, // Small delay to prevent CPU spikes on startup
+        workerCreationDelay: 100, 
     });
 }
 
