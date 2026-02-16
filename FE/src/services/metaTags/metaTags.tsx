@@ -19,8 +19,6 @@ const MetaTags = ({metaTags, macrosAndReplacements, pageUrl}: Iprops ) => {
     }))
     const title = replaceMacros({stringWithMacros: metaTags.title, macrosAndReplacements})
     const href = removeSegmentsFromCanonical({url:pageUrl, removeParameters:window.config.canonicalRemovals})
-    console.log('page url', pageUrl)
-    console.log('canonical href', href)
     return (
         <>
             <link rel="canonical" href={href}/>
