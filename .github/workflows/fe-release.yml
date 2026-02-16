@@ -50,6 +50,9 @@ jobs:
           # This ensures the docker image is tagged with the code SHA, not the workflow SHA.
           echo "real_sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -74,44 +77,7 @@ jobs:
           if docker pull ghcr.io/kolzchut/${IMAGE_NAME}:latest; then
             BUILD_ARGS="--cache-from ghcr.io/kolzchut/${IMAGE_NAME}:latest"
           fi
-          docker build -t fe-release $BUILD_ARGS --build-arg environment=production .
-
-      - name: Login to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-      - name: Push & Update Helm (production, no SSG)
-        env:
-          IMAGE_NAME: kol-sherut-fe
-          CHART_NAME: site
-          SRM_DEVOPS_DEPLOY_KEY: ${{ secrets.SRM_DEVOPS_DEPLOY_KEY }}
-        run: |
-          TAG="${{ steps.vars.outputs.tag_name }}"
-          
-          # Use the SHA calculated in step 2 (The SHA of the code)
-          REAL_SHA="${{ steps.vars.outputs.real_sha }}"
-          
-          SHA_IMAGE="ghcr.io/kolzchut/${IMAGE_NAME}:${REAL_SHA}"
-          TAG_SHA_IMAGE="ghcr.io/kolzchut/${IMAGE_NAME}:${TAG}-${REAL_SHA}"
-          
-          # Push commit-SHA image
-          docker tag fe-release "$SHA_IMAGE"
-          docker push "$SHA_IMAGE"
-          # Push tag-SHA image (used in Helm production values)
-          docker tag fe-release "$TAG_SHA_IMAGE"
-          docker push "$TAG_SHA_IMAGE"
-          
-          echo "${SRM_DEVOPS_DEPLOY_KEY}" > srm_devops_deploy_key
-          chmod 400 srm_devops_deploy_key
-          export GIT_SSH_COMMAND="ssh -i $(pwd)/srm_devops_deploy_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
-          git clone git@github.com:kolzchut/srm-devops.git
-          git config --global user.name "srm-devops CI"
-          git config --global user.email "srm-devops-ci@localhost"
-          cd srm-devops
-          VALUES_FILE="helm/${CHART_NAME}/values.auto-updated.production.yaml"
-          bin/update_yaml.py '{"'"${CHART_NAME}"'":{"image":"'"${TAG_SHA_IMAGE}"'"}}' "$VALUES_FILE"
-          git add "$VALUES_FILE"
-          git commit -m "FE production image update: $VALUES_FILE" || echo "No changes to commit"
-          git push origin main
+          docker build -t fe-release-base $BUILD_ARGS --build-arg environment=production .
 
       - name: Build FE (Vite prod, SSG)
         working-directory: FE
@@ -126,38 +92,60 @@ jobs:
           if docker pull ghcr.io/kolzchut/${IMAGE_NAME}:latest; then
             BUILD_ARGS="--cache-from ghcr.io/kolzchut/${IMAGE_NAME}:latest"
           fi
-          docker build -t fe-release $BUILD_ARGS --build-arg environment=production .
+          docker build -t fe-release-ssg $BUILD_ARGS --build-arg environment=production .
 
-      - name: Push & Update Helm (production, SSG)
+      - name: Push & Update Helm (production)
         env:
           IMAGE_NAME: kol-sherut-fe
           CHART_NAME: site
           SRM_DEVOPS_DEPLOY_KEY: ${{ secrets.SRM_DEVOPS_DEPLOY_KEY }}
         run: |
           TAG="${{ steps.vars.outputs.tag_name }}"
-          
-          # Use the SHA calculated in step 2 (The SHA of the code)
           REAL_SHA="${{ steps.vars.outputs.real_sha }}"
           
-          SHA_IMAGE="ghcr.io/kolzchut/${IMAGE_NAME}:${REAL_SHA}"
-          TAG_SHA_IMAGE="ghcr.io/kolzchut/${IMAGE_NAME}:${TAG}-${REAL_SHA}"
+          echo "Pushing no-SSG images..."
+          SHA_IMAGE_BASE="ghcr.io/kolzchut/${IMAGE_NAME}:${REAL_SHA}"
+          TAG_IMAGE_BASE="ghcr.io/kolzchut/${IMAGE_NAME}:${TAG}"
+          TAG_SHA_IMAGE_BASE="ghcr.io/kolzchut/${IMAGE_NAME}:${TAG}-${REAL_SHA}"
           
-          # Push commit-SHA image
-          docker tag fe-release "$SHA_IMAGE"
-          docker push "$SHA_IMAGE"
-          # Push tag-SHA image (used in Helm production values)
-          docker tag fe-release "$TAG_SHA_IMAGE"
-          docker push "$TAG_SHA_IMAGE"
+          docker tag fe-release-base "$SHA_IMAGE_BASE"
+          docker push "$SHA_IMAGE_BASE"
+          docker tag fe-release-base "$TAG_IMAGE_BASE"
+          docker push "$TAG_IMAGE_BASE"
+          docker tag fe-release-base "$TAG_SHA_IMAGE_BASE"
+          docker push "$TAG_SHA_IMAGE_BASE"
           
-          echo "${SRM_DEVOPS_DEPLOY_KEY}" > srm_devops_deploy_key
+          echo "Pushing SSG images..."
+          SHA_IMAGE_SSG="ghcr.io/kolzchut/${IMAGE_NAME}:${REAL_SHA}-SSG"
+          TAG_IMAGE_SSG="ghcr.io/kolzchut/${IMAGE_NAME}:${TAG}-SSG"
+          TAG_SHA_IMAGE_SSG="ghcr.io/kolzchut/${IMAGE_NAME}:${TAG}-${REAL_SHA}-SSG"
+          
+          docker tag fe-release-ssg "$SHA_IMAGE_SSG"
+          docker push "$SHA_IMAGE_SSG"
+          docker tag fe-release-ssg "$TAG_IMAGE_SSG"
+          docker push "$TAG_IMAGE_SSG"
+          docker tag fe-release-ssg "$TAG_SHA_IMAGE_SSG"
+          docker push "$TAG_SHA_IMAGE_SSG"
+          
+          echo "Updating Helm production values..."
+          rm -f srm_devops_deploy_key
+          printf "%s" "$SRM_DEVOPS_DEPLOY_KEY" | tr -d '\r' > srm_devops_deploy_key
           chmod 400 srm_devops_deploy_key
           export GIT_SSH_COMMAND="ssh -i $(pwd)/srm_devops_deploy_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+          rm -rf srm-devops
           git clone git@github.com:kolzchut/srm-devops.git
           git config --global user.name "srm-devops CI"
           git config --global user.email "srm-devops-ci@localhost"
           cd srm-devops
           VALUES_FILE="helm/${CHART_NAME}/values.auto-updated.production.yaml"
-          bin/update_yaml.py '{"'"${CHART_NAME}"'":{"image":"'"${TAG_SHA_IMAGE}"'"}}' "$VALUES_FILE"
+          echo "Updating $VALUES_FILE with image: $TAG_SHA_IMAGE_SSG"
+          echo "Before (image lines):" && (grep -n 'image:' "$VALUES_FILE" || true)
+          bin/update_yaml.py '{"'"${CHART_NAME}"'":{"image":"'"${TAG_SHA_IMAGE_SSG}"'"}}' "$VALUES_FILE"
+          echo "After  (image lines):" && (grep -n 'image:' "$VALUES_FILE" || true)
+          echo "Git diff for $VALUES_FILE (if any):" && (git diff -- "$VALUES_FILE" || true)
           git add "$VALUES_FILE"
-          git commit -m "FE production image update: $VALUES_FILE" || echo "No changes to commit"
+          git commit -m "FE production image update (including SSG): $VALUES_FILE" || echo "No changes to commit"
           git push origin main
+          cd ..
+          rm -f srm_devops_deploy_key
+          rm -rf srm-devops
