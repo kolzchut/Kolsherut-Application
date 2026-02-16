@@ -42,14 +42,14 @@ jobs:
           npx cross-env ENVIRONMENT=stage npm run sitemap:main
           
 
-      - name: Build FE (Vite)
+      - name: Build FE (Vite, no SSG)
         working-directory: FE
-        run: npm run build:stage
+        run: npm run build:stage:base
 
       - name: Login to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Docker Build
+      - name: Docker Build (no SSG)
         env:
           IMAGE_NAME: kol-sherut-fe
         working-directory: FE
@@ -63,7 +63,58 @@ jobs:
           if [ "${GITHUB_REF}" = "refs/heads/main" ]; then ENV_ARG="stage"; fi
           docker build -t fe-build $BUILD_ARGS --build-arg environment=${ENV_ARG} .
 
-      - name: Push & Update Helm (staging)
+      - name: Push & Update Helm (staging, no SSG)
+        if: github.ref == 'refs/heads/main'
+        env:
+          IMAGE_NAME: kol-sherut-fe
+          CHART_NAME: site
+          SRM_DEVOPS_DEPLOY_KEY: ${{ secrets.SRM_DEVOPS_DEPLOY_KEY }}
+        run: |
+          IMAGE_TAG="${GITHUB_SHA}"
+          FULL_IMAGE="ghcr.io/kolzchut/${IMAGE_NAME}:${IMAGE_TAG}"
+          docker tag fe-build "$FULL_IMAGE"
+          docker push "$FULL_IMAGE"
+          docker tag fe-build ghcr.io/kolzchut/${IMAGE_NAME}:latest
+          docker push ghcr.io/kolzchut/${IMAGE_NAME}:latest
+          # write SSH key safely (preserve newlines, strip CR)
+          printf "%s" "$SRM_DEVOPS_DEPLOY_KEY" | tr -d '\r' > srm_devops_deploy_key
+          chmod 400 srm_devops_deploy_key
+          export GIT_SSH_COMMAND="ssh -i $(pwd)/srm_devops_deploy_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+          git clone git@github.com:kolzchut/srm-devops.git
+          git config --global user.name "srm-devops CI"
+          git config --global user.email "srm-devops-ci@localhost"
+          cd srm-devops
+          VALUES_FILE="helm/${CHART_NAME}/values.auto-updated.yaml"
+          echo "Updating $VALUES_FILE with image: $FULL_IMAGE"
+          echo "Before (image lines):" && (grep -n 'image:' "$VALUES_FILE" || true)
+          bin/update_yaml.py '{"'"${CHART_NAME}"'":{"image":"'"${FULL_IMAGE}"'"}}' "$VALUES_FILE"
+          echo "After  (image lines):" && (grep -n 'image:' "$VALUES_FILE" || true)
+          echo "Git diff for $VALUES_FILE (if any):" && (git diff -- "$VALUES_FILE" || true)
+          git add "$VALUES_FILE"
+          git commit -m "FE staging image update: $VALUES_FILE" || echo "No changes to commit"
+          git push origin main
+
+      - name: Build FE (SSG)
+        if: github.ref == 'refs/heads/main'
+        working-directory: FE
+        run: npm run build:stage
+
+      - name: Docker Build (SSG)
+        if: github.ref == 'refs/heads/main'
+        env:
+          IMAGE_NAME: kol-sherut-fe
+        working-directory: FE
+        run: |
+          BUILD_ARGS=""
+          if docker pull ghcr.io/kolzchut/${IMAGE_NAME}:latest; then
+            BUILD_ARGS="--cache-from ghcr.io/kolzchut/${IMAGE_NAME}:latest"
+          fi
+          # decide build environment: stage on main, local otherwise
+          ENV_ARG="local"
+          if [ "${GITHUB_REF}" = "refs/heads/main" ]; then ENV_ARG="stage"; fi
+          docker build -t fe-build $BUILD_ARGS --build-arg environment=${ENV_ARG} .
+
+      - name: Push & Update Helm (staging, SSG)
         if: github.ref == 'refs/heads/main'
         env:
           IMAGE_NAME: kol-sherut-fe
