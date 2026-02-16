@@ -39,9 +39,6 @@ const renderPage = async (url: string): Promise<{ html: string; fail: boolean }>
 
     try {
         await page.setUserAgent(vars.ssr.userAgent);
-        await page.setExtraHTTPHeaders({
-            'X-Kolsherut-SSR': 'true'
-        });
 
         page.on('response', async (response) => {
             try {
