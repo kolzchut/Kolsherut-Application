@@ -1,5 +1,7 @@
 import {replaceMacros} from "../str";
 import removeSegmentsFromCanonical from "./removeSegmentsFromCanonical";
+import pipe from "../../utilities/pipe.ts";
+import removeStringAfterTheQuestionMark from "./RemoveStringAfterTheQuestionMark.ts";
 
 interface Iprops{
     metaTags:any,
@@ -18,7 +20,12 @@ const MetaTags = ({metaTags, macrosAndReplacements, pageUrl}: Iprops ) => {
         content: replaceMacros({stringWithMacros: name.content, macrosAndReplacements})
     }))
     const title = replaceMacros({stringWithMacros: metaTags.title, macrosAndReplacements})
-    const href = removeSegmentsFromCanonical({url:pageUrl, removeParameters:window.config.canonicalRemovals})
+    const href = pipe(
+        pageUrl,
+        url => removeSegmentsFromCanonical({url, removeParameters: window.config.canonicalRemovals}),
+        removeStringAfterTheQuestionMark
+    )
+    // const href = removeSegmentsFromCanonical({url:pageUrl, removeParameters:window.config.canonicalRemovals})
     return (
         <>
             <link rel="canonical" href={href}/>
