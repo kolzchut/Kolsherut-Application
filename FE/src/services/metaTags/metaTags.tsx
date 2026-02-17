@@ -20,15 +20,14 @@ const MetaTags = ({metaTags, macrosAndReplacements, pageUrl}: Iprops ) => {
         content: replaceMacros({stringWithMacros: name.content, macrosAndReplacements})
     }))
     const title = replaceMacros({stringWithMacros: metaTags.title, macrosAndReplacements})
-    const href = pipe(
+    const canonical = pipe(
         pageUrl,
         url => removeSegmentsFromCanonical({url, removeParameters: window.config.canonicalRemovals}),
         removeStringAfterTheQuestionMark
     )
-    // const href = removeSegmentsFromCanonical({url:pageUrl, removeParameters:window.config.canonicalRemovals})
     return (
         <>
-            <link rel="canonical" href={href}/>
+            <link rel="canonical" href={canonical}/>
             <title>{title}</title>
             {fixedNames && fixedNames.map((tag: { name: string, content: string }, index: number) => (
                 <meta name={tag.name} content={tag.content} key={index}/>
