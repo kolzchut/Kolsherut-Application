@@ -79,22 +79,7 @@ jobs:
           fi
           docker build -t fe-release-base $BUILD_ARGS --build-arg environment=production .
 
-      - name: Build FE (Vite prod, SSG)
-        working-directory: FE
-        run: npm run build:production
-
-      - name: Docker Build (SSG)
-        working-directory: FE
-        env:
-          IMAGE_NAME: kol-sherut-fe
-        run: |
-          BUILD_ARGS=""
-          if docker pull ghcr.io/kolzchut/${IMAGE_NAME}:latest; then
-            BUILD_ARGS="--cache-from ghcr.io/kolzchut/${IMAGE_NAME}:latest"
-          fi
-          docker build -t fe-release-ssg $BUILD_ARGS --build-arg environment=production .
-
-      - name: Push & Update Helm (production)
+      - name: Push & Update Helm (No-SSG)
         env:
           IMAGE_NAME: kol-sherut-fe
           CHART_NAME: site
@@ -114,6 +99,53 @@ jobs:
           docker push "$TAG_IMAGE_BASE"
           docker tag fe-release-base "$TAG_SHA_IMAGE_BASE"
           docker push "$TAG_SHA_IMAGE_BASE"
+          
+          echo "Updating Helm production values..."
+          rm -f srm_devops_deploy_key
+          printf "%s" "$SRM_DEVOPS_DEPLOY_KEY" | tr -d '\r' > srm_devops_deploy_key
+          chmod 400 srm_devops_deploy_key
+          export GIT_SSH_COMMAND="ssh -i $(pwd)/srm_devops_deploy_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+          rm -rf srm-devops
+          git clone git@github.com:kolzchut/srm-devops.git
+          git config --global user.name "srm-devops CI"
+          git config --global user.email "srm-devops-ci@localhost"
+          cd srm-devops
+          VALUES_FILE="helm/${CHART_NAME}/values.auto-updated.production.yaml"
+          echo "Updating $VALUES_FILE with image: $TAG_SHA_IMAGE_BASE"
+          echo "Before (image lines):" && (grep -n 'image:' "$VALUES_FILE" || true)
+          bin/update_yaml.py '{"'"${CHART_NAME}"'":{"image":"'"${TAG_SHA_IMAGE_BASE}"'"}}' "$VALUES_FILE"
+          echo "After  (image lines):" && (grep -n 'image:' "$VALUES_FILE" || true)
+          echo "Git diff for $VALUES_FILE (if any):" && (git diff -- "$VALUES_FILE" || true)
+          git add "$VALUES_FILE"
+          git commit -m "FE production image update (No-SSG): $VALUES_FILE" || echo "No changes to commit"
+          git push origin main
+          cd ..
+          rm -f srm_devops_deploy_key
+          rm -rf srm-devops
+
+      - name: Build FE (Vite prod, SSG)
+        working-directory: FE
+        run: npm run build:production
+
+      - name: Docker Build (SSG)
+        working-directory: FE
+        env:
+          IMAGE_NAME: kol-sherut-fe
+        run: |
+          BUILD_ARGS=""
+          if docker pull ghcr.io/kolzchut/${IMAGE_NAME}:latest; then
+            BUILD_ARGS="--cache-from ghcr.io/kolzchut/${IMAGE_NAME}:latest"
+          fi
+          docker build -t fe-release-ssg $BUILD_ARGS --build-arg environment=production .
+
+      - name: Push & Update Helm (SSG)
+        env:
+          IMAGE_NAME: kol-sherut-fe
+          CHART_NAME: site
+          SRM_DEVOPS_DEPLOY_KEY: ${{ secrets.SRM_DEVOPS_DEPLOY_KEY }}
+        run: |
+          TAG="${{ steps.vars.outputs.tag_name }}"
+          REAL_SHA="${{ steps.vars.outputs.real_sha }}"
           
           echo "Pushing SSG images..."
           SHA_IMAGE_SSG="ghcr.io/kolzchut/${IMAGE_NAME}:${REAL_SHA}-SSG"
