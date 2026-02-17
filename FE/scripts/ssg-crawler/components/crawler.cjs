@@ -38,9 +38,10 @@ async function taskHandler({ page, data }, stats, cluster) {
     const attempt = typeof data === 'string' ? 1 : data.attempt;
 
     const url = `${LOCAL_BASE_URL}${route}`;
-
     try {
         if (global.gc) { global.gc(); }
+
+        await page.setUserAgent('KolsherutSSG');
 
         const rawHtml = await renderPage(page, url);
         const finalHtml = cleanHtmlContent(rawHtml);

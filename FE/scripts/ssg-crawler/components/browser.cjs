@@ -1,9 +1,17 @@
 const { PROXIED_PATTERNS, TARGET_DOMAIN } = require('../config.cjs');
+const blockedAnalyticsDomains = require('../utils/blockAnalytics.json');
 
 async function setupInterception(page) {
     await page.setRequestInterception(true);
     page.on('request', (req) => {
         const reqUrl = req.url();
+
+        const isBlocked = blockedAnalyticsDomains.some(domain => reqUrl.includes(domain));
+        if (isBlocked) {
+            req.abort();
+            return;
+        }
+
         if (PROXIED_PATTERNS.some(p => reqUrl.includes(p))) {
             const headers = { ...req.headers(), 'Origin': TARGET_DOMAIN, 'Referer': TARGET_DOMAIN + '/' };
             req.continue({ headers });
