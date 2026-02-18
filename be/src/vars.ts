@@ -27,6 +27,10 @@ export default {
                 auth: {
                     username: process.env.ELASTIC_USERNAME || 'elastic',
                     password: process.env.ELASTIC_PASS || 'your-password'
+                },
+                headers: {
+                    'Accept': 'application/vnd.elasticsearch+json; compatible-with=8',
+                    'Content-Type': 'application/vnd.elasticsearch+json; compatible-with=8'
                 }
             },
             reconnectTimeout: parseInt(process.env.ELASTIC_RECONNECT_TIMEOUT || '5') * 1000,
