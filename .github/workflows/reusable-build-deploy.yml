@@ -64,6 +64,8 @@ jobs:
         run: |
           if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
             echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/production" ]]; then
+            echo "VERSION=production" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
             echo "VERSION=stage" >> $GITHUB_OUTPUT
           else
@@ -106,7 +108,7 @@ jobs:
           tags: |
             type=raw,value=dev,enable=${{ github.ref == 'refs/heads/dev' }}
             type=raw,value=stage,enable=${{ github.ref == 'refs/heads/master' }}
-            type=raw,value=production,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            type=raw,value=production,enable=${{ startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/production' }}
 
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -160,7 +162,7 @@ jobs:
   # --- DEPLOYMENT STEP FOR PROD ---
   deploy-production:
     needs: build-and-push
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/production'
     runs-on: ubuntu-latest
     steps:
       - name: Azure Login
