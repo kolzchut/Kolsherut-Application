@@ -35,6 +35,12 @@ jobs:
           # 2. If triggered by normal tag push -> inputs are empty -> Use github.ref (The Tag).
           ref: ${{ inputs.commit_ref || github.ref }}
 
+      - name: Sync production branch
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git push origin HEAD:production --force
+
       - name: Derive Tag and SHA
         id: vars
         run: |

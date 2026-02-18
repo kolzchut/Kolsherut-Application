@@ -26,14 +26,32 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 'FE/package-lock.json'
 
-      - name: Install and Build
+      - name: Install and Build Base (No SSG)
         run: |
           cd FE
           npm install
-          npm run build:development
+          npm run build:development:base
 
-      - name: Deploy to Azure Static Web Apps
-        id: builddeploy
+      - name: Deploy to Azure Static Web Apps (Base)
+        id: builddeploy_base
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_ORANGE_FOREST_0544F8503 }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+
+          skip_app_build: true
+          app_location: "FE/dist"
+          api_location: ""
+          output_location: ""
+
+      - name: Build SSG
+        run: |
+          cd FE
+          npm run build:development:ssg
+
+      - name: Deploy to Azure Static Web Apps (SSG)
+        id: builddeploy_ssg
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_ORANGE_FOREST_0544F8503 }}
@@ -56,3 +74,4 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_ORANGE_FOREST_0544F8503 }}
           action: "close"
+          app_location: "/" # required parameter even for close action
