@@ -27,7 +27,7 @@ export default {
                 auth: {
                     username: process.env.ELASTIC_USERNAME || 'elastic',
                     password: process.env.ELASTIC_PASS || 'your-password'
-                }
+                },
             },
             reconnectTimeout: parseInt(process.env.ELASTIC_RECONNECT_TIMEOUT || '5') * 1000,
             indices: indices[process.env.ENV as keyof typeof indices] || indices.dev,
