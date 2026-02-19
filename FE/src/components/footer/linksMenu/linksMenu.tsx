@@ -6,7 +6,6 @@ import {useDispatch} from "react-redux";
 import {setModal} from "../../../store/general/generalSlice";
 import { useTheme } from 'react-jss';
 import IDynamicThemeApp from "../../../types/dynamicThemeApp";
-import {getHrefForLinkBelow} from "../../../services/href";
 
 interface ILinks {
     title: string,
@@ -39,7 +38,7 @@ const LinksMenu = () => {
     if (links.length === 0) return <></>;
     return <div className={classes.mainDiv}>
         {links.map((link: ILinks) => (
-            <a className={classes.links} key={link.title} target={'_blank'} href={link.url || getHrefForLinkBelow(link.modal)}
+            <a className={classes.links} key={link.title} target={'_blank'} href={"#"}
                onClick={(e: React.MouseEvent<HTMLAnchorElement>) => onClick(e, link)}>{link.title}</a>
         ))}
     </div>
