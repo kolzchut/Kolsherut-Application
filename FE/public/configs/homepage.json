@@ -13,7 +13,7 @@
       {
         "situation_id": "human_situations:deprivation:low_income",
         "response_id": "human_services:legal:advocacy_legal_aid:understand_government_programs",
-        "title": "הכנסה נמוכה וקשיים כלכליים ",
+        "title": "הכנסה נמוכה וקשיים כלכליים",
         "query": "מיצוי_זכויות_עבור_בעלי_הכנסה_נמוכה"
       },
           {
@@ -21,6 +21,37 @@
         "response_id": "human_services:legal:advocacy_legal_aid",
         "title": "סיוע משפטי",
         "query": "סיוע_משפטי"
+      }
+    ]
+  },
+  {
+    "group": "הגיל הרך",
+    "situation_id": "human_situations:age_group:infants",
+    "group_link": "לכל שירותי הגיל הרך",
+    "labels": [
+      {
+        "situation_id": "human_situations:age_group:infants",
+        "response_id": "human_services:education:skills_training:parenting_education",
+        "title": "הדרכת הורים",
+        "query": "הדרכת_הורים_עבור_הגיל_הרך"
+      },
+      {
+        "situation_id": null,
+        "response_id": "human_places:health:clinic:well_baby_clinic",
+        "title": "טיפת חלב",
+        "query": "טיפת_חלב"
+      },
+      {
+        "response_id": "human_services:education:afterschool_care",
+        "title": "צהרונים",
+        "situation_id": null,
+        "query": "צהרונים"
+      },
+      {
+        "response_id": "human_services:care:daytime_care",
+        "title": "משפחתונים",
+        "situation_id": "human_situations:age_group:infants",
+        "query": "מסגרת_יום_עבור_הגיל_הרך"
       }
     ]
   },
