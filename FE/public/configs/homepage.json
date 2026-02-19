@@ -37,7 +37,7 @@
       },
       {
         "situation_id": null,
-        "response_id": "human_places:health:clinic:well_baby_clinic",
+        "response_id": "human_services:place:health:clinic:well_baby_clinic",
         "title": "טיפת חלב",
         "query": "טיפת_חלב"
       },
