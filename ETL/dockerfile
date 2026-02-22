@@ -1,0 +1,38 @@
+FROM soulteary/cronicle:latest
+
+# 1. Install System Python
+RUN apk add --no-cache python3 py3-pip
+
+# 2. Set up the Virtual Environment
+# We create it in /opt/venv
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV
+
+# 3. Activate the Virtual Environment
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+WORKDIR /opt/cronicle/plugins/srm-etl
+
+# 4. Install Requirements
+COPY requirements.txt .
+# Note: We removed '--break-system-packages' because we are now inside a venv!
+RUN apk add --no-cache --virtual .build-deps build-base \
+    && pip install --no-cache-dir -r requirements.txt \
+    && apk del .build-deps
+
+# 5. Copy your source code
+COPY data/plugins/srm-etl/operators/ ./operators/
+COPY data/plugins/srm-etl/srm_tools/ ./srm_tools/
+COPY data/plugins/srm-etl/utilities/ ./utilities/
+COPY data/plugins/srm-etl/transform/ ./transform/
+COPY data/plugins/srm-etl/extract/ ./extract/
+COPY data/plugins/srm-etl/load/ ./load/
+COPY data/plugins/srm-etl/conf/ ./conf/
+
+# 6. Copy Config
+COPY data/config.json /opt/cronicle/conf/config.json
+
+ENV CRONICLE_foreground=1 \
+    CRONICLE_echo=1
+
+WORKDIR /opt/cronicle

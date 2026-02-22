@@ -1,0 +1,19 @@
+name: ETL ACR Pipeline
+
+on:
+  push:
+     branches: ['main', 'dev', 'production']
+     paths: ['ETL/**', '.github/workflows/etl-ACR.yml']
+     tags: ['v*']
+
+jobs:
+  run-etl-pipeline:
+    uses: ./.github/workflows/reusable-build-deploy.yml
+    secrets: inherit
+    with:
+      service_path: '.'
+      image_name: 'Kolsherut-ETL'
+      container_name: 'etl'
+      deployment_dev: 'kolsherut-etl'
+      deployment_stage: 'kolsherut-etl'
+      deployment_prod: 'kolsherut-etl'
