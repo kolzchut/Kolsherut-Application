@@ -56,9 +56,9 @@
     ]
   },
   {
-    "group": "מצב החירום",
+    "group": "נפגעים ומשפחותיהם",
     "response_id": "human_services:internal_emergency_services",
-    "group_link": "לכל השירותים למצב החירום",
+    "group_link": "לכל השירותים לנפגעים ומשפחותיהם",
     "labels": [
       {
         "situation_id": "human_situations:armed_forces:bereaved_families",
@@ -201,6 +201,12 @@
         "response_id": "human_services:housing",
         "title": "דיור",
         "query": "דיור_עבור_אזרחים_ותיקים"
+      },
+     {
+        "situation_id": "human_situations:benefit_holders:holocaust_survivors",
+        "title": "ניצולי שואה",
+        "response_id": null,
+        "query": "ניצולי_שואה"
       }
     ]
   },
@@ -283,17 +289,17 @@
   {
     "group": "אוכלוסיות נוספות",
     "labels": [
-      {
-        "situation_id": "human_situations:benefit_holders:holocaust_survivors",
-        "title": "ניצולי שואה",
-        "response_id": null,
-        "query": "ניצולי_שואה"
-      },
-      {
+       {
         "situation_id": "human_situations:survivors:prostition_survivors",
         "title": "שורדות זנות",
         "response_id": null,
         "query": "קורבנות_זנות"
+      },
+       {
+        "situation_id": "human_situations:deprivation:at_risk:at_risk_teens",
+        "title": "נוער בסיכון",
+        "response_id": null,
+        "query": "נערים_בסיכון"
       },
       {
         "situation_id": "human_situations:disability:autistic_spectrum",
