@@ -1,0 +1,411 @@
+{
+  "bytes": 82058394,
+  "count_of_rows": 13854,
+  "hash": "05903c6242f91385d70a20b5015d6e36",
+  "name": "Card Data",
+  "profile": "data-package",
+  "resources": [
+    {
+      "bytes": 146179292,
+      "count_of_rows": 30359,
+      "dialect": {
+        "caseSensitiveHeader": false,
+        "delimiter": ",",
+        "doubleQuote": true,
+        "header": true,
+        "lineTerminator": "\r\n",
+        "quoteChar": "\"",
+        "skipInitialSpace": false
+      },
+      "encoding": "utf-8",
+      "format": "csv",
+      "hash": "2b733f515cdf6248a4852908b5632787",
+      "name": "card_data",
+      "path": "card_data.csv",
+      "profile": "tabular-data-resource",
+      "schema": {
+        "fields": [
+          {
+            "format": "default",
+            "name": "service_key",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_key",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_key",
+            "type": "string"
+          },
+          {
+            "es:keyword": true,
+            "format": "default",
+            "name": "service_id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_description",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_details",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_payment_required",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_payment_details",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_urls",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "service_phone_numbers",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "service_email_address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_implements",
+            "type": "string"
+          },
+          {
+            "decimalChar": ".",
+            "format": "default",
+            "groupChar": "",
+            "name": "service_boost",
+            "type": "number"
+          },
+          {
+            "format": "default",
+            "name": "data_sources",
+            "type": "array"
+          },
+          {
+            "es:keyword": true,
+            "format": "default",
+            "name": "organization_id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_short_name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_description",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_purpose",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_kind",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_urls",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "organization_phone_numbers",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "organization_email_address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_branch_count",
+            "type": "integer"
+          },
+          {
+            "es:keyword": true,
+            "format": "default",
+            "name": "branch_id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_operating_unit",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_description",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_urls",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "branch_phone_numbers",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "branch_email_address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_orig_address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_city",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_geometry",
+            "type": "geopoint"
+          },
+          {
+            "falseValues": [
+              "False"
+            ],
+            "format": "default",
+            "name": "branch_location_accurate",
+            "trueValues": [
+              "True"
+            ],
+            "type": "boolean"
+          },
+          {
+            "format": "%Y-%m-%dT%H:%M:%S",
+            "name": "service_last_modified",
+            "type": "datetime"
+          },
+          {
+            "falseValues": [
+              "False"
+            ],
+            "format": "default",
+            "name": "national_service",
+            "trueValues": [
+              "True"
+            ],
+            "type": "boolean"
+          },
+          {
+            "es:keyword": true,
+            "format": "default",
+            "name": "card_id",
+            "type": "string"
+          },
+          {
+            "es:itemType": "string",
+            "es:keyword": true,
+            "format": "default",
+            "name": "situation_ids",
+            "type": "array"
+          },
+          {
+            "es:itemType": "string",
+            "es:keyword": true,
+            "format": "default",
+            "name": "response_ids",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "situations",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "responses",
+            "type": "array"
+          },
+          {
+            "decimalChar": ".",
+            "format": "default",
+            "groupChar": "",
+            "name": "rs_score",
+            "type": "number"
+          },
+          {
+            "es:itemType": "number",
+            "format": "default",
+            "name": "situation_scores",
+            "type": "array"
+          },
+          {
+            "es:itemType": "string",
+            "es:keyword": true,
+            "format": "default",
+            "name": "situation_ids_parents",
+            "type": "array"
+          },
+          {
+            "es:itemType": "string",
+            "es:keyword": true,
+            "format": "default",
+            "name": "response_ids_parents",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "situations_parents",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "responses_parents",
+            "type": "array"
+          },
+          {
+            "es:itemType": "string",
+            "es:keyword": true,
+            "format": "default",
+            "name": "response_categories",
+            "type": "array"
+          },
+          {
+            "es:keyword": true,
+            "format": "default",
+            "name": "response_category",
+            "type": "string"
+          },
+          {
+            "es:itemType": "string",
+            "es:keyword": true,
+            "format": "default",
+            "name": "possible_autocomplete",
+            "type": "array"
+          },
+          {
+            "es:keyword": true,
+            "format": "default",
+            "name": "point_id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "national_service_details",
+            "type": "string"
+          },
+          {
+            "es:keyword": true,
+            "format": "default",
+            "name": "coords",
+            "type": "string"
+          },
+          {
+            "es:keyword": true,
+            "format": "default",
+            "name": "collapse_key",
+            "type": "string"
+          },
+          {
+            "es:schema": {
+              "fields": [
+                {
+                  "es:fields": {
+                    "keyword": {
+                      "type": "keyword"
+                    }
+                  },
+                  "name": "primary",
+                  "type": "string"
+                },
+                {
+                  "name": "secondary",
+                  "type": "string"
+                }
+              ]
+            },
+            "format": "default",
+            "name": "address_parts",
+            "type": "object"
+          },
+          {
+            "format": "default",
+            "name": "organization_original_name",
+            "type": "string"
+          },
+          {
+            "es:schema": {
+              "fields": [
+                {
+                  "name": "primary",
+                  "type": "string"
+                },
+                {
+                  "name": "secondary",
+                  "type": "string"
+                }
+              ]
+            },
+            "format": "default",
+            "name": "organization_name_parts",
+            "type": "object"
+          },
+          {
+            "es:itemType": "string",
+            "es:keyword": true,
+            "format": "default",
+            "name": "organization_resolved_name",
+            "type": "array"
+          }
+        ],
+        "missingValues": [
+          ""
+        ],
+        "primaryKey": [
+          "card_id"
+        ]
+      }
+    }
+  ]
+}

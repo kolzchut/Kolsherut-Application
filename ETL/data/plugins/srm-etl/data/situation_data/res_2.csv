@@ -1,0 +1,348 @@
+id,name,synonyms,breadcrumbs,count,score
+human_situations:age_group,קבוצת גיל,,,7277,7277
+human_situations:age_group:adults,מבוגרים,מבוגרות,קבוצת גיל,924,924
+human_situations:age_group:children,ילדים,ילדות,קבוצת גיל,2178,2178
+human_situations:age_group:infants,הגיל הרך,"פעוטות
+תינוקות
+פעוטון
+מעון",קבוצת גיל,1394,1394
+human_situations:age_group:seniors,אזרחים ותיקים,"הגיל השלישי
+זקנים
+קשישים
+גיל הזהב
+ישישים
+סבא
+סבתא
+אזרחות ותיקות",קבוצת גיל,2321,2321
+human_situations:age_group:teens,נוער,"תיכוניסטים
+נערים
+נערות",קבוצת גיל,2605,2605
+human_situations:age_group:young_adults,צעירים,צעירות,קבוצת גיל,2030,2030
+human_situations:armed_forces,אנשי צבא וביטחון,"מילואים
+מילואימניקים
+משטרה
+נשות צבא וביטחון
+מילואימניקיות",,249,249
+human_situations:armed_forces:active_duty,משרתי צבא סדיר,"חיילים
+חיילות
+משרתות צבא סדיר",אנשי צבא וביטחון,104,104
+human_situations:armed_forces:bereaved_families,משפחות שכולות,"חללים
+נרצחים 
+טרור 
+איבה
+ששכלו 
+שכולה",אנשי צבא וביטחון,42,42
+human_situations:armed_forces:ex_soldiers,חיילים משוחררים,חיילות משוחררות,אנשי צבא וביטחון,19,19
+human_situations:armed_forces:injured_while_on_duty,"נכי צה""ל","נכות צה""ל",אנשי צבא וביטחון,75,75
+human_situations:armed_forces:professional_duty,משרתי צבא קבע,משרתות צבא קבע,אנשי צבא וביטחון,52,52
+human_situations:armed_forces:reserves,משרתי מילואים,"מילואימניקים
+משרתות מילואים",אנשי צבא וביטחון,60,60
+human_situations:benefit_holders,מקבלי קצבאות והטבות,"מקבלי קצבאות
+מקבלות קצבאות",,730,730
+human_situations:benefit_holders:social_security,מוכרות מביטוח לאומי,"מקבלי קצבאות הביטוח הלאומי
+מקבלות קצבאות הביטוח הלאומי",מקבלי קצבאות והטבות,314,314
+human_situations:benefit_holders:social_security:disability,מקבלי קצבאת נכות,"נכים
+מקבלות קצבאת נכות
+קצבת נכות
+
+",מקבלי קצבאות והטבות/מוכרות מביטוח לאומי,8,8
+human_situations:benefit_holders:social_security:income_security,מקבלי הבטחת הכנסה,"השלמת הכנסה
+מקבלות הבטחת הכנסה",מקבלי קצבאות והטבות/מוכרות מביטוח לאומי,16,16
+human_situations:citizenship,אזרחות ותושבות,,,354,354
+human_situations:citizenship:foreign_residents,תושבי חוץ,תושבות חוץ,אזרחות ותושבות,2,2
+human_situations:citizenship:foreign_workers,מהגרי עבודה,"מהגרים
+מהגרות
+מהגרות עבודה",אזרחות ותושבות,4,4
+human_situations:citizenship:olim,עולים,עולות,אזרחות ותושבות,322,322
+human_situations:citizenship:refugees,פליטים," מבקשי מקלט
+מבקשות מקלט
+פליטות",אזרחות ותושבות,29,29
+human_situations:citizenship:statusless,מחוסרי מעמד,"חסרי מעמד
+סודנים
+דרפורדארפור
+אריתראים
+פליטים
+פלסטינים
+פלשטינאים
+שוהים בלתי חוקיים
+מחוסרות מעמד",אזרחות ותושבות,5,5
+human_situations:community,קהילה,,,217,217
+human_situations:community:activists,פעילים חברתיים,פעילות חברתיות,קהילה,66,66
+human_situations:community:leaders,מנהיגות קהילתית,,קהילה,196,196
+human_situations:criminal_history,פשיעה,,,62,62
+human_situations:criminal_history:ex_offenders,בעלי עבר פלילי,"פושעים
+עבריינים
+בעלות עבר פלילי",פשיעה,14,14
+human_situations:criminal_history:ex_offenders_youth,נוער בעל עבר פלילי,"נוער עבריין
+נוער בסיכון",פשיעה,20,20
+human_situations:criminal_history:prisoners,אסירים,אסירות,פשיעה,5,5
+human_situations:deprivation,רקע אישי,"חסכים
+",,1998,1998
+human_situations:deprivation:geographical_periphery,אנשים מפריפריה גיאוגרפית,נשים מפריפריה גיאוגרפית,רקע אישי,162,162
+human_situations:deprivation:social_periphary,אנשים מפריפריה חברתית,נשים מפריפריה חברתית,רקע אישי,80,80
+human_situations:disability,מוגבלויות,"נכים 
+נכויות
+נכות",,4702,4702
+human_situations:disability:autistic_spectrum,אוטיסטים,"אוטיזם
+אספרגר
+על הרצף
+הרצף האוטיסטי
+הספקטרום
+אוטיסטיות",מוגבלויות,371,371
+human_situations:disability:deaf_or_hard_of_hearing,בעלי חרשות או שמיעה מוגבלת,"חירשים
+כבדי שמיעה
+",מוגבלויות,87,87
+human_situations:disability:intellectual_disability,בעלי מוגבלות שכלית והתפתחותית,"פיגור
+מפגרים
+מש""ה
+מוש""ה
+תסמונת דאון
+",מוגבלויות,817,817
+human_situations:disability:learning_disability,בעלי קשיי למידה,,מוגבלויות,63,63
+human_situations:disability:learning_disability:add_adhd,בעלי הפרעות קשב וריכוז,"הפרעת קשב וריכוז
+קשב וריכוז
+צרכים מיוחדים
+",מוגבלויות/בעלי קשיי למידה,19,19
+human_situations:disability:limited_mobility,בעלי מוגבלות בתנועה,"נכים
+נכות",מוגבלויות,66,66
+human_situations:disability:mental_illness,מתמודדי נפש,"משוגעים
+חולי נפש
+מתמודדות נפש
+נפגעי נפש
+מחלות נפש",מוגבלויות,1287,1287
+human_situations:disability:physical_disability,אנשים עם מוגבלות פיזית,"נכים
+נכות
+נשים עם מוגבלות פיזית",מוגבלויות,47,47
+human_situations:disability:visual_impairment,בעלי ליקוי ראיה,"עיוורים
+כבדי ראיה
+עיוורון
+עיוורות",מוגבלויות,105,105
+human_situations:education,חינוך,,,729,729
+human_situations:education:dropouts,נושרים ממערכת החינוך,נושרות ממערכת החינוך,חינוך,40,40
+human_situations:education:gifted_students,ילדים מחוננים,ילדות מחוננות,חינוך,16,16
+human_situations:education:special_needs,בעלי צרכים מיוחדים,,חינוך,210,210
+human_situations:education:students,סטודנטים,"סטודנטים
+סטודנטיות",חינוך,162,162
+human_situations:education:yeshiva_students,תלמידי ישיבה,,חינוך,283,283
+human_situations:employment,תעסוקה,,,131,131
+human_situations:employment:employed,שכירים,שכירות,תעסוקה,42,42
+human_situations:employment:retirement,אנשים בגמלאות,"גמלאים
+פנסיונרים
+נשים בגמלאות
+פנסיונריות
+",תעסוקה,2,2
+human_situations:employment:self_employed,עצמאים,"עצמאיים
+עצמאיות",תעסוקה,51,51
+human_situations:employment:unemployed,מובטלים,מובטלות,תעסוקה,32,32
+human_situations:gender,מגדר,,,710,710
+human_situations:gender:men,גברים בלבד,גברים,מגדר,286,286
+human_situations:gender:transgender,טרנסג'נדר,"טרנסים
+טראנסג'נדרים
+טרנס
+שינוי מין
+טרנסיות
+",מגדר,18,18
+human_situations:gender:women,נשים בלבד,"נשים
+",מגדר,412,412
+human_situations:health,מצבים בריאותיים,"חולים
+חולות",,565,565
+human_situations:health:chronic_illness,חולים כרוניים,חולות כרוניות,מצבים בריאותיים,31,31
+human_situations:health:endocrine_nutritional_or_metabolic_diseases,חולי מחלות אנדוקריניות,חולות מחלות אנדוקריניות,מצבים בריאותיים,2,2
+human_situations:health:endocrine_nutritional_or_metabolic_diseases:type_1_diabetes,חולי סכרת נעורים,חולות סכרת נעורים,מצבים בריאותיים/חולי מחלות אנדוקריניות,1,1
+human_situations:health:endocrine_nutritional_or_metabolic_diseases:type_2_diabetes,חולי סכרת,"סוכרת
+חולות סכרת",מצבים בריאותיים/חולי מחלות אנדוקריניות,1,1
+human_situations:health:fertility,בעיות פוריות,"טיפולי פוריות
+הפריה",מצבים בריאותיים,3,3
+human_situations:health:genetic_disorder,חולים במחלה גנטית,חולות במחלה גנטית,מצבים בריאותיים,1,1
+human_situations:health:infectious_disease,מחלה מדבקת,,מצבים בריאותיים,3,3
+human_situations:health:infectious_disease:hiv_aids,חולי איידס,"HIV
+חולות איידס",מצבים בריאותיים/מחלה מדבקת,3,3
+human_situations:health:neoplasm,חולי סרטן,חולות סרטן,מצבים בריאותיים,62,62
+human_situations:health:nervous_system_disease,חולי מחלות של מערכת העצבים והמח,"מחלות עצבים
+חולות מחלות של מערכת העצבים והמח",מצבים בריאותיים,62,62
+human_situations:health:nervous_system_disease:alzheimer_disease,חולי אלצהיימר ומחלות דמנציה,"דמנטים
+אלצהיימר
+דמנציה 
+חולות אלצהיימר ומחלות דמנציה",מצבים בריאותיים/חולי מחלות של מערכת העצבים והמח,42,42
+human_situations:health:nervous_system_disease:epilepsy,חולי אפיליפסיה,חולות אפיליפסיה,מצבים בריאותיים/חולי מחלות של מערכת העצבים והמח,11,11
+human_situations:health:nervous_system_disease:stroke,אנשים שעברו אירוע מוחי,נשים שעברו אירוע מוחי,מצבים בריאותיים/חולי מחלות של מערכת העצבים והמח,5,5
+human_situations:health:neurodevelopmental_disorders,אנשים עם לקות נוירו-התפתחותית,נשים עם לקות נוירו-התפתחותית,מצבים בריאותיים,2,2
+human_situations:health:pregnant,הריון,,מצבים בריאותיים,36,36
+human_situations:health:rare_diseases,חולי מחלות יתומות,חולות מחלות יתומות,מצבים בריאותיים,5,5
+human_situations:health:respiratory_system_disease,חולי מחלות דרכי נשימה,חולות מחלות דרכי נשימה,מצבים בריאותיים,57,57
+human_situations:health:respiratory_system_disease:asthma,חולי אסתמה,"חולות אסתמה
+אסטמה",מצבים בריאותיים/חולי מחלות דרכי נשימה,50,50
+human_situations:health:rheumatic_diseases,חולי מחלות ראומטיות,חולות מחלות ראומטיות,מצבים בריאותיים,2,2
+human_situations:health:rheumatic_diseases:fibromyalgia,חולי פיברומיאלגיה,חולות פיברומיאלגיה,מצבים בריאותיים/חולי מחלות ראומטיות,1,1
+human_situations:health:treatment_phases,שלבי טיפול,,מצבים בריאותיים,237,237
+human_situations:health:treatment_phases:facing_end_of_life,אנשים על ערש דווי,"מצב סופני
+פליאטיבי
+ גוססים
+ גסיסה
+ סוף החיים
+נשים על ערש דווי",מצבים בריאותיים/שלבי טיפול,8,8
+human_situations:health:treatment_phases:hospitalized,מאושפזים,מאושפזות,מצבים בריאותיים/שלבי טיפול,56,56
+human_situations:health:treatment_phases:nursing_care,אנשים במצב סיעודי,נשים במצב סיעודי,מצבים בריאותיים/שלבי טיפול,133,133
+human_situations:health:treatment_phases:post_treatment,אנשים בשיקום,"שיקום
+נשים בשיקום",מצבים בריאותיים/שלבי טיפול,42,42
+human_situations:household,מצב משפחתי,,,1877,1877
+human_situations:household:families,משפחות,,מצב משפחתי,1842,1842
+human_situations:household:families:adoption,משפחות מאמצות,,מצב משפחתי/משפחות,6,6
+human_situations:household:families:divorced,גירושים,"פרודים
+גרושים
+גרושות
+",מצב משפחתי/משפחות,11,11
+human_situations:household:families:fathers,אבות,,מצב משפחתי/משפחות,736,736
+human_situations:household:families:foster_caregivers,הורים אומנים,,מצב משפחתי/משפחות,10,10
+human_situations:household:families:mothers,אמהות,,מצב משפחתי/משפחות,743,743
+human_situations:household:families:parents,הורים,,מצב משפחתי/משפחות,884,884
+human_situations:household:families:siblings,אחים,אחיות,מצב משפחתי/משפחות,2,2
+human_situations:household:families:single_parent,משפחות שבראשן הורה עצמאי,"חד הוריות
+משפחות חד הוריות
+אם יחידנית
+אב יחידני
+",מצב משפחתי/משפחות,36,36
+human_situations:household:loneliness,בודדים,"ערירים
+בדידות
+בודדות",מצב משפחתי,26,26
+human_situations:housing,דיור,,,153,153
+human_situations:housing:homeless,מחוסרי בית,"דרי רחוב
+חסרי בית 
+מחוסרות בית
+חסרות בית",דיור,31,31
+human_situations:housing:public_housing_tenants,דיירי דיור ציבורי,דיירות דיור ציבורי,דיור,122,122
+human_situations:housing:runaways,נוער רחוב,,דיור,1,1
+human_situations:language,שפות,,,1433,1433
+human_situations:language:amharic_speaking,דוברי אמהרית,דוברות אמהרית,שפות,55,55
+human_situations:language:arabic_speaking,דוברי ערבית,"العربية
+דוברות ערבית",שפות,656,656
+human_situations:language:english_speaking,דוברי אנגלית,"english speaking
+speakers
+דוברות אנגלית",שפות,647,647
+human_situations:language:french_speaking,דוברי צרפתית,דוברות צרפתית,שפות,97,97
+human_situations:language:russian_speaking,דוברי רוסית,דוברות רוסית,שפות,385,385
+human_situations:language:sign_language,דוברי שפת הסימנים,דוברות שפת הסימנים,שפות,5,5
+human_situations:language:spanish_speaking,דוברי ספרדית,דוברות ספרדית,שפות,46,46
+human_situations:life_events,אירועי חיים,,,63,63
+human_situations:life_events:bar_bat_mitzva,בר/בת מצווה,,אירועי חיים,28,28
+human_situations:life_events:birth,לידה,,אירועי חיים,33,33
+human_situations:life_events:death,מוות,,אירועי חיים,8,8
+human_situations:life_events:divorce,גירושין,גירושים,אירועי חיים,13,13
+human_situations:life_events:grief,אבל,שבעה,אירועי חיים,3,3
+human_situations:life_events:wedding,חתונה,,אירועי חיים,4,4
+human_situations:mental_health,בריאות הנפש,,,141,141
+human_situations:mental_health:mental_conditions_and_diseases,מצבים נפשיים ומחלות,,בריאות הנפש,114,114
+human_situations:mental_health:mental_conditions_and_diseases:anxiety,בעלי הפרעות חרדה,בעלות הפרעות חרדה,בריאות הנפש/מצבים נפשיים ומחלות,53,53
+human_situations:mental_health:mental_conditions_and_diseases:brain_injury,בעלי פציעת ראש,בעלות פציעת ראש,בריאות הנפש/מצבים נפשיים ומחלות,20,20
+human_situations:mental_health:mental_conditions_and_diseases:depression,אנשים עם דיכאון,נשים עם דיכאון,בריאות הנפש/מצבים נפשיים ומחלות,2,2
+human_situations:mental_health:mental_conditions_and_diseases:eating_disorder,בעלי הפרעות אכילה,"אנורקסיה
+אנורקסים
+בולימיה
+בולמיה
+בעלות הפרעות אכילה",בריאות הנפש/מצבים נפשיים ומחלות,5,5
+human_situations:mental_health:mental_conditions_and_diseases:ptsd,בעלי הפרעת דחק פוסט טראומתית (PTSD),"פוסט טראומה
+בעלות הפרעת דחק פוסט טראומתית (PTSD)",בריאות הנפש/מצבים נפשיים ומחלות,30,30
+human_situations:mental_health:mental_conditions_and_diseases:suicidal_thoughts,בעלי מחשבות אובדניות,בעלות מחשבות אובדניות,בריאות הנפש/מצבים נפשיים ומחלות,9,9
+human_situations:role,תפקיד,,,718,718
+human_situations:role:caregivers,מטפלים,"
+",תפקיד,274,274
+human_situations:role:dependents,תלויים,תלויות,תפקיד,1,1
+human_situations:role:spouses,בני ובנות זוג,,תפקיד,6,6
+human_situations:sectors,סקטורים בחברה,,,1150,1150
+human_situations:sectors:arabs,החברה הערבית,"ערבים
+חברה ערבית
+המגזר
+המגזר הערבי
+ערביות",סקטורים בחברה,301,301
+human_situations:sectors:bedouin,החברה הבדואית,"בדואים
+בדואיות",סקטורים בחברה,40,40
+human_situations:sectors:christians,נוצרים,"קתולים
+נוצרים
+יוונים אורתודוכסים
+פרוטסטנטים
+נוצריות",סקטורים בחברה,1,1
+human_situations:sectors:circassians,החברה הצ'רקסית,"צ'רקסים
+צ'רקסיות
+",סקטורים בחברה,1,1
+human_situations:sectors:druze,החברה הדרוזית,"דרוזים
+דרוזיות",סקטורים בחברה,28,28
+human_situations:sectors:jews,יהודים,יהודיות,סקטורים בחברה,869,869
+human_situations:sectors:jews:dati_leumi,דתיים לאומיים,דתיות לאומיות,סקטורים בחברה/יהודים,84,84
+human_situations:sectors:jews:hozer_betshuva,חוזרים בתשובה,חוזרות בתשובה,סקטורים בחברה/יהודים,1,1
+human_situations:sectors:jews:progressives,יהדות מתקדמת,"רפורמים
+",סקטורים בחברה/יהודים,1,1
+human_situations:sectors:jews:ultra_orthodox,חרדים,"חרדים
+חרדיות",סקטורים בחברה/יהודים,617,617
+human_situations:sectors:jews:yotze_beshela,יוצאים בשאלה,"חוזרים בשאלה
+יוצאות בשאלה
+חוזרות בשאלה",סקטורים בחברה/יהודים,96,96
+human_situations:sexuality,נטייה מינית,,,34,34
+human_situations:sexuality:lgbtq,"להט""ב","הומוסקסואלים
+הומואים
+לסביות
+",נטייה מינית,34,34
+human_situations:substance_dependency,התמכרויות,,,48,48
+human_situations:substance_dependency:alcohol_dependency,מכורים לאלכוהול,"אלכוהוליסטים
+מכורות לאלכוהול
+אלכוהוליסטיות
+",התמכרויות,12,12
+human_situations:substance_dependency:gambling,מכורים להימורים,"מהמרים
+מהמרות
+מכורות להימורים",התמכרויות,1,1
+human_situations:substance_dependency:opioid_dependency,מכורים לסמים,מכורות לסמים,התמכרויות,17,17
+human_situations:survivors,ניצולים ונפגעים,ניצולות ונפגעות,,414,414
+human_situations:survivors:abuse_or_neglect_survivors,נפגעי התעללות או הזנחה,נפגעות התעללות או הזנחה,ניצולים ונפגעים,10,10
+human_situations:survivors:car_accidents_survivors,נפגעי תאונות דרכים,נפגעות תאונות דרכים,ניצולים ונפגעים,9,9
+human_situations:survivors:human_trafficking_survivors,נפגעי סחר בבני אדם,נפגעות סחר בבני אדם,ניצולים ונפגעים,10,10
+human_situations:survivors:natural_disaster_survivors,נפגעי אסון טבע,נפגעות אסון טבע,ניצולים ונפגעים,2,2
+human_situations:survivors:trauma_survivors,נפגעי טראומה,"PTSD
+נפגעות טראומה",ניצולים ונפגעים,127,127
+human_situations:urgency,דחיפות,,,132,132
+human_situations:urgency:emergency,מצב חירום,,דחיפות,8,8
+human_situations:urgency:in_crisis,אנשים במשבר נפשי,נשים במשבר נפשי,דחיפות,124,124
+human_situations:criminal_history:sexual_perpetrators,עברייני מין,עברייניות מין,פשיעה,19,19
+human_situations:criminal_history:violent_tendencies,עברייני אלימות במשפחה,עברייניות אלימות במשפחה,פשיעה,6,6
+human_situations:household:orphans,יתומים,"יתומים
+יתומות",מצב משפחתי,13,13
+human_situations:role:family_caregivers,בני משפחה מטפלים,"משפחות תומכות
+בנות משפחה מטפלות
+סיוע למטפלים
+",תפקיד,452,452
+human_situations:armed_forces:police,כוחות המשטרה,"שוטרים
+שוטרות",אנשי צבא וביטחון,1,1
+human_situations:disability:mentally_debilitated,תשושי נפש,תשושות נפש,מוגבלויות,2,2
+human_situations:disability:in_need_for_nursing_care,אנשים במצב סיעודי,נשים במצב סיעודי,מוגבלויות,411,411
+human_situations:survivors:violence_survivors,נפגעי אלימות,,ניצולים ונפגעים,108,108
+human_situations:survivors:violence_survivors:domestic_violence_survivors,נפגעות אלימות במשפחה,נפגעי אלימות במשפחה,ניצולים ונפגעים/נפגעי אלימות,41,41
+human_situations:survivors:violence_survivors:sexual_assault_survivors,נפגעות אלימות מינית,,ניצולים ונפגעים/נפגעי אלימות,54,54
+human_situations:survivors:prostition_survivors,קורבנות זנות,,ניצולים ונפגעים,46,46
+human_situations:benefit_holders:holocaust_survivors,ניצולי שואה,ניצולות שואה,מקבלי קצבאות והטבות,310,310
+human_situations:benefit_holders:ministry_of_health,מוכרי משרד הבריאות,מוכרות משרד הבריאות,מקבלי קצבאות והטבות,104,104
+human_situations:benefit_holders:ministry_of_health:rehabilitation_basket,זכאי סל שיקום,"זכאית סל שיקום
+",מקבלי קצבאות והטבות/מוכרי משרד הבריאות,104,104
+human_situations:sectors:jews:ethiopians,יוצאי אתיופיה,"אתיופים
+יוצאות אתיופיה
+אתיופיות",סקטורים בחברה/יהודים,143,143
+human_situations:citizenship:returned_residents,תושבים חוזרים,תושבות חוזרות,אזרחות ותושבות,5,5
+human_situations:survivors:offence_survivors,נפגעי עבירה,נפגעות עבירה,ניצולים ונפגעים,8,8
+human_situations:survivors:evacuees,מפונים,מפונות,ניצולים ונפגעים,84,84
+human_situations:survivors:wounded,פצועים,פצועות,ניצולים ונפגעים,11,11
+human_situations:survivors:families_of_missing_persons,משפחות של נעדרים,משפחות של נעדרות,ניצולים ונפגעים,3,3
+human_situations:survivors:victims_of_terror,נפגעי פעולות איבה,נפגעות פעולות איבה,ניצולים ונפגעים,70,70
+human_situations:employment:farmers,חקלאים,חקלאיות,תעסוקה,21,21
+human_situations:deprivation:low_income,בעלי הכנסה נמוכה,"קושי כלכלי 
+קשיים כלכליים 
+עניים
+עני 
+בעלות הכנסה נמוכה
+עוני",רקע אישי,1134,1134
+human_situations:education:struggling_students,תלמידים מתקשים,תלמידות מתקשות,חינוך,23,23
+human_situations:education:learning_disorders,בעלי הפרעות למידה,בעלות הפרעות למידה,חינוך,2,2
+human_situations:health:overweight,עודף משקל,,מצבים בריאותיים,1,1
+human_situations:deprivation:at_risk,בסיכון,,רקע אישי,763,763
+human_situations:deprivation:at_risk:at_risk_children,ילדים בסיכון,ילדות בסיכון,רקע אישי/בסיכון,379,379
+human_situations:deprivation:at_risk:at_risk_teens,נערים בסיכון,"צעירים בסיכון
+חסרי עורף משפחתי
+נערות בסיכון",רקע אישי/בסיכון,507,507
+human_situations:deprivation:at_risk:at_risk_youth,צעירים בסיכון,צעירות בסיכון,רקע אישי/בסיכון,79,79
+human_situations:survivors:bereaved_families_of_terror,משפחות של נפגעי פעולות איבה,משפחות של נפגעות פעולות איבה,ניצולים ונפגעים,10,10

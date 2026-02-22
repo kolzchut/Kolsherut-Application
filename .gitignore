@@ -172,3 +172,7 @@ node_modules/
 /tars/
 
 ignore/
+
+
+/ETL/data/data
+/ETL/data/logs

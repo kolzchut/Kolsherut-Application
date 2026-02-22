@@ -1,0 +1,268 @@
+{
+  "bytes": 28911300,
+  "count_of_rows": 15140,
+  "hash": "f3b83107ea941381836b4b3fceca917f",
+  "name": "Flat Table",
+  "profile": "data-package",
+  "resources": [
+    {
+      "bytes": 64120898,
+      "count_of_rows": 30359,
+      "dialect": {
+        "caseSensitiveHeader": false,
+        "delimiter": ",",
+        "doubleQuote": true,
+        "header": true,
+        "lineTerminator": "\r\n",
+        "quoteChar": "\"",
+        "skipInitialSpace": false
+      },
+      "encoding": "utf-8",
+      "format": "csv",
+      "hash": "74c0f614a490091a5f611590b9fd5d5a",
+      "name": "flat_table",
+      "path": "flat_table.csv",
+      "profile": "tabular-data-resource",
+      "schema": {
+        "fields": [
+          {
+            "format": "default",
+            "name": "service_key",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_key",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_key",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_description",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_details",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_payment_required",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_payment_details",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_urls",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "service_phone_numbers",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "service_email_address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_implements",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_situations",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "service_responses",
+            "type": "array"
+          },
+          {
+            "decimalChar": ".",
+            "format": "default",
+            "groupChar": "",
+            "name": "service_boost",
+            "type": "number"
+          },
+          {
+            "format": "default",
+            "name": "data_sources",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "organization_id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_short_name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_description",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_purpose",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_kind",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_urls",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "organization_phone_numbers",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "organization_email_address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_branch_count",
+            "type": "integer"
+          },
+          {
+            "format": "default",
+            "name": "organization_situations",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "branch_id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_operating_unit",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_description",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_urls",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "branch_phone_numbers",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "branch_email_address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_orig_address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_city",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_geometry",
+            "type": "geopoint"
+          },
+          {
+            "falseValues": [
+              "False"
+            ],
+            "format": "default",
+            "name": "branch_location_accurate",
+            "trueValues": [
+              "True"
+            ],
+            "type": "boolean"
+          },
+          {
+            "format": "default",
+            "name": "branch_situations",
+            "type": "array"
+          },
+          {
+            "format": "%Y-%m-%dT%H:%M:%S",
+            "name": "service_last_modified",
+            "type": "datetime"
+          },
+          {
+            "falseValues": [
+              "False"
+            ],
+            "format": "default",
+            "name": "national_service",
+            "trueValues": [
+              "True"
+            ],
+            "type": "boolean"
+          }
+        ],
+        "missingValues": [
+          ""
+        ],
+        "primaryKey": [
+          "service_id",
+          "branch_id"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "bytes": 17304547,
+  "count_of_rows": 15219,
+  "hash": "e21d4be249fe2d35874c92b1e3bf0a4e",
+  "name": "Flat Services",
+  "profile": "data-package",
+  "resources": [
+    {
+      "bytes": 35209598,
+      "count_of_rows": 15219,
+      "dialect": {
+        "caseSensitiveHeader": false,
+        "delimiter": ",",
+        "doubleQuote": true,
+        "header": true,
+        "lineTerminator": "\r\n",
+        "quoteChar": "\"",
+        "skipInitialSpace": false
+      },
+      "encoding": "utf-8",
+      "format": "csv",
+      "hash": "9c2a94478d7221ed199e7ca9f69bb481",
+      "name": "flat_services",
+      "path": "flat_services.csv",
+      "profile": "tabular-data-resource",
+      "schema": {
+        "fields": [
+          {
+            "format": "default",
+            "name": "service_key",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_description",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_details",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_payment_required",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_payment_details",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_urls",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "service_phone_numbers",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "service_email_address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "service_situations",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "service_responses",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "service_implements",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "data_sources",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "branch_key",
+            "type": "string"
+          },
+          {
+            "decimalChar": ".",
+            "format": "default",
+            "groupChar": "",
+            "name": "service_boost",
+            "type": "number"
+          },
+          {
+            "format": "%Y-%m-%dT%H:%M:%S",
+            "name": "service_last_modified",
+            "type": "datetime"
+          }
+        ],
+        "missingValues": [
+          ""
+        ]
+      }
+    }
+  ]
+}

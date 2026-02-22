@@ -1,0 +1,187 @@
+{
+  "bytes": 6919089,
+  "count_of_rows": 10533,
+  "hash": "1bae06002872cee57e10c0cfd4db7f43",
+  "name": "Flat Branches",
+  "profile": "data-package",
+  "resources": [
+    {
+      "bytes": 10384627,
+      "count_of_rows": 10533,
+      "dialect": {
+        "caseSensitiveHeader": false,
+        "delimiter": ",",
+        "doubleQuote": true,
+        "header": true,
+        "lineTerminator": "\r\n",
+        "quoteChar": "\"",
+        "skipInitialSpace": false
+      },
+      "encoding": "utf-8",
+      "format": "csv",
+      "hash": "8c0a77d4c2f7af52fc0a4ea48fcdcff5",
+      "name": "flat_branches",
+      "path": "flat_branches.csv",
+      "profile": "tabular-data-resource",
+      "schema": {
+        "fields": [
+          {
+            "format": "default",
+            "name": "branch_key",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_source",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_operating_unit",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_description",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_urls",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "branch_phone_numbers",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "branch_email_address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_orig_address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_city",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "branch_geometry",
+            "type": "geopoint"
+          },
+          {
+            "falseValues": [
+              "False"
+            ],
+            "format": "default",
+            "name": "branch_location_accurate",
+            "trueValues": [
+              "True"
+            ],
+            "type": "boolean"
+          },
+          {
+            "format": "default",
+            "name": "branch_situations",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "organization_key",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_short_name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_description",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_purpose",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_kind",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_urls",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "organization_phone_numbers",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "organization_email_address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization_situations",
+            "type": "array"
+          },
+          {
+            "falseValues": [
+              "False"
+            ],
+            "format": "default",
+            "name": "national_service",
+            "trueValues": [
+              "True"
+            ],
+            "type": "boolean"
+          },
+          {
+            "format": "default",
+            "name": "organization_branch_count",
+            "type": "integer"
+          }
+        ],
+        "missingValues": [
+          ""
+        ]
+      }
+    }
+  ]
+}

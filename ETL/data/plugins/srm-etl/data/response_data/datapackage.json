@@ -1,0 +1,72 @@
+{
+  "bytes": 23650,
+  "count_of_rows": 199,
+  "hash": "e34f8b848ad1648140d8afb40aec307b",
+  "name": "responses",
+  "profile": "data-package",
+  "resources": [
+    {
+      "bytes": 23650,
+      "dialect": {
+        "caseSensitiveHeader": false,
+        "delimiter": ",",
+        "doubleQuote": true,
+        "header": true,
+        "lineTerminator": "\r\n",
+        "quoteChar": "\"",
+        "skipInitialSpace": false
+      },
+      "encoding": "utf-8",
+      "format": "csv",
+      "hash": "ac35ccbe1095f2da715d86a22d75eb8a",
+      "name": "responses",
+      "path": "res_2.csv",
+      "profile": "tabular-data-resource",
+      "schema": {
+        "fields": [
+          {
+            "es:keyword": true,
+            "format": "default",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "es:itemType": "string",
+            "format": "default",
+            "name": "synonyms",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "breadcrumbs",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "count",
+            "type": "integer"
+          },
+          {
+            "decimalChar": ".",
+            "format": "default",
+            "groupChar": "",
+            "name": "score",
+            "type": "number"
+          }
+        ],
+        "missingValues": [
+          ""
+        ],
+        "primaryKey": [
+          "id"
+        ]
+      }
+    }
+  ],
+  "title": "Taxonomy Responses"
+}

@@ -1,0 +1,288 @@
+id,name,synonyms,breadcrumbs,count,score
+human_services:care,רווחה,לשכת רווחה,,5112,5112
+human_services:care:adoption_foster_care,אימוץ ואומנה,בית אומנה,רווחה,17,17
+human_services:care:daytime_care,מסגרת יום,,רווחה,1445,1445
+human_services:care:recovery,שיקום ושילוב מחדש בחברה,"רשות לשיקום האסיר
+השתלבות בחברה",רווחה,126,126
+human_services:care:support_network,רשת תמיכה,,רווחה,60,60
+human_services:community_services,שירותים קהילתיים,,,1853,1853
+human_services:community_services:community_gardens,גינות קהילתיות,גינה קהילתית,שירותים קהילתיים,8,8
+human_services:community_services:computer_or_internet_access,מחשוב או גישה לאינטרנט,,שירותים קהילתיים,20,20
+human_services:community_services:olim_support,מוקדי קליטה,"תמיכה לעולים
+סיוע לעולים",שירותים קהילתיים,55,55
+human_services:community_services:recreation,פעילויות פנאי,"חוגים
+פעילות חברתית
+פעילויות הפוגה",שירותים קהילתיים,1241,1241
+human_services:community_services:religious_services,שירותי דת,,שירותים קהילתיים,201,201
+human_services:community_services:summer_camps,קייטנות,"קיטנה
+קייטנה",שירותים קהילתיים,73,73
+human_services:education,חינוך,,,3366,3366
+human_services:education:more_education,חינוך נוסף והעשרה,,חינוך,1806,1806
+human_services:education:more_education:civic_engagement,מעורבות חברתית,,חינוך/חינוך נוסף והעשרה,313,313
+human_services:education:more_education:english_as_a_second_language_esl,אולפנים,,חינוך/חינוך נוסף והעשרה,14,14
+human_services:education:more_education:enrichment_programs,תוכניות העשרה,,חינוך/חינוך נוסף והעשרה,225,225
+human_services:education:more_education:environmental_education,חינוך סביבתי,,חינוך/חינוך נוסף והעשרה,22,22
+human_services:education:more_education:foreign_languages,לימודי שפות,"לימודי שפה
+",חינוך/חינוך נוסף והעשרה,17,17
+human_services:education:more_education:youth_development,קידום נוער,,חינוך/חינוך נוסף והעשרה,95,95
+human_services:education:more_education:youth_movement,תנועות נוער,,חינוך/חינוך נוסף והעשרה,431,431
+human_services:education:skills_training,הכשרות,,חינוך,636,636
+human_services:education:skills_training:computer_class,אוריינות דיגיטלית,שיעורי מחשבים,חינוך/הכשרות,38,38
+human_services:education:skills_training:daily_life_skills,כישורי חיים,,חינוך/הכשרות,299,299
+human_services:emergency,חירום,מצב חירום,,96,96
+human_services:emergency:emergency_shelter,מקלט ציבורי,"ממד
+מרחב מוגן
+מקלט",חירום,3,3
+human_services:emergency:help_find_missing_persons,איתור נעדרים,,חירום,3,3
+human_services:food,מזון,"סיוע במזון
+אוכל
+סיוע באוכל",,1232,1232
+human_services:food:food_delivery,סלי מזון,בית תמחוי,מזון,79,79
+human_services:food:food_pantry,בתי תמחוי,"סיוע במזון
+סלי מזון
+קמחא דפסחא",מזון,86,86
+human_services:food:nutrition_education,חינוך והדרכה בנושאי תזונה,"תזונה
+חינוך תזונתי
+דיאטנית",מזון,755,755
+human_services:goods,ציוד,"חפצים
+",,110,110
+human_services:goods:baby_supplies,מוצרי תינוקות,,ציוד,16,16
+human_services:goods:clothing,בגדים,,ציוד,34,34
+human_services:goods:home_goods,מוצרים לבית,"ציוד לבית
+סיוע בציוד לבית",ציוד,4,4
+human_services:goods:toys_gifts,צעצועים ומתנות,,ציוד,4,4
+human_services:health,שירותי בריאות,,,3461,3461
+human_services:health:addiction_recovery,טיפול בהתמכרויות,,שירותי בריאות,30,30
+human_services:health:addiction_recovery:detox,מוסדות גמילה,,שירותי בריאות/טיפול בהתמכרויות,1,1
+human_services:health:addiction_recovery:substance_abuse_counseling,ייעוץ רגשי למתמכרים,,שירותי בריאות/טיפול בהתמכרויות,1,1
+human_services:health:dental_care,טיפולי שיניים,,שירותי בריאות,48,48
+human_services:health:end_of_life_care,טיפול תומך במצב סופני,"הוספיס
+הוספיס ביתי
+הוספיסים
+פליאטיבי",שירותי בריאות,2,2
+human_services:health:health_education,חינוך בריאותי,,שירותי בריאות,57,57
+human_services:health:mental_health_care,שירותי בריאות הנפש,,שירותי בריאות,1488,1488
+human_services:health:mental_health_care:anger_management,ניהול כעסים,,שירותי בריאות/שירותי בריאות הנפש,4,4
+human_services:health:mental_health_care:counseling,טיפול רגשי (פסיכולוגי),,שירותי בריאות/שירותי בריאות הנפש,1138,1138
+human_services:health:mental_health_care:counseling:family_counseling,טיפול משפחתי,,שירותי בריאות/שירותי בריאות הנפש/טיפול רגשי (פסיכולוגי),56,56
+human_services:health:mental_health_care:counseling:group_therapy,טיפול קבוצתי,,שירותי בריאות/שירותי בריאות הנפש/טיפול רגשי (פסיכולוגי),442,442
+human_services:health:mental_health_care:counseling:individual_counseling,טיפול אישי,,שירותי בריאות/שירותי בריאות הנפש/טיפול רגשי (פסיכולוגי),49,49
+human_services:health:sexual_reproductive_health,בריאות מינית,,שירותי בריאות,13,13
+human_services:health:sexual_reproductive_health:std_sti_treatment_prevention,טיפול ומניעה של מחלות מין,,שירותי בריאות/בריאות מינית,3,3
+human_services:health:sexual_reproductive_health:std_sti_treatment_prevention:hiv_treatment,טיפול ב-HIV,"איידס
+",שירותי בריאות/בריאות מינית/טיפול ומניעה של מחלות מין,3,3
+human_services:housing,דיור,,,2346,2346
+human_services:housing:emergency_shelter,דיור ואירוח חירומי,"אירוח, אירוח חירומי",דיור,38,38
+human_services:housing:help_find_housing,עזרה במציאת דיור,,דיור,6,6
+human_services:housing:maintenance_repairs,תיקונים ושיפוצים,,דיור,12,12
+human_services:housing:maintenance_repairs:disability_modifications,התאמות לבית,,דיור/תיקונים ושיפוצים,2,2
+human_services:housing:maintenance_repairs:small_repairs,תיקונים קטנים בבית,,דיור/תיקונים ושיפוצים,8,8
+human_services:housing:residential_housing,מסגרות דיור,,דיור,2179,2179
+human_services:housing:residential_housing:long_term_housing,דיור מוסדי,"דיור חוץ ביתי
+הוסטל
+הוסטלים
+פתרון דיור
+פתרונות דיור
+דיור ארוך טווח",דיור/מסגרות דיור,2179,2179
+human_services:housing:residential_housing:long_term_housing:assisted_living,דיור מוגן,,דיור/מסגרות דיור/דיור מוסדי,661,661
+human_services:housing:residential_housing:long_term_housing:hostel,הוסטל,הוסטלים,דיור/מסגרות דיור/דיור מוסדי,573,573
+human_services:housing:residential_housing:long_term_housing:nursing_home,מוסד סיעודי,,דיור/מסגרות דיור/דיור מוסדי,119,119
+human_services:housing:residential_housing:long_term_housing:old_age_home,בית אבות,,דיור/מסגרות דיור/דיור מוסדי,461,461
+human_services:legal,משפטי,,,1942,1942
+human_services:legal:advocacy_legal_aid,סיוע משפטי,"משפטנים
+משפטניות
+זכויות אדם
+עורך דין
+ייצוג משפטי",משפטי,1936,1936
+human_services:legal:advocacy_legal_aid:discrimination_civil_rights,אפליה וזכויות אדם,,משפטי/סיוע משפטי,36,36
+human_services:legal:advocacy_legal_aid:guardianship,אפוטרופסות,,משפטי/סיוע משפטי,6,6
+human_services:legal:advocacy_legal_aid:understand_government_programs,מיצוי זכויות,"בירוקרטיה
+מימוש זכויות",משפטי/סיוע משפטי,1855,1855
+human_services:legal:advocacy_legal_aid:workplace_rights,זכויות עובדים,דיני עבודה,משפטי/סיוע משפטי,1,1
+human_services:legal:mediation,גישור,,משפטי,10,10
+human_services:money,סיוע כלכלי,"עזרה פיננסית
+כסף
+",,805,805
+human_services:money:financial_assistance,סיוע כספי,"עזרה פיננסית
+עזרה כלכלית",סיוע כלכלי,751,751
+human_services:money:financial_assistance:help_pay_for_childcare,מלגות,,סיוע כלכלי/סיוע כספי,35,35
+human_services:money:financial_assistance:help_pay_for_food,תווי מזון,,סיוע כלכלי/סיוע כספי,18,18
+human_services:money:financial_assistance:help_pay_for_healthcare,סיוע במימון שירותי בריאות,תרופות,סיוע כלכלי/סיוע כספי,8,8
+human_services:money:financial_assistance:help_pay_for_school,סיוע בעלויות חינוך,"ספרי לימוד
+תלבושת אחידה
+ציוד לבית ספר",סיוע כלכלי/סיוע כספי,125,125
+human_services:money:financial_education,חינוך פיננסי,,סיוע כלכלי,28,28
+human_services:money:loans,הלוואות,הלוואה,סיוע כלכלי,7,7
+human_services:work,עבודה,,,1023,1023
+human_services:work:help_find_work,סיוע במציאת עבודה,,עבודה,131,131
+human_services:work:skills_training,הכשרה מקצועית,"קורס
+קורסים",עבודה,361,361
+human_services:work:skills_training:interview_training,הכנה לראיונות עבודה,,עבודה/הכשרה מקצועית,31,31
+human_services:work:special_employment,תעסוקה מיוחדת,,עבודה,614,614
+human_services:work:special_employment:supported_employment,תעסוקה נתמכת,,עבודה/תעסוקה מיוחדת,148,148
+human_services:work:special_employment:protected_employment,תעסוקה מוגנת,,עבודה/תעסוקה מיוחדת,230,230
+human_services:care:accessibility,פתרונות נגישות,"כסאות גלגלים
+רמפות
+רמפה",רווחה,71,71
+human_services:care:aid_center,מרכז סיוע,"מרכז מיצוי 
+תמיכה",רווחה,100,100
+human_services:care:early_childhood_intervention,אבחונים,"אבחון דידקטי
+אבחון פסיכולוגי
+אבחון פסיכודידקטי
+אבחון לקויות למידה
+אבחון קשב וריכוז
+אבחון ילדים מחוננים
+אבחון פסיכודיאגנוסטי
+אבחון נוירופסיכולוגי
+אבחון רגשי
+אבחון קוגניטיבי
+אבחון בשלות
+אבחון הדלגה
+הפרעת קשב וריכוז
+ADHD
+ADD
+היפראקטיביות
+אבחון
+אבחון התפתחותי
+אבחון לקויות למידה
+אבחון פסיכודידקטי
+אבחון קשב וריכוז
+אבחון דידקטי
+אבחון שפה ודיבור",רווחה,60,60
+human_services:care:guidance,ליווי והדרכה,ייעוץ ,רווחה,1238,1238
+human_services:education:more_education:prep_mechina,מכינה,,חינוך/חינוך נוסף והעשרה,201,201
+human_services:education:leadership_development,פיתוח מנהיגות,,חינוך,500,500
+human_services:health:help_find_healthcare,ייעוץ והכוונה רפואיים,"סיוע במציאת טיפול רפואי
+",שירותי בריאות,7,7
+human_services:health:prevent_treat,טיפול רפואי,,שירותי בריאות,1602,1602
+human_services:health:prevent_treat:in_home_support,סיוע בבית,"סיוע רפואי בבית
+עזרה בבית
+שיפוצים
+מטב
+מט""ב",שירותי בריאות/טיפול רפואי,95,95
+human_services:health:prevent_treat:occupational_therapy,ריפוי בעיסוק,,שירותי בריאות/טיפול רפואי,10,10
+human_services:health:prevent_treat:pain_management,טיפול בכאב,רפואת כאב,שירותי בריאות/טיפול רפואי,1,1
+human_services:health:prevent_treat:physical_therapy,פיזיותרפיה,,שירותי בריאות/טיפול רפואי,17,17
+human_services:health:prevent_treat:rehabilitation,שיקום רפואי,,שירותי בריאות/טיפול רפואי,594,594
+human_services:health:prevent_treat:speech_therapy,קלינאות תקשורת,"קלינאית תקשורת
+",שירותי בריאות/טיפול רפואי,21,21
+human_services:health:prevent_treat:vaccinations,חיסונים,חיסון,שירותי בריאות/טיפול רפואי,735,735
+human_services:health:primary_care,רפואה דחופה,"עזרה ראשונה
+",שירותי בריאות,19,19
+human_services:health:skilled_nursing,טיפול על ידי אחות,,שירותי בריאות,2,2
+human_services:health:support_service_animals,חיות תמיכה,,שירותי בריאות,14,14
+human_services:care:accessibility:translation,שפת סימנים,"מתרגם
+תרגום",רווחה/פתרונות נגישות,16,16
+human_services:education:more_education:army_readiness,הכנה לצבא,מכינות לצבא,חינוך/חינוך נוסף והעשרה,65,65
+human_services:education:more_education:national_service_readiness,הכנה לשירות לאומי,,חינוך/חינוך נוסף והעשרה,35,35
+human_services:education:more_education:prep_mechina:army_prep,מכינה צבאית,,חינוך/חינוך נוסף והעשרה/מכינה,179,179
+human_services:education:more_education:prep_mechina:university_prep,מכינה אוניברסיטאית,,חינוך/חינוך נוסף והעשרה/מכינה,2,2
+human_services:health:mental_health_care:hospitalization,אשפוז,,שירותי בריאות/שירותי בריאות הנפש,50,50
+human_services:legal:advocacy_legal_aid:financial_difficulties,הוצאה לפועל וחדלות פרעון,"פשיטת רגל
+חובות
+",משפטי/סיוע משפטי,6,6
+human_services:legal:legal_translation_interpretation,תרגום בהליכים משפטיים,,משפטי,2,2
+human_services:work:skills_training:vocational_courses,קורסים מקצועיים,,עבודה/הכשרה מקצועית,32,32
+human_services:education:special_education,חינוך מיוחד,,חינוך,82,82
+human_services:money:financial_assistance:gamach_money,"גמ""ח",,סיוע כלכלי/סיוע כספי,3,3
+human_services:culture_and_sports,תרבות וספורט,,,942,942
+human_services:culture_and_sports:fine_art,אומנות,,תרבות וספורט,45,45
+human_services:culture_and_sports:cinema,קולנוע,,תרבות וספורט,5,5
+human_services:culture_and_sports:exhibitions,תערוכות ומוזיאונים,,תרבות וספורט,32,32
+human_services:culture_and_sports:dance,מחול,,תרבות וספורט,34,34
+human_services:culture_and_sports:digital_art,אומנות דיגיטלית,,תרבות וספורט,1,1
+human_services:culture_and_sports:exercise_fitness,התעמלות וכושר,"מכוני כושר
+",תרבות וספורט,71,71
+human_services:culture_and_sports:hasbara,הסברה,,תרבות וספורט,188,188
+human_services:culture_and_sports:jewish_culture,תרבות יהודית,,תרבות וספורט,189,189
+human_services:culture_and_sports:ethnic_culture,תרבות אתנית ועדתית,,תרבות וספורט,42,42
+human_services:culture_and_sports:literature,ספרות,,תרבות וספורט,11,11
+human_services:culture_and_sports:music,מוזיקה,,תרבות וספורט,81,81
+human_services:culture_and_sports:sports,ספורט,,תרבות וספורט,271,271
+human_services:culture_and_sports:theatre,תיאטרון,,תרבות וספורט,51,51
+human_services:culture_and_sports:radio,רדיו,,תרבות וספורט,1,1
+human_services:health:prevent_treat:alternative_medicine,רפואה אלטרנטיבית,,שירותי בריאות/טיפול רפואי,8,8
+human_services:health:prevent_treat:checkup_test,בדיקות,,שירותי בריאות/טיפול רפואי,63,63
+human_services:health:prevent_treat:checkup_test:eye_tests,בדיקות ראייה,"בדיקת ראייה
+עיניים
+טיפול בעיניים
+אופתלמולוגיה
+אופטלמולוגיה 
+אופטומטריסט
+",שירותי בריאות/טיפול רפואי/בדיקות,11,11
+human_services:health:prevent_treat:checkup_test:genetic_testing,בדיקות גנטיות,,שירותי בריאות/טיפול רפואי/בדיקות,31,31
+human_services:health:prevent_treat:checkup_test:hearing_tests,בדיקות שמיעה,,שירותי בריאות/טיפול רפואי/בדיקות,2,2
+human_services:transport,תחבורה,,,22,22
+human_services:transport:shuttle_serivce,הסעות,,תחבורה,20,20
+human_services:emergency:financial_aid_in_emergencies,סיוע כספי בחירום,"עזרה כספית
+עזרה כלכלית",חירום,9,9
+human_services:internal_emergency_services,שירותים למצב החירום,طوارئ,שירותים למצב החירום,692,692
+human_services:emergency:farming_assistance,סיוע בחקלאות,,חירום,5,5
+human_services:emergency:fortification,מיגון,,חירום,5,5
+human_services:culture_and_sports:commemoration,הנצחה,,תרבות וספורט,32,32
+human_services:care:risk_assessment,הערכת מסוכנות,,רווחה,1,1
+human_services:care:home_visiting,ביקורי בית,,רווחה,33,33
+human_services:care:in_home_support,טיפול בבית,,רווחה,92,92
+human_services:care:mentoring,מנטורינג,"הכוונה אישית
+חונכות ",רווחה,348,348
+human_services:care:spiritual_support,תמיכה רוחנית,,רווחה,22,22
+human_services:care:support_group,קבוצת תמיכה,,רווחה,150,150
+human_services:care:support_group:bereavement,תמיכה באבל,,רווחה/קבוצת תמיכה,96,96
+human_services:care:vacations,נופשונים,,רווחה,366,366
+human_services:education:afterschool_care,צהרונים,,חינוך,124,124
+human_services:education:integration_in_education,מסגרות משלבות,שילוב בחינוך,חינוך,31,31
+human_services:health:medical_supplies,ציוד רפואי,,שירותי בריאות,146,146
+human_services:health:medical_supplies:assistive_technology,טכנולוגיה מסייעת,,שירותי בריאות/ציוד רפואי,33,33
+human_services:health:medical_supplies:prosthesis,פרוטזות,,שירותי בריאות/ציוד רפואי,7,7
+human_services:housing:short_term_housing,דיור לטווח קצר,,דיור,149,149
+human_services:housing:short_term_housing:transit_flats,דירות מעבר,בתי מעבר,דיור/דיור לטווח קצר,3,3
+human_services:housing:short_term_housing:shelters_from_violence,מקלטים להגנה מאלימות,,דיור/דיור לטווח קצר,38,38
+human_services:place:community,קהילה,,,67,67
+human_services:place:community:community_center,מרכז קהילתי,"מתנ""ס",קהילה,41,41
+human_services:place:community:library,ספרייה,ספריה,קהילה,12,12
+human_services:place:religion,דת,,,31,31
+human_services:place:religion:synagogue,בית כנסת,,דת,30,30
+human_services:place:education,חינוך,,,179,179
+human_services:place:education:kindergarten,גן ילדים,,חינוך,89,89
+human_services:place:education:primary_school,בית ספר יסודי,,חינוך,34,34
+human_services:place:education:middle_school,חטיבת ביניים,,חינוך,5,5
+human_services:place:education:high_school,בית ספר תיכון,,חינוך,48,48
+human_services:place:health,בריאות,,,1412,1412
+human_services:place:health:clinic,מרפאה,,בריאות,1387,1387
+human_services:place:health:clinic:mental_health_clinic,מרפאת בריאות הנפש,,בריאות/מרפאה,626,626
+human_services:place:health:clinic:well_baby_clinic,טיפת חלב,,בריאות/מרפאה,733,733
+human_services:place:health:hospital,בית חולים,,בריאות,2,2
+human_services:place,מקומות,,מקומות,3131,3131
+human_services:education:further_education,חינוך המשך,,חינוך,416,416
+human_services:education:further_education:engineering,הנדסאים,,חינוך/חינוך המשך,2,2
+human_services:education:further_education:yeshiva_and_kollel,ישיבה וכולל,"ישיבת הסדר
+ישיבות הסדר
+בית מדרש
+בתי מדרש",חינוך/חינוך המשך,414,414
+human_services:education:academia,אקדמיה,,חינוך,72,72
+human_services:education:academia:college_readiness,הכנה לאוניברסיטה,,חינוך/אקדמיה,21,21
+human_services:education:high_school_yeshiva,ישיבה תיכונית,,חינוך,30,30
+human_services:education:ulpana,אולפנה,,חינוך,20,20
+human_services:education:youth_villages,כפר נוער,,חינוך,55,55
+human_services:health:mental_health_care:family_advice_center,מרכז ייעוץ למשפחות,,שירותי בריאות/שירותי בריאות הנפש,6,6
+human_services:work:special_employment:employment_club,מועדון תעסוקתי,,עבודה/תעסוקה מיוחדת,79,79
+human_services:place:welfare_bureau,מחלקה לשירותים חברתיים,,,1445,1445
+human_services:care:help_hotline,קו סיוע,,רווחה,75,75
+human_services:education:boarding_school,פנימיה,,חינוך,291,291
+human_services:emergency:emergency_helpline,הכוונה בחירום,,חירום,64,64
+human_services:housing:residential_housing:long_term_housing:satellite_apartment,קהילה תומכת,מגורים עצמאיים,דיור/מסגרות דיור/דיור מוסדי,49,49
+human_services:money:loans:business_loan,הלוואות לעסקים,,סיוע כלכלי/הלוואות,1,1
+human_services:work:business_mentorship,ייעוץ וליווי עסקי,,עבודה,83,83
+human_services:place:health:child_dvelopment_center,מרכז להתפתחות הילד,,בריאות,23,23
+human_services:education:more_education:sex_education,חינוך מיני,,חינוך/חינוך נוסף והעשרה,24,24
+human_services:education:bagrut_high_school_equivalency,הכנה לבחינות בגרות,,חינוך,7,7
+human_services:education:skills_training:parenting_education,הדרכת הורים,,חינוך/הכשרות,152,152
+human_services:health:emergency_mental_assistance,סיוע נפשי מיידי,"דיכאון 
+טראומה
+רגשי
+עזרה ראשונה נפשית
+פסיכולוג
+סיוע נפשי דחוף",שירותי בריאות,195,195
+human_services:health:sexual_reproductive_health:postpartum_counseling,ייעוץ וליווי אחרי לידה,,שירותי בריאות/בריאות מינית,6,6
+human_services:health:mental_health_care:hospitalization:balancing_house,בית מאזן,,שירותי בריאות/שירותי בריאות הנפש/אשפוז,35,35
+human_services:education:more_education:financial_education,Financial Education,,חינוך/חינוך נוסף והעשרה,350,350

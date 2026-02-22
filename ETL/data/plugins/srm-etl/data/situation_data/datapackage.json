@@ -1,0 +1,72 @@
+{
+  "bytes": 24946,
+  "count_of_rows": 185,
+  "hash": "d8a646f4d5dfb8e706fdc266913b3bb2",
+  "name": "situations",
+  "profile": "data-package",
+  "resources": [
+    {
+      "bytes": 24946,
+      "dialect": {
+        "caseSensitiveHeader": false,
+        "delimiter": ",",
+        "doubleQuote": true,
+        "header": true,
+        "lineTerminator": "\r\n",
+        "quoteChar": "\"",
+        "skipInitialSpace": false
+      },
+      "encoding": "utf-8",
+      "format": "csv",
+      "hash": "254a06ed98318bcc68740f55b0c5550e",
+      "name": "situations",
+      "path": "res_2.csv",
+      "profile": "tabular-data-resource",
+      "schema": {
+        "fields": [
+          {
+            "es:keyword": true,
+            "format": "default",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "es:itemType": "string",
+            "format": "default",
+            "name": "synonyms",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "breadcrumbs",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "count",
+            "type": "integer"
+          },
+          {
+            "decimalChar": ".",
+            "format": "default",
+            "groupChar": "",
+            "name": "score",
+            "type": "number"
+          }
+        ],
+        "missingValues": [
+          ""
+        ],
+        "primaryKey": [
+          "id"
+        ]
+      }
+    }
+  ],
+  "title": "Taxonomy Situations"
+}

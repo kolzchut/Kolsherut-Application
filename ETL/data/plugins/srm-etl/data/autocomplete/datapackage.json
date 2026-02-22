@@ -1,0 +1,134 @@
+{
+  "bytes": 95688228,
+  "count_of_rows": 183578,
+  "hash": "4e427c823d17a1317a927e6b0d4293bf",
+  "profile": "data-package",
+  "resources": [
+    {
+      "bytes": 95688228,
+      "dialect": {
+        "delimiter": ",",
+        "doubleQuote": true,
+        "lineTerminator": "\r\n",
+        "quoteChar": "\"",
+        "skipInitialSpace": false
+      },
+      "encoding": "utf-8",
+      "format": "csv",
+      "hash": "b3021723fdacc2714e831537aae20246",
+      "name": "autocomplete",
+      "path": "data/autocomplete.csv",
+      "profile": "data-resource",
+      "schema": {
+        "fields": [
+          {
+            "es:autocomplete": true,
+            "es:hebrew": true,
+            "format": "default",
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "es:hebrew": true,
+            "format": "default",
+            "name": "query_heb",
+            "type": "string"
+          },
+          {
+            "es:keyword": true,
+            "format": "default",
+            "name": "response",
+            "type": "string"
+          },
+          {
+            "es:keyword": true,
+            "format": "default",
+            "name": "situation",
+            "type": "string"
+          },
+          {
+            "es:hebrew": true,
+            "es:itemType": "string",
+            "format": "default",
+            "name": "synonyms",
+            "type": "array"
+          },
+          {
+            "es:keyword": true,
+            "format": "default",
+            "name": "org_id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "org_name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "city_name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "response_name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "situation_name",
+            "type": "string"
+          },
+          {
+            "es:hebrew": true,
+            "format": "default",
+            "name": "structured_query",
+            "type": "string"
+          },
+          {
+            "falseValues": [
+              "False"
+            ],
+            "format": "default",
+            "name": "visible",
+            "trueValues": [
+              "True"
+            ],
+            "type": "boolean"
+          },
+          {
+            "falseValues": [
+              "False"
+            ],
+            "name": "low",
+            "trueValues": [
+              "True"
+            ],
+            "type": "boolean"
+          },
+          {
+            "format": "default",
+            "name": "importance",
+            "type": "integer"
+          },
+          {
+            "decimalChar": ".",
+            "groupChar": "",
+            "name": "score",
+            "type": "number"
+          },
+          {
+            "es:index": false,
+            "es:itemType": "number",
+            "name": "bounds",
+            "type": "array"
+          },
+          {
+            "name": "id",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ]
+}
