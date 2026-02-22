@@ -1,0 +1,1181 @@
+{
+  "bytes": 33480235,
+  "count_of_rows": 34517,
+  "hash": "9837549c201144cbeb4ce58b4a8cc240",
+  "name": "SRM Data",
+  "profile": "data-package",
+  "resources": [
+    {
+      "bytes": 2629827,
+      "dialect": {
+        "caseSensitiveHeader": false,
+        "delimiter": ",",
+        "doubleQuote": true,
+        "header": true,
+        "lineTerminator": "\r\n",
+        "quoteChar": "\"",
+        "skipInitialSpace": false
+      },
+      "encoding": "utf-8",
+      "format": "csv",
+      "hash": "89ef08dfb1358072a2bdce8f1962c698",
+      "name": "responses",
+      "path": "responses.csv",
+      "profile": "tabular-data-resource",
+      "schema": {
+        "fields": [
+          {
+            "format": "default",
+            "name": "key",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "x_count_active_linked_services",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "name_en",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "synonyms",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "breadcrumbs",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "root",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "equivalent_to",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "description_en",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "situations",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "situation_names",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "services",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "Guidestar Service Taxonomy Mapping",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "Click Service Taxonomy Mapping",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "Social Procurement Taxonomy Mapping",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "Services 2",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "Benchmark",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "Job Stories",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "Guidestar Services Mapping",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "Guidestar  Main Classifications",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "Guidestar  Main Classifications 2",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "Social Procurement Taxonomy mapping 2",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "Services 3",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "Field 26",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "pk",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "Homepage",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "Cards",
+            "type": "array"
+          },
+          {
+            "format": "%Y-%m-%dT%H:%M:%S",
+            "name": "last_modified",
+            "type": "datetime"
+          }
+        ],
+        "missingValues": [
+          ""
+        ]
+      }
+    },
+    {
+      "bytes": 3698931,
+      "dialect": {
+        "caseSensitiveHeader": false,
+        "delimiter": ",",
+        "doubleQuote": true,
+        "header": true,
+        "lineTerminator": "\r\n",
+        "quoteChar": "\"",
+        "skipInitialSpace": false
+      },
+      "encoding": "utf-8",
+      "format": "csv",
+      "hash": "d92ac9ebcd0f7e8613055bf894f68d0c",
+      "name": "situations",
+      "path": "situations.csv",
+      "profile": "tabular-data-resource",
+      "schema": {
+        "fields": [
+          {
+            "format": "default",
+            "name": "key",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "x_linked_regular_services",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "x_linked_soproc_services",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "x_total_linked_services",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "x_count_active_linked_cards",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "synonyms",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "category",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "name_en",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "breadcrumbs",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "description_en",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organizations",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "branches",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "services",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "responses",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "Guidestar Service Taxonomy Mapping",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "Click Service Taxonomy Mapping",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "Social Procurement Taxonomy Mapping",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "Services 2",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "Benchmark",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "Job Stories",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "Guidestar Services Mapping",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "Guidestar  Main Classifications",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "Social Procurement Taxonomy mapping 2",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "Social Procurement Taxonomy mapping 3",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "pk",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "Homepage",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "Cards",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "x_regular_services_ids",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "x_regular_card_services_ids",
+            "type": "any"
+          },
+          {
+            "format": "%Y-%m-%dT%H:%M:%S",
+            "name": "last_modified",
+            "type": "datetime"
+          }
+        ],
+        "missingValues": [
+          ""
+        ]
+      }
+    },
+    {
+      "bytes": 2952215,
+      "dialect": {
+        "caseSensitiveHeader": false,
+        "delimiter": ",",
+        "doubleQuote": true,
+        "header": true,
+        "lineTerminator": "\r\n",
+        "quoteChar": "\"",
+        "skipInitialSpace": false
+      },
+      "encoding": "utf-8",
+      "format": "csv",
+      "hash": "95ce820f8ab477a9d16ddf9aecc4bb9a",
+      "name": "organizations",
+      "path": "organizations.csv",
+      "profile": "tabular-data-resource",
+      "schema": {
+        "fields": [
+          {
+            "format": "default",
+            "name": "key",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "short_name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "kind",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "phone_numbers",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "email_address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "urls",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "purpose",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "situations",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "situation_ids",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "branches",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "services",
+            "type": "array"
+          },
+          {
+            "format": "%Y-%m-%d",
+            "name": "last_tag_date",
+            "type": "date"
+          },
+          {
+            "format": "%Y-%m-%dT%H:%M:%S",
+            "name": "Last Modified",
+            "type": "datetime"
+          },
+          {
+            "format": "%Y-%m-%dT%H:%M:%S",
+            "name": "Created",
+            "type": "datetime"
+          },
+          {
+            "format": "default",
+            "name": "Cards",
+            "type": "array"
+          },
+          {
+            "format": "%Y-%m-%dT%H:%M:%S",
+            "name": "last_modified",
+            "type": "datetime"
+          }
+        ],
+        "missingValues": [
+          ""
+        ]
+      }
+    },
+    {
+      "bytes": 2828673,
+      "dialect": {
+        "caseSensitiveHeader": false,
+        "delimiter": ",",
+        "doubleQuote": true,
+        "header": true,
+        "lineTerminator": "\r\n",
+        "quoteChar": "\"",
+        "skipInitialSpace": false
+      },
+      "encoding": "utf-8",
+      "format": "csv",
+      "hash": "c9bf0c62d45c9da0271dda6328951f52",
+      "name": "locations",
+      "path": "locations.csv",
+      "profile": "tabular-data-resource",
+      "schema": {
+        "fields": [
+          {
+            "format": "default",
+            "name": "key",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "provider",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "accuracy",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "alternate_address",
+            "type": "string"
+          },
+          {
+            "decimalChar": ".",
+            "format": "default",
+            "groupChar": "",
+            "name": "resolved_lat",
+            "type": "number"
+          },
+          {
+            "decimalChar": ".",
+            "format": "default",
+            "groupChar": "",
+            "name": "resolved_lon",
+            "type": "number"
+          },
+          {
+            "format": "default",
+            "name": "resolved_address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "resolved_city",
+            "type": "string"
+          },
+          {
+            "decimalChar": ".",
+            "format": "default",
+            "groupChar": "",
+            "name": "fixed_lat",
+            "type": "number"
+          },
+          {
+            "decimalChar": ".",
+            "format": "default",
+            "groupChar": "",
+            "name": "fixed_lon",
+            "type": "number"
+          },
+          {
+            "falseValues": [
+              "False"
+            ],
+            "format": "default",
+            "name": "national_service",
+            "trueValues": [
+              "True"
+            ],
+            "type": "boolean"
+          },
+          {
+            "falseValues": [
+              "False"
+            ],
+            "format": "default",
+            "name": "location_accurate",
+            "trueValues": [
+              "True"
+            ],
+            "type": "boolean"
+          },
+          {
+            "decimalChar": ".",
+            "format": "default",
+            "groupChar": "",
+            "name": "lat",
+            "type": "number"
+          },
+          {
+            "decimalChar": ".",
+            "format": "default",
+            "groupChar": "",
+            "name": "lon",
+            "type": "number"
+          },
+          {
+            "format": "default",
+            "name": "geometry",
+            "type": "geopoint"
+          },
+          {
+            "format": "default",
+            "name": "address",
+            "type": "string"
+          }
+        ],
+        "missingValues": [
+          ""
+        ]
+      }
+    },
+    {
+      "bytes": 3465538,
+      "dialect": {
+        "caseSensitiveHeader": false,
+        "delimiter": ",",
+        "doubleQuote": true,
+        "header": true,
+        "lineTerminator": "\r\n",
+        "quoteChar": "\"",
+        "skipInitialSpace": false
+      },
+      "encoding": "utf-8",
+      "format": "csv",
+      "hash": "81b8a993f62b96b2131979f21909cd84",
+      "name": "branches",
+      "path": "branches.csv",
+      "profile": "tabular-data-resource",
+      "schema": {
+        "fields": [
+          {
+            "format": "default",
+            "name": "key",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "operating_unit",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "location",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "address_details",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "phone_numbers",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "email_address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "urls",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "manual_url",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "situations",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "services",
+            "type": "array"
+          }
+        ],
+        "missingValues": [
+          ""
+        ]
+      }
+    },
+    {
+      "bytes": 17905051,
+      "dialect": {
+        "caseSensitiveHeader": false,
+        "delimiter": ",",
+        "doubleQuote": true,
+        "header": true,
+        "lineTerminator": "\r\n",
+        "quoteChar": "\"",
+        "skipInitialSpace": false
+      },
+      "encoding": "utf-8",
+      "format": "csv",
+      "hash": "5ef82c5bcb2f253f365601ea9dc56a9c",
+      "name": "services",
+      "path": "services.csv",
+      "profile": "tabular-data-resource",
+      "schema": {
+        "fields": [
+          {
+            "format": "default",
+            "name": "key",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "falseValues": [
+              "False"
+            ],
+            "format": "default",
+            "name": "mahlakot_revaha",
+            "trueValues": [
+              "True"
+            ],
+            "type": "boolean"
+          },
+          {
+            "format": "default",
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "decimalChar": ".",
+            "format": "default",
+            "groupChar": "",
+            "name": "boost",
+            "type": "number"
+          },
+          {
+            "format": "default",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "details",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "payment_required",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "payment_details",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "phone_numbers",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "email_address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "urls",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "data_sources",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "fixes (unused)",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "parent_service",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "branches",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "organizations",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "responses",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "situations",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "response_ids",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "situation_ids",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "situations_manual_ids",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "implements",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "location_accuracy (from branches)",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "location (from branches)",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "branch_cities",
+            "type": "array"
+          },
+          {
+            "format": "%Y-%m-%dT%H:%M:%S",
+            "name": "Last Modified",
+            "type": "datetime"
+          },
+          {
+            "format": "%Y-%m-%dT%H:%M:%S",
+            "name": "Created",
+            "type": "datetime"
+          },
+          {
+            "format": "default",
+            "name": "organization (from branches)",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "organization kind (from organizations)",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "organization kind (from branches)",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "Org short name (from branches)",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "address (from branches)",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "Field 38",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "Phone",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "status_url",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "kind (from organizations)",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "name (from organizations)",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "name (from responses)",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "name (from situations)",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "Responses 2",
+            "type": "array"
+          },
+          {
+            "format": "%Y-%m-%dT%H:%M:%S",
+            "name": "last_checked_url_status",
+            "type": "datetime"
+          },
+          {
+            "falseValues": [
+              "False"
+            ],
+            "format": "default",
+            "name": "skip_url_check",
+            "trueValues": [
+              "True"
+            ],
+            "type": "boolean"
+          },
+          {
+            "decimalChar": ".",
+            "format": "default",
+            "groupChar": "",
+            "name": "כמות תיוגי מצבים",
+            "type": "number"
+          },
+          {
+            "falseValues": [
+              "False"
+            ],
+            "format": "default",
+            "name": "עבר בדיקה",
+            "trueValues": [
+              "True"
+            ],
+            "type": "boolean"
+          },
+          {
+            "format": "default",
+            "name": "Cards",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "final_situations",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "final_responses",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "x_branch_url",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "x_org_url",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "x_branch_org_url",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "x_all_urls",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "x_ai_description_claudeV3.5",
+            "type": "object"
+          },
+          {
+            "format": "default",
+            "name": "x_ai_description_LLama3.1",
+            "type": "object"
+          },
+          {
+            "falseValues": [
+              "False"
+            ],
+            "format": "default",
+            "name": "עבר בדיקה - AI",
+            "trueValues": [
+              "True"
+            ],
+            "type": "boolean"
+          },
+          {
+            "format": "default",
+            "name": "x_sit_hebrew",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "x_resp_hebrew",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "x_manual_sit_hebrew",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "x_final_situation_tag_hebrew",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "x_branch_org_name",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "x_branch_org_id",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "x_org_phone",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "x_org_email",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "x_modified_by",
+            "type": "object"
+          },
+          {
+            "format": "%Y-%m-%dT%H:%M:%S",
+            "name": "x_last_boost_mod",
+            "type": "datetime"
+          },
+          {
+            "format": "default",
+            "name": "x_branch_email",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "x_branch_phone",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "x_org_id",
+            "type": "any"
+          },
+          {
+            "format": "%Y-%m-%dT%H:%M:%S",
+            "name": "last_modified",
+            "type": "datetime"
+          }
+        ],
+        "missingValues": [
+          ""
+        ]
+      }
+    }
+  ]
+}

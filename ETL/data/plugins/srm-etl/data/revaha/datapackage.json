@@ -1,0 +1,213 @@
+{
+  "bytes": 627179,
+  "count_of_rows": 684,
+  "hash": "2fe01f04765992ab648598c2acaed86e",
+  "profile": "data-package",
+  "resources": [
+    {
+      "bytes": 425184,
+      "dialect": {
+        "caseSensitiveHeader": false,
+        "delimiter": ",",
+        "doubleQuote": true,
+        "header": true,
+        "lineTerminator": "\r\n",
+        "quoteChar": "\"",
+        "skipInitialSpace": false
+      },
+      "encoding": "utf-8",
+      "format": "csv",
+      "hash": "1158ec02c50733ff799673cfd5ee7295",
+      "name": "current",
+      "path": "res_1.csv",
+      "profile": "tabular-data-resource",
+      "schema": {
+        "fields": [
+          {
+            "format": "default",
+            "name": "__airtable_id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "decision",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "reason",
+            "type": "string"
+          },
+          {
+            "format": "%Y-%m-%dT%H:%M:%S",
+            "name": "decision date",
+            "type": "datetime"
+          },
+          {
+            "format": "default",
+            "name": "source",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "organization",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "operating_unit",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "location",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "address_details",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "phone_numbers",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "email_address",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "urls",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "manual_url",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "situations",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "services",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "fixes",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "org_services",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "org_url",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "org_email",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "org_phone",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "x_org_name",
+            "type": "any"
+          },
+          {
+            "format": "%Y-%m-%dT%H:%M:%S",
+            "name": "last_modified",
+            "type": "datetime"
+          },
+          {
+            "format": "default",
+            "name": "x_temp",
+            "type": "any"
+          },
+          {
+            "format": "default",
+            "name": "_current_hash",
+            "type": "string"
+          }
+        ],
+        "missingValues": [
+          ""
+        ]
+      }
+    },
+    {
+      "bytes": 201995,
+      "dialect": {
+        "caseSensitiveHeader": false,
+        "delimiter": ",",
+        "doubleQuote": true,
+        "header": true,
+        "lineTerminator": "\r\n",
+        "quoteChar": "\"",
+        "skipInitialSpace": false
+      },
+      "encoding": "utf-8",
+      "format": "csv",
+      "hash": "09d4a1dc0a4f29d20c2128764b3441b2",
+      "name": "branches",
+      "path": "branches.csv",
+      "profile": "tabular-data-resource",
+      "schema": {
+        "fields": [
+          {
+            "format": "default",
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "data",
+            "type": "object"
+          }
+        ],
+        "missingValues": [
+          ""
+        ]
+      }
+    }
+  ]
+}
