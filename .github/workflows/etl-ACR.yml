@@ -10,7 +10,7 @@ jobs:
     uses: ./.github/workflows/reusable-build-deploy.yml
     secrets: inherit
     with:
-      service_path: '.'
+      service_path: 'ETL'
       image_name: 'Kolsherut-ETL'
       container_name: 'etl'
       deployment_dev: 'kolsherut-etl'
