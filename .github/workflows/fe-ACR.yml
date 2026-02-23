@@ -62,7 +62,6 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 'FE/package-lock.json'
 
-      # ── Phase 1: Build Base (No SSG) ──────────────────────────────
       - name: Install and Build Base (No SSG)
         run: |
           cd FE
@@ -114,6 +113,12 @@ jobs:
             echo "ENV_TAG=stage" >> $GITHUB_ENV
           fi
 
+      - name: Set up kubelogin
+        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main'
+        uses: azure/use-kubelogin@v1
+        with:
+          version: 'v0.0.24'
+
       - name: Set AKS Context (Non-Prod)
         if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main'
         uses: azure/aks-set-context@v3
@@ -162,6 +167,11 @@ jobs:
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set up kubelogin
+        uses: azure/use-kubelogin@v1
+        with:
+          version: 'v0.0.24'
 
       - name: Set AKS Context (Production)
         uses: azure/aks-set-context@v3
