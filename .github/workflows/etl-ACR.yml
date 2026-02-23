@@ -3,6 +3,7 @@ name: ETL ACR Pipeline
 on:
   push:
     branches: ['main', 'dev', 'production']
+    paths: [ 'ETL/**', '.github/workflows/etl-ACR.yml' ]
     tags: ['v*']
 
 jobs:
