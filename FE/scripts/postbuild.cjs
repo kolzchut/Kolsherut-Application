@@ -3,6 +3,23 @@ const path = require('path');
 
 const env = process.env.ENVIRONMENT || 'local';
 
+function getDirectorySize(directory) {
+    let size = 0;
+    if (fs.existsSync(directory)) {
+        const files = fs.readdirSync(directory);
+        files.forEach(file => {
+            const filePath = path.join(directory, file);
+            const stats = fs.statSync(filePath);
+            if (stats.isDirectory()) {
+                size += getDirectorySize(filePath);
+            } else {
+                size += stats.size;
+            }
+        });
+    }
+    return size;
+}
+
 console.log(`📦 Running postbuild for environment: ${env}`);
 
 try {
@@ -40,6 +57,10 @@ try {
     } else {
         console.warn(`⚠️  staticwebapp-${env}.config.json not found (will use default SWA routing)`);
     }
+
+    const distSize = getDirectorySize(distDir);
+    const distSizeMB = (distSize / (1024 * 1024)).toFixed(2);
+    console.log(`📦 dist folder size: ${distSizeMB} MB`);
 
     console.log(`🎉 Postbuild completed successfully for ${env} environment`);
 
