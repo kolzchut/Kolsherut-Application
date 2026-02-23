@@ -13,4 +13,5 @@ COPY nginx-${environment}.conf /etc/nginx/nginx.conf
 COPY redirects.map /etc/nginx/redirects.map
 
 # Overwrite environment.json with the selected environment file from the built dist
-# COPY dist/configs/${environment}.json /usr/share/nginx/html/configs/environment.json
+COPY dist/configs /usr/share/nginx/html/configs
+COPY dist/configs/${environment}.json /usr/share/nginx/html/configs/environment.json
