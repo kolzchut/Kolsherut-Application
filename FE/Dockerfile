@@ -11,5 +11,6 @@ ENV environment=${environment}
 COPY dist /usr/share/nginx/html
 COPY nginx-${environment}.conf /etc/nginx/nginx.conf
 COPY redirects.map /etc/nginx/redirects.map
+
 COPY dist/configs /usr/share/nginx/html/configs
 COPY dist/configs/${environment}.json /usr/share/nginx/html/configs/environment.json
