@@ -167,6 +167,8 @@ jobs:
         uses: azure/use-kubelogin@v1
         with:
           version: 'v0.0.24'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set AKS Context (Non-Prod)
         if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main'
@@ -197,6 +199,8 @@ jobs:
         uses: azure/use-kubelogin@v1
         with:
           version: 'v0.0.24'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set AKS Context (Production)
         uses: azure/aks-set-context@v3
