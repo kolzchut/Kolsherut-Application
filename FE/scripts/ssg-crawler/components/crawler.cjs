@@ -46,6 +46,13 @@ async function taskHandler({ page, data }, stats, cluster) {
         const rawHtml = await renderPage(page, url);
         const finalHtml = cleanHtmlContent(rawHtml);
 
+        if (!stats.firstHtmlPrinted) {
+            stats.firstHtmlPrinted = true;
+            console.log(`\n📄 --- First Generated HTML (${route}) ---\n`);
+            console.log(finalHtml);
+            console.log(`\n📄 --- End of First Generated HTML ---\n`);
+        }
+
         await savePage(route, finalHtml);
 
         stats.success++;
