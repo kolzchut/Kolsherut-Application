@@ -32,7 +32,6 @@ COPY data/plugins/srm-etl/conf/ ./conf/
 # 6. Copy Config
 COPY data/config.json /opt/cronicle/conf/config.json
 
-
 ENV CRONICLE_foreground=1 \
     CRONICLE_echo=1
 
