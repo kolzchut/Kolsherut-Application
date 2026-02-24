@@ -16,7 +16,7 @@ jobs:
     secrets: inherit
     with:
       service_path: 'ETL'
-      image_name: 'Kolsherut-etl'
+      image_name: 'kolsherut-etl'
       container_name: 'etl'
       deployment_dev: 'kolsherut-etl'
       deployment_stage: 'kolsherut-etl'
