@@ -34,5 +34,4 @@ COPY data/config.json /opt/cronicle/conf/config.json
 
 ENV CRONICLE_foreground=1 \
     CRONICLE_echo=1
-
 WORKDIR /opt/cronicle
