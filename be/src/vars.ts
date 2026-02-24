@@ -2,12 +2,12 @@ import path from "path";
 
 const indices :any = {
     prod: {
-        card: "srm__cards_20240417210351058073_bb6360fd",
-        autocomplete: "srm__autocomplete_20230214172220805473_23f43e2a",
+        card: "srm__cards_20260219134007017041_8f265ef7",
+        autocomplete: "srm__autocomplete_20260219134330342056_0ddc6977",
     },
     stage: {
-        card: "srm__cards_20220926183305498944_a9274d22",
-        autocomplete: "srm__autocomplete_20240505135631716607_372901c0",
+        card: "srm__cards_20220926183305498944_a9274d22", // TODO: UPDATE
+        autocomplete: "srm__autocomplete_20240505135631716607_372901c0",// TODO: UPDATE
     },
     development:{
         card:"srm__cards_20260129133731521567_4f7801a8",
