@@ -16,7 +16,7 @@ jobs:
     secrets: inherit
     with:
       service_path: 'be'
-      image_name: 'Kolsherut-BE'
+      image_name: 'kolsherut-be'
       container_name: 'kolsherut-backend-container'
 
       deployment_dev: 'kolsherut-be'
