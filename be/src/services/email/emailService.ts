@@ -52,6 +52,6 @@ export async function sendEmail({subject, body,additionalRecipientList}:{
         });
         logger.log({service:"Email Service", message:`Email sent`,payload: subject});
     } catch (err) {
-        logger.error({service:"Email Service", message:`Failed to send email:` ,payload: err});
+        logger.error({service:"Email Service", message:`Failed to send email` ,payload: `origin error: ${body} current error: ${err}`});
     }
 }
