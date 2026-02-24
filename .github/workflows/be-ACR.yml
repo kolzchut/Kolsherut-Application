@@ -6,6 +6,10 @@ on:
     paths: ['be/**', '.github/workflows/be-ACR.yml']
     tags: ['v*']
 
+concurrency:
+  group: be-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   run-be-pipeline:
     uses: ./.github/workflows/reusable-build-deploy.yml

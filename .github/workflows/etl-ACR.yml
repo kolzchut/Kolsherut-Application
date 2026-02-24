@@ -6,6 +6,10 @@ on:
     paths: [ 'ETL/**', '.github/workflows/etl-ACR.yml' ]
     tags: ['v*']
 
+concurrency:
+  group: etl-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   run-etl-pipeline:
     uses: ./.github/workflows/reusable-build-deploy.yml

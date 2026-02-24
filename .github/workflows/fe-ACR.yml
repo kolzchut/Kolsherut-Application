@@ -6,6 +6,10 @@ on:
     paths: ['FE/**', '.github/workflows/fe-ACR.yml']
     tags: ['v*']
 
+concurrency:
+  group: fe-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   SERVICE_PATH: 'FE'
   IMAGE_NAME: 'Kolsherut-FE'
