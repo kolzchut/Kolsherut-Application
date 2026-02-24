@@ -18,7 +18,9 @@ const startInterval = () => {
     if (interval) clearInterval(interval);
     interval = setInterval(() => {
         if (!globals.stack.length) return;
-        sendTimedEmails({hasError:false});
+        sendTimedEmails({hasError:false}).catch(e =>
+            logger.error({service: "sendTimedEmails", message: "Interval email failed", payload: e})
+        );
     }, globals.emailInterval);
 };
 
@@ -34,16 +36,18 @@ const sendEmailWhenNoResults = ({fixedSearchQuery, responseId, situationId, by}:
 }
 const sendErrorEmailImmediately = (body:string)=>{
     globals.stack.unshift(body);
-    sendTimedEmails({hasError:true})
+    sendTimedEmails({hasError:true}).catch(e =>
+        logger.error({service: "sendTimedEmails", message: "Immediate error email failed", payload: e})
+    );
 }
 
-const sendTimedEmails = ({hasError}:{hasError: boolean}) => {
+const sendTimedEmails = async ({hasError}:{hasError: boolean}) => {
     if (!globals.stack.length || globals.isSending) return;
     globals.isSending = true;
     let body = globals.stack.map((item, index) => `${index + 1}. ${item}`).join("\n");
 
     try {
-        sendEmail({
+        await sendEmail({
             subject: `Kolsherut ${vars.serverSetups.environment} - ${hasError ? 'Error and ' : ''}${globals.stack.length} Notification${globals.stack.length > 1 ? 's' : ''}`,
             body: body
         });

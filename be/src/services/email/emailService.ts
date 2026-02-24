@@ -37,13 +37,13 @@ export async function sendEmail({subject, body,additionalRecipientList}:{
     body: string,
     additionalRecipientList?: string[]}
 ): Promise<void> {
-    if (!transporter) return;
-
-    const recipients = additionalRecipientList
-        ? [...additionalRecipientList, vars.email.EMAIL_NOTIFIER_SENDER_EMAIL]
-        : vars.email.EMAIL_NOTIFIER_RECIPIENT_LIST.concat(vars.email.EMAIL_NOTIFIER_SENDER_EMAIL || "");
-
     try {
+        if (!transporter) return;
+
+        const recipients = additionalRecipientList
+            ? [...additionalRecipientList, vars.email.EMAIL_NOTIFIER_SENDER_EMAIL]
+            : vars.email.EMAIL_NOTIFIER_RECIPIENT_LIST.concat(vars.email.EMAIL_NOTIFIER_SENDER_EMAIL || "");
+
         await transporter.sendMail({
             from: vars.email.EMAIL_NOTIFIER_SENDER_EMAIL,
             to: recipients.join(', '),
@@ -53,6 +53,5 @@ export async function sendEmail({subject, body,additionalRecipientList}:{
         logger.log({service:"Email Service", message:`Email sent`,payload: subject});
     } catch (err) {
         logger.error({service:"Email Service", message:`Failed to send email:` ,payload: err});
-        throw err;
     }
 }
