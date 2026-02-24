@@ -12,7 +12,7 @@ concurrency:
 
 env:
   SERVICE_PATH: 'FE'
-  IMAGE_NAME: 'Kolsherut-fe'
+  IMAGE_NAME: 'kolsherut-fe'
   CONTAINER_NAME: 'kolsherut-fe'
   DEPLOYMENT_DEV: 'kolsherut-fe'
   DEPLOYMENT_STAGE: 'kolsherut-fe'
