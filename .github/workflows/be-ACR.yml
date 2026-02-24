@@ -17,7 +17,7 @@ jobs:
     with:
       service_path: 'be'
       image_name: 'kolsherut-be'
-      container_name: 'kolsherut-backend-container'
+      container_name: 'kolsherut-be'
 
       deployment_dev: 'kolsherut-be'
       deployment_stage: 'kolsherut-be'
