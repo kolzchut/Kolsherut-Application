@@ -14,6 +14,7 @@ const indices :any = {
         autocomplete:"srm__autocomplete_20260129134047850681_2e67cc4e",
     }
 }
+
 export default {
     serverSetups: {
         origin: process.env.ORIGIN && process.env.ORIGIN.includes(',') ? process.env.ORIGIN.split(',').map(o => o.trim()) : (process.env.ORIGIN || '*'),
