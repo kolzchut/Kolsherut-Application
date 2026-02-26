@@ -58,20 +58,18 @@ def card_score(row):
 
 
 def parse_date(d):
+    if d is None:
+        return None
+    if isinstance(d, datetime):
+        return d
     if isinstance(d, str):
         try:
-            dt = datetime.fromisoformat(d)
-            print(f"Parsed string: {d} -> {dt}")
-            return dt
+            return datetime.fromisoformat(d)
         except Exception as e:
-            print(f"Failed to parse string '{d}': {e}")
+            logger.warning(f"Failed to parse date string '{d}': {e}")
             return None
-    elif isinstance(d, datetime):
-        print(f"Already datetime: {d}")
-        return d
-    else:
-        print(f"Invalid type ({type(d)}): {d}")
-        return None
+    logger.warning(f"Unexpected date type ({type(d)}): {d}")
+    return None
 
 
 def data_api_es_flow():
