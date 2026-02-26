@@ -4,6 +4,7 @@ import buildSearchQuery from "./dsl/buildSearchQuery";
 import vars from "../../../vars";
 import { cardSearchSourceFields } from "./sourceFields/cardSearchSourceFields";
 import buildFreeSearchQuery from "./dsl/buildFreeSearchQuery";
+import logger from "../../logger/logger";
 
 export default async ({ fixedSearchQuery, isFast, responseId, situationId,serviceName, by }: {
     fixedSearchQuery: string,
@@ -91,7 +92,7 @@ export default async ({ fixedSearchQuery, isFast, responseId, situationId,servic
             searchedWithOnlyResponse
         });
     } catch (error) {
-        console.error('Error executing query:', error);
+        logger.error({service:"Search Cards", message: 'Error executing search query', payload: error});
         throw error;
     }
 };

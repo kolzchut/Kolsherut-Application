@@ -42,6 +42,7 @@ httpServer.listen(port, () => {
 
 const start = async () => {
     console.log('Starting server...');
+    logger.log({service:"Show indices",message:"using indices:",payload: vars.serverSetups.elastic.indices});
     initEmailService();
     await dbInit();
 };
