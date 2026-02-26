@@ -2,8 +2,8 @@ import path from "path";
 
 const indices :any = {
     production: {
-        card: "srm__cards_20260219134007017041_8f265ef7",
-        autocomplete: "srm__autocomplete_20260219134330342056_0ddc6977",
+        card: "srm__cards_20260226141535946891_275ed989",
+        autocomplete: "srm__autocomplete_20260226141847128564_27ce41ff",
     },
     stage: {
         card: "srm__cards_20220926183305498944_a9274d22", // TODO: UPDATE
