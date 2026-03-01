@@ -2,34 +2,33 @@ import { Request, Response, Router } from 'express';
 import { asyncHandler } from '../middlewares/errorHandler';
 import { renderPage } from '../services/ssr/ssrService';
 import logger from '../services/logger/logger';
-import vars from '../vars';
 
 const router = Router();
 
 router.use(asyncHandler(async (req: Request, res: Response) => {
-    const requestPath = req.path || '/';
-    const queryString = req.url.includes('?') ? req.url.split('?')[1] : '';
-    const fullPath = queryString ? `${requestPath}?${queryString}` : requestPath;
+    const fullPath = req.originalUrl || '/';
 
-    const originConf = vars.serverSetups.origin;
-    const origin = Array.isArray(originConf) ? originConf[0] : originConf;
-    const fullUrl = origin.startsWith('http')
-        ? `${origin}${fullPath}`
-        : `https://${origin}${fullPath}`;
+    const host = req.get('host');
+
+    const protocol = req.protocol;
+
+    const fullUrl = `${protocol}://${host}${fullPath}`;
 
     logger.log({
         service: 'SSR Route',
-        message: `Rendering path: ${fullPath} from origin: ${origin}`,
+        message: `Rendering path: ${fullPath} from host: ${host}`,
         payload: { fullUrl },
     });
+
     const page = await renderPage(fullUrl);
+
     if (page.fail) {
         res.status(404).end();
         return;
     }
+
     res.setHeader('Content-Type', 'text/html');
     res.status(200).send(page.html);
 }));
-
 
 export default router;
