@@ -1,7 +1,12 @@
 FROM node:lts
 
-## This row is for Demo SSR with Puppeteer - No need in production where you actually have SSR
+# 1. Tell Puppeteer to skip downloading the broken/incompatible Chrome binary
+# 2. Tell Puppeteer to use the system-installed Chromium instead
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+
 RUN apt-get update && apt-get install -y \
+    chromium \
     wget \
     gnupg \
     ca-certificates \
@@ -28,8 +33,12 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
+
+# Copy package files and install dependencies
 COPY package*.json ./
 RUN npm install
+
+# Copy built code
 COPY /dist /app/dist
 
 EXPOSE 5000
