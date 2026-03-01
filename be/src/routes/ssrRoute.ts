@@ -8,15 +8,17 @@ const router = Router();
 router.use(asyncHandler(async (req: Request, res: Response) => {
     const fullPath = req.originalUrl || '/';
 
-    const host = req.get('host');
+    const forwardedHost = req.headers['x-forwarded-host'] || req.get('host');
+    const forwardedProto = req.headers['x-forwarded-proto'] || req.protocol;
 
-    const protocol = req.protocol;
+    const host = typeof forwardedHost === 'string' ? forwardedHost.split(',')[0].trim() : forwardedHost;
+    const protocol = typeof forwardedProto === 'string' ? forwardedProto.split(',')[0].trim() : 'http';
 
     const fullUrl = `${protocol}://${host}${fullPath}`;
 
     logger.log({
         service: 'SSR Route',
-        message: `Rendering path: ${fullPath} from host: ${host}`,
+        message: `Rendering path: ${fullPath} from original host: ${host}`,
         payload: { fullUrl },
     });
 
