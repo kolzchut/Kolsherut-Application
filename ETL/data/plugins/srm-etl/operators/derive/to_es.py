@@ -71,9 +71,16 @@ def parse_date(d):
     logger.warning(f"Unexpected date type ({type(d)}): {d}")
     return None
 
-
 def data_api_es_flow():
     checkpoint = f'{CHECKPOINT}/data_api_es_flow'
+
+    def get_max_modified_date(card):
+        dates = list(filter(None, [
+            parse_date(card.get('service_last_modified')),
+            parse_date(card.get('branch_last_modified'))
+        ]))
+        return max(dates).isoformat() if dates else ""
+
     DF.Flow(
         DF.load(f'{settings.DATA_DUMP_DIR}/card_data/datapackage.json'),
         DF.update_package(title='Card Data', name='srm_card_data'),
@@ -82,12 +89,7 @@ def data_api_es_flow():
         DF.add_field(
             'airtable_last_modified',
             'datetime',
-            lambda card: max(
-                filter(None, [
-                    parse_date(card.get('service_last_modified')),
-                    parse_date(card.get('branch_last_modified'))
-                ])
-            ) if card.get('service_last_modified') or card.get('branch_last_modified') else None,
+            get_max_modified_date,
             resources=['cards']
         ),
         DF.set_type('situations', **TAXONOMY_ITEM_SCHEMA),
