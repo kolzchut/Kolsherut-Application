@@ -48,9 +48,9 @@ def dump_to_es_and_delete(**kwargs):
     try:
         success = engine.ping()
         assert success
-    except Exception as e:
-        print(f'FAILED TO CONNECT TO ES: {e}')
-        raise ConnectionError(f'FAILED TO CONNECT TO ES: {e}') from e
+    except:
+        print('FAILED TO CONNECT TO ES')
+        return
 
     kwargs.setdefault('index_settings', {
         "analysis": {
