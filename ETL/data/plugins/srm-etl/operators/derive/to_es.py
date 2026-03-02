@@ -56,7 +56,6 @@ def card_score(row):
 
     return score
 
-
 def parse_date(d):
     if isinstance(d, str):
         try:
