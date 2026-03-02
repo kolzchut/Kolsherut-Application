@@ -13,7 +13,7 @@ from conf import settings
 def es_instance():
     return elasticsearch.Elasticsearch(
         [dict(host=settings.ES_HOST, port=int(settings.ES_PORT))],
-        timeout=60, retry_on_timeout=True, max_retries=3, retry_on_status=[502, 503, 504],
+        timeout=60, retry_on_timeout=True, max_retries=3, retry_on_status=[429, 502, 503, 504],
         **({"http_auth": settings.ES_HTTP_AUTH.split(':')} if settings.ES_HTTP_AUTH else {}),
     )
 
@@ -48,9 +48,9 @@ def dump_to_es_and_delete(**kwargs):
     try:
         success = engine.ping()
         assert success
-    except:
-        print('FAILED TO CONNECT TO ES')
-        return
+    except Exception as e:
+        print(f'FAILED TO CONNECT TO ES: {e}')
+        raise ConnectionError(f'FAILED TO CONNECT TO ES: {e}') from e
 
     kwargs.setdefault('index_settings', {
         "analysis": {

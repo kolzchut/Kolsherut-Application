@@ -1,5 +1,6 @@
 import tempfile
 import shutil
+import time
 from dataflows_airtable.load_from_airtable import load_from_airtable
 import requests
 from datetime import datetime
@@ -299,13 +300,33 @@ def load_autocomplete_to_es_flow():
 def operator(*_):
     shutil.rmtree(f'.checkpoints/{CHECKPOINT}', ignore_errors=True, onerror=None)
 
+    max_retries = 3
+    retry_delay = 30  # seconds
+
+    def run_with_retry(fn, name, call_process=False):
+        for attempt in range(1, max_retries + 1):
+            try:
+                logger.info(f'Running {name} (attempt {attempt}/{max_retries})')
+                result = fn()
+                if call_process:
+                    result.process()
+                return
+            except Exception as e:
+                logger.warning(f'{name} failed on attempt {attempt}/{max_retries}: {e}')
+                if attempt < max_retries:
+                    logger.info(f'Retrying {name} in {retry_delay}s...')
+                    time.sleep(retry_delay)
+                else:
+                    logger.error(f'{name} failed after {max_retries} attempts')
+                    raise
+
     logger.info('Starting ES Flow')
-    data_api_es_flow()
-    load_locations_to_es_flow().process()
-    load_responses_to_es_flow().process()
-    load_situations_to_es_flow().process()
-    load_organizations_to_es_flow().process()
-    load_autocomplete_to_es_flow()
+    run_with_retry(data_api_es_flow, 'data_api_es_flow')
+    run_with_retry(load_locations_to_es_flow, 'load_locations_to_es_flow', call_process=True)
+    run_with_retry(load_responses_to_es_flow, 'load_responses_to_es_flow', call_process=True)
+    run_with_retry(load_situations_to_es_flow, 'load_situations_to_es_flow', call_process=True)
+    run_with_retry(load_organizations_to_es_flow, 'load_organizations_to_es_flow', call_process=True)
+    run_with_retry(load_autocomplete_to_es_flow, 'load_autocomplete_to_es_flow')
     logger.info('Finished ES Flow')
 
 
