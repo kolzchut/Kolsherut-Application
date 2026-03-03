@@ -1,4 +1,4 @@
-from . import to_dp, to_es, to_mapbox, to_sitemap, from_curation, autocomplete, to_sql
+from . import to_dp, to_es, from_curation, autocomplete, to_sql
 
 from srm_tools.logger import logger
 from srm_tools.error_notifier import invoke_on
