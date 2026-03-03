@@ -42,6 +42,7 @@ def flatten_and_deduplicate(lst):
             seen.add(item)
     return result
 
+
 def safe_list(lst):
     if isinstance(lst, list):
         return lst
@@ -61,7 +62,6 @@ def create_address_clean(adrees, city_name):
     return ' '.join(filter(None, [addr, city]))
 
 
-
 def transform_meser_dataframe(df: pd.DataFrame, tags: dict) -> pd.DataFrame:
     """
     Transform DataFrame like the original DF.Flow:
@@ -76,7 +76,6 @@ def transform_meser_dataframe(df: pd.DataFrame, tags: dict) -> pd.DataFrame:
     df['service_name'] = df['Name'].str.strip()
     df['branch_name'] = df['Type_Descr'].str.strip()
     df = df.rename(columns={'Misgeret_Id': 'meser_id'})
-
 
     # organization_id
     df['organization_id'] = df['ORGANIZATIONS_BUSINES_NUM'].combine_first(df['Registered_Business_Id'])
@@ -99,7 +98,8 @@ def transform_meser_dataframe(df: pd.DataFrame, tags: dict) -> pd.DataFrame:
         else ('0' + str(x) if str(x)[0] != '0' else str(x))
     )
     # tagging array
-    df['tagging'] = df[['Type_Descr', 'Target_Population_Descr', 'Second_Classific', 'Gender_Descr', 'Head_Department']].apply(
+    df['tagging'] = df[
+        ['Type_Descr', 'Target_Population_Descr', 'Second_Classific', 'Gender_Descr', 'Head_Department']].apply(
         lambda row: [v for v in row if v not in [None, 'None', '']], axis=1
     )
     df['branch_id'] = df.apply(
@@ -110,7 +110,6 @@ def transform_meser_dataframe(df: pd.DataFrame, tags: dict) -> pd.DataFrame:
         lambda r: 'meser-s-' + r['meser_id'],
         axis=1
     )
-
 
     # 4. Combine duplicates (same service_name + phone + address + organization_id + Owner_Code_Descr)
     grouped = df.groupby(['service_name', 'phone_numbers', 'address', 'organization_id'], dropna=False).agg({
@@ -123,9 +122,9 @@ def transform_meser_dataframe(df: pd.DataFrame, tags: dict) -> pd.DataFrame:
         'tagging': lambda x: flatten_and_deduplicate_list_of_lists(x)
     }).reset_index()
 
-
     # 5. pluscode from first available GisX/GisY in the group
-    grouped['pluscode'] = df.groupby(['service_name', 'phone_numbers', 'address', 'organization_id'])[['GisY','GisX']].first().apply(
+    grouped['pluscode'] = df.groupby(['service_name', 'phone_numbers', 'address', 'organization_id'])[
+        ['GisY', 'GisX']].first().apply(
         lambda r: olc.encode(r['GisY'], r['GisX']) if pd.notna(r['GisY']) and pd.notna(r['GisX']) else None,
         axis=1
     ).values
@@ -144,8 +143,6 @@ def transform_meser_dataframe(df: pd.DataFrame, tags: dict) -> pd.DataFrame:
     )
 
     return grouped
-
-
 
 
 def sanitize_for_airtable(df: pd.DataFrame) -> pd.DataFrame:
@@ -169,13 +166,14 @@ def sanitize_for_airtable(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
+
 def split_by_local_authority(df):
     mask = df['Owner_Code_Descr'].str.contains(r'רשות מקומית', regex=True, na=False)
     return df[mask], df[~mask]
 
+
 def run(*_):
     logger.info("Starting Meser data update...")
-
 
     logger.info("Fetching and sanitizing source data...")
     # 1. Fetch source data from DataGovIL and sanitize
@@ -226,7 +224,6 @@ def run(*_):
     logger.info(f"Effected {modified_services} services")
 
     logger.info("End Meser data update...")
-
 
 
 def operator(*_):
