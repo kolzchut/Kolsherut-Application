@@ -109,15 +109,15 @@ def update_taxonomy_with_parents(v):
 
 def reorder_responses_by_category(responses, category):
     return (
-            [r for r in responses if r['id'].split(':')[1] == category] +
-            [r for r in responses if r['id'].split(':')[1] != category]
+        [r for r in responses if r['id'].split(':')[1] == category] +
+        [r for r in responses if r['id'].split(':')[1] != category]
     )
 
 
 def reorder_records_by_category(records, category):
     return (
-            [r for r in records if r['response_category'] == category] +
-            [r for r in records if r['response_category'] != category]
+        [r for r in records if r['response_category'] == category] +
+        [r for r in records if r['response_category'] != category]
     )
 
 
@@ -232,12 +232,12 @@ def preprocess_locations(validate=False):
             resources=['locations'],
         ),
         get_stats().filter_with_stat('Processing: Locations: No Location',
-                                     lambda r: any(
-                                         all(r.get(f) for f in fields)
-                                         for fields in [('resolved_lat', 'resolved_lon'), ('fixed_lat', 'fixed_lon'), ('national_service',)]
-                                     ),
-                                     resources=['locations'],
-                                     ),
+            lambda r: any(
+                all(r.get(f) for f in fields)
+                for fields in [('resolved_lat', 'resolved_lon'), ('fixed_lat', 'fixed_lon'), ('national_service',)]
+            ),
+            resources=['locations'],
+        ),
         DF.add_field(
             'location_accurate', 'boolean',
             lambda r: (r['accuracy'] in ACCURATE_TYPES) or all((r.get('fixed_lat'), r['fixed_lon'])) or False,
