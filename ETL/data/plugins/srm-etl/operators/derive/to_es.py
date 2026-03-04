@@ -298,6 +298,12 @@ def load_autocomplete_to_es_flow():
 def operator(*_):
     shutil.rmtree(f'.checkpoints/{CHECKPOINT}', ignore_errors=True, onerror=None)
 
+    # Clean stale intermediate data from previous runs to prevent using outdated cache
+    for subdir in ('place_data', 'response_data', 'situation_data'):
+        stale_path = f'{settings.DATA_DUMP_DIR}/{subdir}'
+        logger.info(f'Cleaning stale data directory: {stale_path}')
+        shutil.rmtree(stale_path, ignore_errors=True, onerror=None)
+
     logger.info('Starting ES Flow')
     data_api_es_flow()
     load_locations_to_es_flow().process()

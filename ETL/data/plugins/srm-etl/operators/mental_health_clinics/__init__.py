@@ -1,5 +1,6 @@
 import hashlib
 import re
+import shutil
 from slugify import slugify
 from pathlib import Path
 import dataflows as DF
@@ -154,6 +155,9 @@ def clinic_hash(row):
 
 
 def run(*_):
+    # Clean stale temp data from previous runs
+    shutil.rmtree('temp/denormalized', ignore_errors=True, onerror=None)
+
     stats = Stats()
     # Prepare data
     def ren(k, v):

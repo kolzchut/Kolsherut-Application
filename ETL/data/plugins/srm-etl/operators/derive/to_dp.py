@@ -925,6 +925,12 @@ def operator(*_):
     shutil.rmtree(f'.checkpoints/{CHECKPOINT}', ignore_errors=True, onerror=None)
     shutil.rmtree(f'.checkpoints/srm_raw_airtable_buffer', ignore_errors=True, onerror=None)
 
+    # Clean stale intermediate data from previous runs to prevent using outdated cache
+    for subdir in ('srm_data', 'flat_branches', 'flat_services', 'flat_table', 'card_data'):
+        stale_path = f'{settings.DATA_DUMP_DIR}/{subdir}'
+        logger.info(f'Cleaning stale data directory: {stale_path}')
+        shutil.rmtree(stale_path, ignore_errors=True, onerror=None)
+
     branch_mapping = dict()
     srm_data_pull_flow().process()
     flat_branches_flow(branch_mapping).process()

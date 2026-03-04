@@ -1,5 +1,6 @@
 import datetime
 import dateutil.parser
+import shutil
 
 import dataflows as DF
 from dataflows.base.resource_wrapper import ResourceWrapper
@@ -630,6 +631,9 @@ def getGuidestarOrgs(ga: GuidestarAPI):
 
 def scrapeGuidestarEntities(*_):
     logger.info('STARTING Entity + Guidestar Scraping')
+
+    # Clean stale temp data from previous runs
+    shutil.rmtree('temp/entities-orgs', ignore_errors=True, onerror=None)
 
     taxonomy = dict()
     print('FETCHING TAXONOMY MAPPING')
