@@ -22,7 +22,7 @@ const MetaTags = ({metaTags, macrosAndReplacements, pageUrl}: Iprops ) => {
     const title = replaceMacros({stringWithMacros: metaTags.title, macrosAndReplacements})
     const canonical = pipe(
         pageUrl,
-        url => removeSegmentsFromCanonical({url, removeParameters: window.config.canonicalRemovals}),
+        // url => removeSegmentsFromCanonical({url, removeParameters: window.config.canonicalRemovals}),
         removeStringAfterTheQuestionMark
     )
     return (

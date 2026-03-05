@@ -8,21 +8,48 @@ const globals = {
 };
 
 export const getRouteParams = () => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const params = Object.fromEntries(searchParams);
-    let key, value;
-    const pathParams = decodeURI(window.location.pathname).split("/");
-    if (pathParams[0] === '') pathParams.shift(); // Remove leading empty element
-    while (pathParams.length > 1) {
-        key = pathParams.shift();
-        value = pathParams.shift();
-        if (!key) continue;
-        params[key as string] = decodeURIComponent(value || '');
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const searchParams = Object.fromEntries(urlSearchParams);
+    console.log("search params", searchParams);
+    const pathParts = window.location.pathname.split('/');
+
+    if (pathParts[1] === 'sitemap') return {
+        p: 'sitemap',
     }
-    if (params.sq) {
-        params.sq = params.sq.split('&')[0];
+
+    if (pathParts[2] === 'card') return {
+        p: 'card',
+        c: pathParts[4],
     }
-    return params
+
+    // Search Page
+    const params = {
+        p: 'search',
+        by: searchParams.by,
+        bsnf: searchParams.bsnf,
+        sq: searchParams.sq,
+        lf: searchParams.lf,
+        rf: searchParams.rf,
+        sf: searchParams.sf,
+    };
+    //TODO: 1. Figure out if path parts situations, response, servicename or by are in the path
+
+
+    return params;
+
+    // let key, value;
+    // const pathParams = decodeURI(window.location.pathname).split("/");
+    // if (pathParams[0] === '') pathParams.shift(); // Remove leading empty element
+    // while (pathParams.length > 1) {
+    //     key = pathParams.shift();
+    //     value = pathParams.shift();
+    //     if (!key) continue;
+    //     params[key as string] = decodeURIComponent(value || '');
+    // }
+    // if (params.sq) {
+    //     params.sq = params.sq.split('&')[0];
+    // }
+    // return params
 };
 
 const buildUrl = (params: Record<string, string>) => {
@@ -31,21 +58,25 @@ const buildUrl = (params: Record<string, string>) => {
     const routeParams = {...params};
     if (!routeParams.p) return base + hash;
     if (routeParams.p === 'sitemap') return `${base}/sitemap${hash}`
-    if(routeParams.p === 'card' && routeParams.c) return `${base}/p/card/c/${routeParams.c}${hash}`;
+    if (routeParams.p === 'card' && routeParams.c) return `${base}/p/card/c/${routeParams.c}${hash}`;
 
     const categories = [];
     if (routeParams.bsf) categories.push(routeParams.bsf);
     if (routeParams.brf) categories.push(routeParams.brf);
-    if (routeParams.by) categories.push(routeParams.by);
-    if (routeParams.bsnf) categories.push(`bsnf|${routeParams.bsnf}`);
+    if (routeParams.by && categories.length < 2) {
+        categories.push(`by|${routeParams.by}`);
+        delete routeParams.by;
+    }
+    if (routeParams.bsnf && categories.length < 2) {
+        categories.push(`bsnf|${routeParams.bsnf}`);
+        delete routeParams.bsnf;
+    }
     const category = categories.join('/');
 
     delete routeParams.p;
     delete routeParams.c;
     delete routeParams.bsf;
     delete routeParams.brf;
-    delete routeParams.by;
-    delete routeParams.bsnf;
     const queryString = new URLSearchParams(routeParams).toString();
 
     return `${base}/${category}?${queryString}`;

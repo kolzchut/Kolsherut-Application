@@ -13,6 +13,8 @@ interface IPlaceHolderText {
     situationSentence?: string;
     bySentence?: string;
 }
+// TODO: Get the taxonomy from github.
+
 
 const InputPlaceHolder = ({onClick}: { onClick: () => void }) => {
     const theme = useTheme<IDynamicThemeApp>();
