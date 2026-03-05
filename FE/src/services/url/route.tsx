@@ -1,6 +1,5 @@
 import {useSelector} from "react-redux";
 import {getUrlParams} from "../../store/shared/urlSelector";
-import filtersUrlParams from "./filtersUrlParams";
 
 const globals = {
     initialized: false,
@@ -29,16 +28,27 @@ export const getRouteParams = () => {
 const buildUrl = (params: Record<string, string>) => {
     const base = `${window.location.protocol}//${window.location.host}`;
     const hash = window.location.hash;
-    let paramString = '';
     const routeParams = {...params};
     if (!routeParams.p) return base + hash;
-    paramString += `p/${routeParams.p}`;
+    if (routeParams.p === 'sitemap') return `${base}/sitemap${hash}`
+    if(routeParams.p === 'card' && routeParams.c) return `${base}/p/card/c/${routeParams.c}${hash}`;
+
+    const categories = [];
+    if (routeParams.bsf) categories.push(routeParams.bsf);
+    if (routeParams.brf) categories.push(routeParams.brf);
+    if (routeParams.by) categories.push(routeParams.by);
+    if (routeParams.bsnf) categories.push(`bsnf|${routeParams.bsnf}`);
+    const category = categories.join('/');
+
     delete routeParams.p;
-    Object
-        .keys(routeParams)
-        .filter(key => !!routeParams[key])
-        .forEach((key) => paramString += `/${key}/${routeParams[key]}`);
-    return `${base}/${paramString}${hash}${filtersUrlParams(['p', 'c'])}`;
+    delete routeParams.c;
+    delete routeParams.bsf;
+    delete routeParams.brf;
+    delete routeParams.by;
+    delete routeParams.bsnf;
+    const queryString = new URLSearchParams(routeParams).toString();
+
+    return `${base}/${category}?${queryString}`;
 };
 
 const navKey = (params: Record<string, string>) => {
