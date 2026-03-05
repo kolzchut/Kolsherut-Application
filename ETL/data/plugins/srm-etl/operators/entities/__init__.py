@@ -339,7 +339,7 @@ def process_service(row, taxonomies, rejected_taxonomies, stats: Stats):
                         [dict(name=name)],
                         DF.update_resource(-1, name='taxonomies'),
                         dump_to_airtable({
-                            (settings.AIRTABLE_BASE, settings.AIRTABLE_TAXONOMY_MAPPING_GUIDESTAR_TABLE): {
+                            (settings.AIRTABLE_STAGING_BASE, settings.AIRTABLE_TAXONOMY_MAPPING_GUIDESTAR_TABLE): {
                                 'resource-name': 'taxonomies',
                                 'typecast': True
                             }
@@ -638,7 +638,7 @@ def scrapeGuidestarEntities(*_):
     taxonomy = dict()
     print('FETCHING TAXONOMY MAPPING')
     taxonomy = DF.Flow(
-        load_from_airtable(settings.AIRTABLE_BASE, settings.AIRTABLE_TAXONOMY_MAPPING_GUIDESTAR_TABLE,
+        load_from_airtable(settings.AIRTABLE_STAGING_BASE, settings.AIRTABLE_TAXONOMY_MAPPING_GUIDESTAR_TABLE,
                            settings.AIRTABLE_VIEW, settings.AIRTABLE_API_KEY),
         # DF.printer(),
         DF.select_fields(['name', 'Status', 'situation_ids', 'response_ids']),
