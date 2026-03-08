@@ -17,8 +17,8 @@ export const cardsSitemap = asyncHandler(async (req: Request, res: Response) => 
 
 export const taxonomySitemap = asyncHandler(async (req: Request, res: Response) => {
     const {responses, situations} = await getTaxonomy();
-    const responsesXML = recursiveTaxonomyToXML({taxonomy: responses.items, isResponse: true});
-    const situationsXML = recursiveTaxonomyToXML({taxonomy: situations.items, isResponse: false});
+    const responsesXML = recursiveTaxonomyToXML({taxonomy: responses.items});
+    const situationsXML = recursiveTaxonomyToXML({taxonomy: situations.items});
 
     const fullXML = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
