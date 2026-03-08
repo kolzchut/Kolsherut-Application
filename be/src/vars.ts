@@ -1,18 +1,27 @@
 import path from "path";
 
 const indices :any = {
-    production: {
-        card: "srm__cards_20260226141535946891_275ed989",
-        autocomplete: "srm__autocomplete_20260226141847128564_27ce41ff",
+    // production: {
+    //     card: "srm__cards_20260226141535946891_275ed989",
+    //     autocomplete: "srm__autocomplete_20260226141847128564_27ce41ff",
+    // },
+    // stage: {
+    //     card: "srm__cards_20260226150255392734_05764288",
+    //     autocomplete: "srm__autocomplete_20260226150608367558_4f737de8",
+    // },
+    // development:{
+    //     card:"srm__cards_20260129133731521567_4f7801a8",
+    //     autocomplete:"srm__autocomplete_20260129134047850681_2e67cc4e",
+    // }
+    // TODO: ALL OF ABOVE ARE AZURE INDICES. BELOW ARE HASADNAS INDICES, CHANGE BACK TO ABOVE ONCE WE ARE READY TO SWITCH TO AZURE
+    prod: {
+        card: "srm__cards_20240417210351058073_bb6360fd",
+        autocomplete: "srm__autocomplete_20230214172220805473_23f43e2a",
     },
     stage: {
-        card: "srm__cards_20260226150255392734_05764288",
-        autocomplete: "srm__autocomplete_20260226150608367558_4f737de8",
+        card: "srm__cards_20220926183305498944_a9274d22",
+        autocomplete: "srm__autocomplete_20240505135631716607_372901c0",
     },
-    development:{
-        card:"srm__cards_20260129133731521567_4f7801a8",
-        autocomplete:"srm__autocomplete_20260129134047850681_2e67cc4e",
-    }
 }
 
 export default {

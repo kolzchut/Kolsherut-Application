@@ -1,8 +1,10 @@
-const buildUrlForSearchLabel = ({situation,response,searchQuery}:{situation?:string, response?:string, searchQuery?:string})=>{
-    let url = window.location.href+'p/results'
-    if (searchQuery) url += `/sq/${searchQuery}`
-    if (response) url += `/brf/${response}`
-    if (situation) url += `/bsf/${situation}`
-    return url;
+import {buildUrl} from "../../../../../services/url/route.tsx";
+
+const buildUrlForSearchLabel = ({situation,response}:{situation?:string, response?:string})=>{
+    return buildUrl({
+        p: 'results',
+        ...(response ? {brf: response} : {}),
+        ...(situation ? {bsf: situation} : {})
+    })
 }
 export default buildUrlForSearchLabel;

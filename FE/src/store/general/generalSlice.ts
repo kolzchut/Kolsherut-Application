@@ -29,9 +29,6 @@ export const generalSlice = createSlice({
         setShowSidebar(state: GeneralStore, action) {
             state.showSidebar = action.payload;
         },
-        settingURLParamsToResults(state: GeneralStore, action) {
-            state.searchQuery = action.payload;
-        },
         setCardIdAndCardPage(state: GeneralStore, action) {
             state.cardId = action.payload;
             state.page = 'card';
@@ -61,7 +58,6 @@ export const {
     setSearchQuery,
     setCardIdAndCardPage,
     setModal,
-    settingURLParamsToResults,
     setShowSidebar,
     setAccessibility,
     setFirstVisitedUrl,

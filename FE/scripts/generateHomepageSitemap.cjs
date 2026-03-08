@@ -31,14 +31,13 @@ data.forEach(group => {
     if (!group.labels) return;
 
     group.labels.forEach(label => {
-        if (!label.query) return;
+        const categories = [];
+        if (label.situation_id) categories.push(label.situation_id.split(':').slice(-1)[0]);
+        if (label.response_id) categories.push(label.response_id.split(':').slice(-1)[0]);
+        if (categories.length === 0) return;
 
-        const params = [`sq/${encodeURI(label.query)}`];
-        if (label.response_id) params.push(`brf/${encodeURI(label.response_id)}`);
-        if (label.situation_id) params.push(`bsf/${encodeURI(label.situation_id)}`);
-
-        const rawUrl = `${baseUrl.replace(/\/$/, '')}/p/results/${params.join('/')}`; // ensure single slash
-        const loc = xmlEscape(rawUrl); // escape special chars for XML
+        const rawUrl = `${baseUrl.replace(/\/$/, '')}/${categories.join('/')}`;
+        const loc = xmlEscape(rawUrl);
 
         xml += `  <url>\n`;
         xml += `    <loc>${loc}</loc>\n`;

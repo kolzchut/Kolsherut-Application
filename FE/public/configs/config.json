@@ -96,5 +96,6 @@
     "lf",
     "sf",
     "rf"
-  ]
+  ],
+  "taxonomyUrl": "https://raw.githubusercontent.com/kolzchut/openeligibility/refs/heads/main/taxonomy.tx.yaml"
 }

@@ -29,4 +29,3 @@ const useSearchAutocomplete = ({setSearchTerm, setOptionalSearchValues, debounce
 }
 
 export default useSearchAutocomplete;
-

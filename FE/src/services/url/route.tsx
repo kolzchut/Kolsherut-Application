@@ -1,5 +1,7 @@
 import {useSelector} from "react-redux";
 import {getUrlParams} from "../../store/shared/urlSelector";
+import UrlParams from "../../types/urlParams";
+import matchSubSlugTaxonomy from "../../utilities/matchSubSlugTaxonomy.ts";
 
 const globals = {
     initialized: false,
@@ -7,12 +9,16 @@ const globals = {
     lastNavKey: ""
 };
 
-export const getRouteParams = () => {
+export const getRouteParams = (): UrlParams => {
     const urlSearchParams = new URLSearchParams(window.location.search);
     const searchParams = Object.fromEntries(urlSearchParams);
-    console.log("search params", searchParams);
     const pathParts = window.location.pathname.split('/');
+    const taxonomy = matchSubSlugTaxonomy(pathParts.slice(1, 3))
+    const routeBy = pathParts.find(part => part.startsWith('by-'));
+    const routeBsnf = pathParts.find(part => part.startsWith('bsnf-'));
 
+    if (routeBy) searchParams.by = routeBy.replace('by-', '');
+    if (routeBsnf) searchParams.bsnf = routeBsnf.replace('bsnf-', '');
     if (pathParts[1] === 'sitemap') return {
         p: 'sitemap',
     }
@@ -21,38 +27,24 @@ export const getRouteParams = () => {
         p: 'card',
         c: pathParts[4],
     }
+    if (!taxonomy.response && !taxonomy.situation && !searchParams.by && !searchParams.bsnf && !searchParams.sq) return {
+        p: 'home',
+    }
 
-    // Search Page
-    const params = {
-        p: 'search',
-        by: searchParams.by,
-        bsnf: searchParams.bsnf,
+    return {
+        p: 'results',
+        by: decodeURIComponent(routeBy ? routeBy.replace('by-', '') : searchParams.by || ''),
+        bsnf: decodeURIComponent(routeBsnf ? routeBsnf.replace('bsnf-', '') : searchParams.bsnf || ''),
         sq: searchParams.sq,
         lf: searchParams.lf,
         rf: searchParams.rf,
         sf: searchParams.sf,
+        brf: taxonomy.response,
+        bsf: taxonomy.situation,
     };
-    //TODO: 1. Figure out if path parts situations, response, servicename or by are in the path
-
-
-    return params;
-
-    // let key, value;
-    // const pathParams = decodeURI(window.location.pathname).split("/");
-    // if (pathParams[0] === '') pathParams.shift(); // Remove leading empty element
-    // while (pathParams.length > 1) {
-    //     key = pathParams.shift();
-    //     value = pathParams.shift();
-    //     if (!key) continue;
-    //     params[key as string] = decodeURIComponent(value || '');
-    // }
-    // if (params.sq) {
-    //     params.sq = params.sq.split('&')[0];
-    // }
-    // return params
 };
 
-const buildUrl = (params: Record<string, string>) => {
+export const buildUrl = (params: UrlParams) => {
     const base = `${window.location.protocol}//${window.location.host}`;
     const hash = window.location.hash;
     const routeParams = {...params};
@@ -61,14 +53,14 @@ const buildUrl = (params: Record<string, string>) => {
     if (routeParams.p === 'card' && routeParams.c) return `${base}/p/card/c/${routeParams.c}${hash}`;
 
     const categories = [];
-    if (routeParams.bsf) categories.push(routeParams.bsf);
-    if (routeParams.brf) categories.push(routeParams.brf);
+    if (routeParams.bsf) categories.push(routeParams.bsf.split(':').slice(-1));
+    if (routeParams.brf) categories.push(routeParams.brf.split(':').slice(-1));
     if (routeParams.by && categories.length < 2) {
-        categories.push(`by|${routeParams.by}`);
+        categories.push(`by-${routeParams.by}`);
         delete routeParams.by;
     }
     if (routeParams.bsnf && categories.length < 2) {
-        categories.push(`bsnf|${routeParams.bsnf}`);
+        categories.push(`bsnf-${routeParams.bsnf}`);
         delete routeParams.bsnf;
     }
     const category = categories.join('/');
@@ -77,19 +69,19 @@ const buildUrl = (params: Record<string, string>) => {
     delete routeParams.c;
     delete routeParams.bsf;
     delete routeParams.brf;
-    const queryString = new URLSearchParams(routeParams).toString();
+    const queryString = new URLSearchParams(routeParams as Record<string, string>).toString();
 
-    return `${base}/${category}?${queryString}`;
+    return `${base}/${category}${queryString ? `?${queryString}` : ''}${hash}`;
 };
 
-const navKey = (params: Record<string, string>) => {
+const navKey = (params: UrlParams) => {
     const p = params.p || 'home';
     if (p === 'card') return `card|${params.c || ''}`;
     return p + '|';
 };
 
-const applyHistory = (params: Record<string, string>) => {
-    const qs = new URLSearchParams(params).toString();
+const applyHistory = (params: UrlParams) => {
+    const qs = new URLSearchParams(params as Record<string, string>).toString();
     const key = navKey(params);
     const suppress = window.__suppressHistoryPush;
 
@@ -122,12 +114,12 @@ const applyHistory = (params: Record<string, string>) => {
 };
 
 export const useGetCurrentRoute = () => {
-    const params = useSelector(getUrlParams) as Record<string, string>;
+    const params = useSelector(getUrlParams) as UrlParams;
     return buildUrl(params);
 
 }
 
 export const useRouteUpdater = () => {
-    const params = useSelector(getUrlParams) as Record<string, string>;
+    const params = useSelector(getUrlParams) as UrlParams;
     applyHistory(params);
 };

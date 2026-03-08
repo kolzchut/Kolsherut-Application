@@ -8,12 +8,8 @@ export const generalStore = (state: RootState) => state.general;
 export const getPage = createSelector([generalStore], (generalStore: GeneralStore) => {
     if (!pageKeys.includes(generalStore.page as Pages)) return pageKeys[0];
     switch (generalStore.page as Pages) {
-        case 'home':
-            return 'home';
-        case 'results': {
-            if(!generalStore.searchQuery) return 'home';
+        case 'results':
             return 'results';
-        }
         case 'card': {
             if (!generalStore.cardId) return 'home';
             return 'card';
@@ -21,7 +17,7 @@ export const getPage = createSelector([generalStore], (generalStore: GeneralStor
         case 'sitemap':
             return 'sitemap';
         default:
-            return pageKeys[0];
+            return 'home'
     }
 });
 

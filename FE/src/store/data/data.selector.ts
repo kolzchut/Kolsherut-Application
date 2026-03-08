@@ -29,3 +29,6 @@ export const getLocations = createSelector([dataStore], (dataStore: DataStore) =
 export const getSitemap = createSelector([dataStore], (dataStore: DataStore) => {
     return dataStore.sitemap;
 });
+export const getTaxonomy = createSelector([dataStore], (dataStore: DataStore) => {
+    return dataStore.taxonomy;
+});

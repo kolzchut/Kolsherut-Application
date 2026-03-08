@@ -21,7 +21,7 @@ const SearchLabel = ({value}: { value: ILabel }) => {
         })
 
     }
-    const href = buildUrlForSearchLabel({response: value.response_id, situation: value.situation_id, searchQuery:value.query});
+    const href = buildUrlForSearchLabel({response: value.response_id, situation: value.situation_id});
     return <a href={href}
         className={classes.optionalSearchValue}
         onClick={onClick}>

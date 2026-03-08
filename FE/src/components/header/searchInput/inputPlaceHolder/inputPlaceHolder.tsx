@@ -4,22 +4,19 @@ import useStyles from "./inputPlaceHolder.css";
 import {useSelector} from "react-redux";
 import {getBackendByFilter} from "../../../../store/filter/filter.selector";
 import {createKeyboardHandler} from "../../../../services/keyboardHandler";
-
-import {getBackendFiltersNamesByResults} from "../../../../store/shared/utilities/header.selector";
 import {getSearchQuery} from "../../../../store/general/general.selector";
+import {getFilteredResultsByFilter} from "../../../../store/shared/inputPlaceHolderSelector.ts";
 
 interface IPlaceHolderText {
     responseSentence?: string;
     situationSentence?: string;
     bySentence?: string;
 }
-// TODO: Get the taxonomy from github.
-
 
 const InputPlaceHolder = ({onClick}: { onClick: () => void }) => {
     const theme = useTheme<IDynamicThemeApp>();
     const searchQuery = useSelector(getSearchQuery)
-    const names = useSelector(getBackendFiltersNamesByResults);
+    const names = useSelector(getFilteredResultsByFilter)
     const byFilter = useSelector(getBackendByFilter)
     const handleKeyDown = createKeyboardHandler(onClick);
 

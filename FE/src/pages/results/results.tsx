@@ -4,7 +4,7 @@ import {getSelectedOrganization} from "../../store/data/data.selector";
 import {setMapOnLocation} from "./resultsLogic";
 import useStyles from "./results.css";
 import FiltersForDesktop from "./filters/filtersForDesktop";
-import {setSelectedOrganization} from "../../store/data/dataSlice";
+import {setResults, setSelectedOrganization} from "../../store/data/dataSlice";
 import Header from "../../components/header/header";
 import {getSearchQuery, getSelectedFeatureId} from "../../store/general/general.selector";
 import {useDisplayResultsMap} from "./context/contextFunctions";
@@ -87,6 +87,11 @@ const Results = () => {
             logger.log({message: " map update size failed", payload: e});
         }
     }, [displayResultsMap]);
+    useEffect(()=>{
+        return () => {
+            dispatch(setResults([]))
+        }
+    }, [])
 
     return <>
         <MetaTags {...metaTagsData}/>

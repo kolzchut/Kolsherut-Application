@@ -17,7 +17,7 @@ const TargetAudience = ({situations, cardId}: { situations: Situation[], cardId:
         <span className={classes.title}>{targetAudienceTitle}</span>
         <div className={classes.linkList}>
             {situations.map((situation: Situation) => {
-                const href = getHrefForResults({searchQuery: situation.name, situationFilter: [situation.id]});
+                const href = getHrefForResults({situationFilter: situation.id});
                 const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
                     e.preventDefault()
                     cardAnalytics.clickOnLabelEvent({cardId:cardId, labelId:situation.id, labelName:situation.name});

@@ -5,30 +5,12 @@ import {
     setLoading,
     setPage,
     setSearchQuery,
-    settingURLParamsToResults
 } from "../general/generalSlice";
 import {setResults} from "../data/dataSlice";
 import fetchResults from "../../services/searchUtilities/fetchResults";
 import {resetFilters, setBackendFilters, setFilters} from "../filter/filterSlice";
 import {IService} from "../../types/serviceType";
-import sendMessage from "../../services/sendMessage/sendMessage";
-import {IStructureAutocomplete, IUnStructuredAutocomplete} from "../../types/autocompleteType";
 
-const updateStoreWithSearchParametersAndGetNewFetchData = (value: IStructureAutocomplete)=>{
-    if (value?.query) store.dispatch(setSearchQuery(value.query));
-    store.dispatch(setBackendFilters({response:value?.responseId, situation:value?.situationId, by:value?.by, serviceName: value?.serviceName}));
-    const filters: {location?: {key: string, bounds: [number,number,number,number]}} = {}
-    if(value?.cityName && value?.bounds) filters.location = {key: value.cityName, bounds: value.bounds};
-    store.dispatch(setFilters(filters));
-    return {
-        searchQuery: value?.query,
-        responseId: value?.responseId || "",
-        situationId: value?.situationId || "",
-        by: value?.by || "",
-        serviceName: value?.serviceName || "",
-    };
-
-}
 
 const updateFirstResults = async ({startResults}: {
     startResults: Promise<IService[]>
@@ -62,30 +44,19 @@ export const backToResults = () =>{
 
 export const changingPageToResults =  ({value, removeOldFilters, refreshPage}: { value: ILabel, removeOldFilters: boolean,refreshPage?: ()=>void }) => {
     settingFilters({removeOldFilters, value});
-    store.dispatch(settingURLParamsToResults(value.query))
     if(refreshPage) refreshPage();
 }
 
 
 export const settingToResults = async ({value}: { value: ILabel}) => {
     store.dispatch(setLoading(true));
-    store.dispatch(settingURLParamsToResults(value.query))
-
-    let fetchBaseData = {
+    const fetchBaseData = {
         responseId: value.response_id,
         situationId: value.situation_id,
         searchQuery: value.query,
         by: value.by,
         serviceName: value.serviceName
     }
-    // TODO: Fix that
-    // const old = store.getState().general.oldURL;
-    // if(old){
-        const requestURL = window.config.routes.autocomplete.replace('%%search%%', value.query?.replace(/_/g, " "));
-        const response = await sendMessage({method: 'get', requestURL});
-        const closestAutocomplete: IStructureAutocomplete | IUnStructuredAutocomplete = response.data.structured?.[0] || response.data.unstructured?.[0];
-        if(closestAutocomplete) fetchBaseData = updateStoreWithSearchParametersAndGetNewFetchData(closestAutocomplete as IStructureAutocomplete);
-    // }
     const startResults = fetchResults({...fetchBaseData, isFast: true});
     const restResults = fetchResults({...fetchBaseData, isFast: false});
     updateFirstResults({startResults});
