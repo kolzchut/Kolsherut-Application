@@ -1,5 +1,4 @@
 import {replaceMacros} from "../str";
-import removeSegmentsFromCanonical from "./removeSegmentsFromCanonical";
 import pipe from "../../utilities/pipe.ts";
 import removeStringAfterTheQuestionMark from "./RemoveStringAfterTheQuestionMark.ts";
 
@@ -22,7 +21,6 @@ const MetaTags = ({metaTags, macrosAndReplacements, pageUrl}: Iprops ) => {
     const title = replaceMacros({stringWithMacros: metaTags.title, macrosAndReplacements})
     const canonical = pipe(
         pageUrl,
-        url => removeSegmentsFromCanonical({url, removeParameters: window.config.canonicalRemovals}),
         removeStringAfterTheQuestionMark
     )
     return (

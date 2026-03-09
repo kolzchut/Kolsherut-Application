@@ -14,7 +14,7 @@ const modals =  {
     AddService,
     Partners,
     Contact,
-    SiteMap,
+    map:SiteMap,
 }
 
 export default modals

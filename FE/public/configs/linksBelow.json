@@ -1,8 +1,8 @@
 [
   {
     "title": "מפת אתר",
-    "modal": "SiteMap",
-    "url": "p/sitemap"
+    "modal": "map",
+    "url": "map"
   },
   {
     "title": "הוסיפו שירות חסר",

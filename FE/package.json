@@ -61,6 +61,7 @@
     "cross-env": "^10.0.0",
     "dompurify": "^3.3.0",
     "http-proxy-middleware": "^3.0.5",
+    "js-yaml": "^4.1.1",
     "ol": "^10.6.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -70,6 +71,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.16.5",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",

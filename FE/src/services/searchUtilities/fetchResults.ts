@@ -10,7 +10,6 @@ const getResultsFromServer = async (
     by: string,
     serviceName: string
 ) => {
-if (!searchQuery) return [];
     const results = await sendMessage({
         method: 'post',
         requestURL: window.config.routes.search,
