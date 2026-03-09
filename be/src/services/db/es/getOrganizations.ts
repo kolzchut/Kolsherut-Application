@@ -12,7 +12,7 @@ const extractOrganizations = (hits: any[], seen: Map<string, OrganizationFields>
     for (const hit of hits) {
         const src = (hit as any)._source;
         const name = src.organization_short_name || src.organization_name;
-        if (!name || seen.has(name)) return;
+        if (!name || seen.has(name)) continue;
         seen.set(name, {
             organization_id: src.organization_id,
             organization_short_name: src.organization_short_name,

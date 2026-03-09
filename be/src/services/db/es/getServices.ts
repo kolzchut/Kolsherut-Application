@@ -11,7 +11,7 @@ const extractServices = (hits: any[], seen: Map<string, ServiceFields>) => {
     for (const hit of hits) {
         const src = (hit as any)._source;
         const name = src.service_name;
-        if (!name || seen.has(name)) return;
+        if (!name || seen.has(name)) continue;
         seen.set(name, {
             service_name: name,
             service_id: src.service_id,
