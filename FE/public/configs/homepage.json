@@ -176,6 +176,12 @@
         "response_id": "human_services:work",
         "title": "תעסוקה",
         "query": "עבודה_עבור_מתמודדי_נפש"
+      },
+      {
+        "situation_id": "human_situations:mental_health:mental_conditions_and_diseases:ptsd",
+        "response_id": null,
+        "title": "מתמודדים עם פוסט טראומה (PTSD)",
+        "query": "בעלי_הפרעת_דחק_פוסט_טראומתית_PTSD"
       }
     ]
   },

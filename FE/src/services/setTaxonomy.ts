@@ -17,10 +17,9 @@ const flattenData = (data: InputNode): FlatNode[] => {
     const recursiveFlatten = (node: InputNode) => {
         if (!node) return;
         result.push(buildNode(node));
-        if (node.items && Array.isArray(node.items)) {
-            for (const item of node.items) {
-                recursiveFlatten(item);
-            }
+        if (!node.items || !Array.isArray(node.items)) return;
+        for (const item of node.items) {
+            recursiveFlatten(item);
         }
     };
 
