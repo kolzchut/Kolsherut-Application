@@ -2,23 +2,25 @@ import {replaceMacros} from "../str";
 import pipe from "../../utilities/pipe.ts";
 import removeStringAfterTheQuestionMark from "./RemoveStringAfterTheQuestionMark.ts";
 
-interface Iprops{
+const collapseSpaces = (str: string): string => str.replace(/\s{2,}/g, ' ').trim();
+
+interface IProps{
     metaTags:any,
     macrosAndReplacements:{ [key: string]: string }
     pageUrl:string
 }
 
-const MetaTags = ({metaTags, macrosAndReplacements, pageUrl}: Iprops ) => {
+const MetaTags = ({metaTags, macrosAndReplacements, pageUrl}: IProps ) => {
 
     const fixedProperties = metaTags.properties.map((property: { property: string, content: string }) => ({
         property: property.property,
-        content: replaceMacros({stringWithMacros: property.content, macrosAndReplacements})
+        content: collapseSpaces(replaceMacros({stringWithMacros: property.content, macrosAndReplacements}))
     }))
     const fixedNames = metaTags.names.map((name: { name: string, content: string }) => ({
         name: name.name,
-        content: replaceMacros({stringWithMacros: name.content, macrosAndReplacements})
+        content: collapseSpaces(replaceMacros({stringWithMacros: name.content, macrosAndReplacements}))
     }))
-    const title = replaceMacros({stringWithMacros: metaTags.title, macrosAndReplacements})
+    const title = collapseSpaces(replaceMacros({stringWithMacros: metaTags.title, macrosAndReplacements}))
     const canonical = pipe(
         pageUrl,
         removeStringAfterTheQuestionMark

@@ -50,8 +50,7 @@
     "tar:production": "npm run tar --env=production",
     "sitemap:homepage": "node scripts/generateHomepageSitemap.cjs",
     "sitemap:main": "node scripts/generateMainSitemap.cjs",
-    "synonyms:update": "node scripts/updateSynonyms.cjs",
-    "staticwebapp:generate": "node scripts/generateStaticWebAppConfig.cjs"
+    "synonyms:update": "node scripts/updateSynonyms.cjs"
   },
   "dependencies": {
     "@fontsource/poppins": "^5.2.5",

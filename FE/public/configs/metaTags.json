@@ -93,7 +93,7 @@
       },
       {
         "name": "description",
-        "content": "%%search%% %%situations%% %%responses%% %%by%% %%location%%"
+        "content": "%%situations%% %%responses%% %%by%% %%serviceName%% %%location%%"
       },
       {
         "name": "robots",
