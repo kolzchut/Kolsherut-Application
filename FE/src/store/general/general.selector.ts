@@ -14,8 +14,8 @@ export const getPage = createSelector([generalStore], (generalStore: GeneralStor
             if (!generalStore.cardId) return 'home';
             return 'card';
         }
-        case 'sitemap':
-            return 'sitemap';
+        case 'map':
+            return 'map';
         default:
             return 'home'
     }

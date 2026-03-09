@@ -5,7 +5,7 @@ import resultsWithContext from "./results/context/resultsWithContext";
 
 const pages = {
     home,
-    sitemap:home,
+    map:home,
     card,
     results: resultsWithContext,
     maintenance,

@@ -29,8 +29,8 @@ function App() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (page === "sitemap") {
-            dispatch(setModal("SiteMap"));
+        if (page === "map") {
+            dispatch(setModal("map"));
         }
     }, [page, dispatch]);
 

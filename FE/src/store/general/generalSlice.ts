@@ -23,8 +23,8 @@ export const generalSlice = createSlice({
         },
         setModal(state: GeneralStore, action) {
             state.modal = action.payload;
-            if (action.payload && action.payload.toLowerCase() === "sitemap")
-                state.page = 'sitemap';
+            if (action.payload && action.payload.toLowerCase() === "map")
+                state.page = 'map';
         },
         setShowSidebar(state: GeneralStore, action) {
             state.showSidebar = action.payload;

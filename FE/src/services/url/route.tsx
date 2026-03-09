@@ -19,8 +19,8 @@ export const getRouteParams = (): UrlParams => {
 
     if (routeBy) searchParams.by = routeBy.replace('by-', '');
     if (routeBsnf) searchParams.bsnf = routeBsnf.replace('bsnf-', '');
-    if (pathParts[1] === 'sitemap') return {
-        p: 'sitemap',
+    if (pathParts[1] === 'map') return {
+        p: 'map',
     }
 
     if (pathParts[2] === 'card') return {
@@ -49,7 +49,7 @@ export const buildUrl = (params: UrlParams) => {
     const hash = window.location.hash;
     const routeParams = {...params};
     if (!routeParams.p) return base + hash;
-    if (routeParams.p === 'sitemap') return `${base}/sitemap${hash}`
+    if (routeParams.p === 'map') return `${base}/map${hash}`
     if (routeParams.p === 'card' && routeParams.c) return `${base}/p/card/c/${routeParams.c}${hash}`;
 
     const categories = [];
