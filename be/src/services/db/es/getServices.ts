@@ -11,13 +11,12 @@ const extractServices = (hits: any[], seen: Map<string, ServiceFields>) => {
     for (const hit of hits) {
         const src = (hit as any)._source;
         const name = src.service_name;
-        if (name && !seen.has(name)) {
-            seen.set(name, {
-                service_name: name,
-                service_id: src.service_id,
-                last_modified: src.airtable_last_modified
-            });
-        }
+        if (!name || seen.has(name)) return;
+        seen.set(name, {
+            service_name: name,
+            service_id: src.service_id,
+            last_modified: src.airtable_last_modified
+        });
     }
 };
 
