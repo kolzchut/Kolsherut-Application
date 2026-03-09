@@ -12,14 +12,13 @@ const extractOrganizations = (hits: any[], seen: Map<string, OrganizationFields>
     for (const hit of hits) {
         const src = (hit as any)._source;
         const name = src.organization_short_name || src.organization_name;
-        if (name && !seen.has(name)) {
-            seen.set(name, {
-                organization_id: src.organization_id,
-                organization_short_name: src.organization_short_name,
-                organization_name: src.organization_name,
-                last_modified: src.airtable_last_modified
-            });
-        }
+        if (!name || seen.has(name)) return;
+        seen.set(name, {
+            organization_id: src.organization_id,
+            organization_short_name: src.organization_short_name,
+            organization_name: src.organization_name,
+            last_modified: src.airtable_last_modified
+        });
     }
 };
 
