@@ -1,6 +1,6 @@
 import loadConfig from './loadConfig';
-import ReactDOM from 'react-dom/client'; // Import hydrateRoot is usually implicit, but good to check
-import {hydrateRoot} from 'react-dom/client'; // <--- ADD THIS
+import ReactDOM from 'react-dom/client';
+import {hydrateRoot} from 'react-dom/client';
 import React from "react";
 import {store} from "../store/store";
 import {setRouteParams} from "../store/general/generalSlice";

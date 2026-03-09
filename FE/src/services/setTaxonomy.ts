@@ -41,5 +41,5 @@ export default async () => {
 
     const responses = [...flattenData(rawResponses), ...flattenData(rawPlaces)];
     const situations =flattenData(rawSituations);
-    store.dispatch(setTaxonomy({ responses, situations }));
+    store.dispatch( setTaxonomy({ responses, situations }));
 };
