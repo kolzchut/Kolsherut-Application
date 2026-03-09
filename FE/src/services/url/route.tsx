@@ -64,7 +64,6 @@ export const buildUrl = (params: UrlParams) => {
         delete routeParams.bsnf;
     }
     const category = categories.join('/');
-
     delete routeParams.p;
     delete routeParams.c;
     delete routeParams.bsf;

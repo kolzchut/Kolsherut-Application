@@ -31,6 +31,7 @@ const updateAllResults = async ({startResults, restResults}: {
 
 const settingFilters = ({removeOldFilters, value}: {removeOldFilters:boolean,value:ILabel})=>{
     store.dispatch(setBackendFilters({response: value.response_id, situation: value.situation_id, by: value.by, serviceName: value.serviceName}));
+    if (value.query) store.dispatch(setSearchQuery(value.query));
     store.dispatch(setPage('results'))
     const filters: {location?: {key: string, bounds: [number,number,number,number]}} = {}
     if(value.cityName && value.bounds) filters.location = {key: value.cityName, bounds: value.bounds};
