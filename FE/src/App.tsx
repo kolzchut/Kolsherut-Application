@@ -17,7 +17,6 @@ function App() {
     const Page = pages[page];
     const modal = useSelector(getModal);
     const [isMobile, setIsMobile] = useState(false);
-
     useEffect(() => {
         setIsMobile(isMobileScreen());
     }, []);
