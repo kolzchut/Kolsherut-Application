@@ -2762,7 +2762,6 @@
 "/p/results/sq/%D7%9E%D7%A9%D7%A4%D7%97%D7%95%D7%AA%20%D7%A9%D7%91%D7%A8%D7%90%D7%A9%D7%9F%20%D7%94%D7%95%D7%A8%D7%94%20%D7%A2%D7%A6%D7%9E%D7%90%D7%99/bsf/human_situations:household:families:single_parent" "/single_parent";
 "/p/results/sq/%D7%9E%D7%A9%D7%A4%D7%97%D7%95%D7%AA%20%D7%A9%D7%9B%D7%95%D7%9C%D7%95%D7%AA/lf/%D7%9B%D7%9C%20%D7%94%D7%90%D7%A8%D7%A5|34.2,29.5,35.6,33.3/brf/human_services:internal_emergency_services/bsf/human_situations:armed_forces:bereaved_families" "/bereaved_families/internal_emergency_services";
 "/p/results/sq/%D7%9E%D7%A9%D7%A4%D7%98%D7%99%20%D7%A0%D7%9B%D7%99%20%D7%A6%D7%94\"%D7%9C/bsf/human_situations:armed_forces:injured_while_on_duty/brf/human_services:legal" "/injured_while_on_duty/legal";
-"/p/results/sq/%D7%A0%D7%9B%D7%99_%D7%A6%D7%94_%D7%9C/lf/%D7%9B%D7%9C+%D7%94%D7%90%D7%A8%D7%A5|34.2,29.5,35.6,33.3/bsf/human_situations:armed_forces:injured_while_on_duty" "/injured_while_on_duty";
 "/p/results/sq/%D7%A1%D7%99%D7%95%D7%A2_%D7%9B%D7%9C%D7%9B%D7%9C%D7%99_%D7%A2%D7%91%D7%95%D7%A8_%D7%9E%D7%A9%D7%A4%D7%97%D7%95%D7%AA_%D7%A9%D7%91%D7%A8%D7%90%D7%A9%D7%9F_%D7%94%D7%95%D7%A8%D7%94_%D7%A2%D7%A6%D7%9E%D7%90%D7%99/lf/%D7%9B%D7%9C%20%D7%94%D7%90%D7%A8%D7%A5|34.2,29.5,35.6,33.3/brf/human_services:money/bsf/human_situations:household:families:single_parent" "/single_parent/money";
 "/p/results/sq/%D7%A1%D7%99%D7%95%D7%A2_%D7%9E%D7%A9%D7%A4%D7%98%D7%99_%D7%9E%D7%92%D7%93%D7%A8/bsf/human_situations:gender/brf/human_services:legal:advocacy_legal_aid" "/gender/advocacy_legal_aid";
 "/p/results/sq/%D7%A1%D7%99%D7%95%D7%A2%20%D7%B9%D7%A1%D7%A4%D7%99%20%D7%91%D7%97%D7%99%D7%A8%D7%95%D7%9D%20%D7%9E%D7%A9%D7%A8%D7%AA%D7%99%20%D7%9E%D7%99%D7%9C%D7%95%D7%90%D7%99%D7%9D/bsf/human_situations:armed_forces:reserves/brf/human_services:emergency:financial_aid_in_emergencies" "/reserves/financial_aid_in_emergencies";
@@ -2808,7 +2807,6 @@
 "/s/%D7%9E%D7%AA%D7%9E%D7%95%D7%93%D7%93%D7%99_%D7%A0%D7%A4%D7%A9?fr=housing" "/mental_illness";
 "/s/_?q=%D7%A1%D7%9C_%D7%A9%D7%99%D7%A7%D7%95%D7%9D_%D7%9C%D7%9E%D7%AA%D7%9E%D7%95%D7%93%D7%93%D7%99_%D7%A0%D7%A4%D7%A9" "/rehabilitation_basket";
 "/s/%D7%A0%D7%A4%D7%92%D7%A2%D7%95%D7%AA_%D7%90%D7%9C%D7%99%D7%9E%D7%95%D7%AA_%D7%91%D7%9E%D7%A9%D7%A4%D7%97%D7%94?fr=housing" "/domestic_violence_survivors";
-"/s/%D7%90%D7%95%D7%98%D7%99%D7%A1%D7%98%D7%99%D7%9D" "/autistic_spectrum";
 "/s/%D7%9E%D7%99%D7%A6%D7%95%D7%99_%D7%96%D7%9B%D7%95%D7%99%D7%95%D7%AA" "/understand_government_programs";
 "/s/%D7%94%D7%AA%D7%9E%D7%9B%D7%A8%D7%95%D7%99%D7%95%D7%AA?q=%D7%94%D7%AA%D7%9E%D7%9B%D7%A8%D7%95%D7%99%D7%95%D7%AA" "/substance_dependency";
 "/p/results/sq/%D7%A6%D7%94%D7%A8%D7%95%D7%9F%20%D7%9C%D7%99%D7%9C%D7%93%D7%99%20%D7%92%D7%9F/bsnf/%D7%A6%D7%94%D7%A8%D7%95%D7%9F%20%D7%9C%D7%99%D7%9C%D7%93%D7%99%20%D7%92%D7%9F" "/children/afterschool_care";
