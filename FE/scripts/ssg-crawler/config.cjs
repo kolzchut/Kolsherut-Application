@@ -19,7 +19,7 @@ module.exports = {
     DIST_DIR: path.join(__dirname, '../../dist'),
     TARGET_DOMAIN: TARGET_DOMAIN,
     LOCAL_BASE_URL: `http://127.0.0.1:3000`,
-    MAX_PAGES: 250,
+    MAX_PAGES: 25000,
     MAX_CONCURRENCY: 5,
     MAX_RETRIES: 3,
     ALLOWED_DOMAINS: [
