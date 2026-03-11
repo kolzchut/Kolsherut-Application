@@ -27,6 +27,19 @@ export default createUseStyles((theme: IDynamicThemeApp) => ({
         width: 'auto',
         '&:hover': {
             cursor: 'pointer',
+        },
+        '@media (max-width: 768px)': {
+            display: 'none',
+        }
+    },
+    hamburgerIcon: {
+        display: 'none',
+        '@media (max-width: 768px)': {
+            display: 'block',
+            flexShrink: 0,
+            height: 30,
+            width: 30,
+            cursor: 'pointer',
         }
     },
     linksAndAcc: {
@@ -45,6 +58,9 @@ export default createUseStyles((theme: IDynamicThemeApp) => ({
         justifyContent: 'space-between',
         flex:8,
         maxWidth: 500,
+        '@media (max-width: 768px)': {
+            display: 'none',
+        }
     },
     link: {
         lineHeight: 4,
