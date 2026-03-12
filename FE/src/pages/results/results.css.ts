@@ -18,7 +18,6 @@ export default createUseStyles({
         direction: "rtl",
         "@media (max-width: 768px)": {
             flexDirection: 'column',
-            height: 'fit-content',
         }
     },
     resultsContainer: {
