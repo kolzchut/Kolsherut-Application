@@ -30,6 +30,18 @@ let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sit
 data.forEach(group => {
     if (!group.labels) return;
 
+    // Generate group-level link from group's situation_id / response_id
+    const groupCategories = [];
+    if (group.situation_id) groupCategories.push(group.situation_id.split(':').slice(-1)[0]);
+    if (group.response_id) groupCategories.push(group.response_id.split(':').slice(-1)[0]);
+    if (groupCategories.length > 0) {
+        const groupRawUrl = `${baseUrl.replace(/\/$/, '')}/${groupCategories.join('/')}`;
+        const groupLoc = xmlEscape(groupRawUrl);
+        xml += `  <url>\n`;
+        xml += `    <loc>${groupLoc}</loc>\n`;
+        xml += `  </url>\n`;
+    }
+
     group.labels.forEach(label => {
         const categories = [];
         if (label.situation_id) categories.push(label.situation_id.split(':').slice(-1)[0]);
