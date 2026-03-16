@@ -3,10 +3,11 @@ import yaml from "js-yaml";
 import { store } from "../store/store";
 import { setTaxonomy } from "../store/data/dataSlice";
 import { FlatNode, InputNode } from "../types/taxonomy";
+import logger from "./logger/logger";
 
 const buildNode = (node: InputNode): FlatNode => ({
-    slug: node.slug.replace('human_places','human_services:place'),
-    subSlug: node.slug.split(':').slice(-1)[0],
+    slug: (node.slug ?? '').replace('human_places','human_services:place'),
+    subSlug: (node.slug ?? '').split(':').slice(-1)[0],
     en: node.name?.source,
     he: node.name?.tx?.he || node.name?.source
 });
@@ -16,7 +17,7 @@ const flattenData = (data: InputNode): FlatNode[] => {
 
     const recursiveFlatten = (node: InputNode) => {
         if (!node) return;
-        result.push(buildNode(node));
+        if (node.slug) result.push(buildNode(node));
         if (!node.items || !Array.isArray(node.items)) return;
         for (const item of node.items) {
             recursiveFlatten(item);
@@ -30,6 +31,10 @@ const flattenData = (data: InputNode): FlatNode[] => {
 };
 
 export default async () => {
+    if (!window.config?.taxonomyUrl) {
+        logger.error({message: 'taxonomyUrl is not configured — skipping taxonomy load'});
+        return;
+    }
     const response = await axios.get(window.config.taxonomyUrl);
     const yamlText = response.data;
 

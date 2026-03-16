@@ -10,7 +10,7 @@ const OptionalSearch = () => {
     const [optionalSearchValues, setOptionalSearchValues] = useState<Array<IGroup>>([]);
     const rootRef = useRef<HTMLDivElement>(null);
     const widthOfRoot = useElementWidth(rootRef);
-    const itemsInRow = widthOfRoot / 350;
+    const itemsInRow = Math.max(widthOfRoot / 350, 1);
     const heightPerItem = 210;
     const minHeight = Math.ceil(optionalSearchValues.length / itemsInRow) * heightPerItem;
     const classes = useStyle({minHeight});
