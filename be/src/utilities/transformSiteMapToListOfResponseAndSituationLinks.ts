@@ -11,12 +11,12 @@ const transformSiteMapToListOfResponseAndSituationLinks = ({responses, situation
 
     const responseUrls = responses.map(response => ({
         name: response.query || response.slug,
-        link: `${vars.serverSetups.origin}/${encodeURI(extractSubSlug(response.slug))}`
+        link: `${vars.serverSetups.canonicalOrigin}/${encodeURI(extractSubSlug(response.slug))}`
     }));
 
     const situationsUrls = situations.map(situation => ({
         name: situation.query || situation.slug,
-        link: `${vars.serverSetups.origin}/${encodeURI(extractSubSlug(situation.slug))}`
+        link: `${vars.serverSetups.canonicalOrigin}/${encodeURI(extractSubSlug(situation.slug))}`
     }));
 
     return {

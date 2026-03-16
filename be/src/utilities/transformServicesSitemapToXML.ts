@@ -3,7 +3,7 @@ import escapeXML from "./escapeXML";
 import { ServiceFields } from "../services/db/es/getServices";
 
 const buildServiceUrlXML = (service: ServiceFields) => {
-    const loc = `${vars.serverSetups.origin}/bsnf-${encodeURI(service.service_name)}`;
+    const loc = `${vars.serverSetups.canonicalOrigin}/bsnf-${encodeURI(service.service_name)}`;
     return `<url>
     <loc>${escapeXML(loc)}</loc>
 </url>`;

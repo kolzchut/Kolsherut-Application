@@ -21,7 +21,7 @@ const minimumDate = ({minimum, compareTo}: {minimum: string; compareTo: string})
 }
 
 const buildCardXML = (card: { card_id: string; service_boost: number; last_modified: string }) => {
-    const loc = `${vars.serverSetups.origin}/p/card/c/${encodeURI(card.card_id)}`;
+    const loc = `${vars.serverSetups.canonicalOrigin}/p/card/c/${encodeURI(card.card_id)}`;
     const date = minimumDate({minimum: vars.sitemap.minimumLastModifiedForCards, compareTo: card.last_modified});
     return buildUrlXML(loc,date);
 };

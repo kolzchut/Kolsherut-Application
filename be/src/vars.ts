@@ -18,6 +18,7 @@ const indices :any = {
 export default {
     serverSetups: {
         origin: process.env.ORIGIN && process.env.ORIGIN.includes(',') ? process.env.ORIGIN.split(',').map(o => o.trim()) : (process.env.ORIGIN || '*'),
+        canonicalOrigin: process.env.ORIGIN ? process.env.ORIGIN.split(',')[0].trim() : 'https://kolsherut.org.il',
         environment: process.env.ENV || 'local',
         port: process.env.PORT || 5000,
         elastic: {

@@ -11,7 +11,7 @@ interface RecursiveTaxonomyToXMLParams {
 const extractSubSlug = (slug: string): string => slug.split(':').slice(-1)[0];
 
 const transformSlugToURL = (slug: string): string => {
-    return `${vars.serverSetups.origin}/${encodeURI(extractSubSlug(slug))}`;
+    return `${vars.serverSetups.canonicalOrigin}/${encodeURI(extractSubSlug(slug))}`;
 }
 
 

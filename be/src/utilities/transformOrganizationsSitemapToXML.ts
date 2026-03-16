@@ -4,7 +4,7 @@ import { OrganizationFields } from "../services/db/es/getOrganizations";
 
 const buildOrganizationUrlXML = (org: OrganizationFields) => {
     const name = org.organization_short_name || org.organization_name;
-    const loc = `${vars.serverSetups.origin}/by-${encodeURI(name)}`;
+    const loc = `${vars.serverSetups.canonicalOrigin}/by-${encodeURI(name)}`;
     return `<url>
     <loc>${escapeXML(loc)}</loc>
 </url>`;
