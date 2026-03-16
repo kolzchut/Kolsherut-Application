@@ -1,6 +1,7 @@
 import {sendEmail} from "../services/email/emailService";
 import vars from "../vars";
 import logger from "../services/logger/logger";
+import {getAndResetRequestCountsSummary} from "./requestCounter"; // TEMP — request counter
 
 const globals: {
     lastEmailSentAt: number, emailInterval: number,
@@ -17,6 +18,10 @@ let interval: NodeJS.Timeout | null = null;
 const startInterval = () => {
     if (interval) clearInterval(interval);
     interval = setInterval(() => {
+        // ===== TEMP — push hourly request counts to stack =====
+        const requestCountsSummary = getAndResetRequestCountsSummary();
+        if (requestCountsSummary) globals.stack.push(requestCountsSummary);
+        // ======================================================
         if (!globals.stack.length) return;
         sendTimedEmails({hasError:false}).catch(e =>
             logger.error({service: "sendTimedEmails", message: "Interval email failed", payload: e})

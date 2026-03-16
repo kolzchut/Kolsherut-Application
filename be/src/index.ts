@@ -15,6 +15,7 @@ import ssrRoute from "./routes/ssrRoute";
 import {initEmailService} from "./services/email/emailService";
 import {closeBrowser} from "./services/ssr/ssrService";
 import {sanitizeCardRoute} from "./utilities/sanitizeRoutes";
+import {incrementRequestCount} from "./utilities/requestCounter"; // TEMP — request counter
 
 const app = express();
 const httpServer = createServer(app);
@@ -23,6 +24,10 @@ const {port, environment, origin} = vars.serverSetups;
 
 app.use(express.json());
 app.use(cors({origin}));
+
+// ===== TEMP — count every incoming request per hour =====
+app.use((req, res, next) => { incrementRequestCount(); next(); });
+// =========================================================
 
 app.get('/test', (req: Request, res: Response) => {
     res.status(200).json({message:'Server is running 🍍☺', success: true});
