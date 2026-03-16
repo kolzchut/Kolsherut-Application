@@ -9,7 +9,7 @@ def configs():
     GITHUB_TOKEN = os.getenv("KZ_KOLSHERUT_APPLICATION_GITHUB_TOKEN")
     REPO_OWNER = "kolzchut"
     REPO_NAME = "Kolsherut-Application"
-    WORKFLOW_FILENAME = "fe-release.yml"
+    WORKFLOW_FILENAME = "fe-ACR.yml"
 
     API_BASE = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}"
     headers = {
