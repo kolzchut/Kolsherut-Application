@@ -29,11 +29,24 @@ function filterAllowedRoutes(urls, routesSet) {
 }
 
 async function processSubSitemap(filename, routesSet) {
-    const localUrl = `${LOCAL_BASE_URL}/${filename}`;
+    const localUrl = `${LOCAL_BASE_URL}/sitemap/${filename}`;
     const remoteUrl = `${TARGET_DOMAIN.replace(/\/$/, '')}/sitemap/${filename}`;
 
-    let xml = await fetchXml(localUrl) || await fetchXml(remoteUrl);
-    if (xml) filterAllowedRoutes(extractTags(xml, 'loc'), routesSet);
+    const sizeBefore = routesSet.size;
+    let source = 'local';
+    let xml = await fetchXml(localUrl);
+    if (!xml) {
+        source = 'remote';
+        xml = await fetchXml(remoteUrl, { timeout: 120000 });
+    }
+    if (xml) {
+        const locs = extractTags(xml, 'loc');
+        filterAllowedRoutes(locs, routesSet);
+        const added = routesSet.size - sizeBefore;
+        console.log(`   📄 ${filename}: ${locs.length} URLs in XML, ${added} new routes added (${source})`);
+    } else {
+        console.log(`   ❌ ${filename}: FAILED to fetch from both local and remote!`);
+    }
 }
 
 async function getRoutesToCrawl() {

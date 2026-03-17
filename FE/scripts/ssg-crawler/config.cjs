@@ -26,8 +26,9 @@ module.exports = {
         TARGET_DOMAIN,
         'www.kolsherut.org.il',
         'kolsherut.org.il',
-        'api.kolsherut.org.il',
-        'srm-staging.whiletrue.industries',
+        'be.kolsherut.org.il',
+        'be-dev.kolsherut.org.il',
+        'be-staging.kolsherut.org.il'
     ],
-    PROXIED_PATTERNS: ['whiletrue.industries', 'api.kolsherut']
+    PROXIED_PATTERNS: ['be-dev.kolsherut', 'be.kolsherut', 'be-staging.kolsherut']
 };
