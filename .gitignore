@@ -176,3 +176,5 @@ ignore/
 
 /ETL/data/data
 /ETL/data/logs
+.planning/
+_analysis_temp/
