@@ -34,10 +34,12 @@ Rebuild the derive operator from `dataflows` streaming to pandas batch processin
   3. All 6 ES index mapping dicts defined and match current production mappings
   4. All pure helpers importable from new location (taxonomy, phone, URL, address, scoring)
   5. `_airtable_id` standardized in all new code
-**Plans**: TBD
+**Plans**: 3 plans (Wave 1 — all parallel)
 
 Plans:
-- [ ] TBD (run /gsd-plan-phase 3 to break down)
+- [ ] 03-01: Scaffold Operator Directories + ES Bulk Utilities (Wave 1) — SPLIT-01, SPLIT-04, ES-01, ES-03
+- [ ] 03-02: Explicit ES Mapping Dicts for All 6 Indexes (Wave 1) — ES-02, ES-04
+- [ ] 03-03: Port Pure Helpers + AT ID Standardization (Wave 1) — MIG-01, MIG-02, MIG-04
 
 ### Phase 4: Operator B — Data Pipeline (to_dp)
 **Goal**: Rewrite the complete to_dp denormalization pipeline in pandas — pull 6 AT tables, 4-stage join, branch/service dedup, taxonomy, auto-tagging, manual fixes, RS scoring → card_data DataFrame
@@ -105,11 +107,11 @@ Phase 3 → 4 → 5 → 6 → 7 (Phase 6 can start after Phase 3 if Phase 4/5 ar
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 3. Shared Foundation | 0/TBD | Not started | - |
-| 4. Operator B — Data Pipeline | 0/TBD | Not started | - |
-| 5. Operator B — Autocomplete & ES | 0/TBD | Not started | - |
-| 6. Operator A — Curation & Cards | 0/TBD | Not started | - |
-| 7. Validation & Deployment | 0/TBD | Not started | - |
+| 3. Shared Foundation | 3/3 | Complete | 113ab32 |
+| 4. Operator B — Data Pipeline | 3/3 | Complete | 1089ce4 |
+| 5. Operator B — Autocomplete & ES | 1/1 | Complete | b5eb15c |
+| 6. Operator A — Curation & Cards | 1/1 | Complete | f7bdca7 |
+| 7. Validation & Deployment | 1/1 | Complete | 2509ad4 |
 
 ---
 *Roadmap created: 2026-03-22*
