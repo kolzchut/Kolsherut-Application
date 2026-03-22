@@ -526,13 +526,107 @@ The autocomplete output is later loaded by `to_es.py` (Stage 4) for indexing int
 
 ## Stage 4: to_es — Elasticsearch Loading
 
-<!-- TODO: Fill in Plan 04 -->
+Loads transformed data into 6 Elasticsearch indexes: **cards, places, responses, situations, organizations, autocomplete**. Applies scoring, field typing, and manages index versioning (load new data, then delete old revision documents).
+
+**`operator()` entry** — cleanup then execute:
+
+```python
+def operator():
+    shutil.rmtree('.checkpoints/to_es', ...)
+    for subdir in ('place_data', 'response_data', 'situation_data'):
+        shutil.rmtree(f'{DATA_DUMP_DIR}/{subdir}', ...)
+    data_api_es_flow()              # Cards → ES
+    load_locations_to_es_flow()     # Places → ES
+    load_responses_to_es_flow()     # Responses → ES
+    load_situations_to_es_flow()    # Situations → ES
+    load_organizations_to_es_flow() # Organizations → ES
+    load_autocomplete_to_es_flow()  # Autocomplete → ES
+```
+
+```mermaid
+graph TD
+    CD["data/card_data/"] --> CARDS["srm__cards ES index"]
+    CD --> PLACES["srm__places ES index"]
+    CD --> RESP["srm__responses ES index"]
+    CD --> SIT["srm__situations ES index"]
+    CD --> ORGS["srm__orgs ES index"]
+    AC["data/autocomplete/"] --> AUTO["srm__autocomplete ES index"]
+```
+
+### Sub-flows in to_es.py:
+
+**a. `data_api_es_flow()` — primary card loading:**
+1. `DF.load('data/card_data/datapackage.json')` — load enriched card data
+2. `DF.add_field('score', 'number', card_score)` — compute card relevance score (factors: meser prefix, description, national service, branch count, org kind, boost)
+3. `DF.add_field('airtable_last_modified', 'datetime', ...)` — compute latest modification date
+4. `DF.set_type(...)` × 18 — apply `es:*` type hints from `es_schemas.py` (taxonomy items, URLs, keyword strings, non-indexed strings)
+5. `dump_to_es_and_delete(indexes=dict(srm__cards=[...]))` — bulk index into ES, then delete old-revision documents
+6. `DF.checkpoint('to_es/data_api_es_flow')` — cache cards after ES loading
+
+**b. `load_locations_to_es_flow()` — places with bounds:**
+1. Download location bounds from external URL (zip file)
+2. Add predefined regions (Gush Dan, Jerusalem area, North, Beer Sheva area)
+3. `DF.concatenate(...)` — merge all place records
+4. `DF.add_field('score', ...)` — compute score based on area size × place type weight
+5. `DF.dump_to_path('data/place_data')` — cache to disk
+6. `dump_to_es_and_delete(indexes=dict(srm__places=[...]))` — load into ES
+
+**c. `load_responses_to_es_flow()` — response taxonomy with card counts:**
+1. Load card_data, expand response_ids with parents, count cards per response
+2. Load responses from Airtable, join counts onto taxonomy
+3. Filter: active and has cards
+4. `DF.dump_to_path('data/response_data')` — cache to disk
+5. `dump_to_es_and_delete(indexes=dict(srm__responses=[...]))` — load into ES
+
+**d. `load_situations_to_es_flow()` — situation taxonomy with card counts:**
+Same pattern as responses — counts cards per situation, loads into ES.
+
+**e. `load_organizations_to_es_flow()` — organization records:**
+1. Load srm_data/organizations + card_data
+2. `DF.join_with_self('card_data', ['organization_id'], ...)` — count cards per org
+3. Join org details, sort by count
+4. `dump_to_es_and_delete(indexes=dict(srm__orgs=[...]))` — load into ES
+
+**f. `load_autocomplete_to_es_flow()` — autocomplete suggestions:**
+1. `DF.load('data/autocomplete/datapackage.json')` — load from Stage 3
+2. `dump_to_es_and_delete(indexes=dict(srm__autocomplete=[...]))` — load into ES
+
+### Key pattern: `dump_to_es_and_delete`
+
+The revision-based atomic swap pattern from `es_utils.py`:
+
+1. Generate a unique `revision` UUID for this run
+2. `DF.add_field('revision', ...)` — tag every record with the revision ID
+3. `dump_to_es(...)` — bulk index all records into ES
+4. `DF.finalizer(deleter)` — after all resources are consumed, query ES for documents with an older revision and delete them via `delete_by_query`
+
+This provides atomic-swap-like behavior without downtime — new data is visible immediately, old data is cleaned up after a 30-second delay.
+
+**Cache locations in to_es (4 persistence points):**
+- `.checkpoints/to_es/data_api_es_flow/` — checkpoint (NDJSON)
+- `data/place_data/` — dump_to_path
+- `data/response_data/` — dump_to_path
+- `data/situation_data/` — dump_to_path
 
 ---
 
 ## Stage 5: to_sql — Airtable Card Upload
 
-<!-- TODO: Fill in Plan 04 -->
+> ⚠️ **Misleading module name**: `to_sql.py` does NOT write to a SQL database. The original SQL functionality is commented out. The active function `cards_to_at_flow()` writes to Airtable. This is legacy naming that hasn't been updated.
+
+Writes a small subset of card data back to the Airtable Cards table for use in the curation interface.
+
+**Active function — `cards_to_at_flow()`:**
+
+1. `DF.load('data/card_data/datapackage.json')` — load card data from Stage 2
+2. `DF.add_field('data', 'object', ...)` — select a small subset of fields: `organization_id`, `service_id`, `branch_id`, `situation_ids`, `response_ids`, `service_boost`, `organization_branch_count`, `branch_location_accurate`
+3. `DF.add_field('id', 'string', lambda r: r.get('card_id'))` — use card_id as the record ID
+4. `DF.select_fields(['id', 'data'])` — keep only id + data object
+5. `airtable_updater(CARDS_TABLE, 'card', FIELDS, flow, update_mapper())` — diff against existing Cards table and write only changed records
+
+**Dead code:** `dump_to_sql_flow()` and a commented-out `relational_sql_flow()` exist in the file but are not called. These were previous output targets that have been replaced by the Airtable upload pattern.
+
+**No separate cache:** This stage does not create any `dump_to_path` or `checkpoint` — it reads directly from `data/card_data/` and writes to Airtable.
 
 ---
 
@@ -540,23 +634,107 @@ The autocomplete output is later loaded by `to_es.py` (Stage 4) for indexing int
 
 ### helpers.py — Shared Preprocessing Flows
 
-<!-- TODO: Fill in Plan 04 -->
+389 lines of shared preprocessing flows and utility functions used across multiple stages.
+
+**Preprocessing flows** — each returns a list of `DF.*` steps that get unpacked into the calling Flow with `*preprocess_services()` syntax. These are NOT standalone Flows — they are step lists composed into the parent Flow:
+
+| Function | Purpose |
+|----------|--------|
+| `preprocess_responses(validate)` | Cleans response records, extracts taxonomy fields (id, name, synonyms, breadcrumbs) |
+| `preprocess_situations(validate)` | Cleans situation records, extracts taxonomy fields |
+| `preprocess_services(validate)` | Cleans service records, normalizes fields, extracts situation/response ID arrays |
+| `preprocess_organizations(validate)` | Cleans org records, normalizes org names via `clean_org_name` |
+| `preprocess_branches(validate)` | Cleans branch records, extracts location references |
+| `preprocess_locations(validate)` | Cleans location records, extracts geocoding data (geometry, resolved_city) |
+
+**Key utility functions:**
+
+- **`address_parts(row)`** — split address into `primary` (street + number) and `secondary` (city) for ES faceting
+- **`org_name_parts(row)`** — split organization names into `primary` and `secondary` parts for autocomplete
+- **`update_taxonomy_with_parents(ids)`** — given a list of taxonomy IDs, expand each to include all parent IDs up to the root (e.g., `human_situations:health:cancer` → also adds `human_situations:health` and `human_situations`)
+- **`validate_address(v)`** — check that an address string is non-empty and contains Hebrew characters
+- **`validate_geometry(geom)`** — check that a geometry point is valid (non-null, within Israel's bounding box)
+- **`calculate_branch_short_name(row)`** — derive a short display name for branches
+- **`calc_point_id(geometry)`** — create a deterministic string ID from geo coordinates
+- **`most_common_category(row)`** — find the most frequent response category across a card's responses
+- **`get_stats()`** — returns a shared `Stats` instance for recording processing statistics
 
 ### autotagging.py — Auto-tagging Rules
 
-<!-- TODO: Fill in Plan 04 -->
+~80 lines. Loads keyword-based tagging rules from the Airtable "Auto Tagging" table in the data entry base.
+
+For each rule: if the organization name, organization purpose, or service name **ends with** or **contains** a specified query string, the corresponding situation and/or response taxonomy IDs are appended to the record.
+
+Each rule is a row from Airtable with fields:
+- `Query` — the search string to match against
+- `In Org Name` / `In Org Purpose` / `In Service Name` — which fields to search
+- `situation_ids` — situation taxonomy IDs to add on match
+- `response_ids` — response taxonomy IDs to add on match
+
+The matching logic: `value.endswith(query) or (query + ' ') in value` — this ensures partial matches like "סרטן" match "האגודה למלחמה בסרטן" but not "סרטןי".
+
+Called within `card_data_flow()` in `to_dp.py` (step 11, before the `to_dp` checkpoint). Adds matched IDs to an `auto_tagged` field so the RS scorer can discount auto-tagged taxonomy pairs.
 
 ### es_schemas.py — ES Field Schema Constants
 
-<!-- TODO: Fill in Plan 04 -->
+~55 lines. Defines `es:*` type hint constants used by `dataflows_elasticsearch` to generate Elasticsearch field mappings.
+
+**Key type hint constants:**
+
+| Constant | ES Behavior |
+|----------|------------|
+| `KEYWORD_ONLY` (`es:keyword: True`) | Exact match field, no analysis |
+| `KEYWORD_STRING` (`es:itemType: string, es:keyword: True`) | Array of exact-match strings |
+| `ITEM_TYPE_STRING` (`es:itemType: string`) | Array of analyzed text strings |
+| `ITEM_TYPE_NUMBER` (`es:itemType: number`) | Array of numeric values |
+| `NON_INDEXED_STRING` (`es:itemType: string, es:index: False`) | Stored but not searchable |
+| `URL_SCHEMA` | Nested object with `href` + `text` fields, not indexed |
+| `TAXONOMY_ITEM_SCHEMA` | Nested object with `id` (keyword) + `name` (title) + `synonyms` (title) |
+| `ADDRESS_PARTS_SCHEMA` | Object with `primary` (keyword + text) + `secondary` (text) |
+| `LAST_MODIFIED_DATE` | Date field with flexible format |
+
+These constants are applied via `DF.set_type(field, **SCHEMA)` calls in `to_es.py` before loading data into ES. The `SRMMappingGenerator` in `es_utils.py` interprets these hints to add Hebrew analyzer fields where appropriate.
 
 ### es_utils.py — ES Connection and Loading
 
-<!-- TODO: Fill in Plan 04 -->
+~95 lines. Creates the Elasticsearch client connection and provides the custom mapping generator and bulk loading function.
+
+**`es_instance()`** — creates an `elasticsearch.Elasticsearch` client with retry logic (429, 502, 503, 504 retries), 60s timeout, and optional HTTP auth from settings.
+
+**`SRMMappingGenerator`** — extends the default `dataflows-elasticsearch` `MappingGenerator` to:
+- Add Hebrew analyzer configuration for text fields (using ICU tokenizer + ICU folding)
+- Auto-detect fields ending in `_name`, `_purpose`, `_description`, `_details`, `_synonyms`, `_heb` and add a `.hebrew` sub-field
+- Handle `es:keyword` → `keyword` type, `es:autocomplete` → `search_as_you_type` type
+- Force `index: True` for numeric and geopoint fields
+
+**`dump_to_es_and_delete(indexes, ...)`** — the core ES loading function:
+1. Generate a unique `revision` UUID
+2. `DF.add_field('revision', 'string', unique_id, es:keyword=True)` — tag every record
+3. `dump_to_es(**kwargs)` — bulk index using the custom `SRMMappingGenerator`
+4. `DF.delete_fields(['revision'])` — remove revision from downstream
+5. `DF.finalizer(deleter)` — after all resources consumed, wait 30s, then `delete_by_query` for documents with non-matching revision → atomic swap
+
+Used by `to_es.py` for all 6 ES indexes (cards, places, responses, situations, orgs, autocomplete).
 
 ### manual_fixes.py — Manual Fix Application
 
-<!-- TODO: Fill in Plan 04 -->
+~170 lines. Loads correction rules from the Airtable ManualFixes table and applies field-level overrides during data import.
+
+**`ManualFixes` class:**
+
+1. **`__init__()`** — loads all manual fix records from the ManualFixes table in the data import Airtable base. Keys them by Airtable record ID.
+
+2. **`apply_manual_fixes()`** — returns a `DF.Flow(func)` step that:
+   - For each row, checks its `fixes` field (array of Airtable record IDs referencing ManualFixes)
+   - For each fix: reads `field`, `current_value`, `fixed_value` from the fix record
+   - If the row's actual value matches `current_value` (or `current_value` is `'*'`): apply the override
+   - Special handling for `responses` and `situations` fields: normalizes comma-separated ID lists before comparison
+   - Tracks fix status: marks each fix as `'Active'` (applied) or `'Obsolete'` (target value no longer matches)
+   - Falls back to reloading fixes without view filter if a referenced fix ID is not found
+
+3. **`finalize()`** — writes fix status (`Active`/`Obsolete`) back to the ManualFixes Airtable table in batches of 50
+
+Used only in Stage 1 (`from_curation.py`) — applied to Organizations, Branches, and Services during the curation copy.
 
 ---
 
@@ -568,4 +746,21 @@ The autocomplete output is later loaded by `to_es.py` (Stage 4) for indexing int
 
 ## External Dependencies Reference
 
-<!-- TODO: Fill in Plan 04 -->
+| Dependency | What It Provides |
+|------------|------------------|
+| `conf.settings` | All configuration: Airtable base IDs, table names, API keys, ES host/port, data dump directory, external API URLs. Loaded from environment variables via `dotenv`. |
+| `srm_tools.logger` | Python logging wrapper used throughout derive |
+| `srm_tools.processors` | `fetch_mapper` / `update_mapper` — helper processors for Airtable bulk update patterns |
+| `srm_tools.stats.Stats` | Load/update stats records in Airtable; `filter_with_stat` filters rows and records rejected count |
+| `srm_tools.stats.Report` | Collects rejected records for specific filters into a report |
+| `srm_tools.update_table.airtable_updater` | Bulk update flow for Airtable: loads existing records, diffs via hash, writes only changed records |
+| `srm_tools.hash.hasher` | SHA-1 based short hash for generating deterministic card IDs |
+| `srm_tools.unwind.unwind` | Array unwinding processor (one-to-many row expansion), similar to MongoDB's `$unwind` |
+| `srm_tools.data_cleaning.clean_org_name` | Organization name normalization |
+| `srm_tools.error_notifier.invoke_on` | Try/except wrapper that sends email notification on failure |
+| `dataflows_airtable` | `load_from_airtable` (Airtable source), `dump_to_airtable` (Airtable sink), `AIRTABLE_ID_FIELD` constant |
+| `dataflows_elasticsearch` | `dump_to_es` — Elasticsearch bulk index processor |
+| `dataflows_ckan` | `dump_to_ckan` — CKAN open data portal sink (referenced but not actively used in derive) |
+| `thefuzz` | Fuzzy string matching — used for branch deduplication (fuzz.ratio) and city name matching in autocomplete |
+
+Per decision D-06, these are surface-level references. To trace into any external dependency's source code, refer to the respective package documentation or source repository.
