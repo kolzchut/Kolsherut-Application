@@ -29,6 +29,8 @@
   - [RSScoreCalc — Side-Channel Flow](#rsscorecalc--side-channel-flow)
 - [Stage 3: autocomplete — Autocomplete Generation](#stage-3-autocomplete--autocomplete-generation)
 - [Stage 4: to_es — Elasticsearch Loading](#stage-4-to_es--elasticsearch-loading)
+  - [Sub-flows in to_es.py](#sub-flows-in-to_espy)
+  - [Key pattern: dump_to_es_and_delete](#key-pattern-dump_to_es_and_delete)
 - [Stage 5: to_sql — Airtable Card Upload](#stage-5-to_sql--airtable-card-upload)
 - [Helper Modules](#helper-modules)
   - [helpers.py — Shared Preprocessing Flows](#helperspy--shared-preprocessing-flows)
@@ -221,7 +223,60 @@ Note: `sys.setrecursionlimit(5000)` is set in `to_dp.py` because deeply nested F
 
 ### High-Level Pipeline Diagram
 
-<!-- TODO: Fill in Plan 05 -->
+```mermaid
+graph TD
+    subgraph "External Systems"
+        AT_CUR["Airtable<br/>Curation Base"]
+        AT_PROD["Airtable<br/>Production Base"]
+        ES["Elasticsearch<br/>6 indexes"]
+        AT_CARDS["Airtable<br/>Cards Table"]
+    end
+
+    subgraph "Stage 1: from_curation"
+        S1_LOAD["Load from curation"] --> S1_CACHE["dump_to_path<br/>#1-3"]
+        S1_CACHE --> S1_FILTER["Filter + ManualFixes"]
+        S1_FILTER --> S1_WRITE["Write to production"]
+    end
+
+    subgraph "Stage 2: to_dp"
+        S2_PULL["srm_data_pull<br/>6 Airtable tables"] --> S2_CP1["checkpoint #4<br/>srm_raw_airtable_buffer"]
+        S2_CP1 --> S2_PREPROCESS["preprocess_*"] --> S2_DUMP1["dump #5<br/>data/srm_data"]
+        S2_DUMP1 --> S2_FB["flat_branches"] --> S2_DUMP2["dump #6"]
+        S2_DUMP1 --> S2_FS["flat_services"] --> S2_DUMP3["dump #7"]
+        S2_DUMP2 --> S2_FS
+        S2_DUMP2 --> S2_FT["flat_table"] --> S2_DUMP4["dump #8"]
+        S2_DUMP3 --> S2_FT
+        S2_DUMP4 --> S2_CD["card_data<br/>taxonomy + tagging"] --> S2_CP2["checkpoint #9<br/>to_dp"]
+        S2_CP2 --> S2_RS["RSScoreCalc + enrich"] --> S2_DUMP5["dump #10<br/>data/card_data"]
+    end
+
+    subgraph "Stage 3: autocomplete"
+        S3_LOAD["Load card_data"] --> S3_TMPL["unwind_templates<br/>Cartesian product"] --> S3_DUMP["dump #11<br/>data/autocomplete"]
+    end
+
+    subgraph "Stage 4: to_es"
+        S4_LOAD["Load card_data"] --> S4_CP["checkpoint #12"] --> S4_ES["dump_to_es<br/>6 indexes"]
+        S4_LOAD --> S4_PLACES["dump #13<br/>place_data"]
+        S4_LOAD --> S4_RESP["dump #14<br/>response_data"]
+        S4_LOAD --> S4_SIT["dump #15<br/>situation_data"]
+    end
+
+    subgraph "Stage 5: to_sql"
+        S5_LOAD["Load card_data"] --> S5_AT["airtable_updater<br/>Cards table"]
+    end
+
+    AT_CUR --> S1_LOAD
+    S1_WRITE --> AT_PROD
+    AT_PROD --> S2_PULL
+    S2_DUMP5 --> S3_LOAD
+    S2_DUMP5 --> S4_LOAD
+    S2_DUMP5 --> S5_LOAD
+    S3_DUMP --> S4_ES
+    S4_ES --> ES
+    S5_AT --> AT_CARDS
+```
+
+Data flows top-to-bottom through the 5 stages. Numbered labels (#1-15) correspond to the [Checkpoint & Cache Map](#checkpoint--cache-map) entries below. Arrows between stages represent disk-based data passing via `dump_to_path` → `DF.load`. The RSScoreCalc side-channel reads from checkpoint #9 (not shown as a separate arrow to keep the diagram readable).
 
 ---
 
@@ -740,7 +795,32 @@ Used only in Stage 1 (`from_curation.py`) — applied to Organizations, Branches
 
 ## Checkpoint & Cache Map
 
-<!-- TODO: Fill in Plan 05 -->
+The derive pipeline uses **15 persistence points**: 3 NDJSON checkpoints and 12 `dump_to_path` caches. Checkpoints provide all-or-nothing cache shortcuts (skip upstream on hit), while `dump_to_path` always writes and serves as inter-sub-flow communication. In the current codebase, all checkpoints are explicitly deleted before use via `shutil.rmtree()`, so they never cache-hit during normal operation — they serve only as crash-recovery restart points.
+
+| # | Path | Module | Type | What It Caches | Invalidation |
+|---|------|--------|------|---------------|--------------|
+| 1 | `.checkpoints/from-curation-Organizations/` | `from_curation.py` | `dump_to_path` | Raw Organization records from curation Airtable | `shutil.rmtree()` before each table copy |
+| 2 | `.checkpoints/from-curation-Branches/` | `from_curation.py` | `dump_to_path` | Raw Branch records from curation Airtable | `shutil.rmtree()` before each table copy |
+| 3 | `.checkpoints/from-curation-Services/` | `from_curation.py` | `dump_to_path` | Raw Service records from curation Airtable | `shutil.rmtree()` before each table copy |
+| 4 | `.checkpoints/srm_raw_airtable_buffer/` | `to_dp.py` (`srm_data_pull`) | `checkpoint` (NDJSON) | All 6 raw Airtable tables (Responses, Situations, Organizations, Locations, Branches, Services) | `shutil.rmtree()` in `to_dp.operator()` |
+| 5 | `data/srm_data/` | `to_dp.py` (`srm_data_pull`) | `dump_to_path` | Preprocessed 6 Airtable tables | `shutil.rmtree()` in `to_dp.operator()` |
+| 6 | `data/flat_branches/` | `to_dp.py` (`flat_branches`) | `dump_to_path` | Denormalized branch records (org + location joined) | `shutil.rmtree()` in `to_dp.operator()` |
+| 7 | `data/flat_services/` | `to_dp.py` (`flat_services`) | `dump_to_path` | Denormalized service records with branch keys | `shutil.rmtree()` in `to_dp.operator()` |
+| 8 | `data/flat_table/` | `to_dp.py` (`flat_table`) | `dump_to_path` | Fully joined service+branch table | `shutil.rmtree()` in `to_dp.operator()` |
+| 9 | `.checkpoints/to_dp/` | `to_dp.py` (`card_data`) | `checkpoint` (NDJSON) | Card data after taxonomy mapping + auto-tagging, before RS score | `shutil.rmtree()` in `to_dp.operator()` |
+| 10 | `data/card_data/` | `to_dp.py` (`card_data`) | `dump_to_path` | Final card data with all enrichments | `shutil.rmtree()` in `to_dp.operator()` |
+| 11 | `data/autocomplete/` | `autocomplete.py` | `dump_to_path` | Generated autocomplete suggestions | Overwritten each run (no explicit delete) |
+| 12 | `.checkpoints/to_es/data_api_es_flow/` | `to_es.py` | `checkpoint` (NDJSON) | Cards after ES scoring, before ES load | `shutil.rmtree()` in `to_es.operator()` |
+| 13 | `data/place_data/` | `to_es.py` | `dump_to_path` | Location bounds for places | `shutil.rmtree()` in `to_es.operator()` |
+| 14 | `data/response_data/` | `to_es.py` | `dump_to_path` | Response taxonomy with card counts | `shutil.rmtree()` in `to_es.operator()` |
+| 15 | `data/situation_data/` | `to_es.py` | `dump_to_path` | Situation taxonomy with card counts | `shutil.rmtree()` in `to_es.operator()` |
+
+**Pattern summary:**
+- **3 NDJSON checkpoints** (#4, #9, #12): All-or-nothing cache. Currently always pre-deleted, so they only provide restart capability if the pipeline crashes mid-run and is restarted without cleanup.
+- **12 `dump_to_path` caches** (#1-3, #5-8, #10-11, #13-15): Always written. The primary mechanism for inter-sub-flow data passing. Sub-flow N writes → sub-flow N+1 reads via `DF.load`.
+- **Invalidation**: All but #11 use explicit `shutil.rmtree()`. #11 (`data/autocomplete/`) is implicitly overwritten.
+
+> **Data lineage through caches:** Airtable → #1-3 (raw copy) → #4 (raw buffer) → #5 (preprocessed) → #6 (flat branches) + #7 (flat services) → #8 (flat table) → #9 (taxonomy mapped) → #10 (enriched cards) → #11 (autocomplete) + #12 (ES-scored cards) → #13-15 (ES aggregates) → Elasticsearch indexes + Airtable Cards table.
 
 ---
 
@@ -764,3 +844,11 @@ Used only in Stage 1 (`from_curation.py`) — applied to Organizations, Branches
 | `thefuzz` | Fuzzy string matching — used for branch deduplication (fuzz.ratio) and city name matching in autocomplete |
 
 Per decision D-06, these are surface-level references. To trace into any external dependency's source code, refer to the respective package documentation or source repository.
+
+---
+
+*Generated: 2026-03-22*
+*Source files analyzed: 12 derive modules + dataflows core package*
+*Total persistence points documented: 15 (3 checkpoints + 12 dump_to_path)*
+
+> **Functional test:** After reading this document, you should be able to answer: "If I add a new field to the Services table in Airtable, which files and sub-flows would need modification?" (Answer: `from_curation.py` copies it, `helpers.py` `preprocess_services()` must extract it, `to_dp.py` sub-flows must propagate it through joins, and if it needs ES indexing, `to_es.py` and `es_schemas.py` must add the field mapping.)
