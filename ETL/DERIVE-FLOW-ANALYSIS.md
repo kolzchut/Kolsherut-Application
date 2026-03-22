@@ -43,27 +43,146 @@
 
 ## How dataflows Works
 
-<!-- TODO: Fill in Plan 02 -->
+`dataflows` (v0.5.5) is a Python data processing framework built on the Frictionless Data specification. It provides three core abstractions: **Flow** (pipeline builder), **DataStreamProcessor** (individual processing step), and **DataStream** (descriptor + resource iterators). The derive operator builds complex ETL pipelines using this framework.
 
 ### Flow() and Processor Chaining
 
-<!-- TODO: Fill in Plan 02 -->
+`Flow(*args)` stores its steps as a tuple in `self.chain`. Calling `.process()` triggers `_chain()`, which wraps each step around the previous `DataStream` in sequence. Each `DataStreamProcessor` receives an upstream DataStream and produces a new one. Nested `Flow` objects are flattened during chaining.
+
+Here is the actual source pattern from `flow.py`:
+
+```python
+class Flow:
+    def __init__(self, *args):
+        self.chain = args           # Store all steps as a tuple
+
+    def process(self):
+        return self._chain().process()   # Build chain, then drain it
+
+    def _chain(self, ds=None):
+        for position, link in enumerate(self._preprocess_chain(), start=1):
+            if isinstance(link, Flow):
+                ds = link._chain(ds)               # Nested flows get flattened
+            elif isinstance(link, DataStreamProcessor):
+                ds = link(ds, position=position)    # Processor wraps upstream
+            elif isfunction(link):
+                # Auto-detect function signature (see next section)
+                ds = auto_wrapped(link)(ds, position=position)
+            elif isinstance(link, Iterable):
+                ds = iterable_loader(link)(ds, position=position)
+        return ds
+```
+
+```mermaid
+graph LR
+    A["Flow(step1, step2, step3)"] --> B["step3(step2(step1(None)))"]
+    B --> C[".process() drains outermost"]
+```
+
+This is a **decorator/wrapper pattern**, not a push-based event system. Each step wraps the previous stream — `.process()` iterates the outermost, triggering a cascade inward through all processors.
 
 ### Lazy Evaluation and Pull-Based Execution
 
-<!-- TODO: Fill in Plan 02 -->
+The `LazyIterator` class is the key to lazy evaluation. It stores a *function that creates an iterator*, not the iterator itself. The function is only called when someone starts iterating:
+
+```python
+class LazyIterator:
+    def __init__(self, get_iterator):
+        self.get_iterator = get_iterator
+
+    def __iter__(self):
+        return self.get_iterator()
+```
+
+The pull model works as follows: the terminal consumer (`.process()`, `dump_to_path`, `checkpoint`) starts iterating → pulls data from the outer processor → which pulls from its upstream → all the way to the innermost source. **No work is done until a terminal consumer reads rows.**
+
+"Draining" means `.process()` iterates through all rows silently, triggering the full chain. This is why derive can define large pipelines cheaply — definition is O(1), execution is deferred.
+
+Execution sequence:
+
+1. `.process()` calls outermost processor's `_process()`
+2. `_process()` calls `self.source._process()` → gets upstream DataStream
+3. Recursion continues to innermost (or `None` → empty DataStream)
+4. Each processor wraps resource iterators with its logic via `LazyIterator`
+5. Outermost starts iterating → pulls rows through the entire chain
+6. Data flows row-by-row through all processors in a single pass
 
 ### Function Auto-Detection
 
-<!-- TODO: Fill in Plan 02 -->
+When a bare Python function is passed to `Flow()`, dataflows inspects its first parameter **name** (not type annotation) to determine behavior:
+
+| Parameter Name | Behavior | Example |
+|---------------|----------|---------|
+| `row` | Called once per row, should return modified row or `None` to filter | `def add_field(row): row['x'] = 1` |
+| `rows` | Receives a generator of all rows in a resource, must yield rows | `def dedup(rows): seen = set(); ...` |
+| `package` | Receives the `PackageWrapper`, can modify schema/metadata | `def add_resource(package): ...` |
+
+This is why derive code freely mixes `DF.*` processor calls with plain functions — they are all valid Flow steps. The auto-detection is based on the first parameter's **name**, not its type annotation. Any other parameter name triggers an assertion error.
 
 ### checkpoint vs dump_to_path
 
-<!-- TODO: Fill in Plan 02 -->
+**checkpoint (NDJSON serialization):**
+
+`checkpoint` is a `Flow` subclass that intercepts chain-building via `_preprocess_chain()`:
+
+1. **Cache HIT**: replaces the entire upstream chain with `unstream(filename)` — reads an NDJSON file, skips all upstream processing
+2. **Cache MISS**: appends `stream(filename)` after the upstream chain — data passes through AND gets serialized to `.checkpoints/<name>/stream.ndjson`
+
+**Critical "absorb" behavior** — `handle_flow_checkpoint()`:
+
+```python
+def handle_flow_checkpoint(self, parent_chain):
+    self.chain = itertools.chain(self.chain, parent_chain)
+    return [self]
+```
+
+When a checkpoint is placed inside a `Flow()`, it absorbs ALL preceding steps into its own chain. This means the checkpoint captures everything before it as upstream, not just the immediately preceding step.
+
+Cache invalidation is **manual only** — the derive code uses `shutil.rmtree()` to delete checkpoint directories before running. In the current codebase, checkpoints are always deleted before use, so they effectively never cache-hit during normal operation. They serve as debugging/restart aids only.
+
+**dump_to_path (disk persistence):**
+
+1. Writes all resources to disk as CSV files + `datapackage.json` descriptor
+2. Always writes (no cache-hit shortcut)
+3. Output is a standard Frictionless Data Package
+4. Can be loaded back with `DF.load('path/datapackage.json')`
+5. In derive, serves as **inter-sub-flow communication**: sub-flow N dumps → sub-flow N+1 loads
+
+**Comparison:**
+
+| Aspect | `checkpoint` | `dump_to_path` |
+|--------|-------------|----------------|
+| Format | NDJSON (stream.ndjson) | CSV + datapackage.json |
+| Cache behavior | Skips upstream on hit | Always writes |
+| Absorbs upstream? | Yes (`handle_flow_checkpoint`) | No |
+| Use in derive | 3 locations, always pre-deleted | 12 locations, inter-stage comms |
+| Invalidation | Manual `shutil.rmtree()` | Overwritten each run |
 
 ### Other Key Processors
 
-<!-- TODO: Fill in Plan 02 -->
+Reference table of all `DF.*` processor types used in the derive pipeline:
+
+| Processor | What It Does |
+|-----------|-------------|
+| `DF.load(path)` | Loads a previously-dumped data package from disk into the flow as new resources |
+| `DF.dump_to_path(path)` | Writes all resources to disk as CSV files + datapackage.json |
+| `DF.checkpoint(name)` | NDJSON cache — skips upstream on cache hit, writes through on miss |
+| `DF.join(source, source_key, target, target_key, fields)` | SQL-like join: consumes source resource into memory, looks up matches for target rows |
+| `DF.join_with_self(resource, key, fields)` | Self-join: groups rows by key within a single resource, applying aggregations |
+| `DF.set_type(field, type, transform)` | Modifies field schema type and optionally applies a per-value transform function |
+| `DF.filter_rows(condition, resources)` | Passes only rows where the predicate function returns True |
+| `DF.select_fields(fields)` | Keeps only the listed fields, removes all others from data and schema |
+| `DF.delete_fields(fields)` | Removes listed fields from data and schema |
+| `DF.update_resource(name, **props)` | Modifies resource metadata (name, path, title) |
+| `DF.update_package(**props)` | Modifies package metadata |
+| `DF.validate()` | Validates all rows against current schema, raises on type mismatch |
+| `DF.sort_rows(key)` | Sorts resource rows by a key expression |
+| `DF.add_field(name, type, default)` | Adds a new field to the schema and optionally sets a default/computed value |
+| `DF.finalizer(callback)` | Registers a callback that runs after all resources are fully consumed |
+
+For `DF.join`, the `fields` dict specifies which source fields to pull onto target rows, with optional aggregation: `count`, `sum`, `set`, `array`, `first`, etc.
+
+For `DF.finalizer`, this is used in `es_utils.py` to delete old ES documents after new ones are loaded.
 
 ---
 
