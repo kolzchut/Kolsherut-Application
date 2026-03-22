@@ -19,8 +19,8 @@ created: 2026-03-22
 |----------|-------|
 | **Framework** | grep / file existence checks (documentation phase — no code tests) |
 | **Config file** | none |
-| **Quick run command** | `grep -c "##" _analysis_temp/derive-analysis.md` |
-| **Full suite command** | `bash -c 'for s in "from_curation" "to_dp" "autocomplete" "to_es" "to_sql"; do grep -q "$s" _analysis_temp/derive-analysis.md && echo "✓ $s" || echo "✗ $s MISSING"; done'` |
+| **Quick run command** | `grep -c "##" ETL/DERIVE-FLOW-ANALYSIS.md` |
+| **Full suite command** | `bash -c 'for s in "from_curation" "to_dp" "autocomplete" "to_es" "to_sql"; do grep -q "$s" ETL/DERIVE-FLOW-ANALYSIS.md && echo "✓ $s" || echo "✗ $s MISSING"; done'` |
 | **Estimated runtime** | ~1 second |
 
 ---
@@ -38,13 +38,13 @@ created: 2026-03-22
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 01-01-01 | 01 | 1 | ANLYS-01 | grep | `grep -q "Flow()" _analysis_temp/derive-analysis.md` | ❌ W0 | ⬜ pending |
-| 01-01-02 | 01 | 1 | ANLYS-02 | grep | `grep -q "checkpoint" _analysis_temp/derive-analysis.md` | ❌ W0 | ⬜ pending |
-| 01-02-01 | 02 | 1 | ANLYS-03 | grep | `grep -q "__main__" _analysis_temp/derive-analysis.md` | ❌ W0 | ⬜ pending |
-| 01-02-02 | 02 | 1 | ANLYS-04 | grep | `grep -cE "from_curation|to_dp|autocomplete|to_es|to_sql|helpers|autotagging|es_schemas|es_utils|manual_fixes" _analysis_temp/derive-analysis.md` | ❌ W0 | ⬜ pending |
-| 01-03-01 | 03 | 2 | ANLYS-05 | grep | `grep -q "step chaining\|multi-step\|sequential" _analysis_temp/derive-analysis.md` | ❌ W0 | ⬜ pending |
-| 01-03-02 | 03 | 2 | ANLYS-06 | grep | `grep -c "checkpoint\|cache\|dump_to_path" _analysis_temp/derive-analysis.md` | ❌ W0 | ⬜ pending |
-| 01-04-01 | 04 | 2 | ANLYS-07 | file | `grep -q "mermaid\|graph\|flowchart" _analysis_temp/derive-analysis.md` | ❌ W0 | ⬜ pending |
+| 01-01-01 | 01 | 1 | ANLYS-01 | grep | `grep -q "Flow()" ETL/DERIVE-FLOW-ANALYSIS.md` | ❌ W0 | ⬜ pending |
+| 01-01-02 | 01 | 1 | ANLYS-02 | grep | `grep -q "checkpoint" ETL/DERIVE-FLOW-ANALYSIS.md` | ❌ W0 | ⬜ pending |
+| 01-02-01 | 02 | 1 | ANLYS-03 | grep | `grep -q "__main__" ETL/DERIVE-FLOW-ANALYSIS.md` | ❌ W0 | ⬜ pending |
+| 01-02-02 | 02 | 1 | ANLYS-04 | grep | `grep -cE "from_curation|to_dp|autocomplete|to_es|to_sql|helpers|autotagging|es_schemas|es_utils|manual_fixes" ETL/DERIVE-FLOW-ANALYSIS.md` | ❌ W0 | ⬜ pending |
+| 01-03-01 | 03 | 2 | ANLYS-05 | grep | `grep -q "step chaining\|multi-step\|sequential" ETL/DERIVE-FLOW-ANALYSIS.md` | ❌ W0 | ⬜ pending |
+| 01-03-02 | 03 | 2 | ANLYS-06 | grep | `grep -c "checkpoint\|cache\|dump_to_path" ETL/DERIVE-FLOW-ANALYSIS.md` | ❌ W0 | ⬜ pending |
+| 01-04-01 | 04 | 2 | ANLYS-07 | file | `grep -q "mermaid\|graph\|flowchart" ETL/DERIVE-FLOW-ANALYSIS.md` | ❌ W0 | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -53,7 +53,7 @@ created: 2026-03-22
 ## Wave 0 Requirements
 
 - [ ] `_analysis_temp/` directory — clone dataflows source
-- [ ] `_analysis_temp/derive-analysis.md` — stub document with section headers
+- [ ] `ETL/DERIVE-FLOW-ANALYSIS.md` — stub document with section headers
 
 *If none: "Existing infrastructure covers all phase requirements."*
 
