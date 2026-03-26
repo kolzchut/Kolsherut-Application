@@ -9,16 +9,18 @@ def deriveData(*_):
 
     logger.info('Starting Derive Data Flow')
 
-    from_curation.operator()
-    logger.info('---from_curation operator finished---')
+    # SKIPPED for ES comparison - from_curation writes to AT, not needed
+    # from_curation.operator()
+    # logger.info('---from_curation operator finished---')
     to_dp.operator()
     logger.info('---to_dp operator finished---')
     autocomplete.operator()
     logger.info('---autocomplete operator finished---')
     to_es.operator()
     logger.info('---to_es operator finished---')
-    to_sql.operator()
-    logger.info('---to_sql operator finished---')
+    # SKIPPED for ES comparison - no PostgreSQL in this Docker setup
+    # to_sql.operator()
+    # logger.info('---to_sql operator finished---')
     # NOT RELEVANT ANYMORE - MAP BOX IS UNUSED AND TO_SITEMAP REPLACED IN THE BE
     # to_mapbox.operator()
     # logger.info('---to_mapbox operator finished---')

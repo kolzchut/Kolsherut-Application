@@ -42,28 +42,38 @@ class Stats():
         self.dirty = {}
 
     def load(self):
-        self.data = DF.Flow(
-            load_from_airtable(settings.AIRTABLE_BASE, settings.AIRTABLE_STATS_TABLE, settings.AIRTABLE_VIEW, settings.AIRTABLE_API_KEY),
-            DF.filter_rows(lambda row: row.get('name') is not None),
-        ).results()[0][0]
-        self.data = {row['name']: row for row in self.data}
+        try:
+            self.data = DF.Flow(
+                load_from_airtable(settings.AIRTABLE_BASE, settings.AIRTABLE_STATS_TABLE, settings.AIRTABLE_VIEW, settings.AIRTABLE_API_KEY),
+                DF.filter_rows(lambda row: row.get('name') is not None),
+            ).results()[0][0]
+            self.data = {row['name']: row for row in self.data}
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).warning('Stats table unavailable, metrics disabled: %s', e)
+            self.data = {}
 
     def set_stat(self, stat, value):
+        if not self.data and stat not in self.data:
+            return  # Stats table unavailable, skip
         rec = {
             'name': stat,
             'value': value
         }
         if stat in self.data:
             rec[AIRTABLE_ID_FIELD] = self.data[stat][AIRTABLE_ID_FIELD]
-        DF.Flow(
-            [rec],
-            DF.update_resource(-1, name=settings.AIRTABLE_STATS_TABLE),
-            dump_to_airtable({
-                (settings.AIRTABLE_BASE, settings.AIRTABLE_STATS_TABLE): {
-                    'resource-name': settings.AIRTABLE_STATS_TABLE,
-                }
-            }, apikey=settings.AIRTABLE_API_KEY)
-        ).process()
+        try:
+            DF.Flow(
+                [rec],
+                DF.update_resource(-1, name=settings.AIRTABLE_STATS_TABLE),
+                dump_to_airtable({
+                    (settings.AIRTABLE_BASE, settings.AIRTABLE_STATS_TABLE): {
+                        'resource-name': settings.AIRTABLE_STATS_TABLE,
+                    }
+                }, apikey=settings.AIRTABLE_API_KEY)
+            ).process()
+        except Exception:
+            return
         if AIRTABLE_ID_FIELD not in rec:
             self.load()
         else:

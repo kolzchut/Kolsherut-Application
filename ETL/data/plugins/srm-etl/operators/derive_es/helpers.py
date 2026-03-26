@@ -35,7 +35,7 @@ _WHITESPACE = re.compile(r'\s+', re.UNICODE | re.MULTILINE)
 
 def transform_urls(urls: Optional[str]) -> Optional[list]:
     """Parse newline-separated URL strings into list of {href, title} dicts."""
-    if not urls:
+    if not urls or not isinstance(urls, str):
         return None
 
     def _parse(s: str) -> dict:
@@ -49,7 +49,7 @@ def transform_urls(urls: Optional[str]) -> Optional[list]:
 
 def transform_phone_numbers(phone_numbers: Optional[str]) -> list:
     """Parse newline-separated phone string into formatted phone list."""
-    phone_numbers = phone_numbers.split('\n') if phone_numbers else []
+    phone_numbers = phone_numbers.split('\n') if isinstance(phone_numbers, str) and phone_numbers else []
     ret = []
     for number in phone_numbers:
         number = number.strip()
@@ -82,7 +82,7 @@ def calc_point_id(geometry: list) -> str:
 
 def validate_geometry(geometry: Optional[list]) -> bool:
     """Check geometry is a valid [lon, lat] point within Israel bounds."""
-    if geometry and len(geometry) == 2:
+    if isinstance(geometry, list) and len(geometry) == 2:
         # X (lon): 33-37, Y (lat): 29.3-33.3
         if 33 < geometry[0] < 37 and 29.3 < geometry[1] < 33.3:
             return True
@@ -91,7 +91,7 @@ def validate_geometry(geometry: Optional[list]) -> bool:
 
 def validate_address(address: Optional[str]) -> bool:
     """Return True if address has no English characters."""
-    if address:
+    if address and isinstance(address, str):
         if len(_ENGLISH.findall(address)) == 0:
             return True
     return False
@@ -162,8 +162,10 @@ def address_parts(row: dict) -> dict:
 
     Returns dict with keys: primary, secondary, (optionally national).
     """
-    resolved_address: str = row.get('branch_address', '') or ''
-    orig_address: str = row.get('branch_orig_address', '') or ''
+    resolved_address = row.get('branch_address', '') or ''
+    resolved_address = resolved_address if isinstance(resolved_address, str) else ''
+    orig_address = row.get('branch_orig_address', '') or ''
+    orig_address = orig_address if isinstance(orig_address, str) else ''
     accurate: bool = bool(row.get('branch_location_accurate'))
     national: bool = bool(row.get('national_service'))
 
@@ -171,7 +173,8 @@ def address_parts(row: dict) -> dict:
         return dict(primary='שירות ארצי', secondary=None, national=True)
 
     address = (resolved_address if accurate else orig_address) or orig_address
-    city: str = (row.get('branch_city') or '').replace('-', ' ')
+    raw_city = row.get('branch_city') or ''
+    city: str = (raw_city if isinstance(raw_city, str) else '').replace('-', ' ')
 
     if not city:
         if accurate:
@@ -200,8 +203,10 @@ def address_parts(row: dict) -> dict:
 
 def org_name_parts(row: dict) -> dict:
     """Parse structured org name parts (primary=short, secondary=remainder)."""
-    name: str = row.get('organization_name', '') or ''
-    short_name: str = row.get('organization_short_name', '') or ''
+    name = row.get('organization_name', '') or ''
+    name = name if isinstance(name, str) else ''
+    short_name = row.get('organization_short_name', '') or ''
+    short_name = short_name if isinstance(short_name, str) else ''
     m = None
     if short_name:
         short_name = short_name.split('(')[0].replace(')', '').strip()

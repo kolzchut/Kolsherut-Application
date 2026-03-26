@@ -1,118 +1,54 @@
 # Roadmap: Kol Sherut ETL — Derive Refactor
 
-**Created:** 2026-03-22
-**Milestone:** v2.0
-**Phases:** 5 (Phase 3–7)
-**Status:** Active
+## Milestones
 
-## Overview
-
-Rebuild the derive operator from `dataflows` streaming to pandas batch processing, split into two independent operators (Operator A: AT Writer, Operator B: ES Pipeline), eliminate all 15 caching/checkpoint points, and validate identical ES output. Builds on the v1.0 analysis (DERIVE-FLOW-ANALYSIS.md) and follows the meser/day_care pandas pattern already in the codebase.
+- ✅ **v1.0 Derive Analysis** — Phase 1 (shipped 2026-03-22)
+- ✅ **v2.0 Refactor Derive** — Phases 2-7 (shipped 2026-03-22)
+- ✅ **v3.0 Derive Comparison & Validation** — Phases 8-13 (shipped 2026-03-23)
 
 ## Phases
 
-**Phase Numbering:**
-- Continues from v1.0 (Phases 1–2 archived)
-- Integer phases (3, 4, 5, 6, 7): Planned milestone work
-- Decimal phases (e.g., 5.1): Urgent insertions if needed
+<details>
+<summary>✅ v1.0 Derive Analysis (Phase 1) — SHIPPED 2026-03-22</summary>
 
-- [ ] **Phase 3: Shared Foundation** - ES utilities, explicit mappings, pure helpers, operator scaffolding
-- [ ] **Phase 4: Operator B — Data Pipeline** - Rewrite to_dp denormalization in pandas
-- [ ] **Phase 5: Operator B — Autocomplete & ES** - Autocomplete generation + 6 ES index loads
-- [ ] **Phase 6: Operator A — Curation & Cards** - Rewrite from_curation + cards-to-AT in pandas
-- [ ] **Phase 7: Validation & Deployment** - Automated ES comparison + operator registration
+- [x] Phase 1: Derive Flow Investigation — completed 2026-03-22
 
-## Phase Details
+</details>
 
-### Phase 3: Shared Foundation
-**Goal**: Create all shared infrastructure needed by both operators — ES bulk utilities, explicit mapping dicts, ported pure helpers, two operator directory scaffolds, AT ID standardization
-**Depends on**: Nothing (first v2.0 phase)
-**Requirements**: MIG-01, MIG-02, MIG-04, ES-01, ES-02, ES-03, ES-04, SPLIT-01, SPLIT-04
-**Success Criteria** (what must be TRUE):
-  1. `derive_curation/` and `derive_es/` directories exist with `__init__.py` entry points
-  2. `bulk_index_dataframe()` function can index a test DataFrame to ES with revision-based atomic swap
-  3. All 6 ES index mapping dicts defined and match current production mappings
-  4. All pure helpers importable from new location (taxonomy, phone, URL, address, scoring)
-  5. `_airtable_id` standardized in all new code
-**Plans**: 3 plans (Wave 1 — all parallel)
+<details>
+<summary>✅ v2.0 Refactor Derive (Phases 2-7) — SHIPPED 2026-03-22</summary>
 
-Plans:
-- [ ] 03-01: Scaffold Operator Directories + ES Bulk Utilities (Wave 1) — SPLIT-01, SPLIT-04, ES-01, ES-03
-- [ ] 03-02: Explicit ES Mapping Dicts for All 6 Indexes (Wave 1) — ES-02, ES-04
-- [ ] 03-03: Port Pure Helpers + AT ID Standardization (Wave 1) — MIG-01, MIG-02, MIG-04
+- [x] Phase 2: Rebuild Derive Operator — completed 2026-03-22
+- [x] Phase 3: Shared Foundation — completed 2026-03-22
+- [x] Phase 4: Operator B Data Pipeline — completed 2026-03-22
+- [x] Phase 5: Operator B Autocomplete + ES — completed 2026-03-22
+- [x] Phase 6: Operator A Curation — completed 2026-03-22
+- [x] Phase 6.1: Operator A Curation Cards — completed 2026-03-22
+- [x] Phase 7: Validation & Deployment — completed 2026-03-22
 
-### Phase 4: Operator B — Data Pipeline (to_dp)
-**Goal**: Rewrite the complete to_dp denormalization pipeline in pandas — pull 6 AT tables, 4-stage join, branch/service dedup, taxonomy, auto-tagging, manual fixes, RS scoring → card_data DataFrame
-**Depends on**: Phase 3
-**Requirements**: MIG-01, MIG-03, SPLIT-03, DP-01, DP-02, DP-03, DP-04, DP-05, DP-06, DP-07, DP-08
-**Success Criteria** (what must be TRUE):
-  1. `to_dp()` function returns a pandas DataFrame with all card_data columns
-  2. Branch deduplication produces same branch count as current pipeline
-  3. Taxonomy normalization and parent expansion produce identical ID sets
-  4. RS scoring produces same situation ordering per card (spot-check 100 cards)
-  5. No dataflows imports in any Phase 4 code
-**Plans**: TBD
+</details>
 
-Plans:
-- [ ] TBD (run /gsd-plan-phase 4 to break down)
+<details>
+<summary>✅ v3.0 Derive Comparison & Validation (Phases 8-13) — SHIPPED 2026-03-23</summary>
 
-### Phase 5: Operator B — Autocomplete & ES Loading
-**Goal**: Rewrite autocomplete generation (10 templates, cartesian expansion, city bounds, scoring) and all 6 ES index loads using the Phase 3 bulk utilities
-**Depends on**: Phase 4
-**Requirements**: MIG-03, SPLIT-03, AC-01, AC-02, AC-03, AC-04
-**Success Criteria** (what must be TRUE):
-  1. Autocomplete generates same number of suggestions (±5%) as current pipeline
-  2. All 6 ES indexes loaded via `bulk_index_dataframe()` with atomic swap
-  3. Cards-to-AT writes 8 fields to AIRTABLE_CARDS_TABLE
-  4. `derive_es/operator()` runs end-to-end: to_dp → autocomplete → to_es → cards_to_at
-  5. Memory usage stays under 4GB during autocomplete cartesian expansion
-**Plans**: TBD
+- [x] Phase 8: Baseline Setup (2/2 plans) — completed 2026-03-23
+- [x] Phase 9: Foundation Audit (1/1 plan) — completed 2026-03-23
+- [x] Phase 10: Operator A Audit (1/1 plan) — completed 2026-03-23
+- [x] Phase 11: Operator B Audit (1/1 plan) — completed 2026-03-23
+- [x] Phase 12: Runtime Validation Tooling (1/1 plan) — completed 2026-03-23
+- [x] Phase 13: Full Validation Run + Report (1/1 plan) — completed 2026-03-23
 
-Plans:
-- [ ] TBD (run /gsd-plan-phase 5 to break down)
-
-### Phase 6: Operator A — Curation & Cards
-**Goal**: Rewrite from_curation pipeline in pandas — filter curated records, apply manual fixes, remap cross-table IDs, write orgs→branches→services to staging AT
-**Depends on**: Phase 3 (shared helpers + AT utilities)
-**Requirements**: MIG-01, MIG-03, SPLIT-02, CUR-01, CUR-02, CUR-03, CUR-04, CUR-05
-**Success Criteria** (what must be TRUE):
-  1. `derive_curation/operator()` filters and copies records from curation to staging AT
-  2. Manual fixes applied and status written back
-  3. Cross-table ID remapping correct (orgs→branches→services chain)
-  4. Cards-to-AT writes 8 card fields from card_data
-  5. AIRTABLE_BASE env var determines write target (verified on stage)
-**Plans**: TBD
-
-Plans:
-- [ ] TBD (run /gsd-plan-phase 6 to break down)
-
-### Phase 7: Validation & Deployment
-**Goal**: Automated comparison of all 6 ES indexes between old and new pipeline, register both operators with scheduler, document the migration
-**Depends on**: Phase 5, Phase 6
-**Requirements**: VAL-01, VAL-02, VAL-03
-**Success Criteria** (what must be TRUE):
-  1. Comparison script reports field-level diff for all 6 indexes
-  2. Zero unexpected differences between old and new pipeline output
-  3. Both operators registered in Cronicle/scheduler
-  4. README or migration doc explains the two-operator setup
-**Plans**: TBD
-
-Plans:
-- [ ] TBD (run /gsd-plan-phase 7 to break down)
+</details>
 
 ## Progress
 
-**Execution Order:**
-Phase 3 → 4 → 5 → 6 → 7 (Phase 6 can start after Phase 3 if Phase 4/5 are in progress)
-
-| Phase | Plans Complete | Status | Completed |
-|-------|----------------|--------|-----------|
-| 3. Shared Foundation | 3/3 | Complete | 113ab32 |
-| 4. Operator B — Data Pipeline | 3/3 | Complete | 1089ce4 |
-| 5. Operator B — Autocomplete & ES | 1/1 | Complete | b5eb15c |
-| 6. Operator A — Curation & Cards | 1/1 | Complete | f7bdca7 |
-| 7. Validation & Deployment | 1/1 | Complete | 2509ad4 |
-
----
-*Roadmap created: 2026-03-22*
-*Last updated: 2026-03-22*
+| Phase | Milestone | Plans Complete | Status | Completed |
+|-------|-----------|----------------|--------|-----------|
+| 1: Derive Flow Investigation | v1.0 | 0 (informal) | Complete | 2026-03-22 |
+| 2-7: Refactor Derive | v2.0 | 11/11 | Complete | 2026-03-22 |
+| 8: Baseline Setup | v3.0 | 2/2 | Complete | 2026-03-23 |
+| 9: Foundation Audit | v3.0 | 1/1 | Complete | 2026-03-23 |
+| 10: Operator A Audit | v3.0 | 1/1 | Complete | 2026-03-23 |
+| 11: Operator B Audit | v3.0 | 1/1 | Complete | 2026-03-23 |
+| 12: Runtime Validation Tooling | v3.0 | 1/1 | Complete | 2026-03-23 |
+| 13: Full Validation Run + Report | v3.0 | 1/1 | Complete | 2026-03-23 |

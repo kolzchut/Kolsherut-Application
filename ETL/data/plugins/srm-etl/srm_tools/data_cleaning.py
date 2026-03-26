@@ -3,7 +3,7 @@ STOPWORDS = ['עמותת ', 'העמותה ל']
 
 
 def clean_org_name(name):
-    if not name:
+    if not name or not isinstance(name, str):
         return ''
     for x in (
         'בעמ',

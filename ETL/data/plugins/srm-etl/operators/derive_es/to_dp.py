@@ -76,6 +76,13 @@ def load_all_tables() -> dict:
         'services':      _load_table(settings.AIRTABLE_SERVICE_TABLE),
     }
     for name, df in tables.items():
+        # Replace NaN with None in object (string/list) columns to avoid
+        # float-NaN type errors in string operations throughout the pipeline.
+        # Numeric columns keep NaN for proper pandas numeric handling.
+        obj_cols = df.select_dtypes(include=['object']).columns
+        if len(obj_cols):
+            df[obj_cols] = df[obj_cols].where(df[obj_cols].notna(), None)
+        tables[name] = df
         logger.info('Loaded %s: %d rows', name, len(df))
     return tables
 
@@ -276,7 +283,7 @@ def _select_address(row, address_fields):
     return None
 
 
-def flat_branches(tables: dict) -> pd.DataFrame:
+def flat_branches(tables: dict) -> tuple:
     """Denormalize: branches ← locations ← organizations, then merge duplicates."""
     branches = tables['branches'].copy()
     locations = tables['locations'].copy()
@@ -364,9 +371,9 @@ def flat_branches(tables: dict) -> pd.DataFrame:
     branches = branches.rename(columns={k: v for k, v in branch_rename.items() if k in branches.columns})
 
     # --- Merge duplicate branches ---
-    branches = _merge_duplicate_branches(branches)
+    branches, branch_key_mapping = _merge_duplicate_branches(branches)
 
-    return branches
+    return branches, branch_key_mapping
 
 
 def _merge_duplicate_branches(branches: pd.DataFrame) -> pd.DataFrame:
@@ -422,13 +429,15 @@ def _merge_duplicate_branches(branches: pd.DataFrame) -> pd.DataFrame:
         row_dict['organization_branch_count'] = org_count.get(row_dict.get('organization_id'), 1)
 
     result = pd.DataFrame(list(found.values()))
-    return result
+    return result, branch_mapping
 
 
 # ── Service Denormalization ────────────────────────────────────────────
 
-def flat_services(tables: dict, branches_df: pd.DataFrame) -> pd.DataFrame:
+def flat_services(tables: dict, branches_df: pd.DataFrame, branch_key_mapping: dict = None) -> pd.DataFrame:
     """Denormalize services → branches, merge duplicates."""
+    if branch_key_mapping is None:
+        branch_key_mapping = {}
     services = tables['services'].copy()
     flat_br = branches_df.copy()
 
@@ -456,10 +465,12 @@ def flat_services(tables: dict, branches_df: pd.DataFrame) -> pd.DataFrame:
     # Get org_branches from flat_branches grouped by organization_key
     org_branches = flat_br.groupby('organization_key')['branch_key'].apply(set).to_dict()
 
-    # Map service direct branches through branch mapping
+    # Map service direct branches through branch key mapping
+    # service.branches contains original AT record IDs; translate them to
+    # deduped branch_keys via branch_key_mapping (old_at_id → deduped_key)
     if 'branches' in services.columns:
         services['branches'] = services['branches'].apply(
-            lambda v: list(set(filter(None, [branch_map.get(b) for b in (v or [])])))
+            lambda v: list(set(filter(None, [branch_key_mapping.get(b) for b in (v or [])])))
             if isinstance(v, list) else []
         )
     else:
@@ -727,9 +738,10 @@ def _load_autotagging_rules() -> list:
             fields.append('organization_purpose')
         if row.get('In Service Name'):
             fields.append('service_name')
+        raw_query = row.get('Query') or row.get('query', '')
         rules.append({
             'fields': fields,
-            'query': row.get('Query') or row.get('query', ''),
+            'query': raw_query if isinstance(raw_query, str) else '',
             'situation_ids': row.get('situation_ids') or [],
             'response_ids': row.get('response_ids') or [],
         })
@@ -1043,7 +1055,21 @@ def card_data_assembly(flat: pd.DataFrame, tables: dict) -> pd.DataFrame:
 
     # Computed fields
     df['point_id'] = df.apply(
-        lambda r: calc_point_id(r['branch_geometry']) if not r.get('national_service') else 'national_service',
+        lambda r: calc_point_id(r['branch_geometry']) if isinstance(r.get('branch_geometry'), list) and not r.get('national_service') else 'national_service',
+        axis=1,
+    )
+
+    df['national_service_details'] = df['national_service'].apply(
+        lambda ns: 'ארצי' if ns else None,
+    )
+
+    df['coords'] = df.apply(
+        lambda r: '[{},{}]'.format(*r['branch_geometry']) if isinstance(r.get('branch_geometry'), list) else None,
+        axis=1,
+    )
+
+    df['collapse_key'] = df.apply(
+        lambda r: f"{r.get('service_name', '')} {r.get('service_description') or ''}".strip(),
         axis=1,
     )
 
@@ -1093,10 +1119,10 @@ def to_dp() -> pd.DataFrame:
     tables = preprocess_all(tables)
 
     # 3. Denormalize branches
-    branches = flat_branches(tables)
+    branches, branch_key_mapping = flat_branches(tables)
 
     # 4. Denormalize services
-    services = flat_services(tables, branches)
+    services = flat_services(tables, branches, branch_key_mapping)
 
     # 5. Flat table
     flat = flat_table(branches, services)

@@ -51,10 +51,15 @@ def _serialize_value(v):
         return float(v)
     if isinstance(v, np.ndarray):
         return v.tolist()
+    if isinstance(v, (list, dict, tuple)):
+        return v
     if isinstance(v, float) and np.isnan(v):
         return None
-    if pd.isna(v):
-        return None
+    try:
+        if pd.isna(v):
+            return None
+    except (ValueError, TypeError):
+        pass
     return v
 
 
