@@ -51,6 +51,14 @@
       {
         "name": "theme-color",
         "content": "#ffffff"
+      },
+      {
+        "name": "geo.placename",
+        "content": "%%cityName%%"
+      },
+      {
+        "name": "geo.address",
+        "content": "%%addressString%%"
       }
     ]
   },
