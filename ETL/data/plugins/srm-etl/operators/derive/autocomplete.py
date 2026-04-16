@@ -1,4 +1,5 @@
 import math
+import os
 import re
 from itertools import product
 
@@ -38,9 +39,11 @@ PKRE = re.compile('[0-9a-zA-Zא-ת]+')
 VERIFY_ORG_ID = re.compile('^(srm|)[0-9]+$')
 VERIFY_CITY_NAME = re.compile('''^[א-ת-`"' ]+$''')
 
+STATIC_PLACE_DATA = os.path.join(os.path.dirname(__file__), 'static_data', 'place_data', 'datapackage.json')
+
 def prepare_locations():
     all_places = DF.Flow(
-        DF.load(f'{settings.DATA_DUMP_DIR}/place_data/datapackage.json'),
+        DF.load(STATIC_PLACE_DATA),
     ).results(on_error=None)[0][0]
     keys = [n for rec in all_places for n in rec['name']]
     mapping = dict((n, rec['bounds']) for rec in all_places for n in rec['name'])

@@ -1,3 +1,4 @@
+import os
 import shutil
 from dataflows_airtable.load_from_airtable import load_from_airtable
 from datetime import datetime
@@ -132,9 +133,11 @@ def select_text_fields(row):
     return list(_aux(row))
 
 
+STATIC_PLACE_DATA = os.path.join(os.path.dirname(__file__), 'static_data', 'place_data', 'datapackage.json')
+
 def load_locations_to_es_flow():
     return DF.Flow(
-        DF.load(f'{settings.DATA_DUMP_DIR}/place_data/datapackage.json'),
+        DF.load(STATIC_PLACE_DATA),
         dump_to_es_and_delete(
             indexes=dict(srm__places=[dict(resource_name='places')]),
         ),
