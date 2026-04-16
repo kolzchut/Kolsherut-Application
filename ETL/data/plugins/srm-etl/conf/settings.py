@@ -66,7 +66,6 @@ ES_HOST = get_env('ES_HOST')
 ES_PORT = int(get_env('ES_PORT'))
 ES_HTTP_AUTH = get_env('ES_HTTP_AUTH', required=False)
 
-LOCATION_BOUNDS_SOURCE_URL='https://srm-staging.datacity.org.il/dataset/0386f511-bd1b-4931-8c3c-88c45272f642/resource/a5bad1e6-a40f-4ab5-b73e-56cd4947d8fa/download/place_bounds_he.zip'
 
 EMAIL_NOTIFIER_SENDER_EMAIL = get_env('EMAIL_NOTIFIER_SENDER_EMAIL')
 EMAIL_NOTIFIER_PASSWORD = get_env('EMAIL_NOTIFIER_PASSWORD')

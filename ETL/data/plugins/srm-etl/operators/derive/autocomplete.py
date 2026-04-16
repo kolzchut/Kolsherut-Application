@@ -1,8 +1,5 @@
 import math
 import re
-import tempfile
-import requests
-import shutil
 from itertools import product
 
 from thefuzz import process
@@ -42,18 +39,12 @@ VERIFY_ORG_ID = re.compile('^(srm|)[0-9]+$')
 VERIFY_CITY_NAME = re.compile('''^[א-ת-`"' ]+$''')
 
 def prepare_locations():
-    url = settings.LOCATION_BOUNDS_SOURCE_URL
-    all_places = []
-    with tempfile.NamedTemporaryFile(suffix='.zip', delete=False) as tmpfile:
-        src = requests.get(url, stream=True).raw
-        shutil.copyfileobj(src, tmpfile)
-        tmpfile.close()
-        all_places = DF.Flow(
-            DF.load(tmpfile.name, format='datapackage'),
-        ).results(on_error=None)[0][0]
-        keys = [n for rec in all_places for n in rec['name']]
-        mapping = dict((n ,rec['bounds']) for rec in all_places for n in rec['name'])
-        return keys, mapping
+    all_places = DF.Flow(
+        DF.load(f'{settings.DATA_DUMP_DIR}/place_data/datapackage.json'),
+    ).results(on_error=None)[0][0]
+    keys = [n for rec in all_places for n in rec['name']]
+    mapping = dict((n, rec['bounds']) for rec in all_places for n in rec['name'])
+    return keys, mapping
 
 def remove_stop_words(s):
     return ' '.join([w for w in s.split() if w not in STOP_WORDS])

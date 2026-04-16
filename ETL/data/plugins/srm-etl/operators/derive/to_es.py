@@ -1,7 +1,5 @@
-import tempfile
 import shutil
 from dataflows_airtable.load_from_airtable import load_from_airtable
-import requests
 from datetime import datetime
 
 import dataflows as DF
@@ -135,42 +133,12 @@ def select_text_fields(row):
 
 
 def load_locations_to_es_flow():
-    url = settings.LOCATION_BOUNDS_SOURCE_URL
-    scores = dict(
-        region=200, city=100, town=50, village=10, hamlet=5,
+    return DF.Flow(
+        DF.load(f'{settings.DATA_DUMP_DIR}/place_data/datapackage.json'),
+        dump_to_es_and_delete(
+            indexes=dict(srm__places=[dict(resource_name='places')]),
+        ),
     )
-
-    def calc_score(r):
-        b = r['bounds']
-        size = (b[2] - b[0]) * (b[3] - b[1]) * 100000
-        return size * scores.get(r['place'], 1)
-
-    PREDEFINED = [
-        dict(key='גוש_דן', name=['גוש דן'], bounds=[34.6, 31.8, 35.1, 32.181], place='region'),
-        dict(key='איזור_ירושלים', name=['איזור ירושלים'], bounds=[34.9, 31.7, 35.3, 31.9], place='region'),
-        dict(key='איזור_הצפון', name=['איזור הצפון'], bounds=[34.5, 32.5, 35.8, 33.3], place='region'),
-        dict(key='איזור_באר_שבע', name=['איזור באר-שבע'], bounds=[34.5, 30.8, 35.5, 31.5], place='region'),
-    ]
-
-    with tempfile.NamedTemporaryFile(suffix='.zip', delete=False) as tmpfile:
-        src = requests.get(url, stream=True).raw
-        shutil.copyfileobj(src, tmpfile)
-        tmpfile.close()
-        return DF.Flow(
-            DF.load(tmpfile.name, format='datapackage'),
-            PREDEFINED,
-            DF.concatenate(
-                fields=dict(key=[], name=[], bounds=[], place=[]),
-                target=dict(name='places')
-            ),
-            DF.update_package(title='Bounds for Locations in Israel', name='bounds-for-locations'),
-            DF.add_field('query', 'string', lambda r: sorted(r['name'], key=lambda v: len(v), reverse=True)[0]),
-            DF.add_field('score', 'number', calc_score),
-            DF.dump_to_path(f'{settings.DATA_DUMP_DIR}/place_data'),
-            dump_to_es_and_delete(
-                indexes=dict(srm__places=[dict(resource_name='places')]),
-            ),
-        )
 
 
 def load_responses_to_es_flow():
@@ -299,7 +267,7 @@ def operator(*_):
     shutil.rmtree(f'.checkpoints/{CHECKPOINT}', ignore_errors=True, onerror=None)
 
     # Clean stale intermediate data from previous runs to prevent using outdated cache
-    for subdir in ('place_data', 'response_data', 'situation_data'):
+    for subdir in ('response_data', 'situation_data'):
         stale_path = f'{settings.DATA_DUMP_DIR}/{subdir}'
         logger.info(f'Cleaning stale data directory: {stale_path}')
         shutil.rmtree(stale_path, ignore_errors=True, onerror=None)
