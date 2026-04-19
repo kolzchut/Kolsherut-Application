@@ -1,3 +1,5 @@
+import csv
+import json
 import os
 import shutil
 from dataflows_airtable.load_from_airtable import load_from_airtable
@@ -133,11 +135,27 @@ def select_text_fields(row):
     return list(_aux(row))
 
 
-STATIC_PLACE_DATA = os.path.join(os.path.dirname(__file__), 'static_data', 'place_data', 'datapackage.json')
+STATIC_PLACE_CSV = os.path.join(os.path.dirname(__file__), 'static_data', 'place_data', 'data', 'places.csv')
+
+def _load_places_from_csv():
+    places = []
+    with open(STATIC_PLACE_CSV, 'r', encoding='utf-8') as f:
+        for row in csv.DictReader(f):
+            row['name'] = json.loads(row['name'])
+            row['bounds'] = json.loads(row['bounds'])
+            row['score'] = float(row['score'])
+            places.append(row)
+    return places
 
 def load_locations_to_es_flow():
     return DF.Flow(
-        DF.load(STATIC_PLACE_DATA),
+        _load_places_from_csv(),
+        DF.update_resource(-1, name='places'),
+        DF.set_type('key', **{'es:keyword': True}),
+        DF.set_type('place', **{'es:keyword': True}),
+        DF.set_type('name', type='array', **{'es:itemType': 'string', 'es:keyword': True}),
+        DF.set_type('bounds', type='array', **{'es:itemType': 'number', 'es:index': False}),
+        DF.set_primary_key(['key']),
         dump_to_es_and_delete(
             indexes=dict(srm__places=[dict(resource_name='places')]),
         ),

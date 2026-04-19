@@ -1,3 +1,5 @@
+import csv
+import json
 import math
 import os
 import re
@@ -39,12 +41,15 @@ PKRE = re.compile('[0-9a-zA-Zא-ת]+')
 VERIFY_ORG_ID = re.compile('^(srm|)[0-9]+$')
 VERIFY_CITY_NAME = re.compile('''^[א-ת-`"' ]+$''')
 
-STATIC_PLACE_DATA = os.path.join(os.path.dirname(__file__), 'static_data', 'place_data', 'datapackage.json')
+STATIC_PLACE_CSV = os.path.join(os.path.dirname(__file__), 'static_data', 'place_data', 'data', 'places.csv')
 
 def prepare_locations():
-    all_places = DF.Flow(
-        DF.load(STATIC_PLACE_DATA),
-    ).results(on_error=None)[0][0]
+    all_places = []
+    with open(STATIC_PLACE_CSV, 'r', encoding='utf-8') as f:
+        for row in csv.DictReader(f):
+            row['name'] = json.loads(row['name'])
+            row['bounds'] = json.loads(row['bounds'])
+            all_places.append(row)
     keys = [n for rec in all_places for n in rec['name']]
     mapping = dict((n, rec['bounds']) for rec in all_places for n in rec['name'])
     return keys, mapping
