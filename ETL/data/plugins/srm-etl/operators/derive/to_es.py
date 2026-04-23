@@ -60,18 +60,12 @@ def card_score(row):
 def parse_date(d):
     if isinstance(d, str):
         try:
-            dt = datetime.fromisoformat(d)
-            print(f"Parsed string: {d} -> {dt}")
-            return dt
-        except Exception as e:
-            print(f"Failed to parse string '{d}': {e}")
+            return datetime.fromisoformat(d)
+        except Exception:
             return None
     elif isinstance(d, datetime):
-        print(f"Already datetime: {d}")
         return d
-    else:
-        print(f"Invalid type ({type(d)}): {d}")
-        return None
+    return None
 
 
 def data_api_es_flow():
@@ -150,11 +144,14 @@ def _load_places_from_csv():
 def load_locations_to_es_flow():
     return DF.Flow(
         _load_places_from_csv(),
+        DF.update_package(title='Bounds for Locations in Israel', name='bounds-for-locations'),
         DF.update_resource(-1, name='places'),
-        DF.set_type('key', **{'es:keyword': True}),
-        DF.set_type('place', **{'es:keyword': True}),
-        DF.set_type('name', type='array', **{'es:itemType': 'string', 'es:keyword': True}),
+        DF.set_type('key', type='string', **{'es:keyword': True}),
+        DF.set_type('place', type='string', **{'es:keyword': True}),
+        DF.set_type('name', type='array', **{'es:itemType': 'string'}),
         DF.set_type('bounds', type='array', **{'es:itemType': 'number', 'es:index': False}),
+        DF.set_type('query', type='string'),
+        DF.set_type('score', type='number'),
         DF.set_primary_key(['key']),
         dump_to_es_and_delete(
             indexes=dict(srm__places=[dict(resource_name='places')]),
