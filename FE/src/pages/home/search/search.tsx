@@ -35,7 +35,7 @@ const Search = () => {
                 {isMobile && <img onClick={handleIconClick} className={classes.hamburger} src={hamburger}
                                   alt={"hamburger button"}/>}
                 <img className={classes.kolsherutLogo} src={kolsherutLogo} alt={"kolsherut Logo"}/>
-                <span className={classes.aboveDivText}>{window.strings.home.aboveDivText}</span>
+                <h1 className={classes.aboveDivText}>{window.strings.home.aboveDivText}</h1>
             </div>
             <SearchInput/>
             <div className={classes.bottomDiv}>

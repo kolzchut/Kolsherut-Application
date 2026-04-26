@@ -33,9 +33,9 @@ const Group = ({group}: { group: IGroup }) => {
     const handleKeyDown = createKeyboardHandler(onClick);
 
     return <div className={classes.group} key={group.group}>
-        <h3 className={classes.groupTitle}>{group.group}
+        <h2 className={classes.groupTitle}>{group.group}
         {group.icon && <img src={`/icons/${group.icon}`} alt={`dynamic icon ${group.icon}`} className={classes.icon}/>}
-        </h3>
+        </h2>
         <div className={classes.optionalSearchValuesWrapper}>
             {group?.labels?.map((value: ILabel, index: number) => (
                 <SearchLabel key={index} value={value}/>

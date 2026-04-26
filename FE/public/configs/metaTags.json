@@ -12,11 +12,11 @@
       },
       {
         "property": "og:image",
-        "content": "https://www.kolsherut.org.il/icons/logo.svg"
+        "content": "https://www.kolsherut.org.il/icons/logo.png"
       },
       {
         "property": "og:url",
-        "content": "https://www.kolsherut.org.il/?p=card&c=%%serviceId%%"
+        "content": "https://www.kolsherut.org.il/p/card/c/%%serviceId%%"
       },
       {
         "property": "og:type",
@@ -75,7 +75,7 @@
       },
       {
         "property": "og:image",
-        "content": "https://www.kolsherut.org.il/icons/logo.svg"
+        "content": "https://www.kolsherut.org.il/icons/logo.png"
       },
       {
         "property": "og:url",
@@ -130,7 +130,7 @@
       },
       {
         "property": "og:image",
-        "content": "https://www.kolsherut.org.il/icons/logo.svg"
+        "content": "https://www.kolsherut.org.il/icons/logo.png"
       },
       {
         "property": "og:url",
@@ -150,10 +150,6 @@
       }
     ],
     "names": [
-      {
-        "name": "description",
-        "content": "כל-שירות הוא מאגר מידע פתוח על שירותים ציבוריים בישראל."
-      },
       {
         "name": "robots",
         "content": "index, follow"

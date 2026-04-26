@@ -1,0 +1,163 @@
+# כל שירות — Kol Sherut
+
+> Kol Sherut (כל שירות) is Israel's comprehensive open database and search engine for public social services. It maps social services and resources provided by the government, NGOs, and organizations, helping citizens find exactly who can help them — for any situation, anywhere in Israel.
+
+The platform is operated by [Kolzchut](https://www.kolzchut.org.il/) (כל זכות — "All Rights") with support from the Israeli Ministry of Justice and the National Digital Agency.
+
+Website: https://www.kolsherut.org.il/
+Contact: info@kolsherut.org.il
+Language: Hebrew (עברית), with partial Arabic support (العربية)
+
+## About
+
+Kol Sherut aggregates and indexes thousands of social services across Israel. Users can search by keyword, filter by life situation, service type, target audience, and geographic location. An interactive map displays service locations nationwide. The data is sourced from GuideStar Israel and other public registries, with services categorized using the Open Eligibility taxonomy.
+
+The platform is currently in beta. Some information may be incomplete or not fully up to date.
+
+## Pages
+
+- [Homepage](https://www.kolsherut.org.il/): Search for any social service by keyword, browse predefined service categories, and explore popular topics
+- [Search Results](https://www.kolsherut.org.il/): Filtered results showing matching services with map view, quick filters, and location-based search
+- [Service Card](https://www.kolsherut.org.il/p/card/c/{serviceId}): Detailed page for each service including description, target audience, eligibility, contact details, branches, and map location
+- [Site Map](https://www.kolsherut.org.il/map): Full catalog of all service responses and life situations indexed on the platform
+- [About](https://www.kolsherut.org.il/): Information about the Kol Sherut project, its mission, and its operators
+- [Partners](https://www.kolsherut.org.il/): Organizations supporting Kol Sherut including government ministries and agencies
+- [Add a Missing Service](https://www.kolsherut.org.il/): Crowdsourced service reporting — users can flag missing services
+- [Accessibility Statement](https://www.kolzchut.org.il/he/%D7%9B%D7%9C_%D7%A9%D7%99%D7%A8%D7%95%D7%AA:%D7%A0%D7%92%D7%99%D7%A9%D7%95%D7%AA): Accessibility policy and features
+
+## Service Categories
+
+The platform covers the following major categories of social services:
+
+### Rights Advocacy (מיצוי זכויות)
+- Understanding government programs and benefits
+- Legal aid and advocacy
+- Services for people with health conditions
+- Services for low-income individuals
+
+### Early Childhood (הגיל הרך)
+- Parenting education and guidance
+- Well-baby clinics (Tipat Chalav)
+- Afterschool care and daycare
+- Family daycare centers (Mishpachtonim)
+
+### Victims and Their Families (נפגעים ומשפחותיהם)
+- Services for bereaved families
+- Disabled IDF veterans
+- Mental health crisis support
+- Financial emergency aid
+
+### Housing (דיור)
+- Housing for domestic violence survivors
+- Housing for at-risk youth
+- Housing for the homeless
+- Housing for people with mental illness
+
+### Health Services (שירותי בריאות)
+- Cancer patient services
+- Services for visually impaired individuals
+- Addiction treatment and rehabilitation
+- Medical equipment and supplies
+
+### Mental Health (מתמודדי נפש)
+- Balancing homes (Batim Me'aznim)
+- Counseling, guidance, and accompaniment
+- Supported housing
+- Employment for people with mental illness
+- PTSD support
+
+### Senior Citizens (אזרחים ותיקים)
+- Health services for seniors
+- Recreational clubs and leisure
+- Senior housing solutions
+- Holocaust survivor services
+
+### Low Income and Financial Hardship (הכנסה נמוכה וקשיים כלכליים)
+- Food assistance
+- Rights advocacy for low-income individuals
+- Financial aid
+- Clothing and essential goods
+
+### Youth (צעירים וצעירות)
+- Youth mentoring programs
+- At-risk youth services
+
+### Arabic-Speaking Community (خدمات للمجتمع العربي)
+- Legal assistance in Arabic
+- Emergency services in Arabic
+- Mental health crisis support in Arabic
+
+### Additional Populations (אוכלוסיות נוספות)
+- Prostitution survivors
+- At-risk teenagers
+- Autism spectrum services
+- Domestic violence survivors
+- Student services
+
+## Service Types (Response Taxonomy)
+
+- Human Services (שירותים אנושיים)
+- Health (בריאות)
+- Care (טיפול)
+- Education (חינוך)
+- Legal (משפטי)
+- Employment (עבודה)
+- Housing (דיור)
+- Community Services (שירותים קהילתיים)
+- Goods (מוצרים)
+- Financial Assistance (כסף)
+- Emergency Services (חירום)
+- Culture and Sports (תרבות וספורט)
+- Food (מזון)
+
+## Life Situations (Filters)
+
+Users can filter services by life situation including:
+- Target audiences: military/veteran status, citizenship, criminal history, deprivation, education, household status, housing status, income level, sector, sexual orientation, survivor status
+- Health issues: mental health conditions, substance dependency, disabilities, physical health conditions
+- Age groups: infants, children, youth, young adults, adults, seniors
+- Languages: Arabic, Russian, Amharic, Tigrinya, French, English, and more
+- Employment status, gender, community, life events, government-recognized statuses
+
+## Geographic Coverage
+
+Services are indexed across all regions of Israel:
+- Gush Dan (Greater Tel Aviv metropolitan area)
+- Jerusalem area
+- Northern Israel
+- Southern Israel
+- Nationwide services (שירות ארצי)
+
+Users can search by specific city, region, or use their current GPS location.
+
+## Data Sources and Taxonomy
+
+Service data is sourced from:
+- [GuideStar Israel](https://www.guidestar.org.il/) — NGO and nonprofit registries
+- Government ministries and agencies
+- The [Open Eligibility](https://github.com/kolzchut/openeligibility) taxonomy for standardized service classification
+
+## Partners
+
+Kol Sherut is built and supported by:
+- [Kolzchut](https://www.kolzchut.org.il/) (כל זכות) — the operating organization
+- [Ministry of Justice](https://www.gov.il/he/departments/ministry_of_justice/govil-landing-page) — government partner
+- [National Digital Agency](https://www.gov.il/he/departments/national-digital-agency/govil-landing-page) — government partner
+- Prime Minister's Office — Government and Society Division
+- Government ICT Authority — Ready Government Unit
+- Corporate Authority and GuideStar
+- Ministry of Welfare and Social Security
+- Ministry of Health
+- Ministry of Education
+
+## How to Add Services
+
+Organizations can add their services to Kol Sherut:
+- **NGOs/Nonprofits**: Enter service data on [GuideStar Israel](https://www.guidestar.org.il/); it will be automatically imported
+- **Other organizations**: Contact info@kolsherut.org.il with organization name, services provided, and contact details
+
+## Disclaimer
+
+Kol Sherut provides general information only and does not offer individual advice. Kolzchut Ltd. (a public benefit company) is not responsible for the content displayed on the site. The information is general, largely sourced automatically from various databases, and may not be complete, accurate, or up to date. Use of the site is at the user's sole responsibility.
+
+Government support does not imply governmental responsibility for the site's operations or content. The site is intended for all genders.

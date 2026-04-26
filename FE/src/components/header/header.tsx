@@ -41,14 +41,15 @@ const Header = ({showLogo = true, showSearchbar = true, refreshPage}: { showLogo
                         className={classes.button} onClick={toggleAccessibility} key={'2'}>
                     <img src={accessibilityIcon} alt={'activate accessibility'} className={classes.accIcon} key={'3'}/>
                 </button>
+                
                 <div className={classes.linksDiv}>
-                    <a href={`?m=About`} className={classes.link}
+                    <a href={`#`} className={classes.link}
                        onClick={(e: React.MouseEvent<HTMLAnchorElement>) => onClick(e, "About")}>{names.about}</a>
-                    <a href={`?m=AddService`} className={classes.link}
+                    <a href={`#`} className={classes.link}
                        onClick={(e: React.MouseEvent<HTMLAnchorElement>) => onClick(e, "AddService")}>{names.addService}</a>
-                    <a href={`?m=Partners`} className={classes.link}
+                    <a href={`#`} className={classes.link}
                        onClick={(e: React.MouseEvent<HTMLAnchorElement>) => onClick(e, "Partners")}>{names.partners}</a>
-                    <a href={`?m=Contact`} className={classes.link}
+                    <a href={`#`} className={classes.link}
                        onClick={(e: React.MouseEvent<HTMLAnchorElement>) => onClick(e, "Contact")}>{names.contact}</a>
                 </div>
 

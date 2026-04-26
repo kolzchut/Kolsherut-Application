@@ -1,3 +1,4 @@
 User-agent: *
 Disallow: /configs/
 Sitemap: https://www.kolsherut.org.il/sitemap.xml
+LLMS: https://www.kolsherut.org.il/llms.txt
