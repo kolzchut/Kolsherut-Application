@@ -1,21 +1,31 @@
 import {replaceMacros} from "../str";
 
+export type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
+
 interface IProps {
-    templates: any[];
-    macrosAndReplacements: { [key: string]: string };
-    objectReplacements?: { [key: string]: any };
+    templates: JsonValue[];
+    macrosAndReplacements: Record<string, string>;
+    objectReplacements?: Record<string, JsonValue>;
 }
 
 const JsonLd = ({templates, macrosAndReplacements, objectReplacements = {}}: IProps) => {
+    // Escape replacement values so control characters (newlines, tabs, etc.)
+    // don't break the JSON string after macro substitution.
+    const safeMacros: Record<string, string> = {};
+    for (const [key, value] of Object.entries(macrosAndReplacements)) {
+        // JSON.stringify escapes special chars and wraps in quotes — strip the quotes
+        safeMacros[key] = JSON.stringify(value).slice(1, -1);
+    }
+
     const processedSchemas = templates.map((template) => {
         let jsonString = JSON.stringify(template);
 
         jsonString = replaceMacros({
             stringWithMacros: jsonString,
-            macrosAndReplacements
+            macrosAndReplacements: safeMacros
         });
 
-        let schema = JSON.parse(jsonString);
+        let schema: JsonValue = JSON.parse(jsonString);
 
         schema = replaceObjectMacros(schema, objectReplacements);
 
@@ -35,7 +45,7 @@ const JsonLd = ({templates, macrosAndReplacements, objectReplacements = {}}: IPr
     );
 };
 
-const replaceObjectMacros = (obj: any, objectReplacements: { [key: string]: any }): any => {
+const replaceObjectMacros = (obj: JsonValue, objectReplacements: Record<string, JsonValue>): JsonValue => {
     if (typeof obj === "string") {
         return objectReplacements[obj] !== undefined ? objectReplacements[obj] : obj;
     }
@@ -43,7 +53,7 @@ const replaceObjectMacros = (obj: any, objectReplacements: { [key: string]: any 
         return obj.map(item => replaceObjectMacros(item, objectReplacements));
     }
     if (obj && typeof obj === "object") {
-        const result: any = {};
+        const result: Record<string, JsonValue> = {};
         for (const [key, value] of Object.entries(obj)) {
             result[key] = replaceObjectMacros(value, objectReplacements);
         }

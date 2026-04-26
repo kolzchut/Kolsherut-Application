@@ -1,4 +1,5 @@
 import {IService} from "../../types/serviceType";
+import type {JsonValue} from "../../services/jsonLd/jsonLd";
 
 const getResultsJsonLd = ({
     searchQuery,
@@ -11,7 +12,7 @@ const getResultsJsonLd = ({
     pageUrl: string;
     backendFilters: { response: string | null; situation: string | null; by: string; serviceName: string };
 }) => {
-    const templates = window.jsonLd.results;
+    const templates: JsonValue[] = window.jsonLd.results;
     const defaults = window.jsonLd.defaults;
     const baseUrl = window.environment.currentURL;
     const siteName = window.strings.footer.nameOfWebsite;
@@ -20,20 +21,18 @@ const getResultsJsonLd = ({
     const search = cleanSearch || [backendFilters.response, backendFilters.situation].filter(Boolean).join(" ");
     const resultsDescription = `${defaults.resultsDescriptionPrefix} ${search}`;
 
-    // Build ItemList elements from first 10 results
     const itemListElements = buildResultsItemList(results.slice(0, 10), baseUrl);
 
-    // Breadcrumbs: Home > Search term
     const breadcrumbs = buildResultsBreadcrumbs(search, pageUrl, baseUrl, siteName, defaults.searchResultsFallback);
 
-    const macrosAndReplacements: { [key: string]: string } = {
+    const macrosAndReplacements: Record<string, string> = {
         "%%search%%": search,
         "%%resultsDescription%%": resultsDescription,
         "%%currentUrl%%": pageUrl,
         "%%resultsCount%%": String(results.length),
     };
 
-    const objectReplacements: { [key: string]: any } = {
+    const objectReplacements: Record<string, JsonValue> = {
         "%%itemListElements%%": itemListElements,
         "%%breadcrumbs%%": breadcrumbs,
     };

@@ -1,7 +1,8 @@
 import {ICard} from "../../types/cardType";
+import type {JsonValue} from "../../services/jsonLd/jsonLd";
 
 const getCardJsonLd = ({card, cardUrl}: { card: ICard; cardUrl: string }) => {
-    const templates = window.jsonLd.card;
+    const templates: JsonValue[] = window.jsonLd.card;
     const defaults = window.jsonLd.defaults;
     const baseUrl = window.environment.currentURL;
     const siteName = window.strings.footer.nameOfWebsite;
@@ -12,7 +13,7 @@ const getCardJsonLd = ({card, cardUrl}: { card: ICard; cardUrl: string }) => {
 
     const breadcrumbs = buildCardBreadcrumbs(card, cardUrl, baseUrl, siteName);
 
-    const macrosAndReplacements: { [key: string]: string } = {
+    const macrosAndReplacements: Record<string, string> = {
         "%%serviceName%%": card.service_name || "",
         "%%serviceDescription%%": card.service_description || "",
         "%%cardUrl%%": cardUrl,
@@ -22,7 +23,7 @@ const getCardJsonLd = ({card, cardUrl}: { card: ICard; cardUrl: string }) => {
         "%%situationNames%%": situationNames,
     };
 
-    const objectReplacements: { [key: string]: any } = {
+    const objectReplacements: Record<string, JsonValue> = {
         "%%breadcrumbs%%": breadcrumbs,
     };
 
@@ -30,7 +31,7 @@ const getCardJsonLd = ({card, cardUrl}: { card: ICard; cardUrl: string }) => {
 };
 
 function buildCardBreadcrumbs(card: ICard, cardUrl: string, baseUrl: string, siteName: string) {
-    const items: any[] = [
+    const items: JsonValue[] = [
         {
             "@type": "ListItem",
             "position": 1,
