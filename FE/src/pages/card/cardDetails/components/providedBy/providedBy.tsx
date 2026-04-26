@@ -39,7 +39,7 @@ const ProvidedBy = ({
 
     const classes = useStyle({arrow: arrowDirection, accessibilityActive: theme.accessibilityActive});
     return <div>
-        <span className={classes.title}>{providedByTitle}</span>
+        <h3 className={classes.title}>{providedByTitle}</h3>
         <div className={classes.mainDiv}>
             {arrowDirection !== ArrowDirection.NotDisplayed && (
                 <img src={openIcon} className={classes.arrow} alt={"Toggle Details"} onClick={handleToggle}/>

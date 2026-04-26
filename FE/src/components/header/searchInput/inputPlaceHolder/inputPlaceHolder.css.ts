@@ -31,12 +31,14 @@ export default createUseStyles((theme: IDynamicThemeApp) => ({
         gap: 5
     },
     firstSentence: {
+        display: 'block',
         color: secondaryTextColorOne,
         fontWeight: 600,
         fontSize: theme?.accessibilityActive ? '26px' : '22px',
         margin: 0,
     },
     secondSentence: {
+        display: 'block',
         color: tertiaryTextColorFour,
         fontWeight: 400,
         fontSize: theme?.accessibilityActive ? '22px' : '18px',

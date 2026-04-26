@@ -5,8 +5,13 @@ import Label from "../label/label";
 import useStyle, {IDynamicTheme} from "./cardBanner.css";
 import cardAnalytics from "../../services/gtag/cardEvents";
 
+interface ICardBannerProps {
+    card: ICardForBanner;
+    headingLevel?: 'h2' | 'h3';
+}
 
-const CardBanner = ({card}: { card: ICardForBanner }) => {
+const CardBanner = ({card, headingLevel = 'h2'}: ICardBannerProps) => {
+    const HeadingTag = headingLevel;
     const theme = useTheme<IDynamicTheme>();
     const [extendText, setExtendText] = useState<boolean>(false);
     const classes = useStyle({theme});
@@ -37,9 +42,9 @@ const CardBanner = ({card}: { card: ICardForBanner }) => {
 
     return (
         <div className={classes.cardBanner}>
-            <h2 className={classes.bannerTitle}>
+            <HeadingTag className={classes.bannerTitle}>
                 {card.service_name}
-            </h2>
+            </HeadingTag>
             <div className={classes.bannerDescriptionDiv}>
                 <span ref={el} className={buttonClass}>{card.service_description}</span>
                 {isOverflowing && <button onClick={handleExtendOrMinimizeClick}

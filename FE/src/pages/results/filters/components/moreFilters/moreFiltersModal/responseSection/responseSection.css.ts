@@ -24,12 +24,13 @@ export default createUseStyles({
         flexWrap:'wrap',
     },
     title: ({accessibilityActive}: IProps) => ({
+        display: 'block',
         fontWeight:600,
         lineHeight:1.3,
         fontSize: accessibilityActive ? 22 : 18,
         color: tertiaryTextColorTwo,
+        cursor: 'pointer',
         '&:hover': {
-            cursor: 'pointer',
             textDecoration: 'underline',
         }
     })

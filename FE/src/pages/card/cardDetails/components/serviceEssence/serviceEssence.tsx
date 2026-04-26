@@ -13,7 +13,7 @@ const ServiceEssence = ({responses, cardId}: { responses: Response[], cardId:str
     const classes = useStyle({accessibilityActive: theme.accessibilityActive});
 
     return <div>
-        <span className={classes.title}>{serviceEssenceTitle}</span>
+        <h3 className={classes.title}>{serviceEssenceTitle}</h3>
         <div className={classes.linkList}>
             {responses.map((response: Response) => {
                 const href = getHrefForResults({responseFilter: response.id});

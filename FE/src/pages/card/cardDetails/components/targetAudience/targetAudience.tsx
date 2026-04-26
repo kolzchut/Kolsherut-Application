@@ -14,7 +14,7 @@ const TargetAudience = ({situations, cardId}: { situations: Situation[], cardId:
     const classes = useStyle({accessibilityActive: theme.accessibilityActive});
     if (situations.length < 1) return <></>
     return <div>
-        <span className={classes.title}>{targetAudienceTitle}</span>
+        <h3 className={classes.title}>{targetAudienceTitle}</h3>
         <div className={classes.linkList}>
             {situations.map((situation: Situation) => {
                 const href = getHrefForResults({situationFilter: situation.id});

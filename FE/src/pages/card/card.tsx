@@ -9,7 +9,9 @@ import CardDetails from "./cardDetails/cardDetails";
 import cardAnalytics from "../../services/gtag/cardEvents";
 import Header from "../../components/header/header";
 import getCardMetaTags from "./getCardMetaTags";
+import getCardJsonLd from "./getCardJsonLd";
 import MetaTags from "../../services/metaTags/metaTags";
+import JsonLd from "../../services/jsonLd/jsonLd";
 import {useGetCurrentRoute} from "../../services/url/route";
 
 const Card = () => {
@@ -18,6 +20,7 @@ const Card = () => {
     const cardId = useSelector(getCardId)
     const cardUrl = useGetCurrentRoute();
     const metaTagsData = fullCard ? getCardMetaTags({card: fullCard, cardUrl}) : null;
+    const jsonLdData = fullCard ? getCardJsonLd({card: fullCard, cardUrl}) : null;
     useEffect(() => {
         const fetchCard = async () => {
             const cardData = await getFullCard(cardId);
@@ -37,6 +40,7 @@ const Card = () => {
     return (
         <>
             {metaTagsData && <MetaTags {...metaTagsData}/>}
+            {jsonLdData && <JsonLd {...jsonLdData}/>}
             <main>
                 <Header/>
                 <section className={classes.root}>

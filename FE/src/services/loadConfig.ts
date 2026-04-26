@@ -14,6 +14,7 @@ declare global {
         gtag: any;
         modules: any;
         metaTags: any
+        jsonLd: any;
         environment: any;
         handleMapFeatureClick: (event: Event, cardId: string, lengthOfFeatures: number) => void;
         __suppressHistoryPush: boolean
@@ -29,7 +30,8 @@ const configs: Array<ConfigType> = [
     {"type": "responseColors", "fileName": `responseColors.json`},
     {"type": "filters", "fileName": `filters.json`},
     {"type": "modules", "fileName": `modules.json`},
-    {"type": "metaTags", "fileName": `metaTags.json`}
+    {"type": "metaTags", "fileName": "metaTags.json"},
+    {"type": "jsonLd", "fileName": "jsonLd.json"}
 ];
 
 export default async () => {

@@ -14,7 +14,9 @@ import resultsAnalytics from "../../services/gtag/resultsEvents";
 import FiltersForMobile from "./filters/filtersForMobile";
 import {getBackendFilters, getLocationFilter} from "../../store/filter/filter.selector";
 import MetaTags from "../../services/metaTags/metaTags";
+import JsonLd from "../../services/jsonLd/jsonLd";
 import getResultsMetaTags from "./getResultsMetaTags";
+import getResultsJsonLd from "./getResultsJsonLd";
 import {useOnce} from "../../hooks/useOnce";
 import {allowChangeStoreLocation} from "../../services/map/events/mapInteraction";
 import {settingToResults} from "../../store/shared/sharedSlice";
@@ -48,6 +50,7 @@ const Results = () => {
         openSecondList: !!selectedOrganization || showBranchFilterForMobile,
     });
     const metaTagsData = getResultsMetaTags({searchQuery, locationFilter: location.key, backendFilters, pageUrl})
+    const jsonLdData = getResultsJsonLd({searchQuery, results: filteredResults, pageUrl, backendFilters})
     const dispatch = useDispatch();
     const reportOnce = useOnce(() => resultsAnalytics.scrollOnceEvent());
     const refreshPage = () => setNewPage(prev => prev + 1);
@@ -95,6 +98,7 @@ const Results = () => {
 
     return <>
         <MetaTags {...metaTagsData}/>
+        <JsonLd {...jsonLdData}/>
         <main>
             <Header key={'resultHeader'} refreshPage={refreshPage}/>
             <div className={classes.mainDiv}>

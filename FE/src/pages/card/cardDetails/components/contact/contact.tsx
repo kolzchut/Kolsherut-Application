@@ -25,7 +25,7 @@ const Contact = ({email, phoneNumbers, websites, address,card}: IProps) => {
 
     return (
         <div>
-            <span className={classes.title}>{contactTitle}</span>
+            <h3 className={classes.title}>{contactTitle}</h3>
             {phoneNumbers.map((phoneNumber) => (<Connection type={`tel`} text={phoneNumber} key={phoneNumber} card={card} actionType={'phone'}/>))}
             {email && (<Connection text={email} type={`mailto`}  card={card} actionType={'email'}/>)}
             {websites && websites.map((website) => (

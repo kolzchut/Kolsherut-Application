@@ -57,7 +57,8 @@
     "showMore": "עוד",
     "resultsAmount": " %%MACRO%% תוצאות",
     "geoFilterModalPlaceHolder": "ניתן לחפש ישוב או מקום מוגדר",
-    "showMoreOrganizations": "הצג עוד %%MACRO%% ארגונים"
+    "showMoreOrganizations": "הצג עוד %%MACRO%% ארגונים",
+    "pageHeading": "תוצאות חיפוש"
   },
   "smallPopUp": {
     "title": " %%NUM_OF_BRANCHES%% שירותים באיזור זה",

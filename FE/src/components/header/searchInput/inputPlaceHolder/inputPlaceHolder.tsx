@@ -41,11 +41,11 @@ const InputPlaceHolder = ({onClick}: { onClick: () => void }) => {
         role="button"
         aria-label="Search input placeholder"
     >
-        {text.responseSentence && <h2 className={classes.firstSentence}>{text.responseSentence}</h2>}
+        {text.responseSentence && <span className={classes.firstSentence}>{text.responseSentence}</span>}
         <div className={classes.bottomDiv}>
             {text.situationSentence &&
-                <h2 className={classes.secondSentence}>{baseSituationSentence + " " + text.situationSentence}</h2>}
-            {text.bySentence && <h3 className={classes.secondSentence}>{text.bySentence}</h3>}
+                <span className={classes.secondSentence}>{baseSituationSentence + " " + text.situationSentence}</span>}
+            {text.bySentence && <span className={classes.secondSentence}>{text.bySentence}</span>}
         </div>
     </div>
 }
