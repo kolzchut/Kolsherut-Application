@@ -33,7 +33,9 @@ export default  createUseStyles({
         width:'auto'
     },
     root:{
-        height: 320,
-        width:'auto'
+        height: 'auto',
+        width:'100%',
+        boxSizing: 'border-box',
+        flexShrink: 0
     }
 });

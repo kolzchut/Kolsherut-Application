@@ -4,16 +4,11 @@ import Group from "./group/group"
 import axios from "axios";
 import {useEffect, useRef, useState} from "react";
 import logger from "../../../services/logger/logger";
-import useElementWidth from "../../../hooks/useElementWidth";
 
 const OptionalSearch = () => {
     const [optionalSearchValues, setOptionalSearchValues] = useState<Array<IGroup>>([]);
     const rootRef = useRef<HTMLDivElement>(null);
-    const widthOfRoot = useElementWidth(rootRef);
-    const itemsInRow = Math.max(widthOfRoot / 350, 1);
-    const heightPerItem = 210;
-    const minHeight = Math.ceil(optionalSearchValues.length / itemsInRow) * heightPerItem;
-    const classes = useStyle({minHeight});
+    const classes = useStyle();
     useEffect(() => {
             const getOptionalSearchValues = async () => {
                 try {
