@@ -1,5 +1,7 @@
 {
   "state": "local",
   "server": "http://localhost:5000",
-  "analyticsId": "G-GYV3YZ00Z8"
+  "analyticsId": "G-GYV3YZ00Z8",
+  "currentURL": "https://dev.kolsherut.org.il",
+  "sitemapsDefaultLastModified": "2025-05-07T00:00:00.000Z"
 }
