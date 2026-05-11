@@ -57,7 +57,7 @@ OPENELIGIBILITY_YAML_URL = (
     'https://raw.githubusercontent.com/kolzchut/openeligibility/main/taxonomy.tx.yaml'
 )
 
-BUDGETKEY_DATABASE_URL = 'postgresql://readonly:readonly@data-next.obudget.org/budgetkey'
+BUDGETKEY_DATABASE_URL = get_env('BUDGETKEY_DATABASE_URL')
 
 DATA_DUMP_DIR = 'data'
 
