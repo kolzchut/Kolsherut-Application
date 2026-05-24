@@ -12,8 +12,8 @@ const mixedTaxonomyBlackList: Record<string, string[]> = mixedTaxonomyBlackListR
 const extractSubSlug = (slug: string): string => slug.split(':').slice(-1)[0];
 
 const buildLoc = ({response, situation}: {response: FixedTaxonomy, situation: FixedTaxonomy}): string => {
-    const sitSubSlug = encodeURI(extractSubSlug(situation.slug));
-    const respSubSlug = encodeURI(extractSubSlug(response.slug));
+    const sitSubSlug = encodeURIComponent(extractSubSlug(situation.slug));
+    const respSubSlug = encodeURIComponent(extractSubSlug(response.slug));
     return `${vars.serverSetups.canonicalOrigin}/${sitSubSlug}/${respSubSlug}`;
 }
 
