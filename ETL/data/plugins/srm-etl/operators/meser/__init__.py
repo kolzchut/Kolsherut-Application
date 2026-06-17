@@ -48,7 +48,11 @@ def safe_list(lst):
     if isinstance(lst, list):
         return lst
     return []
+
+
 def remove_numbers_and_spaces(text):
+    if text is None:
+        return ""
     text = re.sub(r'\d+', '', text)
     text = re.sub(r' +', ' ', text)
     return text.strip()
@@ -63,8 +67,8 @@ def create_address_clean(adrees, city_name):
 
     if addr and city and addr.lower() == city.lower():
         addr = None
-
-    return ' '.join(filter(None, [addr, city]))
+    data = [addr, city]
+    return ' '.join(str(item).strip() for item in data if item and str(item).strip())
 
 
 
