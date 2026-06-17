@@ -1,3 +1,5 @@
+import re
+
 from operators.meser.update_service import update_airtable_services_from_df
 from srm_tools.hash import hasher
 from openlocationcode import openlocationcode as olc
@@ -46,6 +48,10 @@ def safe_list(lst):
     if isinstance(lst, list):
         return lst
     return []
+def remove_numbers_and_spaces(text):
+    text = re.sub(r'\d+', '', text)
+    text = re.sub(r' +', ' ', text)
+    return text.strip()
 
 
 def create_address_clean(adrees, city_name):
@@ -53,7 +59,7 @@ def create_address_clean(adrees, city_name):
         s = str(val).strip()
         return s if pd.notna(val) and s.lower() not in ['none', 'nan', ''] else None
 
-    addr, city = clean(adrees), clean(city_name)
+    addr, city = clean(adrees), remove_numbers_and_spaces(clean(city_name))
 
     if addr and city and addr.lower() == city.lower():
         addr = None
