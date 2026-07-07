@@ -212,18 +212,11 @@ def run(*_):
     logger.info("Transforming Meser data...")
     # 5. Transform the sanitized dataframe
     transformed_df = transform_meser_dataframe(df, tags)
-    ### COMMENTED TO DISABLE LOCAL AUTHORITY SPECIAL HANDLING - DIFFERENT ISSUE - ACTUALLY SHOULD BE IN PRODUCTION ###
-    # transformed_df_local, transformed_df_non_local = split_by_local_authority(transformed_df)
-    #
-    # logger.info("Handling local authorities...")
-    # # 6. Handle local authorities separately
-    # transformed_df_local = handle_local_authorities(transformed_df_local)
-    # transformed_df = pd.concat([transformed_df_local, transformed_df_non_local], ignore_index=True)
-
-    ## Remove that Line after fixing local authorities issue ##
-    transformed_df = transformed_df[transformed_df["organization_id"].str.len().between(5, 15)]
-    ### END COMMENTED TO DISABLE LOCAL AUTHORITY SPECIAL HANDLING - DIFFERENT ISSUE - ACTUALLY SHOULD BE IN PRODUCTION ###
-
+    transformed_df_local, transformed_df_non_local = split_by_local_authority(transformed_df)
+    logger.info("Handling local authorities...")
+    # 6. Handle local authorities separately
+    transformed_df_local = handle_local_authorities(transformed_df_local)
+    transformed_df = pd.concat([transformed_df_local, transformed_df_non_local], ignore_index=True)
     logger.info("Updating Airtable")
     modified_organizations = update_airtable_organizations_from_df(transformed_df.copy())
     logger.info(f"Effected {modified_organizations} organizations")
