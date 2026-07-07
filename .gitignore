@@ -176,3 +176,6 @@ ignore/
 
 /ETL/data/data
 /ETL/data/logs
+
+# Local ES replica credentials (see ES/reindex/.env.example)
+ES/reindex/.env

@@ -1,0 +1,17 @@
+services:
+  kolsherut-elasticsearch:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: kolsherut-elasticsearch-local
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_local_data:/usr/share/elasticsearch/data
+
+volumes:
+  es_local_data:
