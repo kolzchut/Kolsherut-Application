@@ -6,7 +6,7 @@ import SearchOption from "../../../pages/home/search/searchInput/searchOption/se
 import resultsAnalytics from "../../../services/gtag/resultsEvents";
 import useOnClickedOutside from "../../../hooks/useOnClickedOutside";
 import {useSelector} from "react-redux";
-import {getSearchQuery} from "../../../store/general/general.selector";
+import {getSearchQuery, isLoading} from "../../../store/general/general.selector";
 import {useTheme} from "react-jss";
 import IDynamicThemeApp from "../../../types/dynamicThemeApp";
 import useStyles from "./searchInput.css";
@@ -21,6 +21,7 @@ const SearchInput = ({refreshPage}:{refreshPage?: ()=>void}) => {
     const theme = useTheme<IDynamicThemeApp>();
     const classes = useStyles({theme});
     const searchQuery = useSelector(getSearchQuery);
+    const isResultsLoading = useSelector(isLoading);
     const [isInputFocused, setIsInputFocused] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const [optionalSearchValues, setOptionalSearchValues] = useState<AutocompleteType>(emptyAutocomplete);
@@ -81,7 +82,7 @@ const SearchInput = ({refreshPage}:{refreshPage?: ()=>void}) => {
                 autoComplete="off"
             />
         </div>}
-        {(optionalSearchValues.structured.length > 0 || optionalSearchValues.unstructured.length> 0) && <div className={classes.searchOptionsDiv}>
+        {(optionalSearchValues.structured.length > 0 || optionalSearchValues.unstructured.length> 0) && !isResultsLoading  && <div className={classes.searchOptionsDiv}>
         {optionalSearchValues.structured.map((value: IStructureAutocomplete, index: number) => (
             <SearchOption value={value} isStructured={true} key={index}
                           onCloseSearchOptions={onCloseSearchOptions} refreshPage={refreshPage}/>

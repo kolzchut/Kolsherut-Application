@@ -51,6 +51,7 @@ export const changingPageToResults =  ({value, removeOldFilters, refreshPage}: {
 
 export const settingToResults = async ({value}: { value: ILabel}) => {
     store.dispatch(setLoading(true));
+   store.dispatch(setResults([]))
     const fetchBaseData = {
         responseId: value.response_id,
         situationId: value.situation_id,
