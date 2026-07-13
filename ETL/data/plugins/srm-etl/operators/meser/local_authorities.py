@@ -1,10 +1,14 @@
 import csv
+from pathlib import Path
+
 import pandas as pd
 
 from conf import settings
 from load.airtable import update_if_exists_if_not_create
 from utilities.update import prepare_airtable_dataframe
 from srm_tools.logger import logger
+
+STATIC_DATA_DIRECTORY = Path(__file__).parent / 'static_data'
 
 def clean_city_name(city_series: pd.Series) -> pd.Series:
     city_series = city_series.str.replace(r'[-"\'`]', '', regex=True)
@@ -19,12 +23,12 @@ def set_up_organizations(df: pd.DataFrame):
     update_if_exists_if_not_create(df=df, table_name=settings.AIRTABLE_ORGANIZATION_TABLE,base_id=settings.AIRTABLE_DATA_IMPORT_BASE, airtable_key=airtable_key)
 
 def set_up_local_authorities():
-    local_authorities_csv = csv.DictReader(open('static_data/local_authorities.csv', encoding='utf-8'))
+    local_authorities_csv = csv.DictReader(open(STATIC_DATA_DIRECTORY / 'local_authorities.csv', encoding='utf-8'))
     df = pd.DataFrame(local_authorities_csv)
     set_up_organizations(df)
 
 def set_up_map_cities_with_local_authorities() -> pd.DataFrame:
-    map_cities_with_local_authorities_csv = csv.DictReader(open('static_data/map_cities_with_local_authorities.csv', encoding='utf-8'))
+    map_cities_with_local_authorities_csv = csv.DictReader(open(STATIC_DATA_DIRECTORY / 'map_cities_with_local_authorities.csv', encoding='utf-8'))
     df = pd.DataFrame(map_cities_with_local_authorities_csv)
     return df
 

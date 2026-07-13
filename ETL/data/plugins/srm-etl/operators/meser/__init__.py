@@ -1,6 +1,8 @@
 import re
 
 from operators.meser.local_authorities import handle_local_authorities
+from operators.meser.program_enrichment.enrich_services import enrich_services_with_program_data
+from operators.meser.program_enrichment.load_program_tables import load_program_tables
 from operators.meser.update_service import update_airtable_services_from_df
 from srm_tools.hash import hasher
 from openlocationcode import openlocationcode as olc
@@ -187,6 +189,9 @@ def split_by_local_authority(df):
 def run(*_):
     logger.info("Starting Meser data update...")
 
+    logger.info("Fetching program tables from Google Drive...")
+    # 0. Fetch the two program tables from Google Drive (fails the run on any Drive error)
+    program_tables = load_program_tables()
 
     logger.info("Fetching and sanitizing source data...")
     # 1. Fetch source data from DataGovIL and sanitize
@@ -214,6 +219,11 @@ def run(*_):
     logger.info("Transforming Meser data...")
     # 5. Transform the sanitized dataframe
     transformed_df = transform_meser_dataframe(df, tags)
+
+    logger.info("Enriching services with program data...")
+    # 5.5 Enrich services with the Google Drive program tables
+    transformed_df = enrich_services_with_program_data(transformed_df, tags, program_tables)
+
     transformed_df_local, transformed_df_non_local = split_by_local_authority(transformed_df)
     logger.info("Handling local authorities...")
     # 6. Handle local authorities separately

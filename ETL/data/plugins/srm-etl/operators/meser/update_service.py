@@ -41,7 +41,7 @@ def update_airtable_services_from_df(df: pd.DataFrame) -> int:
 
     fields_to_prepare = [
         'id', 'name', 'data_sources', 'situations', 'responses',
-        'branches', 'id_in_source', 'source', 'status'
+        'branches', 'id_in_source', 'source', 'status', 'description', 'details'
     ]
     df_prepared = prepare_airtable_dataframe(df, key_field, fields_to_prepare, airtable_key)
 

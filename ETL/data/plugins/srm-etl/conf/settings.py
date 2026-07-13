@@ -53,6 +53,8 @@ AIRTABLE_API_KEY = get_env('DATAFLOWS_AIRTABLE_APIKEY')
 
 GOOGLE_MAPS_API_KEY = get_env('ETL_GOOGLE_MAPS_API_KEY')
 
+GOOGLE_SERVICE_ACCOUNT_JSON_BASE64 = get_env('ETL_GOOGLE_SERVICE_ACCOUNT_JSON_BASE64', required=False)
+
 OPENELIGIBILITY_YAML_URL = (
     'https://raw.githubusercontent.com/kolzchut/openeligibility/main/taxonomy.tx.yaml'
 )
