@@ -18,7 +18,10 @@ function App() {
     const modal = useSelector(getModal);
     const [isMobile, setIsMobile] = useState(false);
     useEffect(() => {
-        setIsMobile(isMobileScreen());
+        const updateIsMobile = () => setIsMobile(isMobileScreen());
+        updateIsMobile();
+        window.addEventListener('resize', updateIsMobile);
+        return () => window.removeEventListener('resize', updateIsMobile);
     }, []);
 
     const dynamicTheme = {
