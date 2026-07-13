@@ -1,0 +1,61 @@
+# ---------------------------------------------------------
+# STAGING ENVIRONMENT OVERRIDES
+# ---------------------------------------------------------
+
+backend:
+  replicaCount: 1
+  image:
+    tag: "stage"
+  
+  ingress:
+    hosts:
+      - host: be-staging.kolsherut.org.il
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: tls-secret-name
+        hosts:
+          - be-staging.kolsherut.org.il
+
+  env:
+    ENV: "stage"
+    ORIGIN: "https://staging.kolsherut.org.il" 
+    VERBOSE: "true"
+
+etl:
+  image:  
+    tag: "stage"
+  
+  ingress:
+    hosts:
+      - host: etl-staging.kolsherut.org.il
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: tls-secret-name
+        hosts:
+          - etl-staging.kolsherut.org.il
+
+  env:
+    CRONICLE_server__hostname: "etl-staging.kolsherut.org.il"
+    CRONICLE_base_app_url: "https://etl-staging.kolsherut.org.il"
+    CRONICLE_custom_live_log_socket_url: "https://etl-staging.kolsherut.org.il"
+
+frontend:
+  image:
+    tag: "stage"
+  ingress:
+    hosts:
+      - host: staging.kolsherut.org.il
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: tls-secret-name
+        hosts:
+          - staging.kolsherut.org.il
+
+secrets:
+  ENV_NAME: "staging"

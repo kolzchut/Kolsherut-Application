@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "backend.fullname" . }}-etl
+  labels:
+    component: etl
+    {{- include "backend.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.etl.service.type }}
+  ports:
+    - port: {{ .Values.etl.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    component: etl
+    {{- include "backend.selectorLabels" . | nindent 4 }}
+    

@@ -1,0 +1,62 @@
+# ---------------------------------------------------------
+# DEVELOPMENT ENVIRONMENT OVERRIDES
+# ---------------------------------------------------------
+
+backend:
+  replicaCount: 1
+  image:
+    tag: "dev"
+  
+  ingress:
+    hosts:
+      - host: be-dev.kolsherut.org.il
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: tls-secret-name
+        hosts:
+          - be-dev.kolsherut.org.il
+
+  # Dev Environment Variables
+  env:
+    ENV: "development"
+    ORIGIN: "https://orange-forest-0544f8503.1.azurestaticapps.net,https://fe-dev.kolsherut.org.il,https://dev.kolsherut.org.il"
+    VERBOSE: "true"
+
+etl:
+  image:
+    tag: "dev"
+  
+  ingress:
+    hosts:
+      - host: etl-dev.kolsherut.org.il
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: tls-secret-name
+        hosts:
+          - etl-dev.kolsherut.org.il
+
+  env:
+    CRONICLE_server__hostname: "etl-dev.kolsherut.org.il"
+    CRONICLE_base_app_url: "https://etl-dev.kolsherut.org.il"
+    CRONICLE_custom_live_log_socket_url: "https://etl-dev.kolsherut.org.il"
+
+frontend:
+  image:
+    tag: "dev"
+  ingress:
+    hosts:
+      - host: dev.kolsherut.org.il
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: tls-secret-name
+        hosts:
+          - dev.kolsherut.org.il
+
+secrets:
+  ENV_NAME: "development"

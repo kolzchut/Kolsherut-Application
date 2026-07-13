@@ -1,0 +1,144 @@
+{{- $logs := .Values.backend.logs | default dict }}
+{{- $logsCleanup := $logs.cleanup | default dict }}
+{{- $logsPersistence := $logs.persistence | default dict }}
+{{- $logsEmptyDir := $logs.emptyDir | default dict }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "backend.fullname" . }}-be
+  labels:
+    {{- include "backend.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+  {{- with .Values.backend.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      component: backend
+      {{- include "backend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        component: backend
+        {{- include "backend.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+        - name: wait-for-elasticsearch
+          image: busybox:1.28
+          command: 
+            - 'sh'
+            - '-c'
+            - |
+              until nc -z -v -w30 {{ include "backend.fullname" . }}-elasticsearch 9200; do
+                sleep 2
+              done
+      containers:
+        - name: {{ .Chart.Name }}-be
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.backend.service.port }}
+              protocol: TCP
+          
+          # --- UPDATED: TCP PROBES ---
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: {{ .Values.backend.probes.liveness.initialDelaySeconds }}
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: {{ .Values.backend.probes.readiness.initialDelaySeconds }}
+          # ----------------------------
+
+          resources:
+            {{- toYaml .Values.backend.resources | nindent 12 }}
+          env:
+            - name: ELASTIC_URL
+              value: "http://{{ include "backend.fullname" . }}-elasticsearch:9200"
+          envFrom:
+            - configMapRef:
+                name: {{ include "backend.fullname" . }}-config
+            - secretRef:
+                name: {{ include "backend.fullname" . }}-secrets
+
+          {{- if ($logs.enabled | default false) }}
+          volumeMounts:
+            - name: be-logs
+              mountPath: {{ $logs.mountPath | default "/app/logs" | quote }}
+          {{- end }}
+
+        {{- if and ($logs.enabled | default false) ($logsCleanup.enabled | default false) }}
+        - name: logs-cleaner
+          image: {{ $logsCleanup.image | default "busybox:1.36" | quote }}
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: LOG_DIR
+              value: {{ $logs.mountPath | default "/app/logs" | quote }}
+            - name: MAX_SIZE_MI
+              value: {{ $logsCleanup.maxSizeMi | default 2048 | quote }}
+            - name: BUFFER_MI
+              value: {{ $logsCleanup.bufferMi | default 150 | quote }}
+            - name: SLEEP_SECONDS
+              value: {{ $logsCleanup.intervalSeconds | default 60 | quote }}
+          command:
+            - sh
+            - -c
+          args:
+            - |
+              set -eu
+              LOG_DIR="${LOG_DIR:-/app/logs}"
+              MAX_SIZE_MI="${MAX_SIZE_MI:-2048}"
+              BUFFER_MI="${BUFFER_MI:-150}"
+              SLEEP_SECONDS="${SLEEP_SECONDS:-60}"
+
+              mkdir -p "$LOG_DIR"
+
+              max_kb=$((MAX_SIZE_MI * 1024))
+              buffer_kb=$((BUFFER_MI * 1024))
+              threshold_kb=$((max_kb - buffer_kb))
+              if [ "$threshold_kb" -lt 0 ]; then
+                threshold_kb=0
+              fi
+
+              while true; do
+                # Total size in KiB
+                total_kb="$(du -sk "$LOG_DIR" 2>/dev/null | awk '{print $1}' || echo 0)"
+
+                # Start cleanup slightly before the hard cap to keep headroom.
+                while [ "${total_kb:-0}" -gt "$threshold_kb" ]; do
+                  oldest="$(ls -1tr "$LOG_DIR" 2>/dev/null | head -n 1 || true)"
+                  if [ -z "$oldest" ]; then
+                    break
+                  fi
+                  rm -f "$LOG_DIR/$oldest" || true
+                  total_kb="$(du -sk "$LOG_DIR" 2>/dev/null | awk '{print $1}' || echo 0)"
+                done
+
+                sleep "$SLEEP_SECONDS"
+              done
+          volumeMounts:
+            - name: be-logs
+              mountPath: {{ $logs.mountPath | default "/app/logs" | quote }}
+        {{- end }}
+
+      {{- if ($logs.enabled | default false) }}
+      volumes:
+        - name: be-logs
+        {{- if ($logsPersistence.enabled | default false) }}
+          persistentVolumeClaim:
+            claimName: {{ include "backend.fullname" . }}-be-logs
+        {{- else }}
+          emptyDir:
+            {{- if $logsEmptyDir.sizeLimit }}
+            sizeLimit: {{ $logsEmptyDir.sizeLimit | quote }}
+            {{- end }}
+        {{- end }}
+      {{- end }}

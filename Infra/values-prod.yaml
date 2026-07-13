@@ -1,0 +1,71 @@
+# ---------------------------------------------------------
+# PRODUCTION ENVIRONMENT OVERRIDES
+# ---------------------------------------------------------
+
+backend:
+  replicaCount: 1
+  
+  image:
+    tag: "production"
+  
+  ingress:
+    enabled: true
+    className: "nginx"
+    hosts:
+      - host: be.kolsherut.org.il
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: tls-secret-name
+        hosts:
+          - be.kolsherut.org.il
+
+  env:
+    ENV: "production"
+    ORIGIN: "https://www.kolsherut.org.il,https://kolsherut.org.il"
+    VERBOSE: "true"
+
+etl:
+  image:
+    tag: "production"
+  
+  ingress:
+    enabled: true
+    className: "nginx"
+    hosts:
+      - host: etl.kolsherut.org.il
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: tls-secret-name
+        hosts:
+          - etl.kolsherut.org.il
+
+  env:
+    CRONICLE_server__hostname: "etl.kolsherut.org.il"
+    CRONICLE_base_app_url: "https://etl.kolsherut.org.il"
+    CRONICLE_custom_live_log_socket_url: "https://etl.kolsherut.org.il"
+
+frontend:
+  image:
+    tag: "production"
+  ingress:
+    hosts:
+      - host: kolsherut.org.il
+        paths:
+          - path: /
+            pathType: Prefix
+      - host: www.kolsherut.org.il
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: tls-secret-name
+        hosts:
+          - kolsherut.org.il
+          - www.kolsherut.org.il
+
+secrets:
+  ENV_NAME: "production"

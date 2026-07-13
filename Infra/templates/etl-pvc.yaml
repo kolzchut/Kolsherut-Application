@@ -1,0 +1,16 @@
+{{- if .Values.etl.persistence.enabled }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "backend.fullname" . }}-etl-data
+  labels:
+    component: etl
+    {{- include "backend.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: "managed-csi" # Standard Azure Storage
+  resources:
+    requests:
+      storage: 4Gi
+{{- end }}

@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "backend.fullname" . }}-fe
+  labels:
+    {{- include "backend.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.frontend.replicaCount }}
+  {{- with .Values.frontend.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      component: frontend
+      {{- include "backend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        component: frontend
+        {{- include "backend.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.frontend.persistence.enabled }}
+      initContainers:
+        - name: sync-config
+          image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          command:
+            - sh
+            - -c
+            - |
+              mkdir -p /mnt/storage/p /mnt/storage/configs
+              # p/ - remove all old files then copy fresh from image
+              rm -rf /mnt/storage/p/*
+              cp -rf /usr/share/nginx/html/p/. /mnt/storage/p/
+              # configs/ - copy only new files, never overwrite existing
+              cp -rn /usr/share/nginx/html/configs/. /mnt/storage/configs/
+              echo "Config sync complete"
+          volumeMounts:
+            - name: fe-config-storage
+              mountPath: /mnt/storage
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}-fe
+          image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.frontend.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.frontend.resources | nindent 12 }}
+          {{- if .Values.frontend.persistence.enabled }}
+          volumeMounts:
+            - name: fe-config-storage
+              mountPath: /usr/share/nginx/html/p
+              subPath: p
+            - name: fe-config-storage
+              mountPath: /usr/share/nginx/html/configs
+              subPath: configs
+          {{- end }}
+      {{- if .Values.frontend.persistence.enabled }}
+      volumes:
+        - name: fe-config-storage
+          persistentVolumeClaim:
+            claimName: {{ include "backend.fullname" . }}-fe-config
+      {{- end }}
