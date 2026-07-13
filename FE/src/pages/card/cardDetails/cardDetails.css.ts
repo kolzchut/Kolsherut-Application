@@ -24,6 +24,7 @@ export default createUseStyles({
         flexDirection:'column',
         width: '100%',
         boxSizing: 'border-box',
+        flexGrow: 1,
         padding: '16px 56px',
         gap:'16px',
         '@media (max-width: 768px)': {

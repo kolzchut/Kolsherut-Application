@@ -23,7 +23,9 @@ const Home = () => {
             <section className={classes.main}>
                 {!isMobile && <Header showSearchbar={false} showLogo={false} key={'homeHeader'}/>}
                 <OptionalSearch/>
-                <Footer/>
+                <div className={classes.footerContainer}>
+                    <Footer/>
+                </div>
             </section>
         </main>
     </>

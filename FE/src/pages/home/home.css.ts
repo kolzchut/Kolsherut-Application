@@ -25,5 +25,9 @@ export default createUseStyles({
         minHeight: 0,
         overflowY: isMobile ? 'none' : 'auto',
         scrollbarWidth: 'none',
-    })
+    }),
+    footerContainer: {
+        width: '100%',
+        marginTop: 'auto',
+    }
 });

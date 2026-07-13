@@ -1,7 +1,7 @@
 import {useSelector} from "react-redux";
 import {getUrlParams} from "../../store/shared/urlSelector";
 import UrlParams from "../../types/urlParams";
-import matchSubSlugTaxonomy from "../../utilities/matchSubSlugTaxonomy.ts";
+import matchSubSlugTaxonomy from "../../utilities/matchSubSlugTaxonomy";
 
 const globals = {
     initialized: false,
