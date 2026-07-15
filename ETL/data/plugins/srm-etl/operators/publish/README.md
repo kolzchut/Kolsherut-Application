@@ -79,11 +79,9 @@ saved `data/` output of one final instrumented `derive` run with `PYTHONHASHSEED
 
 1. Point the Cronicle job at `operators.publish` (Cronicle UI, not the repo).
 2. Keep `operators/derive` one release for rollback.
-3. Delete `operators/derive`; repoint the external imports:
-   `geocode` -> `operators.publish.shared.location_accuracy.ACCURATE_TYPES`,
-   `manual_data_entry` -> `operators.publish.shared.organization_id_validation.VERIFY_ORG_ID`,
-   and strip the deprecated `presets` operator's unreachable body (its dead
-   `..derive.es_utils` import included).
+3. Delete `operators/derive` - nothing imports from it anymore (`geocode` and
+   `manual_data_entry` were repointed to `operators.publish.shared.*`, and the deprecated
+   `presets` operator's unreachable body was stripped).
 4. Delete the four orphan indexes (`srm__places`, `srm__responses`, `srm__situations`,
    `srm__orgs`) once the snapshot-process owner confirms the consumer list.
 5. Delete or archive the `verification/` package.
