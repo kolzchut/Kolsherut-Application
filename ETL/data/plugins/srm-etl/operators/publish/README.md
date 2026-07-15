@@ -8,15 +8,15 @@ checkpoints. Reference for the legacy behavior: [operators/derive/README.md](../
 
 ```
 run_publish_pipeline()
-  1. curation_promotion   - Data-Import base -> main base (MUST run before the pull)
-  2. data_build           - one pull of the six main-base tables + pure card build -> PipelineData
+  1. copy_from_data_import - Data-Import base -> main base (MUST run before the pull)
+  2. data_build            - one pull of the six main-base tables + pure card build -> PipelineData
   3. autocomplete_generation - cards + static places.csv -> autocomplete rows
-  4. cards_sync           - 8-field Cards table write-back (upsert by card_id, vanished -> INACTIVE)
-  5. es_publish           - srm__cards + srm__autocomplete, revision-swap reindex
-  finally: stats.flush()  - single batched write to the Stats table
+  4. cards_sync            - 8-field Cards table write-back (upsert by card_id, vanished -> INACTIVE)
+  5. es_publish            - srm__cards + srm__autocomplete, revision-swap reindex
+  finally: write_stats_to_airtable() - single batched write to the Stats table
 ```
 
-`PipelineData` (snapshot / cards / autocomplete) replaces the entire legacy `data/` folder.
+`PipelineData` (source_tables / cards / autocomplete) replaces the entire legacy `data/` folder.
 
 ## Running
 
@@ -24,7 +24,7 @@ run_publish_pipeline()
   e-mail notifier, like every other operator).
 - Manually: `python -m operators.publish [--dump-dir <dir>]`. Unlike legacy `derive`,
   `python -m` also goes through the notifier. `--dump-dir` writes the in-memory
-  intermediates (snapshot / cards / autocomplete) to JSON for debugging.
+  intermediates (source_tables / cards / autocomplete) to JSON for debugging.
 
 ## Deliberate behavior changes vs `derive`
 
@@ -36,25 +36,25 @@ run_publish_pipeline()
    `srm__situations`, `srm__orgs` had no consumer and were dropped.
 6. Set-derived taxonomy id lists are sorted (the legacy order was hash-seed dependent).
 7. All dead code from the legacy operator (README §12) was not ported.
-8. Promotion filters and manual fixes no longer touch the main-base `current` resource. In
+8. The copy filters and manual fixes no longer touch the main-base `current` resource. In
    legacy `from_curation`, the unguarded dataflows steps (the branches "No Valid Organization"
    filter, the services "No Valid Organization/Branch" filter, and `apply_manual_fixes` in all
    three tables) also processed the main-base table inside `airtable_updater`. That could drop
    a current row and cause its re-fetched twin to be CREATED AS A DUPLICATE record, and could
    skip the INACTIVE marking of vanished rows without valid links. The new code applies them to
-   the promoted curation rows only. **Staging step-8 comparison note:** expect exactly these
-   two diff classes vs a legacy run - no duplicate records created, and possible extra INACTIVE
-   writes.
+   the rows fetched from the Data-Import base only. **Staging step-8 comparison note:** expect
+   exactly these two diff classes vs a legacy run - no duplicate records created, and possible
+   extra INACTIVE writes.
 9. Stage order: `cards_sync` runs BEFORE `es_publish` (legacy ran ES first). An ES outage
    therefore aborts after the Cards table write-back - the Cards table can briefly be one run
    ahead of the site until the rerun. Rerun-safe either way.
 10. The frozen index mappings and the ES connection are validated at pipeline start, before any
-    external write. An ES outage now aborts the run before the curation promotion (legacy
+    external write. An ES outage now aborts the run before the Data-Import copy (legacy
     promoted regardless of ES state).
 
-Everything else - card identity (`card_id = hasher(branch_id, service_id)`), promotion
-semantics, Cards lifecycle, autocomplete templates/scoring, ES revision swap - is preserved
-exactly.
+Everything else - card identity (`card_id = hasher(branch_id, service_id)`), the
+Data-Import copy semantics, Cards lifecycle, autocomplete templates/scoring, ES revision
+swap - is preserved exactly.
 
 ## Before the first run: freeze the ES mappings
 

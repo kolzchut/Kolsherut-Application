@@ -8,7 +8,7 @@ import json
 
 from conf import settings
 from operators.publish.airtable.airtable_sync import sync_table_rows
-from operators.publish.cards_sync.cards_sync import CARDS_SOURCE_ID, CARDS_TABLE_FIELDS, build_fetched_card_rows
+from operators.publish.cards_sync.cards_sync import CARDS_SOURCE_ID, CARDS_TABLE_FIELDS, build_card_rows_for_sync
 
 from .report_writer import write_report
 
@@ -16,7 +16,7 @@ CHECK_NAME = 'cards_sync_idempotency'
 
 
 def run_sync_once(cards):
-    fetched_rows = build_fetched_card_rows(cards)
+    fetched_rows = build_card_rows_for_sync(cards)
     return sync_table_rows(settings.AIRTABLE_CARDS_TABLE, CARDS_SOURCE_ID, CARDS_TABLE_FIELDS, fetched_rows)
 
 

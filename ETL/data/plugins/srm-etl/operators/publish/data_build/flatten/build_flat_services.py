@@ -4,8 +4,8 @@ Each service is unwound per linked organization, collects the organization's
 branches (soproc-filtered), merges them with its direct branch links (remapped
 through the dedup branch mapping), and yields one row per (service, branch_key).
 """
-SOPROC_SERVICE_PREFIX = 'soproc:'
-SOPROC_ORG_BRANCHES_LIMIT = 5
+SOCIAL_PROCUREMENT_SERVICE_PREFIX = 'soproc:'  # "soproc" - the social-procurement data source
+SOCIAL_PROCUREMENT_ORGANIZATION_BRANCHES_LIMIT = 5
 NATIONAL_BRANCH_ID_PREFIX = 'national'
 SERVICE_FIELD_RENAMES = {
     'key': 'service_key', 'id': 'service_id', 'name': 'service_name',
@@ -35,8 +35,8 @@ def filter_soproc_branches(branch_keys, service_id, branch_id_by_key, non_nation
     """soproc services with many org branches keep only 'national*' branches when any exist;
     otherwise (and for all other services) only non-national branches are kept."""
     branch_keys = branch_keys or []
-    is_soproc = isinstance(service_id, str) and service_id.startswith(SOPROC_SERVICE_PREFIX)
-    if is_soproc and len(branch_keys) > SOPROC_ORG_BRANCHES_LIMIT:
+    is_soproc = isinstance(service_id, str) and service_id.startswith(SOCIAL_PROCUREMENT_SERVICE_PREFIX)
+    if is_soproc and len(branch_keys) > SOCIAL_PROCUREMENT_ORGANIZATION_BRANCHES_LIMIT:
         national_id_branches = [
             branch_key for branch_key in branch_keys
             if str(branch_id_by_key.get(branch_key, '')).lower().startswith(NATIONAL_BRANCH_ID_PREFIX)
@@ -74,7 +74,7 @@ def unwind_service_organization_keys(service):
     return [None] if organizations is None else organizations
 
 
-def build_flat_services(snapshot, flat_branches, branch_mapping):
+def build_flat_services(source_tables, flat_branches, branch_mapping):
     branch_context = {
         'branch_mapping': branch_mapping,
         'branch_id_by_key': {branch['branch_key']: branch['branch_id'] for branch in flat_branches},
@@ -84,7 +84,7 @@ def build_flat_services(snapshot, flat_branches, branch_mapping):
         'branches_by_organization': group_branch_keys_by_organization(flat_branches),
     }
     rows = []
-    for service in snapshot['services']:
+    for service in source_tables['services']:
         for organization_key in unwind_service_organization_keys(service):
             for branch_key in merge_service_branch_keys(service, organization_key, branch_context):
                 rows.append(rename_and_select_service_fields(service, branch_key))

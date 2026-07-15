@@ -6,7 +6,7 @@ card's auto_tagged list, which zeroes their RS score later.
 """
 from conf import settings
 
-from ...airtable.airtable_client import list_table_rows
+from ...airtable.airtable_client import fetch_rows_from_airtable
 
 AUTO_TAGGING_TABLE = 'Auto Tagging'
 RULE_FIELD_FLAGS = (
@@ -17,7 +17,7 @@ RULE_FIELD_FLAGS = (
 
 
 def fetch_auto_tagging_rules():
-    rows = list_table_rows(settings.AIRTABLE_DATAENTRY_BASE, AUTO_TAGGING_TABLE)
+    rows = fetch_rows_from_airtable(settings.AIRTABLE_DATAENTRY_BASE, AUTO_TAGGING_TABLE)
     return [
         {
             'query': row.get('Query'),

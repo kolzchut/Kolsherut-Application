@@ -22,7 +22,7 @@ def _json_default(value):
     return str(value)
 
 
-def dump_stage_output(dump_directory, stage_name, payload):
+def write_stage_output_to_json(dump_directory, stage_name, payload):
     if not dump_directory:
         return
     os.makedirs(dump_directory, exist_ok=True)

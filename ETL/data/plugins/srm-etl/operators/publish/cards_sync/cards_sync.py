@@ -17,7 +17,7 @@ CARDS_TABLE_FIELDS = [
 ]
 
 
-def build_fetched_card_rows(cards):
+def build_card_rows_for_sync(cards):
     return [
         {
             'id': card.get('card_id'),
@@ -29,6 +29,6 @@ def build_fetched_card_rows(cards):
 
 def sync_cards_to_airtable(data):
     logger.info('Starting Cards Sync Flow')
-    fetched_rows = build_fetched_card_rows(data.cards)
+    fetched_rows = build_card_rows_for_sync(data.cards)
     sync_table_rows(settings.AIRTABLE_CARDS_TABLE, CARDS_SOURCE_ID, CARDS_TABLE_FIELDS, fetched_rows)
     logger.info('Finished Cards Sync Flow')

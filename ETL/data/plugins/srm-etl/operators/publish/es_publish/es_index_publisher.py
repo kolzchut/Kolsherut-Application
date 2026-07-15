@@ -19,7 +19,7 @@ REVISION_FIELD = 'revision'
 PURGE_DELAY_SECONDS = 30
 
 
-def ensure_index_exists(es_client, index_name, mapping):
+def create_index_if_missing(es_client, index_name, mapping):
     if es_client.indices.exists(index=index_name):
         return
     logger.info('Creating index %s', index_name)
@@ -36,7 +36,7 @@ def build_bulk_actions(index_name, rows, primary_key_field, revision):
         yield {'_index': index_name, '_id': str(row[primary_key_field]), '_source': document}
 
 
-def purge_previous_revisions(es_client, index_name, revision):
+def delete_documents_of_previous_revisions(es_client, index_name, revision):
     response = es_client.delete_by_query(
         index=index_name,
         body=dict(query=dict(bool=dict(must_not=dict(term=dict(revision=revision))))),
@@ -47,7 +47,7 @@ def purge_previous_revisions(es_client, index_name, revision):
 
 def publish_rows_to_index(es_client, index_name, rows, primary_key_field, mapping):
     revision = uuid.uuid4().hex
-    ensure_index_exists(es_client, index_name, mapping)
+    create_index_if_missing(es_client, index_name, mapping)
     success_count, errors = bulk(
         es_client,
         build_bulk_actions(index_name, rows, primary_key_field, revision),
@@ -55,4 +55,4 @@ def publish_rows_to_index(es_client, index_name, rows, primary_key_field, mappin
     )
     logger.info('Indexed %d documents into %s', success_count, index_name)
     time.sleep(PURGE_DELAY_SECONDS)
-    purge_previous_revisions(es_client, index_name, revision)
+    delete_documents_of_previous_revisions(es_client, index_name, revision)

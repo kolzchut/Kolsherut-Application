@@ -32,7 +32,7 @@ def resolve_city_bounds(city_name, place_names, bounds_by_name, bounds_cache):
     return bounds_cache[city_name]
 
 
-def add_bounds_to_rows(rows):
+def add_city_bounds_to_queries(rows):
     place_names, bounds_by_name = build_city_bounds_lookup()
     bounds_cache = {}
     return [

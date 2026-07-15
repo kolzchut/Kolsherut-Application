@@ -3,12 +3,12 @@ relevance base score and the airtable_last_modified date. These never leak
 into the Airtable-facing card rows.
 
 Note: branch_last_modified never reaches the cards (the legacy flat table
-dropped it - see flat_table_builder), so airtable_last_modified is effectively
+dropped it - see build_flat_table), so airtable_last_modified is effectively
 the service's last_modified; the max() is kept for exact legacy parity.
 """
 from datetime import datetime
 
-MESER_SERVICE_PREFIX = 'meser-'
+MESER_SERVICE_PREFIX = 'meser-'  # "meser" (מס"ר) - the national welfare data source
 MINIMUM_DESCRIPTION_LENGTH = 5
 HOTLINE_MAX_PHONE_LENGTH = 5
 HOTLINE_PHONE_PREFIX = '1'

@@ -1,6 +1,7 @@
 """One row per branch with its location and organization inlined (legacy flat_branches_flow)."""
+from ...airtable.stats_collector import filter_rows_and_count_removed
 from ..pull.field_normalizers import validate_address
-from .duplicate_branches_merger import merge_duplicate_branches
+from .merge_duplicate_branches import merge_duplicate_branches
 
 BRANCHES_NO_LOCATION_STAT = 'Processing: Branches: No Location'
 BRANCHES_NO_ORGANIZATION_STAT = 'Processing: Branches: No Organization'
@@ -54,18 +55,18 @@ def rename_and_select_branch_fields(row):
     return {name: renamed.get(name) for name in FLAT_BRANCH_FIELDS}
 
 
-def build_flat_branches(snapshot, stats):
+def build_flat_branches(source_tables):
     """Return (flat branch rows, original branch_key -> merged branch_key mapping)."""
-    locations_by_key = {location['key']: location for location in snapshot['locations']}
-    organizations_by_key = {organization['key']: organization for organization in snapshot['organizations']}
-    rows = [dict(branch, orig_address=branch.get('address')) for branch in snapshot['branches']]
-    rows = stats.filter_rows_with_stat(
+    locations_by_key = {location['key']: location for location in source_tables['locations']}
+    organizations_by_key = {organization['key']: organization for organization in source_tables['organizations']}
+    rows = [dict(branch, orig_address=branch.get('address')) for branch in source_tables['branches']]
+    rows = filter_rows_and_count_removed(
         BRANCHES_NO_LOCATION_STAT, rows,
         lambda row: bool(row.get('location')) and len(row['location']) > 0,
     )
     rows = [join_location_onto_branch(row, locations_by_key) for row in rows]
     rows = [{**row, 'organization_key': (row.get('organization') or [None])[0]} for row in rows]
-    rows = stats.filter_rows_with_stat(
+    rows = filter_rows_and_count_removed(
         BRANCHES_NO_ORGANIZATION_STAT, rows,
         lambda row: row['organization_key'] is not None,
     )

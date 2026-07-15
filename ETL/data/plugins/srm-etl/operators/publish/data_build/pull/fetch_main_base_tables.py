@@ -1,7 +1,7 @@
 """The single pull of the six main-base Airtable tables the build consumes."""
 from conf import settings
 
-from ...airtable.airtable_client import list_table_rows
+from ...airtable.airtable_client import fetch_rows_from_airtable
 
 MAIN_BASE_TABLES = (
     settings.AIRTABLE_RESPONSE_TABLE,
@@ -13,8 +13,8 @@ MAIN_BASE_TABLES = (
 )
 
 
-def pull_main_base_tables():
+def fetch_main_base_tables_from_airtable():
     return {
-        table_name: list_table_rows(settings.AIRTABLE_BASE, table_name)
+        table_name: fetch_rows_from_airtable(settings.AIRTABLE_BASE, table_name)
         for table_name in MAIN_BASE_TABLES
     }

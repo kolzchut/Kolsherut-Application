@@ -8,7 +8,7 @@ organization's own curated one.
 """
 from srm_tools.logger import logger
 
-SOPROC_SERVICE_PREFIX = 'soproc:'
+SOCIAL_PROCUREMENT_SERVICE_PREFIX = 'soproc:'  # "soproc" - the social-procurement data source
 
 
 def should_skip_implemented_card(card, implemented_by_organization):
@@ -17,7 +17,7 @@ def should_skip_implemented_card(card, implemented_by_organization):
         return None
     if any(card['service_id'] in implemented for implemented in organization_implements):
         return 'implementing'
-    if card['service_id'].startswith(SOPROC_SERVICE_PREFIX):
+    if card['service_id'].startswith(SOCIAL_PROCUREMENT_SERVICE_PREFIX):
         return 'soproc'
     return None
 
