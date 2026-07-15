@@ -1,0 +1,76 @@
+{
+  "bytes": 185427,
+  "count_of_rows": 1430,
+  "hash": "6a178613a4bdbdfa37ec3ccaf965f9b6",
+  "name": "bounds-for-locations",
+  "profile": "data-package",
+  "resources": [
+    {
+      "bytes": 185427,
+      "dialect": {
+        "caseSensitiveHeader": false,
+        "delimiter": ",",
+        "doubleQuote": true,
+        "header": true,
+        "lineTerminator": "\r\n",
+        "quoteChar": "\"",
+        "skipInitialSpace": false
+      },
+      "encoding": "utf-8",
+      "format": "csv",
+      "hash": "4eef9e9c9f7900d563f033374ea0bb6d",
+      "mediatype": "text/csv",
+      "name": "places",
+      "path": "data/places.csv",
+      "profile": "tabular-data-resource",
+      "schema": {
+        "fields": [
+          {
+            "es:keyword": true,
+            "format": "default",
+            "name": "key",
+            "type": "string"
+          },
+          {
+            "es:keyword": true,
+            "format": "default",
+            "name": "place",
+            "type": "string"
+          },
+          {
+            "es:itemType": "string",
+            "format": "default",
+            "name": "name",
+            "type": "array"
+          },
+          {
+            "es:index": false,
+            "es:itemType": "number",
+            "format": "default",
+            "name": "bounds",
+            "type": "array"
+          },
+          {
+            "format": "default",
+            "name": "query",
+            "type": "string"
+          },
+          {
+            "decimalChar": ".",
+            "format": "default",
+            "groupChar": "",
+            "name": "score",
+            "type": "number"
+          }
+        ],
+        "missingValues": [
+          ""
+        ],
+        "primaryKey": [
+          "key"
+        ]
+      }
+    }
+  ],
+  "title": "Bounds for Locations in Israel"
+}

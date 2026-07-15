@@ -180,4 +180,7 @@ ignore/
 # Local ES replica credentials (see ES/reindex/.env.example)
 ES/reindex/.env
 
+# One-shot migration verification reports (see ETL/data/plugins/srm-etl/verification)
+ETL/data/plugins/srm-etl/verification/reports/
+
 .claude
