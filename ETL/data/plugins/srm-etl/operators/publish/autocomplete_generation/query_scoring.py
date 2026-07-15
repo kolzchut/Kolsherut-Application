@@ -9,7 +9,7 @@ import math
 LOW_CONFIDENCE_SCORE = 0.5
 
 
-def group_query_rows(query_rows):
+def group_identical_queries(query_rows):
     ordered_rows = sorted(query_rows, key=lambda row: row['importance'])
     grouped_by_query = {}
     for row in ordered_rows:
@@ -27,5 +27,5 @@ def scored_query_row(row):
     return {**row, 'score': LOW_CONFIDENCE_SCORE if row['low'] else duplicate_count_score}
 
 
-def apply_query_scores(grouped_rows):
+def add_scores_to_queries(grouped_rows):
     return [scored_query_row(row) for row in grouped_rows]

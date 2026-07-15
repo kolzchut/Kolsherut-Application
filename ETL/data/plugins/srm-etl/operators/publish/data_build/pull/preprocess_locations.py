@@ -1,6 +1,7 @@
 """Preprocess of the Locations table (legacy preprocess_locations). No ACTIVE filter."""
 from operators.publish.shared.location_accuracy import ACCURATE_TYPES
 
+from ...airtable.stats_collector import filter_rows_and_count_removed
 from .preprocess_common import drop_dummy_rows, rename_record_id_to_key, select_row_fields
 
 LOCATIONS_NO_LOCATION_STAT = 'Processing: Locations: No Location'
@@ -36,7 +37,7 @@ def add_location_fields(row):
     }
 
 
-def preprocess_locations(raw_rows, stats):
+def preprocess_locations(raw_rows):
     rows = drop_dummy_rows(raw_rows)
     rows = rename_record_id_to_key(rows)
     rows = [select_row_fields(row, LOCATION_FIELDS) for row in rows]
@@ -44,12 +45,12 @@ def preprocess_locations(raw_rows, stats):
         {**row, 'national_service': row.get('accuracy') == NATIONAL_SERVICE_ACCURACY}
         for row in rows
     ]
-    rows = stats.filter_rows_with_stat(LOCATIONS_NO_LOCATION_STAT, rows, has_any_location)
-    rows = stats.filter_rows_with_stat(
+    rows = filter_rows_and_count_removed(LOCATIONS_NO_LOCATION_STAT, rows, has_any_location)
+    rows = filter_rows_and_count_removed(
         LOCATIONS_NO_LAT_STAT, rows,
         lambda row: any(row[field] for field in ('fixed_lat', 'resolved_lat', 'national_service')),
     )
-    rows = stats.filter_rows_with_stat(
+    rows = filter_rows_and_count_removed(
         LOCATIONS_NO_LON_STAT, rows,
         lambda row: any(row[field] for field in ('fixed_lon', 'resolved_lon', 'national_service')),
     )

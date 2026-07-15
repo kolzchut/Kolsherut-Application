@@ -7,11 +7,11 @@ INACTIVE, and Airtable record ids are always preserved.
 from conf import settings
 from srm_tools.logger import logger
 
-from .airtable_client import RECORD_ID_FIELD, list_table_rows, upsert_rows
+from .airtable_client import AIRTABLE_RECORD_ID_FIELD, fetch_rows_from_airtable, create_or_update_rows_in_airtable
 
 ACTIVE_STATUS = 'ACTIVE'
 INACTIVE_STATUS = 'INACTIVE'
-DUMMY_SOURCE = 'dummy'
+PLACEHOLDER_ROW_SOURCE = 'dummy'
 
 
 def hash_row(row, table_fields):
@@ -26,7 +26,7 @@ def merge_fetched_row(logical_id, data, current_row, source_id, table_fields):
     merged['id'] = logical_id
     merged['status'] = ACTIVE_STATUS if data else INACTIVE_STATUS
     merged['source'] = source_id
-    merged[RECORD_ID_FIELD] = (current_row or {}).get(RECORD_ID_FIELD)
+    merged[AIRTABLE_RECORD_ID_FIELD] = (current_row or {}).get(AIRTABLE_RECORD_ID_FIELD)
     if data:
         merged.update(data)
     return merged
@@ -37,7 +37,7 @@ def select_written_fields(row, table_fields):
     selected['id'] = row.get('id')
     selected['source'] = row.get('source')
     selected['status'] = row.get('status')
-    selected[RECORD_ID_FIELD] = row.get(RECORD_ID_FIELD)
+    selected[AIRTABLE_RECORD_ID_FIELD] = row.get(AIRTABLE_RECORD_ID_FIELD)
     return selected
 
 
@@ -86,13 +86,13 @@ def collect_changed_rows(fetched_rows, current_rows_by_id, source_id, table_fiel
 def sync_table_rows(table_name, source_id, table_fields, fetched_rows, airtable_base=None):
     """Sync fetched {id, data} rows into an Airtable table, exactly like airtable_updater."""
     base_id = airtable_base or settings.AIRTABLE_BASE
-    current_rows = list_table_rows(base_id, table_name)
-    current_rows = [row for row in current_rows if row.get('source') in (source_id, DUMMY_SOURCE)]
+    current_rows = fetch_rows_from_airtable(base_id, table_name)
+    current_rows = [row for row in current_rows if row.get('source') in (source_id, PLACEHOLDER_ROW_SOURCE)]
     current_rows_by_id = {row['id']: row for row in current_rows}
     changed, write_counts = collect_changed_rows(fetched_rows, current_rows_by_id, source_id, table_fields)
     logger.info(
         '%s (%s) -- Existing: %d, New: %d, Different: %d',
         table_name, source_id, write_counts['existing'], write_counts['new'], write_counts['different'],
     )
-    upsert_rows(base_id, table_name, [select_written_fields(row, table_fields) for row in changed])
+    create_or_update_rows_in_airtable(base_id, table_name, [select_written_fields(row, table_fields) for row in changed])
     return write_counts

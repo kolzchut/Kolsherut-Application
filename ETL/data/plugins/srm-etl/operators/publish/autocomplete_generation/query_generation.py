@@ -4,7 +4,7 @@ from itertools import product
 from .query_filters import is_low_confidence, should_skip_combination
 from .query_templates import STOP_WORDS, TEMPLATES
 
-NONE_LEAK_MARKER = 'None'
+NONE_TEXT_IN_QUERY_MARKER = 'None'
 
 
 def remove_stop_words(text):
@@ -54,7 +54,7 @@ def build_query_row(card, template, importance, combination):
         org_name=org_name, org_id=org_id, city_name=city_name,
     )
     query = template.format(**template_values)
-    if NONE_LEAK_MARKER in query:
+    if NONE_TEXT_IN_QUERY_MARKER in query:
         return None
     return {
         'query': query,

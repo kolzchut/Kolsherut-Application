@@ -28,8 +28,8 @@ EXPECTED_WRITTEN_IDS = {'changed': 'ACTIVE', 'brand-new': 'ACTIVE', 'vanished-ac
 
 def run(_argv):
     written_rows = []
-    airtable_sync.list_table_rows = lambda *args, **kwargs: [dict(row) for row in CURRENT_ROWS]
-    airtable_sync.upsert_rows = lambda base, table, rows: written_rows.extend(rows)
+    airtable_sync.fetch_rows_from_airtable = lambda *args, **kwargs: [dict(row) for row in CURRENT_ROWS]
+    airtable_sync.create_or_update_rows_in_airtable = lambda base, table, rows: written_rows.extend(rows)
     counts = airtable_sync.sync_table_rows('TestTable', 'test', TABLE_FIELDS, FETCHED_ROWS)
     written_statuses = {row['id']: row['status'] for row in written_rows}
     summary_lines = [

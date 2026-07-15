@@ -8,7 +8,7 @@ DEFAULT_URL_TITLE = 'קישור'
 ISRAEL_COUNTRY_PREFIX = '972'
 
 
-def transform_urls(urls):
+def normalize_urls(urls):
     if not urls:
         return None
     transformed = []
@@ -36,7 +36,7 @@ def format_phone_digits(digits):
     return None
 
 
-def transform_phone_numbers(phone_numbers):
+def normalize_phone_numbers(phone_numbers):
     lines = phone_numbers.split('\n') if phone_numbers else []
     transformed = []
     for line in lines:

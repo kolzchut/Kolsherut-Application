@@ -9,13 +9,13 @@ import dataflows as DF
 from dataflows_airtable import load_from_airtable
 
 from conf import settings
-from operators.publish.airtable.airtable_client import list_table_rows
+from operators.publish.airtable.airtable_client import fetch_rows_from_airtable
 
 from .report_writer import diff_summary_lines, write_report
 from .row_diff import diff_keyed_rows
 
 CHECK_NAME = 'pull_parity'
-RECORD_ID_FIELD = '__airtable_id'
+AIRTABLE_RECORD_ID_FIELD = '__airtable_id'
 
 
 def legacy_pull(base_id, table_name):
@@ -25,7 +25,7 @@ def legacy_pull(base_id, table_name):
 
 
 def new_pull(base_id, table_name):
-    return list_table_rows(base_id, table_name)
+    return fetch_rows_from_airtable(base_id, table_name)
 
 
 def align_field_sets(legacy_rows, new_rows):
@@ -45,7 +45,7 @@ def run(argv):
     details = {}
     for table_name in args.table:
         legacy_rows, new_rows = align_field_sets(legacy_pull(args.base, table_name), new_pull(args.base, table_name))
-        table_summary, table_details = diff_keyed_rows(legacy_rows, new_rows, RECORD_ID_FIELD)
+        table_summary, table_details = diff_keyed_rows(legacy_rows, new_rows, AIRTABLE_RECORD_ID_FIELD)
         summary_lines += diff_summary_lines(f'{CHECK_NAME}: {table_name}', table_summary)
         details[table_name] = table_details
     write_report(CHECK_NAME, summary_lines, details)

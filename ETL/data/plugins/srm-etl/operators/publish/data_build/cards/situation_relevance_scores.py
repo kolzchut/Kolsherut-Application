@@ -1,4 +1,5 @@
-"""RS (distinctiveness) score per card (legacy RSScoreCalc).
+"""Situation relevance scores per card (legacy RSScoreCalc; "RS" = response-situation.
+The output card fields keep their legacy/ES names: 'rs_score', 'situation_scores').
 
 Phase 1 - collect (situation, response) co-occurrence frequencies across all cards.
 Phase 2 - score table: score(s, r) = ln(total(r) / freq(s, r)) - an IDF where a
@@ -44,12 +45,14 @@ def trim_over_tagged_situations(situations, situation_scores, total_score):
     return situations, situation_scores, total_score
 
 
-def collect_card_situation_scores(card, pair_scores):
+def collect_card_situation_scores(card, score_per_response_situation_pair):
     total_score = 0
     score_by_situation = {}
     for response in card['responses']:
         for situation in card['situations']:
-            score = pair_scores.get((situation['id'], response['id']), 0) / len(card['responses'])
+            score = score_per_response_situation_pair.get(
+                (situation['id'], response['id']), 0,
+            ) / len(card['responses'])
             if situation['id'] in card['auto_tagged']:
                 score = 0
             total_score += score
@@ -57,10 +60,10 @@ def collect_card_situation_scores(card, pair_scores):
     return score_by_situation, total_score
 
 
-def apply_rs_score_to_card(card, pair_scores):
+def add_situation_scores_to_card(card, score_per_response_situation_pair):
     if not card['responses']:
         return {**card, 'rs_score': None, 'situation_scores': None}
-    score_by_situation, total_score = collect_card_situation_scores(card, pair_scores)
+    score_by_situation, total_score = collect_card_situation_scores(card, score_per_response_situation_pair)
     sorted_situations = sorted(
         card['situations'], key=lambda situation: score_by_situation[situation['id']], reverse=True,
     )
@@ -77,6 +80,6 @@ def apply_rs_score_to_card(card, pair_scores):
     }
 
 
-def apply_rs_scores(cards):
-    pair_scores = build_pair_scores(cards)
-    return [apply_rs_score_to_card(card, pair_scores) for card in cards]
+def add_situation_relevance_scores(cards):
+    score_per_response_situation_pair = build_pair_scores(cards)
+    return [add_situation_scores_to_card(card, score_per_response_situation_pair) for card in cards]
