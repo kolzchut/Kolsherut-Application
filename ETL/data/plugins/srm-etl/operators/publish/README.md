@@ -51,10 +51,18 @@ run_publish_pipeline()
 10. The frozen index mappings and the ES connection are validated at pipeline start, before any
     external write. An ES outage now aborts the run before the Data-Import copy (legacy
     promoted regardless of ES state).
+11. Duplicate logical ids in a copy batch are MERGED into one record before upsert
+    (`airtable/merge_fetched_rows/`): connection/list fields (service `organizations`/`branches`,
+    branch `organization`/`location`, `situations`/`responses`/`urls`/... ) are unioned so no link
+    is lost, and scalar fields take the latest non-empty value. Legacy `from_curation` had no real
+    dedup - two Data-Import rows sharing an id (e.g. an org written by both `meser` and
+    `soproc`/`entities`) produced order-dependent last-write-wins overwrites into a single existing
+    record, or duplicate CREATEs for a brand-new id. `merge_fetched_row` still overwrites the
+    existing main-base row's links with the (now unioned) incoming set - it is not unioned against
+    the current record, since the copy re-derives every link from the Data-Import base each run.
 
-Everything else - card identity (`card_id = hasher(branch_id, service_id)`), the
-Data-Import copy semantics, Cards lifecycle, autocomplete templates/scoring, ES revision
-swap - is preserved exactly.
+Everything else - card identity (`card_id = hasher(branch_id, service_id)`), Cards lifecycle,
+autocomplete templates/scoring, ES revision swap - is preserved exactly.
 
 ## Before the first run: freeze the ES mappings
 
@@ -71,9 +79,14 @@ python -m verification.run_verification freeze_mappings
 All one-shot migration checks live in the sibling [`verification/`](../../verification)
 package (`python -m verification.run_verification <check>`): pull_parity, capture_fixture,
 run_build_on_fixture, cards_diff, autocomplete_diff, es_corpus_diff, mapping_parity,
-freeze_mappings, cards_sync_idempotency, sync_semantics. Each writes a timestamped report
-under `verification/reports/`; a human reads it and decides. The legacy baseline is the
+freeze_mappings, cards_sync_idempotency, sync_semantics, merge_ab. Each writes a timestamped
+report under `verification/reports/`; a human reads it and decides. The legacy baseline is the
 saved `data/` output of one final instrumented `derive` run with `PYTHONHASHSEED=0`.
+
+`merge_ab` is different from the others: it does not compare against the legacy `derive`
+baseline. It runs the Data-Import copy twice (production merge vs the old keep-richest
+collapse), holding everything else constant, so every diff it reports is attributable to the
+duplicate-row merge (change #11) alone - use it to size that change's impact in isolation.
 
 ## Cutover checklist (after staging verification)
 

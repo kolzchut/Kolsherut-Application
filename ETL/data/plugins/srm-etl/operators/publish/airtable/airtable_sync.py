@@ -8,6 +8,7 @@ from conf import settings
 from srm_tools.logger import logger
 
 from .airtable_client import AIRTABLE_RECORD_ID_FIELD, fetch_rows_from_airtable, create_or_update_rows_in_airtable
+from .merge_fetched_rows import merge_fetched_rows_by_id
 
 ACTIVE_STATUS = 'ACTIVE'
 INACTIVE_STATUS = 'INACTIVE'
@@ -86,6 +87,7 @@ def collect_changed_rows(fetched_rows, current_rows_by_id, source_id, table_fiel
 def sync_table_rows(table_name, source_id, table_fields, fetched_rows, airtable_base=None):
     """Sync fetched {id, data} rows into an Airtable table, exactly like airtable_updater."""
     base_id = airtable_base or settings.AIRTABLE_BASE
+    fetched_rows = merge_fetched_rows_by_id(fetched_rows, table_name)
     current_rows = fetch_rows_from_airtable(base_id, table_name)
     current_rows = [row for row in current_rows if row.get('source') in (source_id, PLACEHOLDER_ROW_SOURCE)]
     current_rows_by_id = {row['id']: row for row in current_rows}

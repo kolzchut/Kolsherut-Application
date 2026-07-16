@@ -13,7 +13,7 @@ import argparse
 
 from . import (
     autocomplete_diff, capture_fixture, cards_diff, cards_sync_idempotency,
-    es_corpus_diff, freeze_mappings, mapping_parity, pull_parity,
+    es_corpus_diff, freeze_mappings, mapping_parity, merge_ab, pull_parity,
     run_build_on_fixture, sync_semantics,
 )
 
@@ -28,6 +28,7 @@ CHECKS = {
     'freeze_mappings': freeze_mappings.run,
     'cards_sync_idempotency': cards_sync_idempotency.run,
     'sync_semantics': sync_semantics.run,
+    'merge_ab': merge_ab.run,
 }
 
 
