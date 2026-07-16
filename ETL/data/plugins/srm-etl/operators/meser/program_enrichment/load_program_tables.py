@@ -5,6 +5,7 @@ from operators.meser.drive_import.download_drive_file import download_drive_file
 from operators.meser.drive_import.find_drive_file_by_name import find_drive_file_by_name
 from operators.meser.drive_import.values import GOOGLE_DRIVE_IDS_FILE_NAME, GOOGLE_DRIVE_TEXTS_FILE_NAME
 from operators.meser.program_enrichment.clean_whitespace import clean_dataframe_whitespace
+from operators.meser.program_enrichment.drop_marked_as_false_by_revaha import drop_marked_as_false_by_revaha
 
 
 def download_xlsx_as_dataframe(drive_service, file_name):
@@ -20,4 +21,5 @@ def load_program_tables():
     drive_service = create_drive_service()
     program_texts_df = download_xlsx_as_dataframe(drive_service, GOOGLE_DRIVE_TEXTS_FILE_NAME)
     program_ids_df = download_xlsx_as_dataframe(drive_service, GOOGLE_DRIVE_IDS_FILE_NAME)
+    program_texts_df = drop_marked_as_false_by_revaha(program_texts_df)
     return program_texts_df, program_ids_df
