@@ -1,0 +1,17 @@
+# Local virtualenv - rebuilt inside the image
+venv/
+
+# Hugging Face download caches inside the model dirs (not needed at runtime)
+artifacts/**/.cache/
+
+# Local secrets - env is injected at run time, never baked into the image
+.env
+
+# Python / tooling cruft
+__pycache__/
+*.pyc
+.git/
+.gitignore
+.pytest_cache/
+.mypy_cache/
+README.md
