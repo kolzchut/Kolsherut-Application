@@ -12,7 +12,7 @@ run_publish_pipeline()
   2. data_build            - one pull of the six main-base tables + pure card build -> PipelineData
   3. autocomplete_generation - cards + static places.csv -> autocomplete rows
   4. cards_sync            - 8-field Cards table write-back (upsert by card_id, vanished -> INACTIVE)
-  5. es_publish            - srm__cards + srm__autocomplete, revision-swap reindex
+  5. es_publish            - srm__cards + srm__autocomplete + srm_services, revision-swap reindex
   finally: write_stats_to_airtable() - single batched write to the Stats table
 ```
 
@@ -32,8 +32,10 @@ run_publish_pipeline()
 2. Stats are written once, batched, at the end of the run (was one Airtable write per stat).
 3. `python -m operators.publish` sends the failure e-mail too.
 4. Autocomplete queries with an unknown city are always kept with `bounds=None` (logged once per city).
-5. Only `srm__cards` and `srm__autocomplete` are published; `srm__places`, `srm__responses`,
-   `srm__situations`, `srm__orgs` had no consumer and were dropped.
+5. `srm__cards`, `srm__autocomplete` and `srm_services` are published; `srm__places`,
+   `srm__responses`, `srm__situations`, `srm__orgs` had no consumer and were dropped.
+   `srm_services` mirrors the Airtable Services table (one document per service, from the
+   preprocessed `source_tables['services']`, keyed by the service `id`).
 6. Set-derived taxonomy id lists are sorted (the legacy order was hash-seed dependent).
 7. All dead code from the legacy operator (README §12) was not ported.
 8. The copy filters and manual fixes no longer touch the main-base `current` resource. In
@@ -73,6 +75,11 @@ publish until they are frozen from the live cluster:
 ```
 python -m verification.run_verification freeze_mappings
 ```
+
+`srm_services.json` is the exception: it is a brand-new index with nothing on the live cluster
+to freeze from, so it is hand-authored (service field types mirror the `service_*` fields in
+`srm__cards.json`, plus the `revision` keyword the purge query needs). Elasticsearch dynamic
+mapping covers any Services field not declared there.
 
 ## Migration verification
 

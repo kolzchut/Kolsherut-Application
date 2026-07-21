@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>כל-שירות RAG</title>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script>
+        // Force Babel standalone to use the classic JSX runtime (avoids "import
+        // statement outside a module" from the automatic runtime).
+        if (typeof Babel !== 'undefined') {
+            var origReactPreset = Babel.availablePresets.react;
+            Babel.availablePresets.react = function (api, opts) {
+                return origReactPreset(api, Object.assign({}, opts || {}, { runtime: 'classic' }));
+            };
+        }
+    </script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --bg-color: #f4f6f9;
+            --chat-bg: #ffffff;
+            --sidebar-bg: #2c3e50;
+            --sidebar-text: #ecf0f1;
+            --user-msg-bg: #e3f2fd;
+            --bot-msg-bg: #f8f9fa;
+            --border-color: #dee2e6;
+            --accent-color: #1abc9c;
+            --like-color: #2ecc71;
+            --dislike-color: #e74c3c;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        .sidebar ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+        .messages-container ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.2); border-radius: 4px; }
+
+        #root { width: 100%; height: 100%; display: flex; }
+        .app-container { display: flex; width: 100%; height: 100%; }
+
+        .sidebar {
+            width: 320px;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+        .sidebar-header { margin-bottom: 20px; text-align: center; }
+        .sidebar-header small { color: #95a5a6; font-weight: normal; }
+
+        .action-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background 0.2s;
+            margin-bottom: 10px;
+        }
+        .action-btn:hover { background-color: #0056b3; }
+        .download-btn { background-color: var(--accent-color); margin-bottom: 20px; }
+        .download-btn:hover { background-color: #16a085; }
+        .download-btn:disabled { background-color: #95a5a6; cursor: not-allowed; }
+
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 120px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+            padding-right: 5px;
+        }
+        .history-item {
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #bdc3c7;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        .history-item:hover { background-color: rgba(255,255,255,0.1); color: white; }
+        .history-item.active { background-color: rgba(255,255,255,0.2); color: white; border-right: 3px solid var(--primary-color); }
+
+        .settings-section-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #bdc3c7;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 5px;
+        }
+        .setting-group {
+            margin-bottom: 15px;
+            background: rgba(0,0,0,0.2);
+            padding: 10px;
+            border-radius: 6px;
+        }
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        .toggle-container:last-child { margin-bottom: 0; }
+        .input-group label { display: block; margin-bottom: 4px; color: #bdc3c7; font-size: 0.85rem; }
+        .input-group input {
+            width: 100%;
+            padding: 6px;
+            border-radius: 4px;
+            border: 1px solid #555;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 0.9rem;
+        }
+        .input-group input:focus { border-color: var(--primary-color); outline: none; }
+
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--chat-bg);
+            min-width: 0;
+        }
+        .chat-header {
+            padding: 10px 20px;
+            background-color: white;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            flex-shrink: 0;
+        }
+        .chat-title { font-weight: bold; color: #2c3e50; }
+        .mode-badge {
+            font-size: 0.8rem;
+            padding: 3px 10px;
+            border-radius: 12px;
+            background: var(--user-msg-bg);
+            color: #2c3e50;
+        }
+
+        .messages-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .message {
+            max-width: 80%;
+            padding: 15px;
+            border-radius: 12px;
+            line-height: 1.6;
+            position: relative;
+            font-size: 1rem;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+        .message.user {
+            align-self: flex-start;
+            background-color: var(--user-msg-bg);
+            border-bottom-right-radius: 2px;
+            color: #2c3e50;
+        }
+        .message.bot {
+            align-self: flex-end;
+            background-color: var(--bot-msg-bg);
+            border-bottom-left-radius: 2px;
+            border: 1px solid var(--border-color);
+        }
+        .message.error { border-color: var(--dislike-color); background: #fdecea; color: #a5352c; }
+
+        .message-footer {
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .message-actions { display: flex; justify-content: flex-end; align-items: center; gap: 8px; }
+        .msg-rate-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #bdc3c7;
+            font-size: 1rem;
+            padding: 4px;
+            transition: all 0.2s;
+        }
+        .msg-rate-btn:hover { color: #7f8c8d; }
+        .msg-rate-btn.like.active { color: var(--like-color); }
+        .msg-rate-btn.dislike.active { color: var(--dislike-color); }
+
+        .rating-note { display: flex; gap: 6px; align-items: center; }
+        .rating-note-input {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            outline: none;
+        }
+        .rating-note-input:focus { border-color: var(--primary-color); }
+        .rating-note-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .rating-note-btn:hover { background: #0056b3; }
+        .rating-status { font-size: 0.8rem; color: #7f8c8d; }
+        .rating-status.error { color: var(--dislike-color); }
+
+        .sources-title { font-weight: bold; font-size: 0.8rem; color: #7f8c8d; margin-bottom: 4px; }
+        .source-card {
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 6px;
+            margin-bottom: 6px;
+            overflow: hidden;
+            background: rgba(0,0,0,0.02);
+        }
+        .source-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .source-head:hover { background: rgba(0,0,0,0.04); }
+        .source-id { font-family: Consolas, monospace; color: var(--primary-color); }
+        .source-score {
+            background: rgba(26, 188, 156, 0.15);
+            color: #12876f;
+            padding: 1px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+        }
+        .source-text {
+            padding: 8px 10px;
+            border-top: 1px solid rgba(0,0,0,0.08);
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            color: #444;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .input-area {
+            padding: 20px;
+            background-color: white;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+        }
+        input[type="text"].chat-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
+        input[type="text"].chat-input:focus { border-color: var(--primary-color); }
+        .send-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 50px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        .send-btn:disabled { background-color: #ccc; cursor: not-allowed; }
+
+        .typing-indicator::after { content: '...'; animation: typing 1.5s infinite; }
+        @keyframes typing { 0% { content: '.'; } 33% { content: '..'; } 66% { content: '...'; } }
+    </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+    const HISTORY_STORAGE_KEY = "kolsherut_rag_history";
+
+    function uuidv4() {
+        return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+        );
+    }
+
+    function SourceCard({ document: doc }) {
+        const [open, setOpen] = useState(false);
+        return (
+            <div className="source-card">
+                <div className="source-head" onClick={() => setOpen(!open)}>
+                    <span className="source-id"><i className="fas fa-id-card"></i> {doc.service_id}</span>
+                    <span className="source-score">score {doc.score.toFixed(4)}</span>
+                    <i className={`fas ${open ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                </div>
+                {open && <div className="source-text">{doc.text}</div>}
+            </div>
+        );
+    }
+
+    function Sources({ documents }) {
+        if (!documents || documents.length === 0) return null;
+        return (
+            <div>
+                <div className="sources-title">מסמכים שאוחזרו ({documents.length}):</div>
+                {documents.map((doc, idx) => <SourceCard key={idx} document={doc} />)}
+            </div>
+        );
+    }
+
+    function App() {
+        const [input, setInput] = useState("");
+        const [messages, setMessages] = useState([]);
+        const [loading, setLoading] = useState(false);
+        const [sessionId, setSessionId] = useState("");
+        const [history, setHistory] = useState([]);
+
+        const [showDocs, setShowDocs] = useState(true);
+
+        const messagesEndRef = useRef(null);
+        const inputRef = useRef(null);
+
+        useEffect(() => { loadHistory(); startNewChat(); }, []);
+        useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
+        useEffect(() => { if (sessionId && messages.length > 0) saveSession(sessionId, messages); }, [messages, sessionId]);
+
+        const loadHistory = () => {
+            const saved = localStorage.getItem(HISTORY_STORAGE_KEY);
+            if (saved) { try { setHistory(JSON.parse(saved)); } catch (e) { console.error(e); } }
+        };
+
+        const saveSession = (currentId, currentMessages) => {
+            const preview = currentMessages.find(m => m.role === 'user')?.content || "שיחה חדשה";
+            const sessionData = {
+                id: currentId,
+                date: new Date().toISOString(),
+                preview: preview.substring(0, 40) + (preview.length > 40 ? "..." : ""),
+                messages: currentMessages
+            };
+            let next = [...history].filter(h => h.id !== currentId);
+            next.unshift(sessionData);
+            next = next.slice(0, 25);
+            setHistory(next);
+            localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(next));
+        };
+
+        const startNewChat = () => { setSessionId(uuidv4()); setMessages([]); inputRef.current?.focus(); };
+        const loadPreviousChat = (session) => { setSessionId(session.id); setMessages(session.messages || []); };
+
+        const downloadHistory = () => {
+            if (history.length === 0) return;
+            const blob = new Blob([JSON.stringify(history, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `kolsherut_rag_history_${new Date().toISOString().slice(0, 10)}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        };
+
+        const parseError = async (response) => {
+            const text = await response.text();
+            try {
+                const json = JSON.parse(text);
+                if (json.detail) return typeof json.detail === 'string' ? json.detail : JSON.stringify(json.detail);
+            } catch (e) {}
+            return `שגיאת שרת (${response.status})`;
+        };
+
+        const callRetrieve = async (userText) => {
+            const response = await fetch('/api/retrieve', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: userText })
+            });
+            if (!response.ok) throw new Error(await parseError(response));
+            const data = await response.json();
+            const count = (data.documents || []).length;
+            return { content: `הוחזרו ${count} שירותים רלוונטיים.`, documents: data.documents || [], log_id: data.log_id, log_index: data.log_index };
+        };
+
+        const handleSend = async () => {
+            if (!input.trim() || loading) return;
+            const userText = input.trim();
+            setInput("");
+            const priorMessages = messages;
+            setMessages([...priorMessages, { role: 'user', content: userText }]);
+            setLoading(true);
+            const botMsgId = Date.now();
+            setMessages(prev => [...prev, { id: botMsgId, role: 'bot', content: '', loading: true }]);
+
+            try {
+                const result = await callRetrieve(userText);
+                setMessages(prev => prev.map(msg => msg.id === botMsgId
+                    ? { ...msg, content: result.content, documents: result.documents, log_id: result.log_id, log_index: result.log_index, loading: false }
+                    : msg));
+            } catch (error) {
+                setMessages(prev => prev.map(msg => msg.id === botMsgId
+                    ? { ...msg, content: `שגיאה: ${error.message}`, loading: false, isError: true }
+                    : msg));
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        return (
+            <div className="app-container">
+                <div className="sidebar">
+                    <div className="sidebar-header">
+                        <h3>כל-שירות</h3>
+                        <small>אחזור שירותים חברתיים</small>
+                    </div>
+                    <button className="action-btn" onClick={startNewChat}>
+                        <i className="fas fa-plus"></i> שיחה חדשה
+                    </button>
+                    <button className="action-btn download-btn" onClick={downloadHistory} disabled={history.length === 0}>
+                        <i className="fas fa-file-download"></i> הורד היסטוריה (JSON)
+                    </button>
+                    <div className="history-list">
+                        {history.map(item => (
+                            <div key={item.id} className={`history-item ${item.id === sessionId ? 'active' : ''}`} onClick={() => loadPreviousChat(item)}>
+                                <i className="far fa-comment-dots"></i> {item.preview}
+                            </div>
+                        ))}
+                    </div>
+                    <div className="settings-section-title">הגדרות</div>
+                    <div className="setting-group">
+                        <label className="toggle-container">
+                            <span>הצג שירותים שאוחזרו</span>
+                            <input type="checkbox" checked={showDocs} onChange={(e) => setShowDocs(e.target.checked)} />
+                        </label>
+                    </div>
+                </div>
+
+                <div className="chat-area">
+                    <div className="chat-header">
+                        <div className="chat-title">צ'אט</div>
+                        <div className="mode-badge">אחזור שירותים</div>
+                    </div>
+
+                    <div className="messages-container">
+                        {messages.length === 0 && (
+                            <div style={{ textAlign: 'center', marginTop: '100px', color: '#aaa' }}>
+                                <h2>שלום! איך אני יכול לעזור לך היום?</h2>
+                                <p>שאל שאלה על שירותים חברתיים.</p>
+                            </div>
+                        )}
+                        {messages.map((msg, index) => (
+                            <div key={index} className={`message ${msg.role} ${msg.isError ? 'error' : ''}`}>
+                                {msg.loading && !msg.content ? <span className="typing-indicator">מעבד</span> : msg.content}
+                                {msg.role === 'bot' && !msg.loading && !msg.isError && (
+                                    <div className="message-footer">
+                                        {showDocs && <Sources documents={msg.documents} />}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                        <div ref={messagesEndRef} />
+                    </div>
+
+                    <div className="input-area">
+                        <input ref={inputRef} className="chat-input" type="text" placeholder="הקלד שאלה..." value={input}
+                               onChange={(e) => setInput(e.target.value)}
+                               onKeyDown={(e) => e.key === 'Enter' && handleSend()} disabled={loading} />
+                        <button className="send-btn" onClick={handleSend} disabled={loading || !input.trim()}>
+                            <i className="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

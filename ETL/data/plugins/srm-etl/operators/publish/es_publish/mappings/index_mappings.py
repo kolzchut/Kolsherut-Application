@@ -11,7 +11,8 @@ import os
 MAPPINGS_DIRECTORY = os.path.dirname(__file__)
 CARDS_INDEX_NAME = 'srm__cards'
 AUTOCOMPLETE_INDEX_NAME = 'srm__autocomplete'
-PUBLISHED_INDEX_NAMES = (CARDS_INDEX_NAME, AUTOCOMPLETE_INDEX_NAME)
+SERVICES_INDEX_NAME = 'srm_services'
+PUBLISHED_INDEX_NAMES = (CARDS_INDEX_NAME, AUTOCOMPLETE_INDEX_NAME, SERVICES_INDEX_NAME)
 FREEZE_INSTRUCTIONS = (
     'Run "python -m verification.run_verification freeze_mappings" against the live '
     'cluster to snapshot the index mapping into this file before the first publish run.'

@@ -188,3 +188,4 @@ ETL/data/plugins/srm-etl/verification/reports/
 
 .claude
 test-scripts
+*artifacts
