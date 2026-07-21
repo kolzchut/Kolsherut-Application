@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 
+from app.schemas.service_hierarchy_schemas import Service
+
 
 class RetrievedDocument(BaseModel):
     service_id: str
@@ -14,5 +16,6 @@ class RetrieveRequest(BaseModel):
 
 class RetrieveResponse(BaseModel):
     documents: list[RetrievedDocument]
+    services: list[Service] = []
     log_id: str
     log_index: str

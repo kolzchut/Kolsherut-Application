@@ -34,7 +34,7 @@ The server boots without the retrieval model present — the model loads lazily 
 | ------ | ----------------------- | --------------------------------- | ---------------------------------- |
 | GET    | `/health`               | -                                 | Health check                       |
 | POST   | `/api/services/update`  | `{ "serviceId": "..." }`          | Embed a single service into the retrieval index |
-| POST   | `/api/services/reindex` | `{ "limit": 50 }` (optional)      | Scan all of `srm_services`, embed each, insert into the retrieval index. Omit `limit` for the full index. Returns `{total, embedded, skipped_no_text, not_found}`. |
+| POST   | `/api/services/reindex` | `{ "limit": 50, "resume": true }` (both optional) | Scan all of `srm_services`, embed each, insert into the retrieval index. Omit `limit` for the full index. `resume: true` skips services already present in the embeddings index (continue an interrupted run). Streams Server-Sent Events (`text/event-stream`): a `progress` event every 100 processed services and a final `done` event, each `{event, total, embedded, skipped_no_text, not_found}`. |
 | POST   | `/api/retrieve`         | `{ "query": "..." }`              | Hybrid retrieval + request logging. Returns `{documents, log_id, log_index}`. |
 
 Interactive docs: `http://localhost:8200/docs`.

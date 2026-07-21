@@ -9,6 +9,9 @@ from app.services.logging.build_weekly_logs_index_name import build_weekly_logs_
 from app.services.logging.log_retrieve_to_elasticsearch import log_retrieve_to_elasticsearch
 from app.services.logging.log_retrieve_to_terminal import log_retrieve_to_terminal
 from app.services.retrieval.retrieve_documents_with_trace import retrieve_documents_with_trace
+from app.services.service_hierarchy.assemble_services_from_documents import (
+    assemble_services_from_documents,
+)
 from app.vars import RETRIEVE_ROUTE_PATH
 
 retrieve_router = APIRouter()
@@ -22,6 +25,7 @@ async def retrieve_services(
     log_index = build_weekly_logs_index_name()
     started_at = perf_counter()
     retrieved_documents, retrieval_steps = await retrieve_documents_with_trace(retrieve_request.query)
+    services = await assemble_services_from_documents(retrieved_documents)
     event = build_retrieve_log_event(
         log_id,
         retrieve_request.query,
@@ -33,6 +37,7 @@ async def retrieve_services(
     background_tasks.add_task(log_retrieve_to_elasticsearch, log_index, event)
     return RetrieveResponse(
         documents=[RetrievedDocument(**document) for document in retrieved_documents],
+        services=services,
         log_id=log_id,
         log_index=log_index,
     )

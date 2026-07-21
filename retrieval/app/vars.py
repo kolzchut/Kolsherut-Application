@@ -20,6 +20,9 @@ ELASTIC_PASSWORD = os.getenv('ELASTIC_PASS', '')
 SERVICES_INDEX_NAME = os.getenv('SERVICES_INDEX_NAME', 'srm_services')
 SERVICE_ID_FIELD_NAME = os.getenv('SERVICE_ID_FIELD_NAME', 'id')
 RETRIEVAL_EMBEDDINGS_INDEX_NAME = os.getenv('RETRIEVAL_EMBEDDINGS_INDEX_NAME', 'srm__services_retrieval_embeddings')
+# Branch-level cards index (published by the ETL) used to enrich retrieved services
+# with their organizations and branches, mirroring the be search hierarchy.
+CARDS_INDEX_NAME = os.getenv('CARDS_INDEX_NAME', 'srm__cards')
 
 # Logging (retrieval logs roll into a weekly index: {RETRIEVAL_LOGS_INDEX_NAME}_{week}_{year})
 RETRIEVAL_LOGS_INDEX_NAME = os.getenv('RETRIEVAL_LOGS_INDEX_NAME', 'srm__retrieval_logs')
@@ -50,6 +53,8 @@ SERVICE_SCAN_BATCH_SIZE = int(os.getenv('SERVICE_SCAN_BATCH_SIZE', '500'))
 SERVICE_SCAN_SCROLL_KEEP_ALIVE = os.getenv('SERVICE_SCAN_SCROLL_KEEP_ALIVE', '30m')
 # How many services are rendered, embedded (in one model call), and bulk-indexed per reindex batch.
 SERVICE_EMBED_BATCH_SIZE = int(os.getenv('SERVICE_EMBED_BATCH_SIZE', '64'))
+# How many processed services between reindex progress events streamed back to the caller.
+REINDEX_PROGRESS_INTERVAL = int(os.getenv('REINDEX_PROGRESS_INTERVAL', '100'))
 
 # Retrieval
 KNN_NUM_CANDIDATES = int(os.getenv('KNN_NUM_CANDIDATES', '100'))
@@ -60,6 +65,20 @@ RRF_RANK_CONSTANT = int(os.getenv('RRF_RANK_CONSTANT', '60'))
 # Minimum fused RRF score a service must reach to be returned. RRF scores are
 # rank-based (~0.01-0.03), not cosine similarity, so tune this empirically.
 MIN_FUSED_SCORE = float(os.getenv('MIN_FUSED_SCORE', '0.0'))
+
+# Service hierarchy assembly (cards -> service/organization/branch, mirrors the be search route).
+# Cards are collapsed by service_id; each service's cards (branches) come back as inner hits.
+CARDS_COLLAPSE_FIELD = 'service_id'
+CARDS_INNER_HITS_NAME = 'branch_hits'
+CARDS_INNER_HITS_SIZE = int(os.getenv('CARDS_INNER_HITS_SIZE', '1000'))
+# Card _source fields the hierarchy mapper reads (service, organization and branch levels).
+CARDS_SOURCE_FIELDS = [
+    'service_id', 'service_name', 'service_description', 'service_boost', 'score',
+    'service_phone_numbers', 'organization_id', 'organization_name', 'organization_kind',
+    'organization_phone_numbers', 'card_id', 'branch_name', 'branch_address', 'address_parts',
+    'branch_operating_unit', 'national_service', 'branch_location_accurate', 'branch_geometry',
+    'responses', 'situations',
+]
 
 # Mock FE
 MOCK_FE_ROUTE_PATH = '/'

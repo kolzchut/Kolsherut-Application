@@ -5,9 +5,11 @@ from pydantic import BaseModel
 
 class ReindexRequest(BaseModel):
     limit: Optional[int] = None
+    resume: bool = False
 
 
-class ReindexResponse(BaseModel):
+class ReindexProgressEvent(BaseModel):
+    event: str
     total: int
     embedded: int
     skipped_no_text: int

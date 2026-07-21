@@ -43,6 +43,12 @@ SERVICE_EMBED_STATUS_EMBEDDED = 'embedded'
 SERVICE_EMBED_STATUS_SKIPPED_NO_TEXT = 'skipped_no_text'
 SERVICE_EMBED_STATUS_NOT_FOUND = 'not_found'
 
+# Reindex progress stream (Server-Sent Events). Each line is "data: {json}\n\n".
+SSE_MEDIA_TYPE = 'text/event-stream'
+SSE_DATA_LINE_TEMPLATE = 'data: {payload}\n\n'
+REINDEX_EVENT_PROGRESS = 'progress'
+REINDEX_EVENT_DONE = 'done'
+
 RETRIEVAL_LOGGER_NAME = 'kolsherut-retrieval'
 LOG_FORMAT = '%(asctime)s | %(levelname)s | %(name)s | %(message)s'
 SERVICE_STARTUP_MESSAGE = 'Kolsherut retrieval service started'
