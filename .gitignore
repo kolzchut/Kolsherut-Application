@@ -189,3 +189,10 @@ ETL/data/plugins/srm-etl/verification/reports/
 .claude
 test-scripts
 *artifacts
+
+# Exception: the retrieval embedding model is shipped via Git LFS (see .gitattributes)
+# so CI can bake it into the image. Its Hugging Face download cache stays ignored.
+!retrieval/artifacts/
+!retrieval/artifacts/retrieval-model/
+!retrieval/artifacts/retrieval-model/**
+retrieval/artifacts/retrieval-model/**/.cache/

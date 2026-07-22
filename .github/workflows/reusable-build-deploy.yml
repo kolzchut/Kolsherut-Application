@@ -67,6 +67,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          # Pull Git LFS objects (the retrieval embedding model) so the Docker
+          # build context contains the real files, not LFS pointer stubs.
+          lfs: true
 
       - name: Get Version Tag
         id: get_version
