@@ -67,5 +67,21 @@ frontend:
           - kolsherut.org.il
           - www.kolsherut.org.il
 
+retrieval:
+  image:
+    tag: "production"
+  ingress:
+    enabled: true
+    className: "nginx"
+    hosts:
+      - host: retrieval.kolsherut.org.il
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: tls-secret-name
+        hosts:
+          - retrieval.kolsherut.org.il
+
 secrets:
   ENV_NAME: "production"

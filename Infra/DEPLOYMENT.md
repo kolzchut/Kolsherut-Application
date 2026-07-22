@@ -34,7 +34,8 @@ helm upgrade --install kolsherut . -f values.yaml -f values-dev.yaml -f secrets-
 Switch your kubectl context to the staging cluster (if applicable) and run:
 
 ```bash
-doc```
+helm upgrade --install kolsherut . -f values.yaml -f values-staging.yaml -f secrets-staging.yaml
+```
 
 ### 3. Production
 
@@ -48,7 +49,7 @@ helm upgrade --install kolsherut . -f values.yaml -f values-prod.yaml -f secrets
 
 ## Retrieval Service
 
-The `retrieval` service (FastAPI) runs from the self-contained image `kosherutregistry.azurecr.io/retrieval`, which **bundles the local embedding model** — there is no model volume to provision, the pod pulls the image and warms the model on startup. It is a pure hybrid retriever (semantic kNN + lexical BM25 fused by RRF) over `srm_services`; there is no reranker and no LLM.
+The `retrieval` service (FastAPI) runs from the self-contained image `kosherutregistry.azurecr.io/kolsherut-retrieval`, which **bundles the local embedding model** — there is no model volume to provision, the pod pulls the image and warms the model on startup. It is a pure hybrid retriever (semantic kNN + lexical BM25 fused by RRF) over `srm_services`; there is no reranker and no LLM.
 
 *   **Config:** non-secret settings live under `retrieval.env` in `values.yaml`; `ELASTIC_URL` is injected automatically (in-cluster Elasticsearch).
 *   **Secrets:** `ELASTIC_USERNAME` / `ELASTIC_PASS` come from the shared secret (`secrets-<env>.yaml`).

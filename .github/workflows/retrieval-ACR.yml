@@ -1,0 +1,28 @@
+name: Retrieval ACR Pipeline
+
+on:
+  push:
+    branches: ['main', 'dev', 'production']
+    paths: ['retrieval/**', '.github/workflows/retrieval-ACR.yml']
+    tags: ['v*']
+
+concurrency:
+  group: retrieval-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  run-retrieval-pipeline:
+    uses: ./.github/workflows/reusable-build-deploy.yml
+    secrets: inherit
+    with:
+      service_path: 'retrieval'
+      image_name: 'kolsherut-retrieval'
+      container_name: 'kolsherut-retrieval'
+
+      deployment_dev: 'kolsherut-retrieval'
+      deployment_stage: 'kolsherut-retrieval'
+      deployment_prod: 'kolsherut-retrieval'
+
+      # Retrieval warms the embedding model before it reports Ready, so give the
+      # rollout longer than the 2m default used by be/fe/etl.
+      rollout_timeout: '12m'

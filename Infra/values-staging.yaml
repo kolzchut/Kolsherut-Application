@@ -57,5 +57,20 @@ frontend:
         hosts:
           - staging.kolsherut.org.il
 
+retrieval:
+  image:
+    tag: "stage"
+  ingress:
+    enabled: true
+    hosts:
+      - host: retrieval-staging.kolsherut.org.il
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: tls-secret-name
+        hosts:
+          - retrieval-staging.kolsherut.org.il
+
 secrets:
   ENV_NAME: "staging"
