@@ -510,8 +510,21 @@
             let next = [...history].filter(h => h.id !== currentId);
             next.unshift(sessionData);
             next = next.slice(0, 25);
-            setHistory(next);
-            localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(next));
+            setHistory(persistHistory(next));
+        };
+
+        const persistHistory = (sessions) => {
+            let toSave = [...sessions];
+            while (toSave.length > 0) {
+                try {
+                    localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(toSave));
+                    return toSave;
+                } catch (e) {
+                    if (e.name !== 'QuotaExceededError' || toSave.length === 1) throw e;
+                    toSave = toSave.slice(0, -1);
+                }
+            }
+            return toSave;
         };
 
         const startNewChat = () => { setSessionId(uuidv4()); setMessages([]); inputRef.current?.focus(); };

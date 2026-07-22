@@ -1,0 +1,333 @@
+# ---------------------------------------------------------
+# GLOBAL SETTINGS
+# ---------------------------------------------------------
+imagePullSecrets:
+  - name: acr-registry-secret
+
+# ---------------------------------------------------------
+# STATIC REGISTRY CREDENTIALS
+# ---------------------------------------------------------
+registryCredentials:
+  enabled: true
+  registry: kosherutregistry.azurecr.io
+  username: KosherutRegistry
+  password: "" # MUST BE PROVIDED VIA SECRETS FILE
+  email: "notifier.etl@gmail.com"
+
+# ---------------------------------------------------------
+# APP SECRETS (Centralized Config)
+# ---------------------------------------------------------
+secrets:
+  # Values here are DEFAULTS or PLACEHOLDERS. 
+  # Real secrets must be provided via secrets.yaml or CI/CD.
+
+  # --- Infrastructure ---
+  ELASTIC_USERNAME: "elastic"
+  ELASTIC_PASS: ""
+
+  # --- Cronicle Auth ---
+  CRONICLE_ADMIN_USER: "ariel"
+  CRONICLE_ADMIN_PASS: ""
+  
+  # --- Email (Merged) ---
+  EMAIL_NOTIFIER_SENDER_EMAIL: "notifier.etl@gmail.com"
+  EMAIL_NOTIFIER_PASSWORD: ""
+  EMAIL_NOTIFIER_RECIPIENT_LIST: ""
+
+  # --- ETL OPERATORS CONFIG ---
+  ENV_NAME: "development" # Default, override in values-prod.yaml
+  
+  DATAFLOWS_AIRTABLE_APIKEY: ""
+  ETL_AIRTABLE_BASE: ""
+  ETL_AIRTABLE_ALTERNATE_BASE: "-"
+  ETL_AIRTABLE_DATAENTRY_BASE: ""
+  ETL_AIRTABLE_DATA_IMPORT_BASE: ""
+  
+  ETL_GUIDESTAR_USERNAME: ""
+  ETL_GUIDESTAR_PASSWORD: ""
+  
+  ETL_GOVMAP_API_KEY: ""
+  
+  ETL_GOOGLE_MAPS_API_KEY: ""
+  
+  KZ_GITHUB_TOKEN: ""
+  KZ_KOLSHERUT_APPLICATION_GITHUB_TOKEN: ""
+
+# ---------------------------------------------------------
+# 1. BACKEND CONFIGURATION
+# ---------------------------------------------------------
+backend:
+  replicaCount: 1
+  # Prevent Helm/Kubernetes rollouts from briefly creating an extra pod (default
+  # RollingUpdate maxSurge=25% can turn 1 replica into 2 during upgrades).
+  # Note: This enforces "no surge" and may cause a short downtime during rollout.
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  image:
+    repository: kosherutregistry.azurecr.io/kolsherut-be
+    pullPolicy: Always
+    # tag: defined in values-env.yaml (defaulting to latest if omitted helps fail fast or use 'dev')
+    tag: "dev"
+  service:
+    type: ClusterIP
+    port: 5000
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    # Hosts defined in values-env.yaml
+    hosts: []
+    # TLS defined in values-env.yaml
+    tls: []
+  resources:
+    requests:
+      cpu: 500m
+      memory: 2Gi
+    limits:
+      cpu: 1250m
+      memory: 4Gi
+  probes:
+    liveness:
+      initialDelaySeconds: 30
+    readiness:
+      initialDelaySeconds: 5
+  env:
+    # ORIGIN, ENV defined in values-env.yaml
+    PORT: "5000"
+    ELASTIC_RECONNECT_TIMEOUT: "5"
+    AUTOCOMPLETE_MIN_SCORE: "5000"
+    SEARCHCARDS_FIRST_LENGTH: "50"
+    VERBOSE: "true"
+    LOG_TO_FILE: "true"
+    LOG_DURATION: "10"
+    EMAIL_INTERVAL_HOURS: "6"
+    EMAIL_NOTIFIER_RECIPIENT_LIST: "ariel_ohana@webiks.com,eli.rabby@kolzchut.org.il"
+    SITEMAP_MINIMUM_LAST_MODIFIED_FOR_CARDS: "2026-01-19T09:00:00"
+
+  # ---------------------------------------------------------
+  # BACKEND LOGS (/app/logs)
+  # ---------------------------------------------------------
+  # Mounts /app/logs on a volume, and (optionally) runs a sidecar that deletes
+  # the oldest files once total log size exceeds 2GiB.
+  logs:
+    enabled: true
+    mountPath: "/app/logs"
+
+    # Persist logs across pod restarts (recommended).
+    persistence:
+      enabled: true
+      storageClass: "managed-csi"
+      size: "4Gi"
+
+    # If persistence.enabled=false, uses an emptyDir instead.
+    emptyDir:
+      sizeLimit: "4Gi"
+
+    cleanup:
+      enabled: true
+      # Image must have: sh, du, ls, awk, rm.
+      image: "busybox:1.36"
+      maxSizeMi: 4096
+      bufferMi: 150
+      intervalSeconds: 60
+
+# ---------------------------------------------------------
+# 2. ELASTICSEARCH CONFIGURATION
+# ---------------------------------------------------------
+elasticsearch:
+  image:
+    repository: kosherutregistry.azurecr.io/heb_es_arm
+    tag: "latest"
+  resources:
+    requests:
+      cpu: 500m
+      memory: 6Gi
+    limits:
+      cpu: 1000m
+      memory: 8Gi
+  volumeClaim:
+    enabled: true
+    storageClass: "managed-csi"
+    size: 30Gi
+
+# ---------------------------------------------------------
+# 3. ETL (CRONICLE) CONFIGURATION
+# ---------------------------------------------------------
+etl:
+  replicaCount: 1
+  image:
+    repository: kosherutregistry.azurecr.io/kolsherut-etl
+    tag: "latest" # Default, override in values-env.yaml
+    pullPolicy: Always
+
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 3012
+
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    # Hosts defined in values-env.yaml
+    hosts: []
+    # TLS defined in values-env.yaml
+    tls: []
+
+  resources:
+    requests:
+      cpu: 750m
+      memory: 2Gi
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+
+  persistence:
+    enabled: true
+    storageClass: "managed-csi"
+    size: 4Gi
+
+  env:
+    TZ: "Asia/Jerusalem"
+    # CRONICLE hostname/url envs defined in values-env.yaml
+    CRONICLE_ip: "0.0.0.0" 
+    CRONICLE_server__port: "3012"    
+    CRONICLE_web_socket_use_hostnames: "1"    
+    CRONICLE_email_from: "notifier.etl@gmail.com"
+    CRONICLE_smtp_hostname: "smtp.gmail.com"
+    CRONICLE_smtp_port: "587"
+    CRONICLE_mail_options__auth__user: "notifier.etl@gmail.com"
+    CRONICLE_secret_key: "" # MUST BE PROVIDED VIA SECRETS FILE
+    BUDGETKEY_DATABASE_URL: "postgresql://readonly:readonly@data-next.obudget.org/budgetkey"
+
+# ---------------------------------------------------------
+# 4. FRONTEND CONFIGURATION
+# ---------------------------------------------------------
+frontend:
+  replicaCount: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  image:
+    repository: kosherutregistry.azurecr.io/kolsherut-fe
+    pullPolicy: Always
+    tag: "dev"
+  service:
+    type: ClusterIP
+    port: 4000
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    # Hosts defined in values-env.yaml
+    hosts: []
+    # TLS defined in values-env.yaml
+    tls: []
+  resources:
+    requests:
+      cpu: 250m
+      memory: 1Gi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+  persistence:
+    enabled: true
+    size: "1Gi"
+    # Per-environment Azure File Share settings (provided via secrets files)
+    azureStorageAccountName: ""  # MUST BE PROVIDED VIA SECRETS FILE
+    azureStorageAccountKey: ""    # MUST BE PROVIDED VIA SECRETS FILE
+    azureFileShareName: ""        # MUST BE PROVIDED VIA SECRETS FILE
+
+# ---------------------------------------------------------
+# 5. RETRIEVAL SERVICE CONFIGURATION
+# ---------------------------------------------------------
+# FastAPI retrieval microservice. The image bundles the local embedding model,
+# so no model volume is needed - the pod just pulls the self-contained image
+# from ACR and warms the model on startup.
+retrieval:
+  enabled: true
+  replicaCount: 1
+  # Single replica: avoid a surge pod (the pod loads the embedding model into RAM).
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  image:
+    repository: kosherutregistry.azurecr.io/kolsherut-retrieval
+    pullPolicy: Always
+    tag: "latest"
+  service:
+    type: ClusterIP
+    port: 8200
+  # Internal-only by default (the backend reaches it via the cluster service DNS).
+  # Set enabled=true and provide hosts/tls in values-<env>.yaml to expose it.
+  ingress:
+    enabled: false
+    className: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    hosts: []
+    tls: []
+  resources:
+    requests:
+      cpu: 500m
+      memory: 3Gi
+    limits:
+      cpu: 2000m
+      memory: 6Gi
+  # Startup loads the models before /health responds, so the startup probe
+  # gates readiness on a fully warmed service (up to failureThreshold*period).
+  probes:
+    startup:
+      periodSeconds: 10
+      failureThreshold: 60
+    liveness:
+      initialDelaySeconds: 30
+      periodSeconds: 20
+    readiness:
+      initialDelaySeconds: 10
+      periodSeconds: 10
+  # Non-secret config. ELASTIC_URL is injected by the deployment (in-cluster ES),
+  # and ELASTIC_USERNAME / ELASTIC_PASS come from the shared secret.
+  env:
+    RETRIEVAL_SERVER_HOST: "0.0.0.0"
+    RETRIEVAL_SERVER_PORT: "8200"
+    SERVICES_INDEX_NAME: "srm_services"
+    SERVICE_ID_FIELD_NAME: "id"
+    RETRIEVAL_EMBEDDINGS_INDEX_NAME: "srm__services_retrieval_embeddings"
+    CARDS_INDEX_NAME: "srm__cards"
+    RETRIEVAL_LOGS_INDEX_NAME: "srm__retrieval_logs"
+    RETRIEVAL_LOG_LEVEL: "INFO"
+    EMBEDDING_MODEL_PATH: "artifacts/retrieval-model"
+    EMBEDDING_PASSAGE_PREFIX: "passage: "
+    EMBEDDING_QUERY_PREFIX: "query: "
+    # srm_services source field overrides read while rendering service text.
+    SERVICE_NAME_FIELD: "name"
+    SERVICE_DESCRIPTION_FIELD: "description"
+    SERVICE_DETAILS_FIELD: "details"
+    SERVICE_PHONE_NUMBERS_FIELD: "phone_numbers"
+    SERVICE_EMAIL_FIELD: "email_address"
+    SERVICE_PAYMENT_REQUIRED_FIELD: "payment_required"
+    SERVICE_PAYMENT_DETAILS_FIELD: "payment_details"
+    SERVICE_SCAN_BATCH_SIZE: "500"
+    SERVICE_SCAN_SCROLL_KEEP_ALIVE: "30m"
+    SERVICE_EMBED_BATCH_SIZE: "64"
+    REINDEX_PROGRESS_INTERVAL: "100"
+    KNN_NUM_CANDIDATES: "100"
+    CANDIDATE_POOL_SIZE: "50"
+    RRF_RANK_CONSTANT: "60"
+    # Per-retriever fusion weights; 1.0/1.0 = equal-weight RRF (semantic + lexical).
+    SEMANTIC_WEIGHT: "1.0"
+    LEXICAL_WEIGHT: "1.0"
+    MIN_FUSED_SCORE: "0.0"
+    # Max branches (inner hits) returned per service when collapsing cards by service_id.
+    CARDS_INNER_HITS_SIZE: "1000"

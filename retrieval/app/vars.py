@@ -62,6 +62,11 @@ KNN_NUM_CANDIDATES = int(os.getenv('KNN_NUM_CANDIDATES', '100'))
 CANDIDATE_POOL_SIZE = int(os.getenv('CANDIDATE_POOL_SIZE', '50'))
 # The rank constant in the reciprocal rank fusion score 1 / (rank_constant + rank).
 RRF_RANK_CONSTANT = int(os.getenv('RRF_RANK_CONSTANT', '60'))
+# Per-retriever weights multiplied into each reciprocal rank contribution before
+# fusion. Raise SEMANTIC_WEIGHT to favor kNN (meaning), LEXICAL_WEIGHT to favor BM25
+# (exact terms). Only the ratio matters; 1.0/1.0 reproduces plain equal-weight RRF.
+SEMANTIC_WEIGHT = float(os.getenv('SEMANTIC_WEIGHT', '1.0'))
+LEXICAL_WEIGHT = float(os.getenv('LEXICAL_WEIGHT', '1.0'))
 # Minimum fused RRF score a service must reach to be returned. RRF scores are
 # rank-based (~0.01-0.03), not cosine similarity, so tune this empirically.
 MIN_FUSED_SCORE = float(os.getenv('MIN_FUSED_SCORE', '0.0'))

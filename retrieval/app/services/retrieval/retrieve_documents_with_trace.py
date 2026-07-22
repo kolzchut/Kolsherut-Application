@@ -8,7 +8,13 @@ from app.services.retrieval.reciprocal_rank_fusion import fuse_rankings_by_recip
 from app.services.text_embedding.embedding_model import embed_query_text
 from app.services.tracing.build_retrieval_steps import build_retrieval_steps
 from app.services.tracing.time_async_call import time_async_call
-from app.vars import CANDIDATE_POOL_SIZE, MIN_FUSED_SCORE, RRF_RANK_CONSTANT
+from app.vars import (
+    CANDIDATE_POOL_SIZE,
+    LEXICAL_WEIGHT,
+    MIN_FUSED_SCORE,
+    RRF_RANK_CONSTANT,
+    SEMANTIC_WEIGHT,
+)
 
 
 def filter_documents_by_min_fused_score(fused_documents: list[dict]) -> list[dict]:
@@ -23,7 +29,9 @@ async def retrieve_documents_with_trace(query: str) -> tuple[list[dict], list[di
     knn_documents = [build_retrieved_document(hit) for hit in knn_hits]
     bm25_documents = [build_retrieved_document(hit) for hit in bm25_hits]
     fusion_started_at = perf_counter()
-    fused_documents = fuse_rankings_by_reciprocal_rank([knn_documents, bm25_documents], RRF_RANK_CONSTANT)
+    fused_documents = fuse_rankings_by_reciprocal_rank(
+        [knn_documents, bm25_documents], RRF_RANK_CONSTANT, [SEMANTIC_WEIGHT, LEXICAL_WEIGHT]
+    )
     retrieved_documents = filter_documents_by_min_fused_score(fused_documents)
     fusion_ms = (perf_counter() - fusion_started_at) * 1000
     steps = build_retrieval_steps(
