@@ -24,6 +24,11 @@ on:
       deployment_prod:
         required: true
         type: string
+      rollout_timeout:
+        required: false
+        type: string
+        default: '2m'
+        description: "kubectl rollout status timeout for the non-prod deploy (e.g. 2m, 12m)"
     secrets:
       ACR_LOGIN_SERVER:
         required: true
@@ -183,7 +188,7 @@ jobs:
         run: |
           kubectl set env deployment/${{ env.DEPLOYMENT }} ENVIRONMENT=${{ env.TARGET_ENV }} -n default
           kubectl rollout restart deployment/${{ env.DEPLOYMENT }} -n default
-          kubectl rollout status deployment/${{ env.DEPLOYMENT }} -n default --timeout=2m
+          kubectl rollout status deployment/${{ env.DEPLOYMENT }} -n default --timeout=${{ inputs.rollout_timeout }}
 
   deploy-production:
     needs: build-and-push

@@ -47,6 +47,17 @@ helm upgrade --install kolsherut . -f values.yaml -f values-prod.yaml -f secrets
 
 ---
 
+## Retrieval Service
+
+The `retrieval` service (FastAPI) runs from the self-contained image `kosherutregistry.azurecr.io/kolsherut-retrieval`, which **bundles the local embedding model** — there is no model volume to provision, the pod pulls the image and warms the model on startup. It is a pure hybrid retriever (semantic kNN + lexical BM25 fused by RRF) over `srm_services`; there is no reranker and no LLM.
+
+*   **Config:** non-secret settings live under `retrieval.env` in `values.yaml`; `ELASTIC_URL` is injected automatically (in-cluster Elasticsearch).
+*   **Secrets:** `ELASTIC_USERNAME` / `ELASTIC_PASS` come from the shared secret (`secrets-<env>.yaml`).
+*   **Reindex:** embed all services by calling `POST /api/services/reindex` on the service (synchronous — run it as a one-shot `kubectl` Job or a `curl` against the ClusterIP service); query at `POST /api/retrieve`.
+*   **Networking:** internal-only by default (backend reaches it at `http://<release>-retrieval:8200`). To expose it, set `retrieval.ingress.enabled=true` and add `retrieval.ingress.hosts`/`tls` in the env values file.
+*   **Startup:** the embedding model loads before `/health` responds; the startup probe allows up to ~10 min of warm-up. The image pull can be slow on first schedule.
+*   **Disable entirely:** set `retrieval.enabled=false`.
+
 ## Troubleshooting
 
 *   **Secrets Missing?** Ensure `secrets-<env>.yaml` exists and is filled out. It is ignored by git for security.

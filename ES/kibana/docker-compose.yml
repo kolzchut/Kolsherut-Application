@@ -1,0 +1,22 @@
+services:
+  kolsherut-kibana:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kolsherut-kibana-local
+    restart: unless-stopped
+    environment:
+      # Which Elasticsearch to connect to (set in .env). See .env.example.
+      - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_HOSTS}
+      # Basic-auth credentials. Leave blank in .env for a security-disabled cluster.
+      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
+      # TLS verification for https targets. "none" for self-signed dev clusters.
+      - ELASTICSEARCH_SSL_VERIFICATIONMODE=${ELASTICSEARCH_SSL_VERIFICATIONMODE:-none}
+      - SERVER_HOST=0.0.0.0
+    ports:
+      - "5601:5601"
+    # Lets the container reach an Elasticsearch running on the host
+    # (e.g. http://host.docker.internal:9200 for the ES/reindex local replica).
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

@@ -1,0 +1,113 @@
+{
+  "properties": {
+    "bounds": {
+      "ignore_malformed": true,
+      "scaling_factor": 100.0,
+      "type": "scaled_float"
+    },
+    "city_name": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "id": {
+      "type": "text"
+    },
+    "importance": {
+      "ignore_malformed": true,
+      "type": "long"
+    },
+    "low": {
+      "type": "boolean"
+    },
+    "org_id": {
+      "type": "keyword"
+    },
+    "org_name": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "query": {
+      "doc_values": false,
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "max_shingle_size": 3,
+      "type": "search_as_you_type"
+    },
+    "query_heb": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "response": {
+      "type": "keyword"
+    },
+    "response_name": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "revision": {
+      "type": "keyword"
+    },
+    "score": {
+      "ignore_malformed": true,
+      "scaling_factor": 100.0,
+      "type": "scaled_float"
+    },
+    "situation": {
+      "type": "keyword"
+    },
+    "situation_name": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "structured_query": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "synonyms": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "visible": {
+      "type": "boolean"
+    }
+  }
+}

@@ -11,7 +11,7 @@ from pyproj import Transformer
 import geocoder
 
 from conf import settings
-from operators.derive.helpers import ACCURATE_TYPES
+from operators.publish.shared.location_accuracy import ACCURATE_TYPES
 from srm_tools.logger import logger
 from srm_tools.error_notifier import invoke_on
 

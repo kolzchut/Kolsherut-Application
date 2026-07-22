@@ -180,4 +180,12 @@ ignore/
 # Local ES replica credentials (see ES/reindex/.env.example)
 ES/reindex/.env
 
+# Kibana target/credentials (see ES/kibana/.env.example)
+ES/kibana/.env
+
+# One-shot migration verification reports (see ETL/data/plugins/srm-etl/verification)
+ETL/data/plugins/srm-etl/verification/reports/
+
 .claude
+test-scripts
+*artifacts
