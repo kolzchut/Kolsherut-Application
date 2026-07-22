@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kolsherut Retrieval Evaluation</title>
+  <style>
+    :root {
+      --bg: #0f1420; --panel: #182033; --border: #2a3450; --text: #e7ecf5;
+      --muted: #93a0bd; --accent: #5b8cff;
+    }
+    @media (prefers-color-scheme: light) {
+      :root { --bg: #f4f6fb; --panel: #ffffff; --border: #dfe4ee; --text: #1a2233; --muted: #5c6b88; --accent: #2f6bff; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; }
+    h1 { font-size: 20px; margin: 0 0 4px; }
+    .sub { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+    .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+      padding: 20px; margin-bottom: 22px; }
+    .headline { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+    .score { font-size: 54px; font-weight: 700; line-height: 1; }
+    .score small { display: block; font-size: 13px; font-weight: 400; color: var(--muted); margin-top: 6px; }
+    .chips { display: flex; gap: 10px; flex-wrap: wrap; }
+    .chip { background: var(--bg); border: 1px solid var(--border); border-radius: 999px;
+      padding: 7px 13px; font-size: 12px; color: var(--muted); }
+    .chip b { color: var(--text); }
+    h2 { font-size: 15px; margin: 0 0 14px; }
+    .scroll { overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; font-size: 13px; }
+    th, td { padding: 8px 10px; text-align: right; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    th:first-child, td:first-child { text-align: left; }
+    thead th { color: var(--muted); font-weight: 600; cursor: default; }
+    .drill thead th { cursor: pointer; user-select: none; }
+    .cell { color: #08110c; font-weight: 600; border-radius: 6px; }
+    .empty { color: var(--muted); }
+    svg { width: 100%; height: 320px; display: block; }
+    .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; font-size: 12px; color: var(--muted); }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+    .error { color: #ff6b6b; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Kolsherut Retrieval Evaluation</h1>
+    <div class="sub">Retrieval ranking vs. BE-derived ground truth &middot; metrics at k = 3, 5, 10, 25, 50</div>
+    <div id="root"><div class="panel">Loading results&hellip;</div></div>
+  </div>
+
+  <script>
+    let INLINE_DATA;
+    try { INLINE_DATA = __SUMMARY_JSON__; } catch (e) { INLINE_DATA = null; }
+
+    const CHART_COLORS = ['#5b8cff', '#37c98b', '#ffb84d', '#ff6b8b', '#b98cff', '#4dd0e1', '#f06292'];
+
+    const loadData = async () => {
+      if (INLINE_DATA) return INLINE_DATA;
+      const response = await fetch('../results/summary.json');
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      return response.json();
+    };
+
+    const heatColor = (value) => 'hsl(' + Math.round(value * 120) + ', 65%, ' + (62 - value * 6) + '%)';
+    const fmt = (value) => value.toFixed(4);
+
+    const renderHeadline = (data) => {
+      const meta = data.meta;
+      const chips = [
+        ['queries', meta.num_queries], ['evaluated', meta.num_evaluated],
+        ['skipped (empty GT)', meta.num_skipped_empty_gt], ['BE 404', meta.num_be_404],
+        ['avg GT size', meta.avg_ground_truth_size.toFixed(2)],
+      ].map((entry) => '<div class="chip"><b>' + entry[1] + '</b> ' + entry[0] + '</div>').join('');
+      return '<div class="panel headline"><div class="score">' + fmt(data.overall_score) +
+        '<small>overall score</small></div><div class="chips">' + chips + '</div></div>';
+    };
+
+    const renderMatrix = (data) => {
+      const head = '<th>Metric</th>' + data.k_values.map((k) => '<th>@' + k + '</th>').join('');
+      const rows = data.metric_keys.map((key) => {
+        const cells = data.k_values.map((k) => {
+          const value = data.metrics[k][key];
+          return '<td class="cell" style="background:' + heatColor(value) + '">' + fmt(value) + '</td>';
+        }).join('');
+        return '<tr><td>' + data.metric_labels[key] + '</td>' + cells + '</tr>';
+      }).join('');
+      return '<div class="panel"><h2>Metrics &times; k</h2><div class="scroll"><table><thead><tr>' +
+        head + '</tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+    };
+
+    const buildPolyline = (data, key, colorIndex, width, height, padding) => {
+      const stepX = (width - padding * 2) / Math.max(data.k_values.length - 1, 1);
+      const points = data.k_values.map((k, i) => {
+        const value = data.metrics[k][key];
+        const x = padding + i * stepX;
+        const y = height - padding - value * (height - padding * 2);
+        return x.toFixed(1) + ',' + y.toFixed(1);
+      }).join(' ');
+      return '<polyline fill="none" stroke="' + CHART_COLORS[colorIndex % CHART_COLORS.length] +
+        '" stroke-width="2" points="' + points + '" />';
+    };
+
+    const renderChart = (data) => {
+      const width = 1040, height = 320, padding = 34;
+      const axisY = ['0', '0.25', '0.5', '0.75', '1'].map((label, i) => {
+        const y = height - padding - (i / 4) * (height - padding * 2);
+        return '<line x1="' + padding + '" y1="' + y + '" x2="' + (width - padding) + '" y2="' + y +
+          '" stroke="var(--border)" /><text x="6" y="' + (y + 4) + '" fill="var(--muted)" font-size="11">' + label + '</text>';
+      }).join('');
+      const xLabels = data.k_values.map((k, i) => {
+        const stepX = (width - padding * 2) / Math.max(data.k_values.length - 1, 1);
+        const x = padding + i * stepX;
+        return '<text x="' + x + '" y="' + (height - 10) + '" fill="var(--muted)" font-size="11" text-anchor="middle">@' + k + '</text>';
+      }).join('');
+      const lines = data.metric_keys.map((key, i) => buildPolyline(data, key, i, width, height, padding)).join('');
+      const legend = data.metric_keys.map((key, i) => '<span><i class="swatch" style="background:' +
+        CHART_COLORS[i % CHART_COLORS.length] + '"></i>' + data.metric_labels[key] + '</span>').join('');
+      return '<div class="panel"><h2>Metric curves across k</h2><div class="scroll"><svg viewBox="0 0 ' +
+        width + ' ' + height + '" preserveAspectRatio="xMidYMid meet">' + axisY + xLabels + lines +
+        '</svg></div><div class="legend">' + legend + '</div></div>';
+    };
+
+    const renderDrill = (data) => {
+      const head = '<th data-col="query">query</th><th data-col="gt">ground truth</th>' +
+        data.k_values.map((k) => '<th data-col="k' + k + '">hits@' + k + '</th>').join('');
+      const body = data.per_query.map((entry) => {
+        const hits = data.k_values.map((k) => '<td>' + entry.hits_by_k[k] + '</td>').join('');
+        const gt = entry.empty_ground_truth ? '<td class="empty">0</td>' : '<td>' + entry.ground_truth_size + '</td>';
+        return '<tr><td>' + entry.query + '</td>' + gt + hits + '</tr>';
+      }).join('');
+      return '<div class="panel"><h2>Per-query drill-down</h2><div class="scroll"><table class="drill"><thead><tr>' +
+        head + '</tr></thead><tbody>' + body + '</tbody></table></div></div>';
+    };
+
+    const enableSorting = () => {
+      document.querySelectorAll('.drill thead th').forEach((header, columnIndex) => {
+        header.addEventListener('click', () => {
+          const body = header.closest('table').querySelector('tbody');
+          const rows = Array.from(body.querySelectorAll('tr'));
+          const numeric = columnIndex > 0;
+          rows.sort((a, b) => {
+            const left = a.children[columnIndex].textContent, right = b.children[columnIndex].textContent;
+            return numeric ? (parseFloat(right) - parseFloat(left)) : left.localeCompare(right);
+          });
+          rows.forEach((row) => body.appendChild(row));
+        });
+      });
+    };
+
+    const render = (data) => {
+      document.getElementById('root').innerHTML =
+        renderHeadline(data) + renderMatrix(data) + renderChart(data) + renderDrill(data);
+      enableSorting();
+    };
+
+    loadData().then(render).catch((error) => {
+      document.getElementById('root').innerHTML =
+        '<div class="panel error">Could not load results: ' + error.message +
+        '. Serve this folder (e.g. <code>python -m http.server</code>) or open results/report.html.</div>';
+    });
+  </script>
+</body>
+</html>

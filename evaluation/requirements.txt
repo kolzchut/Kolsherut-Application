@@ -1,0 +1,5 @@
+# HTTP client for calling the retrieval and BE services.
+requests==2.32.3
+
+# .env overrides for vars.py (URLs, timeouts, ground-truth mode).
+python-dotenv==1.2.2

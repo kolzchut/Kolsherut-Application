@@ -18,9 +18,12 @@ BRANCH_LINK_FIELDS = ('services', 'org_services')
 
 def remap_branch_location(row, updated_locations):
     """The Data-Import location is a plain location id string; it becomes a one-item
-    array remapped to the main-base record id (unmapped ids kept as-is)."""
+    array remapped to the main-base record id (unmapped ids kept as-is). The string is
+    stripped of surrounding whitespace first so it matches the existing Location id -
+    otherwise Airtable auto-creates a duplicate Location for the unmatched string."""
     location = row.get('location')
-    return {**row, 'location': [updated_locations.get(location, location)]}
+    stripped_location = location.strip() if isinstance(location, str) else location
+    return {**row, 'location': [updated_locations.get(stripped_location, stripped_location)]}
 
 
 def copy_branches_to_main_base(table_rows, source_id, updated_organizations, updated_locations):
