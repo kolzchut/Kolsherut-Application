@@ -4,6 +4,9 @@ import {
     primaryTextColorOne
 } from "../../services/theme";
 import IDynamicThemeApp from "../../types/dynamicThemeApp.ts";
+import {widthOfHeaderCollapse} from "../../constants/mediaQueryProps";
+
+const headerCollapseMediaQuery = `@media (max-width: ${widthOfHeaderCollapse}px)`;
 
 export default createUseStyles((theme: IDynamicThemeApp) => ({
     root: {
@@ -28,13 +31,13 @@ export default createUseStyles((theme: IDynamicThemeApp) => ({
         '&:hover': {
             cursor: 'pointer',
         },
-        '@media (max-width: 768px)': {
+        [headerCollapseMediaQuery]: {
             display: 'none',
         }
     },
     hamburgerIcon: {
         display: 'none',
-        '@media (max-width: 768px)': {
+        [headerCollapseMediaQuery]: {
             display: 'block',
             flexShrink: 0,
             height: 30,
@@ -58,12 +61,13 @@ export default createUseStyles((theme: IDynamicThemeApp) => ({
         justifyContent: 'space-between',
         flex:8,
         maxWidth: 500,
-        '@media (max-width: 768px)': {
+        [headerCollapseMediaQuery]: {
             display: 'none',
         }
     },
     link: {
         lineHeight: 4,
+        whiteSpace: 'nowrap',
         fontSize: theme?.accessibilityActive ? 24 : 20,
         textDecoration: "none",
         fontWeight: 300,
