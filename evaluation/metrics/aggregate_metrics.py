@@ -21,8 +21,8 @@ def build_meta(all_evaluations: list[QueryEvaluation], evaluated: list[QueryEval
     return {
         'num_queries': len(all_evaluations),
         'num_evaluated': len(evaluated),
+        'num_skipped_unsupported': sum(1 for e in all_evaluations if e.skip_reason),
         'num_skipped_empty_gt': sum(1 for e in all_evaluations if e.empty_ground_truth),
-        'num_be_404': sum(1 for e in all_evaluations if e.be_returned_empty),
         'avg_ground_truth_size': mean([e.ground_truth_size for e in evaluated]),
     }
 

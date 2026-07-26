@@ -70,7 +70,8 @@
       const meta = data.meta;
       const chips = [
         ['queries', meta.num_queries], ['evaluated', meta.num_evaluated],
-        ['skipped (empty GT)', meta.num_skipped_empty_gt], ['BE 404', meta.num_be_404],
+        ['skipped (unsupported URL)', meta.num_skipped_unsupported],
+        ['skipped (empty GT)', meta.num_skipped_empty_gt],
         ['avg GT size', meta.avg_ground_truth_size.toFixed(2)],
       ].map((entry) => '<div class="chip"><b>' + entry[1] + '</b> ' + entry[0] + '</div>').join('');
       return '<div class="panel headline"><div class="score">' + fmt(data.overall_score) +
@@ -123,12 +124,16 @@
     };
 
     const renderDrill = (data) => {
-      const head = '<th data-col="query">query</th><th data-col="gt">ground truth</th>' +
+      const head = '<th data-col="query">query</th><th data-col="skip">skipped</th>' +
+        '<th data-col="gt">ground truth</th>' +
         data.k_values.map((k) => '<th data-col="k' + k + '">hits@' + k + '</th>').join('');
       const body = data.per_query.map((entry) => {
-        const hits = data.k_values.map((k) => '<td>' + entry.hits_by_k[k] + '</td>').join('');
+        const skipped = !!entry.skip_reason;
+        const hits = data.k_values.map((k) =>
+          '<td>' + (skipped ? '' : entry.hits_by_k[k]) + '</td>').join('');
         const gt = entry.empty_ground_truth ? '<td class="empty">0</td>' : '<td>' + entry.ground_truth_size + '</td>';
-        return '<tr><td>' + entry.query + '</td>' + gt + hits + '</tr>';
+        const reason = '<td class="empty">' + (entry.skip_reason || '') + '</td>';
+        return '<tr><td>' + entry.query + '</td>' + reason + gt + hits + '</tr>';
       }).join('');
       return '<div class="panel"><h2>Per-query drill-down</h2><div class="scroll"><table class="drill"><thead><tr>' +
         head + '</tr></thead><tbody>' + body + '</tbody></table></div></div>';
@@ -139,7 +144,7 @@
         header.addEventListener('click', () => {
           const body = header.closest('table').querySelector('tbody');
           const rows = Array.from(body.querySelectorAll('tr'));
-          const numeric = columnIndex > 0;
+          const numeric = !header.matches('[data-col="query"], [data-col="skip"]');
           rows.sort((a, b) => {
             const left = a.children[columnIndex].textContent, right = b.children[columnIndex].textContent;
             return numeric ? (parseFloat(right) - parseFloat(left)) : left.localeCompare(right);

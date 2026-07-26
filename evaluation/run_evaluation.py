@@ -2,9 +2,13 @@ import argparse
 import sys
 
 from evaluation import vars
-from evaluation.strings import APP_TITLE, LOG_LOADED_DATASET, LOG_WROTE_RESULTS, LOG_THRESHOLDS_PASSED
+from evaluation.strings import (
+    APP_TITLE, CLI_DESCRIPTION, CLI_LIMIT_HELP, CLI_RESCRAPE_HELP,
+    LOG_LOADED_DATASET, LOG_WROTE_RESULTS, LOG_THRESHOLDS_PASSED,
+)
 from evaluation.logger import build_logger
 from evaluation.dataset.load_dataset import load_dataset
+from evaluation.ground_truth.load_ground_truth import load_ground_truth
 from evaluation.evaluate_dataset import evaluate_dataset
 from evaluation.metrics.aggregate_metrics import aggregate_metrics
 from evaluation.report.compute_overall_score import compute_overall_score
@@ -16,8 +20,9 @@ from evaluation.report.check_thresholds import check_thresholds
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=APP_TITLE)
-    parser.add_argument('--limit', type=int, default=None, help='Evaluate only the first N queries')
+    parser = argparse.ArgumentParser(prog=APP_TITLE, description=CLI_DESCRIPTION)
+    parser.add_argument('--limit', type=int, default=None, help=CLI_LIMIT_HELP)
+    parser.add_argument('--rescrape', action='store_true', help=CLI_RESCRAPE_HELP)
     return parser.parse_args()
 
 
@@ -35,11 +40,14 @@ def report_and_gate(aggregate: dict, overall_score: float, logger) -> int:
 def main() -> int:
     args = parse_args()
     logger = build_logger()
-    examples = load_dataset()
+    examples, source_checksum = load_dataset()
     logger.info(LOG_LOADED_DATASET.format(count=len(examples), path=vars.DATASET_PATH))
     if args.limit is not None:
         examples = examples[:args.limit]
-    evaluations = evaluate_dataset(examples, logger)
+    # A limited run must not overwrite the cache with a partial scrape.
+    ground_truth = load_ground_truth(examples, source_checksum, logger,
+                                     rescrape=args.rescrape, persist=args.limit is None)
+    evaluations = evaluate_dataset(examples, ground_truth, logger)
     aggregate = aggregate_metrics(evaluations)
     overall_score = compute_overall_score(aggregate['metrics'])
     write_results(build_summary(aggregate, overall_score, evaluations))

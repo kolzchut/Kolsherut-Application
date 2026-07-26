@@ -8,7 +8,7 @@ def serialize_query_evaluation(evaluation: QueryEvaluation) -> dict:
         'query': evaluation.query,
         'ground_truth_size': evaluation.ground_truth_size,
         'empty_ground_truth': evaluation.empty_ground_truth,
-        'be_returned_empty': evaluation.be_returned_empty,
+        'skip_reason': evaluation.skip_reason,
         'hits_by_k': evaluation.hits_by_k,
         'metrics_by_k': evaluation.metrics_by_k,
     }

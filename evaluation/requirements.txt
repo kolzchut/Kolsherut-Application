@@ -1,5 +1,9 @@
-# HTTP client for calling the retrieval and BE services.
+# HTTP client for calling the retrieval service.
 requests==2.32.3
 
-# .env overrides for vars.py (URLs, timeouts, ground-truth mode).
+# .env overrides for vars.py (URLs, timeouts).
 python-dotenv==1.2.2
+
+# Headless browser used to render the staging site for ground truth.
+# After installing, fetch the browser binary once: python -m playwright install chromium
+playwright==1.49.1

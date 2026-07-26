@@ -7,8 +7,8 @@ from evaluation.metrics.ndcg import ndcg_at_k
 from evaluation.metrics.average_precision import average_precision_at_k
 
 
-def build_hit_flags(ranked_ids: list[str], ground_truth_ids: set[str], k: int) -> list[int]:
-    return [1 if service_id in ground_truth_ids else 0 for service_id in ranked_ids[:k]]
+def build_hit_flags(ranked_names: list[str], ground_truth_names: set[str], k: int) -> list[int]:
+    return [1 if service_name in ground_truth_names else 0 for service_name in ranked_names[:k]]
 
 
 def compute_metrics_at_k(hit_flags: list[int], ground_truth_size: int, k: int) -> dict[str, float]:
@@ -26,17 +26,17 @@ def compute_metrics_at_k(hit_flags: list[int], ground_truth_size: int, k: int) -
     }
 
 
-def evaluate_query(example: Example, ranked_ids: list[str], ground_truth_ids: set[str],
-                   be_returned_empty: bool) -> QueryEvaluation:
-    ground_truth_size = len(ground_truth_ids)
+def evaluate_query(example: Example, ranked_names: list[str],
+                   ground_truth_names: set[str]) -> QueryEvaluation:
+    ground_truth_size = len(ground_truth_names)
     metrics_by_k = {}
     hits_by_k = {}
     for k in vars.K_VALUES:
-        hit_flags = build_hit_flags(ranked_ids, ground_truth_ids, k)
+        hit_flags = build_hit_flags(ranked_names, ground_truth_names, k)
         hits_by_k[k] = sum(hit_flags)
         metrics_by_k[k] = compute_metrics_at_k(hit_flags, ground_truth_size, k)
     return QueryEvaluation(
         query=example.query, ground_truth_size=ground_truth_size,
-        empty_ground_truth=ground_truth_size == 0, be_returned_empty=be_returned_empty,
+        empty_ground_truth=ground_truth_size == 0,
         metrics_by_k=metrics_by_k, hits_by_k=hits_by_k,
     )
