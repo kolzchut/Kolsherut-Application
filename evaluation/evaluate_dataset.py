@@ -14,7 +14,7 @@ def build_skipped_evaluation(example: Example, scraped: ScrapedPage) -> QueryEva
 
 def evaluate_single_example(example: Example, scraped: ScrapedPage) -> QueryEvaluation:
     ranked_names = fetch_retrieval_ranked_names(example.query)
-    return evaluate_query(example, ranked_names, set(scraped.service_names))
+    return evaluate_query(example, ranked_names, scraped.service_names)
 
 
 def resolve_scraped_page(example: Example, ground_truth: dict[str, ScrapedPage]) -> ScrapedPage:

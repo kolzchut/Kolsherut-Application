@@ -1,0 +1,18 @@
+def find_missed_ground_truth_names(ordered_ground_truth_names: tuple[str, ...],
+                                   ranked_names: list[str]) -> tuple[str, ...]:
+    """Ground-truth services retrieval never returned - the recall failures.
+
+    Kept in the incumbent site's render order, so position doubles as its rank.
+    """
+    retrieved_names = set(ranked_names)
+    return tuple(name for name in ordered_ground_truth_names if name not in retrieved_names)
+
+
+def find_unexpected_retrieved_names(ranked_names: list[str],
+                                    ground_truth_names: set[str]) -> tuple[str, ...]:
+    """Returned services the incumbent site does not show - the false positives.
+
+    Kept in retrieval's rank order: a false positive at rank 2 matters far more than one
+    at rank 250, so the ordering is the diagnostic signal.
+    """
+    return tuple(name for name in ranked_names if name not in ground_truth_names)

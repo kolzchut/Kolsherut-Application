@@ -67,9 +67,35 @@ RRF_RANK_CONSTANT = int(os.getenv('RRF_RANK_CONSTANT', '60'))
 # (exact terms). Only the ratio matters; 1.0/1.0 reproduces plain equal-weight RRF.
 SEMANTIC_WEIGHT = float(os.getenv('SEMANTIC_WEIGHT', '1.0'))
 LEXICAL_WEIGHT = float(os.getenv('LEXICAL_WEIGHT', '1.0'))
-# Minimum fused RRF score a service must reach to be returned. RRF scores are
-# rank-based (~0.01-0.03), not cosine similarity, so tune this empirically.
+# Minimum fused RRF score a service must reach to be returned. The fused score is a pure
+# function of ranks, so this behaves as a fixed top-N cut, NOT as a relevance cut - the
+# Nth-best fused score is near-identical for every query. Use the semantic floors below
+# for a cut whose length actually varies with the query.
 MIN_FUSED_SCORE = float(os.getenv('MIN_FUSED_SCORE', '0.0'))
+
+# Score truncation. Every cutoff is independent and off at its default, so these values
+# reproduce "return the whole fused pool". See the README for how to tune them.
+# The semantic floors are in COSINE units: Elasticsearch scores a cosine dense_vector as
+# (1 + cosine) / 2, and that +0.5 offset would squeeze every useful ratio into [0.95, 1.0].
+# Tied to 'similarity': 'cosine' in ensure_retrieval_index_exists - changing it breaks these.
+COSINE_SCORE_OFFSET = 0.5
+COSINE_SCORE_SCALE = 0.5
+MINIMUM_COSINE_SIMILARITY = -1.0
+# Absolute cosine floor, off at the cosine minimum. The only cutoff that can return nothing.
+MIN_SEMANTIC_SCORE = float(os.getenv('MIN_SEMANTIC_SCORE', str(MINIMUM_COSINE_SIMILARITY)))
+# Relative cosine floor: keep documents within this fraction of the pool's best cosine.
+# 0.0 disables it. The cutoff that adapts per query.
+SEMANTIC_SCORE_RATIO = float(os.getenv('SEMANTIC_SCORE_RATIO', '0.0'))
+# BM25-only documents carry no cosine. False imputes the kNN list minimum (a document absent
+# from a kNN list of size N provably scores at or below its Nth-best cosine). True exempts
+# them, pinning the result length to CANDIDATE_POOL_SIZE - escape hatch, not a default.
+KEEP_LEXICAL_ONLY_DOCUMENTS = os.getenv('KEEP_LEXICAL_ONLY_DOCUMENTS', 'false').lower() == 'true'
+# Hard cap; 0 disables it. Caps documents, not services - the cards join and the
+# service_name collapse shrink the list further, so services is always <= this.
+MAX_RETURNED_SERVICES = int(os.getenv('MAX_RETURNED_SERVICES', '0'))
+# Keys each retriever's raw score is attached under once fusion has overwritten 'score'.
+SEMANTIC_SCORE_KEY = 'semantic_score'
+LEXICAL_SCORE_KEY = 'lexical_score'
 
 # Service hierarchy assembly (cards -> service/organization/branch, mirrors the be search route).
 # Cards are collapsed by service_id; each service's cards (branches) come back as inner hits.

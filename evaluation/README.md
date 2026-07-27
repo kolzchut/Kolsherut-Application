@@ -105,11 +105,58 @@ truth; `|G|` = ground-truth size. Every metric is in `[0, 1]`; higher is better.
 Reported values are the **mean over evaluated queries**. Precision, Hit-Rate and MRR care about the
 top of the list; Recall cares about coverage; nDCG and MAP are rank-aware quality scores.
 
+### Set-level metrics (over the returned list)
+
+Every metric above divides by a fixed `k`, which makes them **blind to truncation**: dropping a
+non-hit off the tail leaves `hits@k / k` unchanged, and recall, MRR, nDCG and MAP can only stay flat
+or fall. All of them are monotonically non-increasing as documents are removed, so tuning a retrieval
+score threshold against them would always conclude that returning everything is optimal.
+
+The set-level metrics divide by `|R|`, the length of the list retrieval **actually returned**:
+
+| Metric | Formula (per query) |
+| --- | --- |
+| **Precision@returned** | `hits / |R|` |
+| **Recall@returned** | `hits / |G|` |
+| **F1@returned** | `2·P·R / (P+R)` |
+
+Cutting a non-hit shrinks precision's denominator while the numerator holds, so precision rises;
+recall only falls when a real hit is cut. **F1@returned therefore has an interior maximum over the
+threshold** — it is the number to optimise when tuning `MIN_SEMANTIC_SCORE` / `SEMANTIC_SCORE_RATIO`
+in the retrieval service.
+
+Averaged over queries with a non-empty ground truth, same as the fixed-k metrics.
+
+### Count parity
+
+How closely our returned count tracks the incumbent site's. Counts are log-skewed — over the 63
+scored golden-set queries the ground truth runs min 0, median 8, mean 18.7, Q3 20, max 230 — so
+medians and geometric means lead, and every ratio is smoothed by `+1` (`COUNT_RATIO_SMOOTHING`) to
+stay finite when either side is 0.
+
+With `r` = returned count and `g` = ground-truth count:
+
+| Statistic | Meaning |
+| --- | --- |
+| **count_parity** (per query) | `min(r+1, g+1) / max(r+1, g+1)` — symmetric, scale-free, in `[0, 1]`, `1.0` is exact parity. Penalises over- and under-returning equally. Its mean is the single number to watch. |
+| **geometric_mean_count_ratio** | `exp(mean(log((r+1)/(g+1))))` — direction: `< 1` we under-return, `> 1` we over-return. Geometric so the one 230-result query cannot dominate. |
+| `median_returned_count` / `median_ground_truth_count` / `ratio_of_median_counts` | Plain-English diagnostics. |
+| `median_absolute_count_error` | Robust average miss, in services. |
+
+Computed over **all non-skipped** queries, including the empty-ground-truth ones — "the site returned
+nothing, so should we" is exactly a count-parity signal. Those queries are excluded from the
+set-level metrics above, where recall would be `0/0`.
+
 ### Overall score
 
 A single headline number in `[0, 1]`: the **weighted mean of every metric across every k** (7 metrics
 × 5 cutoffs = 35 cells, equal weight by default). Adjust `SCORE_WEIGHTS` in `vars.py` to up/down-weight
 or drop a metric. This is the default CI gate.
+
+The set-level metrics and count statistics are deliberately **excluded** from it — they have no `k`,
+and `compute_overall_score` averages whatever keys it finds in each per-k dict, so folding them in
+would silently change what the score means and break comparison with past runs. They live in sibling
+`set_metrics` / `count_stats` blocks in `summary.json`.
 
 ## Running
 
@@ -135,11 +182,23 @@ selector stops matching after an FE change.
 
 Outputs land in `evaluation/results/`:
 - `summary.json` — full metrics, meta and per-query data.
-- `per_query.csv` — one row per query (ground-truth size + hits@k) for spotting weak queries.
+- `per_query.csv` — one row per query (ground-truth size, returned count, missed and unexpected
+  counts, set-level metrics, hits@k) for spotting weak queries and count mismatches.
+- `service_diff.csv` — **which** services differ, one row per query × service:
+  `query, side, rank, service_name`. `side` is `missed_ground_truth` (the site shows it, retrieval
+  never returned it — a recall failure) or `unexpected_retrieved` (retrieval returned it, the site
+  does not show it). `rank` is the name's 1-based position on its own side, so a low rank on the
+  unexpected side is a high-confidence false positive. Filter or pivot this to see *what* is wrong,
+  not just how much.
 - `report.html` — the dashboard with data inlined; **open directly** (double-click).
 
-The **dashboard** shows the overall score, the metric×k matrix (heat-colored), metric curves across k,
-and a sortable per-query drill-down. Open `results/report.html` directly, or serve the live version:
+Names live in their own file because the two sides are lopsided: median ground truth is 8 services,
+median returned count is ~283, so an unexpected-name list per row would be unreadable.
+
+The **dashboard** shows the overall score, the metric×k matrix (heat-colored), the set-level metrics
+and count-parity tables, metric curves across k, and a sortable per-query drill-down whose
+`missed GT` / `unexpected` cells expand from a count to the full name list. Open `results/report.html`
+directly, or serve the live version:
 
 ```bash
 cd evaluation && python -m http.server        # then open http://localhost:8000/dashboard/dashboard.html
@@ -158,7 +217,8 @@ Thresholds live in `vars.py` (empty by default = report-only, exit 0):
 ```
 run_evaluation.py     entry point: load → scrape/cache → evaluate → aggregate → report → exit code
 evaluate_dataset.py   per-query loop scoring retrieval against the scraped names
-vars.py / strings.py  all config (selectors, timeouts, URLs) / all text
+vars.py / strings.py  all config (URLs, k values, metric keys) / all text
+scraper_vars.py       browser + FE-selector config, split out of vars.py
 schemas.py            Example, ScrapedPage, QueryEvaluation dataclasses
 data/                 raw golden set + the scraped ground-truth cache
 dataset/              raw CSV → Example, and the production → staging URL swap
@@ -173,6 +233,9 @@ results/              generated outputs (gitignored)
 
 ### A note on `@50`
 
-Retrieval's candidate pool is capped at `CANDIDATE_POOL_SIZE = 50` (`retrieval/app/vars.py`), and
-collapsing to unique service names shrinks it further. The ranked list is therefore usually **shorter
-than 50**, so `@50` in practice means "everything retrieval returned".
+Each retriever returns `CANDIDATE_POOL_SIZE` candidates (`retrieval/app/vars.py`), but fusion
+**unions** the two lists, so up to `2 × CANDIDATE_POOL_SIZE` distinct services can survive; the cards
+join and the unique-name collapse then shrink it again. So `@50` is *usually* close to "everything
+retrieval returned" at the default pool of 50, but it is not guaranteed — and once the pool is
+deepened it truncates for real. Read `precision_at_returned` / `recall_at_returned` when you need
+"everything returned" with certainty, and `returned_count` in `per_query.csv` for the actual length.

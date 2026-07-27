@@ -1,4 +1,4 @@
-from evaluation import vars
+from evaluation import scraper_vars
 from evaluation.schemas import ScrapedPage
 from evaluation.strings import SKIP_REASON_NOT_A_RESULTS_PAGE
 from evaluation.scraper.normalize_service_name import normalize_and_dedupe
@@ -9,13 +9,13 @@ from evaluation.scraper.wait_for_results_ready import (
 
 def is_results_page(page) -> bool:
     """Card pages and the homepage fallback never mount the results pane."""
-    return poll_until(page, lambda: has_element(page, vars.RESULTS_CONTAINER_SELECTOR),
-                      vars.RESULTS_CONTAINER_TIMEOUT_MS)
+    return poll_until(page, lambda: has_element(page, scraper_vars.RESULTS_CONTAINER_SELECTOR),
+                      scraper_vars.RESULTS_CONTAINER_TIMEOUT_MS)
 
 
 def read_service_names(page) -> tuple[str, ...]:
     """The FE concatenates the fast and rest responses without deduping, so names repeat."""
-    rendered = page.locator(vars.SERVICE_NAME_SELECTOR).all_inner_texts()
+    rendered = page.locator(scraper_vars.SERVICE_NAME_SELECTOR).all_inner_texts()
     return normalize_and_dedupe(rendered)
 
 
@@ -28,7 +28,7 @@ def scrape_service_names(page, recorded_searches: list, staging_url: str) -> Scr
     """
     page.context.clear_cookies()
     recorded_searches.clear()
-    page.goto(staging_url, timeout=vars.PAGE_LOAD_TIMEOUT_MS)
+    page.goto(staging_url, timeout=scraper_vars.PAGE_LOAD_TIMEOUT_MS)
     if not is_results_page(page):
         return ScrapedPage(skip_reason=SKIP_REASON_NOT_A_RESULTS_PAGE)
     wait_for_results_ready(page, recorded_searches)

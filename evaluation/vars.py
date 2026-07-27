@@ -34,35 +34,14 @@ GROUND_TRUTH_SERVICE_NAMES_KEY = 'service_names'
 GROUND_TRUTH_SKIP_REASON_KEY = 'skip_reason'
 CHECKSUM_PREFIX = 'sha256:'
 
-# FE selectors. The app uses react-jss without minification, so class names are
-# '<ruleKey>-0-1-<counter>' — always match on the prefix, never on the whole value.
-SERVICE_NAME_SELECTOR = 'h2[class^="bannerTitle"]'
-RESULTS_CONTAINER_SELECTOR = 'div[class^="resultsContainer"]'
-LOADER_SELECTOR = '[class^="loader-"]'
-NO_RESULTS_SELECTOR = '[class^="noResults"]'
-
-# Scraping. The FE fires two /search calls (isFast true then false) and renders the
-# first one's partial results immediately, so we wait for both before reading the DOM.
-BROWSER_HEADLESS = os.getenv('EVAL_BROWSER_HEADLESS', 'true').lower() != 'false'
-# Must look like a plain desktop Chrome. Cloudflare 403s the default 'HeadlessChrome' UA,
-# and staging's nginx routes curl/wget/python-requests UAs to a different SSR pipeline.
-BROWSER_USER_AGENT = (
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-    '(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
-)
-BROWSER_LAUNCH_ARGS = ['--disable-blink-features=AutomationControlled']
-SEARCH_REQUEST_PATH = '/search'
-EXPECTED_SEARCH_RESPONSES = 2
-PAGE_LOAD_TIMEOUT_MS = int(os.getenv('EVAL_PAGE_LOAD_TIMEOUT_MS', '60000'))
-RESULTS_READY_TIMEOUT_MS = int(os.getenv('EVAL_RESULTS_READY_TIMEOUT_MS', '45000'))
-RESULTS_CONTAINER_TIMEOUT_MS = int(os.getenv('EVAL_RESULTS_CONTAINER_TIMEOUT_MS', '15000'))
-SEARCH_RESPONSE_TIMEOUT_MS = int(os.getenv('EVAL_SEARCH_RESPONSE_TIMEOUT_MS', '45000'))
-POLL_INTERVAL_MS = 250
-SEARCH_REQUEST_METHOD = 'POST'
+# Headless-browser scraping config lives in scraper_vars.py.
 
 RESULTS_DIR = EVALUATION_ROOT / 'results'
 SUMMARY_JSON_PATH = RESULTS_DIR / 'summary.json'
 PER_QUERY_CSV_PATH = RESULTS_DIR / 'per_query.csv'
+# Long format (one row per query x service), because the unexpected-name lists run to
+# hundreds of services - per_query.csv carries only their counts.
+SERVICE_DIFF_CSV_PATH = RESULTS_DIR / 'service_diff.csv'
 REPORT_HTML_PATH = RESULTS_DIR / 'report.html'
 DASHBOARD_TEMPLATE_PATH = EVALUATION_ROOT / 'dashboard' / 'dashboard.html'
 DASHBOARD_DATA_PLACEHOLDER = '__SUMMARY_JSON__'
@@ -81,6 +60,36 @@ METRIC_MAP = 'map'
 METRIC_KEYS = [
     METRIC_MRR, METRIC_RECALL, METRIC_PRECISION, METRIC_F1,
     METRIC_HIT_RATE, METRIC_NDCG, METRIC_MAP,
+]
+
+# Set-level metrics, computed over the ACTUAL returned list instead of a fixed cutoff.
+# These are the only metrics that can reward truncation: cutting a non-hit off the tail
+# shrinks precision's denominator while the numerator holds, so precision@returned rises,
+# and recall@returned only falls when a real hit is cut - so F1@returned has an interior
+# maximum over the threshold. Every metric above divides by k, so it can only stay flat
+# or drop when documents are removed. Deliberately kept out of METRIC_KEYS: they have no
+# k, and compute_overall_score would silently absorb them into the headline score.
+METRIC_PRECISION_AT_RETURNED = 'precision_at_returned'
+METRIC_RECALL_AT_RETURNED = 'recall_at_returned'
+METRIC_F1_AT_RETURNED = 'f1_at_returned'
+METRIC_COUNT_PARITY = 'count_parity'
+SET_METRIC_KEYS = [METRIC_PRECISION_AT_RETURNED, METRIC_RECALL_AT_RETURNED, METRIC_F1_AT_RETURNED]
+PER_QUERY_SET_METRIC_KEYS = [*SET_METRIC_KEYS, METRIC_COUNT_PARITY]
+
+# Count parity: how closely our returned count tracks the incumbent site's. Counts are
+# log-skewed (median 8, mean 18.7, max 230), so ratios are smoothed by +1 to stay finite
+# when either side is 0, and medians/geometric means lead over arithmetic means.
+COUNT_RATIO_SMOOTHING = 1
+COUNT_STAT_MEAN_COUNT_PARITY = 'mean_count_parity'
+COUNT_STAT_MEDIAN_RETURNED_COUNT = 'median_returned_count'
+COUNT_STAT_MEDIAN_GROUND_TRUTH_COUNT = 'median_ground_truth_count'
+COUNT_STAT_RATIO_OF_MEDIAN_COUNTS = 'ratio_of_median_counts'
+COUNT_STAT_MEDIAN_ABSOLUTE_COUNT_ERROR = 'median_absolute_count_error'
+COUNT_STAT_GEOMETRIC_MEAN_COUNT_RATIO = 'geometric_mean_count_ratio'
+COUNT_STAT_KEYS = [
+    COUNT_STAT_MEAN_COUNT_PARITY, COUNT_STAT_MEDIAN_RETURNED_COUNT,
+    COUNT_STAT_MEDIAN_GROUND_TRUTH_COUNT, COUNT_STAT_RATIO_OF_MEDIAN_COUNTS,
+    COUNT_STAT_MEDIAN_ABSOLUTE_COUNT_ERROR, COUNT_STAT_GEOMETRIC_MEAN_COUNT_RATIO,
 ]
 
 # Final single-number score: weighted mean of every metric across every k. Missing

@@ -36,6 +36,14 @@
     .drill thead th { cursor: pointer; user-select: none; }
     .cell { color: #08110c; font-weight: 600; border-radius: 6px; }
     .empty { color: var(--muted); }
+    /* Diff cells collapse to a count: the unexpected-name lists run to hundreds of services,
+       so an expanded cell scrolls inside itself instead of blowing out the column. */
+    .diff summary { cursor: pointer; }
+    /* An explicit width, not just a max: the cell is only as wide as its collapsed count, and
+       the names would otherwise wrap to shreds inside it. */
+    .diff-names { width: 22rem; max-height: 12rem; overflow-y: auto; margin-top: 6px;
+      white-space: normal; font-size: 12px; color: var(--muted); }
+    .diff-names div { padding: 2px 0; border-bottom: 1px solid var(--border); }
     svg { width: 100%; height: 320px; display: block; }
     .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; font-size: 12px; color: var(--muted); }
     .legend span { display: inline-flex; align-items: center; gap: 6px; }
@@ -46,7 +54,7 @@
 <body>
   <div class="wrap">
     <h1>Kolsherut Retrieval Evaluation</h1>
-    <div class="sub">Retrieval ranking vs. BE-derived ground truth &middot; metrics at k = 3, 5, 10, 25, 50</div>
+    <div class="sub">Retrieval ranking vs. BE-derived ground truth &middot; metrics at k = 3, 5, 10, 25, 50 &middot; plus set-level metrics over the returned list and count parity</div>
     <div id="root"><div class="panel">Loading results&hellip;</div></div>
   </div>
 
@@ -65,14 +73,20 @@
 
     const heatColor = (value) => 'hsl(' + Math.round(value * 120) + ', 65%, ' + (62 - value * 6) + '%)';
     const fmt = (value) => value.toFixed(4);
+    const escapeHtml = (text) => String(text).replace(/[&<>"]/g, (character) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[character]);
 
     const renderHeadline = (data) => {
       const meta = data.meta;
+      const counts = data.count_stats || {};
       const chips = [
         ['queries', meta.num_queries], ['evaluated', meta.num_evaluated],
         ['skipped (unsupported URL)', meta.num_skipped_unsupported],
         ['skipped (empty GT)', meta.num_skipped_empty_gt],
         ['avg GT size', meta.avg_ground_truth_size.toFixed(2)],
+        ['median returned', (counts.median_returned_count ?? 0).toFixed(1)],
+        ['median GT', (counts.median_ground_truth_count ?? 0).toFixed(1)],
+        ['count parity', (counts.mean_count_parity ?? 0).toFixed(3)],
       ].map((entry) => '<div class="chip"><b>' + entry[1] + '</b> ' + entry[0] + '</div>').join('');
       return '<div class="panel headline"><div class="score">' + fmt(data.overall_score) +
         '<small>overall score</small></div><div class="chips">' + chips + '</div></div>';
@@ -89,6 +103,32 @@
       }).join('');
       return '<div class="panel"><h2>Metrics &times; k</h2><div class="scroll"><table><thead><tr>' +
         head + '</tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+    };
+
+    // Two tables: the set metrics are all in [0,1] so they get the same heat scale as the
+    // matrix; the count stats are unbounded ratios and counts, so they stay plain - heatColor
+    // maps 0 to red and 1 to green, which is meaningless for "median returned = 12".
+    const renderValueTable = (title, keys, values, labels, heat) => {
+      const rows = keys.filter((key) => key in values).map((key) => {
+        const value = values[key];
+        const cell = heat
+          ? '<td class="cell" style="background:' + heatColor(value) + '">' + fmt(value) + '</td>'
+          : '<td>' + fmt(value) + '</td>';
+        return '<tr><td>' + labels[key] + '</td>' + cell + '</tr>';
+      }).join('');
+      return '<h2>' + title + '</h2><div class="scroll"><table><thead><tr><th>Metric</th>' +
+        '<th>Value</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+    };
+
+    const renderSetMetrics = (data) => {
+      if (!data.set_metrics) return '';
+      return '<div class="panel">' +
+        renderValueTable('Set metrics over the returned list', data.set_metric_keys || [],
+                         data.set_metrics, data.set_metric_labels || {}, true) +
+        '<div style="height:18px"></div>' +
+        renderValueTable('Count parity', data.count_stat_keys || [],
+                         data.count_stats || {}, data.count_stat_labels || {}, false) +
+        '</div>';
     };
 
     const buildPolyline = (data, key, colorIndex, width, height, padding) => {
@@ -123,17 +163,39 @@
         '</svg></div><div class="legend">' + legend + '</div></div>';
     };
 
+    // Collapsed it shows the count; expanded, every name. data-sort carries the count so the
+    // numeric sort never parses the name text that follows it in the cell.
+    const renderDiffCell = (names, skipped) => {
+      if (skipped) return '<td class="diff"></td>';
+      const list = names || [];
+      if (!list.length) return '<td class="diff empty" data-sort="0">0</td>';
+      const items = list.map((name) => '<div>' + escapeHtml(name) + '</div>').join('');
+      return '<td class="diff" data-sort="' + list.length + '"><details><summary>' + list.length +
+        '</summary><div class="diff-names">' + items + '</div></details></td>';
+    };
+
     const renderDrill = (data) => {
+      const setKeys = data.set_metric_keys || [];
+      const setLabels = data.set_metric_labels || {};
       const head = '<th data-col="query">query</th><th data-col="skip">skipped</th>' +
-        '<th data-col="gt">ground truth</th>' +
+        '<th data-col="gt">ground truth</th><th data-col="returned">returned</th>' +
+        '<th data-col="missed">missed GT</th><th data-col="unexpected">unexpected</th>' +
+        setKeys.map((key) => '<th data-col="' + key + '">' + setLabels[key] + '</th>').join('') +
         data.k_values.map((k) => '<th data-col="k' + k + '">hits@' + k + '</th>').join('');
       const body = data.per_query.map((entry) => {
         const skipped = !!entry.skip_reason;
         const hits = data.k_values.map((k) =>
           '<td>' + (skipped ? '' : entry.hits_by_k[k]) + '</td>').join('');
         const gt = entry.empty_ground_truth ? '<td class="empty">0</td>' : '<td>' + entry.ground_truth_size + '</td>';
+        const returned = '<td>' + (entry.returned_count == null ? '' : entry.returned_count) + '</td>';
+        const diff = renderDiffCell(entry.missed_ground_truth_names, skipped) +
+          renderDiffCell(entry.unexpected_retrieved_names, skipped);
+        const setCells = setKeys.map((key) => {
+          const value = (entry.set_metrics || {})[key];
+          return '<td>' + (value == null ? '' : value.toFixed(3)) + '</td>';
+        }).join('');
         const reason = '<td class="empty">' + (entry.skip_reason || '') + '</td>';
-        return '<tr><td>' + entry.query + '</td>' + reason + gt + hits + '</tr>';
+        return '<tr><td>' + entry.query + '</td>' + reason + gt + returned + diff + setCells + hits + '</tr>';
       }).join('');
       return '<div class="panel"><h2>Per-query drill-down</h2><div class="scroll"><table class="drill"><thead><tr>' +
         head + '</tr></thead><tbody>' + body + '</tbody></table></div></div>';
@@ -145,8 +207,11 @@
           const body = header.closest('table').querySelector('tbody');
           const rows = Array.from(body.querySelectorAll('tr'));
           const numeric = !header.matches('[data-col="query"], [data-col="skip"]');
+          // data-sort wins where the visible text is not the sort key (the diff cells hold a
+          // count followed by the name list).
+          const sortKey = (cell) => cell.dataset.sort ?? cell.textContent;
           rows.sort((a, b) => {
-            const left = a.children[columnIndex].textContent, right = b.children[columnIndex].textContent;
+            const left = sortKey(a.children[columnIndex]), right = sortKey(b.children[columnIndex]);
             return numeric ? (parseFloat(right) - parseFloat(left)) : left.localeCompare(right);
           });
           rows.forEach((row) => body.appendChild(row));
@@ -156,7 +221,8 @@
 
     const render = (data) => {
       document.getElementById('root').innerHTML =
-        renderHeadline(data) + renderMatrix(data) + renderChart(data) + renderDrill(data);
+        renderHeadline(data) + renderMatrix(data) + renderSetMetrics(data) +
+        renderChart(data) + renderDrill(data);
       enableSorting();
     };
 

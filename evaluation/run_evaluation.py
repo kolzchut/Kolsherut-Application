@@ -4,7 +4,8 @@ import sys
 from evaluation import vars
 from evaluation.strings import (
     APP_TITLE, CLI_DESCRIPTION, CLI_LIMIT_HELP, CLI_RESCRAPE_HELP,
-    LOG_LOADED_DATASET, LOG_WROTE_RESULTS, LOG_THRESHOLDS_PASSED,
+    COUNT_STATS_TABLE_TITLE, LOG_LOADED_DATASET, LOG_WROTE_RESULTS,
+    LOG_THRESHOLDS_PASSED, SET_METRICS_TABLE_TITLE,
 )
 from evaluation.logger import build_logger
 from evaluation.dataset.load_dataset import load_dataset
@@ -15,7 +16,8 @@ from evaluation.report.compute_overall_score import compute_overall_score
 from evaluation.report.serialize_summary import build_summary
 from evaluation.report.write_results import write_results
 from evaluation.report.build_metrics_table import build_metrics_table
-from evaluation.report.render_table import render_table
+from evaluation.report.build_set_metrics_table import build_count_stats_table, build_set_metrics_table
+from evaluation.report.render_table import render_table, render_titled_table
 from evaluation.report.check_thresholds import check_thresholds
 
 
@@ -29,6 +31,8 @@ def parse_args() -> argparse.Namespace:
 def report_and_gate(aggregate: dict, overall_score: float, logger) -> int:
     table = build_metrics_table(aggregate['metrics'])
     print(render_table(table, overall_score, aggregate['meta']))
+    print(render_titled_table(SET_METRICS_TABLE_TITLE, build_set_metrics_table(aggregate)))
+    print(render_titled_table(COUNT_STATS_TABLE_TITLE, build_count_stats_table(aggregate)))
     failures = check_thresholds(overall_score, aggregate['metrics'])
     for failure in failures:
         logger.error(failure)
@@ -52,7 +56,8 @@ def main() -> int:
     overall_score = compute_overall_score(aggregate['metrics'])
     write_results(build_summary(aggregate, overall_score, evaluations))
     logger.info(LOG_WROTE_RESULTS.format(
-        summary=vars.SUMMARY_JSON_PATH, csv=vars.PER_QUERY_CSV_PATH, html=vars.REPORT_HTML_PATH))
+        summary=vars.SUMMARY_JSON_PATH, csv=vars.PER_QUERY_CSV_PATH,
+        diff=vars.SERVICE_DIFF_CSV_PATH, html=vars.REPORT_HTML_PATH))
     return report_and_gate(aggregate, overall_score, logger)
 
 

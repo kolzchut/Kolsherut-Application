@@ -328,6 +328,13 @@ retrieval:
     # Per-retriever fusion weights; 1.0/1.0 = equal-weight RRF (semantic + lexical).
     SEMANTIC_WEIGHT: "1.0"
     LEXICAL_WEIGHT: "1.0"
+    # Rank-derived, so this is a fixed top-N cut rather than a relevance cut.
     MIN_FUSED_SCORE: "0.0"
+    # Score truncation, all off at these values (retrieval returns the whole fused pool).
+    # The semantic floors are in cosine units, not Elasticsearch score units.
+    MIN_SEMANTIC_SCORE: "-1.0"
+    SEMANTIC_SCORE_RATIO: "0.0"
+    KEEP_LEXICAL_ONLY_DOCUMENTS: "false"
+    MAX_RETURNED_SERVICES: "0"
     # Max branches (inner hits) returned per service when collapsing cards by service_id.
     CARDS_INNER_HITS_SIZE: "1000"

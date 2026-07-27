@@ -9,6 +9,7 @@ def build_retrieve_logs_index_mappings() -> dict:
             'query': {'type': 'text'},
             'retrieved_service_ids': {'type': 'keyword'},
             'num_documents': {'type': 'integer'},
+            'num_fused_documents': {'type': 'integer'},
             'latency_ms': {'type': 'float'},
             'timings_ms': {
                 'type': 'object',
@@ -17,6 +18,7 @@ def build_retrieve_logs_index_mappings() -> dict:
                     'knn': {'type': 'float'},
                     'bm25': {'type': 'float'},
                     'fusion': {'type': 'float'},
+                    'score_cut': {'type': 'float'},
                 },
             },
             'steps': {'type': 'object', 'enabled': False},

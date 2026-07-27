@@ -2,7 +2,7 @@ from contextlib import contextmanager
 
 from playwright.sync_api import sync_playwright
 
-from evaluation import vars
+from evaluation import scraper_vars
 from evaluation.scraper.wait_for_results_ready import build_search_response_recorder
 
 
@@ -20,10 +20,10 @@ def browser_session():
     browser = None
     try:
         browser = playwright.chromium.launch(
-            headless=vars.BROWSER_HEADLESS, args=vars.BROWSER_LAUNCH_ARGS)
-        context = browser.new_context(user_agent=vars.BROWSER_USER_AGENT)
+            headless=scraper_vars.BROWSER_HEADLESS, args=scraper_vars.BROWSER_LAUNCH_ARGS)
+        context = browser.new_context(user_agent=scraper_vars.BROWSER_USER_AGENT)
         page = context.new_page()
-        page.set_default_timeout(vars.RESULTS_READY_TIMEOUT_MS)
+        page.set_default_timeout(scraper_vars.RESULTS_READY_TIMEOUT_MS)
         recorded_searches, record_response = build_search_response_recorder()
         page.on('response', record_response)
         yield page, recorded_searches

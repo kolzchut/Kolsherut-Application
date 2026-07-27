@@ -15,6 +15,14 @@ def compute_column_widths(headers: list[str], rows: list[list]) -> list[int]:
     return [max(len(str(row[column])) for row in all_rows) for column in range(len(headers))]
 
 
+def render_titled_table(title: str, table: dict) -> str:
+    """A bare table under a title - no overall score or run meta, for the secondary blocks."""
+    column_widths = compute_column_widths(table['headers'], table['rows'])
+    header_line = format_row(table['headers'], column_widths)
+    body_lines = [format_row(row, column_widths) for row in table['rows']]
+    return '\n'.join(['', title, header_line, '-' * len(header_line), *body_lines])
+
+
 def render_table(table: dict, overall_score: float, meta: dict) -> str:
     """Human-readable console block: overall score, run meta, and the metric x k grid."""
     column_widths = compute_column_widths(table['headers'], table['rows'])

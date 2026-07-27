@@ -25,3 +25,12 @@ class QueryEvaluation:
     skip_reason: str = ''
     metrics_by_k: dict[int, dict[str, float]] = field(default_factory=dict)
     hits_by_k: dict[int, int] = field(default_factory=dict)
+    # How many services retrieval actually returned. None for skipped queries, where
+    # retrieval was never called - distinct from a genuine zero.
+    returned_count: int | None = None
+    set_metrics: dict[str, float] = field(default_factory=dict)
+    # The two set differences behind the metrics: which ground-truth services were never
+    # returned, and which returned services the incumbent site does not show. Empty for
+    # skipped queries. Each keeps its source ordering, so position is its rank.
+    missed_ground_truth_names: tuple[str, ...] = ()
+    unexpected_retrieved_names: tuple[str, ...] = ()
