@@ -203,7 +203,6 @@ etl:
     CRONICLE_smtp_port: "587"
     CRONICLE_mail_options__auth__user: "notifier.etl@gmail.com"
     CRONICLE_secret_key: "" # MUST BE PROVIDED VIA SECRETS FILE
-    BUDGETKEY_DATABASE_URL: "postgresql://readonly:readonly@data-next.obudget.org/budgetkey"
 
 # ---------------------------------------------------------
 # 4. FRONTEND CONFIGURATION
@@ -303,7 +302,12 @@ retrieval:
     RETRIEVAL_SERVER_PORT: "8200"
     SERVICES_INDEX_NAME: "srm_services"
     SERVICE_ID_FIELD_NAME: "id"
-    RETRIEVAL_EMBEDDINGS_INDEX_NAME: "srm__services_retrieval_embeddings"
+    # MUST be bumped in the same commit as any change to how embedded_text is rendered, because
+    # /api/services/update writes one service at a time: shipping new rendering code while this
+    # still points at the previous index silently mixes old- and new-format documents in it.
+    # After deploying a bump, run a full reindex (POST /api/services/reindex against
+    # http://<release>-retrieval:8200) or retrieval answers out of an empty index.
+    RETRIEVAL_EMBEDDINGS_INDEX_NAME: "srm__services_retrieval_embeddings_v3_enriched"
     CARDS_INDEX_NAME: "srm__cards"
     RETRIEVAL_LOGS_INDEX_NAME: "srm__retrieval_logs"
     RETRIEVAL_LOG_LEVEL: "INFO"
