@@ -1,0 +1,47 @@
+name: Graphify Knowledge Graph
+
+on:
+  push:
+    branches: ['main', 'dev']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: graphify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-graph:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          lfs: false          # skip the 2.2 GB LFS model; pointer stubs are enough
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install graphify
+        run: pipx install graphifyy==0.9.29
+
+      - name: Build graph from scratch
+        run: graphify extract . --code-only --force
+
+      - name: Cluster and generate report
+        run: graphify cluster-only . --no-label
+
+      - name: Upload graph
+        uses: actions/upload-artifact@v4
+        with:
+          name: graphify-graph
+          path: |
+            graphify-out/graph.json
+            graphify-out/graph.html
+            graphify-out/GRAPH_REPORT.md
+          retention-days: 30
