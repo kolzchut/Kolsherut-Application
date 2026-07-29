@@ -196,3 +196,6 @@ test-scripts
 !retrieval/artifacts/retrieval-model/
 !retrieval/artifacts/retrieval-model/**
 retrieval/artifacts/retrieval-model/**/.cache/
+
+# Graphify knowledge graph output (built in CI, see README "Codebase Knowledge Graph")
+graphify-out/

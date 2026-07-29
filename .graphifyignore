@@ -1,0 +1,14 @@
+# Graphify exclusions. Same syntax as .gitignore; merged with .gitignore and
+# evaluated last, so rules here win on conflict.
+#
+# Do NOT add "!" negation rules: a single negation disables all directory
+# pruning (upstream issue #1274).
+
+# Git LFS embedding model: 2.2 GB locally, including a 17 MB tokenizer.json that
+# would be parsed as code. .gitignore deliberately re-includes this path via
+# "!retrieval/artifacts/" so CI can bake the model into the image, so it has to
+# be excluded here instead.
+retrieval/artifacts/
+
+# Graphify's own output
+graphify-out/
