@@ -8,6 +8,7 @@ SERVICE_FIELD_MACROS = {
     'description': '%%DESCRIPTION%%',
     'details': '%%DETAILS%%',
     'situations_hebrew': '%%SITUATIONS%%',
+    'responses_hebrew': '%%RESPONSES%%',
     'organization_names': '%%ORGANIZATIONS%%',
     'organization_kind': '%%ORGANIZATION_KIND%%',
     'phone_numbers': '%%PHONES%%',
@@ -20,6 +21,7 @@ SERVICE_FIELD_MACROS = {
 # No English machine IDs and no contact/payment noise - only semantic content.
 SERVICE_EMBEDDING_TEXT_TEMPLATE = (
     '%%NAME%%. %%DESCRIPTION%% %%DETAILS%% '
+    'תחומי סיוע: %%RESPONSES%%. '
     'אוכלוסיית יעד: %%SITUATIONS%%. '
     'מופעל על ידי: %%ORGANIZATIONS%%.'
 )

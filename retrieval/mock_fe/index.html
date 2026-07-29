@@ -271,13 +271,21 @@
         }
         .source-head:hover { background: rgba(0,0,0,0.04); }
         .source-id { font-family: Consolas, monospace; color: var(--primary-color); }
+        /* One bubble per .env score cutoff - fused (MIN_FUSED_SCORE), cosine
+           (MIN_SEMANTIC_SCORE), ratio (SEMANTIC_SCORE_RATIO), bm25 (lexical-only hits). */
+        .score-bubbles { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; }
         .source-score {
             background: rgba(26, 188, 156, 0.15);
             color: #12876f;
             padding: 1px 8px;
             border-radius: 10px;
             font-size: 0.75rem;
+            white-space: nowrap;
         }
+        .source-score.score-cosine { background: rgba(0, 123, 255, 0.12); color: #0b5ed7; }
+        .source-score.score-ratio { background: rgba(155, 89, 182, 0.15); color: #7d3c98; }
+        .source-score.score-bm25 { background: rgba(243, 156, 18, 0.18); color: #a05f00; }
+        .source-score.missing { background: rgba(0, 0, 0, 0.05); color: #95a5a6; }
         .source-text {
             padding: 8px 10px;
             border-top: 1px solid rgba(0,0,0,0.08);
@@ -357,9 +365,41 @@
     const CARD_BASE_URL = "https://staging.kolsherut.org.il/p/card/c/";
     const cardUrl = (cardId) => CARD_BASE_URL + cardId;
 
+    // One bubble per score the retrieval .env can cut on. `field` is the document key the
+    // API returns, `modifier` the bubble color class.
+    const SCORE_BUBBLES = [
+        { field: "score", label: "score", digits: 4, modifier: "score-fused" },
+        { field: "cosine_score", label: "cosine", digits: 4, modifier: "score-cosine" },
+        { field: "cosine_score_ratio", label: "ratio", digits: 3, modifier: "score-ratio" },
+        { field: "lexical_score", label: "bm25", digits: 3, modifier: "score-bm25" },
+    ];
+    const MISSING_SCORE_TEXT = "—";
+
     function uuidv4() {
         return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
             (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+        );
+    }
+
+    const formatScore = (value, digits) =>
+        typeof value === 'number' ? value.toFixed(digits) : MISSING_SCORE_TEXT;
+
+    function ScoreBubble({ bubble, value }) {
+        const missing = typeof value !== 'number';
+        return (
+            <span className={`source-score ${bubble.modifier} ${missing ? 'missing' : ''}`}>
+                {bubble.label} {formatScore(value, bubble.digits)}
+            </span>
+        );
+    }
+
+    function ScoreBubbles({ document: doc }) {
+        return (
+            <span className="score-bubbles">
+                {SCORE_BUBBLES.map(bubble => (
+                    <ScoreBubble key={bubble.field} bubble={bubble} value={doc[bubble.field]} />
+                ))}
+            </span>
         );
     }
 
@@ -369,7 +409,7 @@
             <div className="source-card">
                 <div className="source-head" onClick={() => setOpen(!open)}>
                     <span className="source-id"><i className="fas fa-id-card"></i> {doc.service_id}</span>
-                    <span className="source-score">score {doc.score.toFixed(4)}</span>
+                    <ScoreBubbles document={doc} />
                     <i className={`fas ${open ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
                 </div>
                 {open && <div className="source-text">{doc.text}</div>}

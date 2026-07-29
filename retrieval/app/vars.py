@@ -41,12 +41,32 @@ SERVICE_NAME_FIELD = os.getenv('SERVICE_NAME_FIELD', 'name')
 SERVICE_DESCRIPTION_FIELD = os.getenv('SERVICE_DESCRIPTION_FIELD', 'description')
 SERVICE_DETAILS_FIELD = os.getenv('SERVICE_DETAILS_FIELD', 'details')
 SERVICE_SITUATION_HEBREW_FIELDS = ['x_manual_sit_hebrew', 'x_sit_hebrew', 'x_final_situation_tag_hebrew']
-SERVICE_ORGANIZATION_NAMES_FIELD = 'name (from organizations)'
-SERVICE_ORGANIZATION_KIND_FIELD = 'kind (from organizations)'
+# Organization names are split across three inconsistently populated fields, and the populated sets
+# are disjoint: 'x_branch_org_name' (branch-derived, already deduped) and 'organization_name' (the
+# same values with one entry per branch, so heavily repeated) cover 11,448 of 11,748 services, while
+# the legacy lookup 'name (from organizations)' covers only 194 - and reading just that one put the
+# organization clause on 194 embedded texts instead of 11,639. Unioned and deduped at render time;
+# 'x_branch_org_name' goes first so the deduped branch-canonical spelling wins.
+SERVICE_ORGANIZATION_NAME_FIELDS = ['x_branch_org_name', 'organization_name', 'name (from organizations)']
+# Hebrew service-category labels ('סיוע משפטי', 'מיצוי זכויות', ...) on 10,686 of 11,748 services.
+# Measured fully disjoint from the situation labels - no service's responses are a subset of its
+# situations - so this is new signal, not a restatement. A one-element list so it flows through the
+# same union helper as the other groups. 'name (from responses)' is a strict subset and is left out.
+SERVICE_RESPONSE_HEBREW_FIELDS = ['x_resp_hebrew']
+# Same split for the provider kind, which only feeds the display text: 11,271 docs vs 194.
+SERVICE_ORGANIZATION_KIND_FIELDS = ['organization kind (from branches)', 'kind (from organizations)']
 SERVICE_PHONE_NUMBERS_FIELD = os.getenv('SERVICE_PHONE_NUMBERS_FIELD', 'phone_numbers')
 SERVICE_EMAIL_FIELD = os.getenv('SERVICE_EMAIL_FIELD', 'email_address')
 SERVICE_PAYMENT_REQUIRED_FIELD = os.getenv('SERVICE_PAYMENT_REQUIRED_FIELD', 'payment_required')
 SERVICE_PAYMENT_DETAILS_FIELD = os.getenv('SERVICE_PAYMENT_DETAILS_FIELD', 'payment_details')
+
+# Skip services with no branch card. order_services_by_ranking drops any retrieved service_id with no
+# matching card, so the 1,877 card-less services (16%) can never be returned - they only consume slots
+# in the candidate pool before being discarded. The card set is snapshotted at reindex start, so a
+# service that gains its first card afterwards stays unembedded until the next reindex.
+REQUIRE_CARD_FOR_EMBEDDING = os.getenv('REQUIRE_CARD_FOR_EMBEDDING', 'true').lower() == 'true'
+# Composite aggregation page size when paging distinct service_ids out of the cards index.
+CARDS_SERVICE_ID_PAGE_SIZE = int(os.getenv('CARDS_SERVICE_ID_PAGE_SIZE', '2000'))
 
 # Reindex scan/embed batching.
 SERVICE_SCAN_BATCH_SIZE = int(os.getenv('SERVICE_SCAN_BATCH_SIZE', '500'))
@@ -96,6 +116,11 @@ MAX_RETURNED_SERVICES = int(os.getenv('MAX_RETURNED_SERVICES', '0'))
 # Keys each retriever's raw score is attached under once fusion has overwritten 'score'.
 SEMANTIC_SCORE_KEY = 'semantic_score'
 LEXICAL_SCORE_KEY = 'lexical_score'
+# Keys the two semantic-floor inputs are attached under, both in COSINE units: the value
+# MIN_SEMANTIC_SCORE is compared against, and its fraction of the pool's best cosine that
+# SEMANTIC_SCORE_RATIO is compared against.
+COSINE_SCORE_KEY = 'cosine_score'
+COSINE_SCORE_RATIO_KEY = 'cosine_score_ratio'
 
 # Service hierarchy assembly (cards -> service/organization/branch, mirrors the be search route).
 # Cards are collapsed by service_id; each service's cards (branches) come back as inner hits.

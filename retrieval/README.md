@@ -56,7 +56,15 @@ truncation and will always prefer no cut at all.
 
 ## Embedded text
 
-The vectorized (and BM25-matched) text is **Hebrew only** — every English machine ID is omitted. It is built from `srm_services` fields in this order: `name`, `description`, `details` (when present), the deduped Hebrew situation names (union of `x_manual_sit_hebrew` / `x_sit_hebrew` / `x_final_situation_tag_hebrew`), and the deduped Hebrew organization names (`name (from organizations)`). Contact/payment/provider-kind fields are kept out of the vector and rendered into a separate `context_text` returned for display.
+The vectorized (and BM25-matched) text is **Hebrew only** — every English machine ID is omitted. It is built from `srm_services` fields in this order: `name`, `description`, `details` (when present, with HTML markup stripped), the deduped Hebrew response categories (`x_resp_hebrew`), the deduped Hebrew situation names (union of `x_manual_sit_hebrew` / `x_sit_hebrew` / `x_final_situation_tag_hebrew`), and the deduped Hebrew organization names (union of `x_branch_org_name` / `organization_name` / `name (from organizations)`). Contact/payment/provider-kind fields are kept out of the vector and rendered into a separate `context_text` returned for display.
+
+Every one of those groups **must** be read as a union of candidate columns, never as a single column: `srm_services` populates the variants disjointly, so reading only the legacy `name (from organizations)` lookup put the organization clause on just **194 of 11,748** services instead of 11,638. The same split applies to the provider kind (`organization kind (from branches)` covers 11,271 docs, `kind (from organizations)` only 194).
+
+`details` carries raw HTML on 939 services (`<br/>`, `<li>`, `<p>`, entities). `strip_html_markup` turns it into prose at the source-field level, before template rendering, so the tag→space substitution collapses cleanly through the whitespace normalizer. Tags were measured to appear **only** in `details`; entities also appear in `description` on one service and are deliberately left alone there.
+
+Services with no branch card are excluded from the index (`REQUIRE_CARD_FOR_EMBEDDING`, default on), using the exact set of `service_id`s present in `srm__cards` — 9,871 of 11,748. `order_services_by_ranking` discards any retrieved service with no card, so those 1,877 documents could only ever consume candidate-pool slots. The `srm_services.Cards` field is **not** used for this: it disagrees with the cards index on 16 services.
+
+Measured effect of the above on the 65-query golden set (identical retrieval config, ~48-50 services returned per query): the incumbent text scores `overall_score` **0.2990**, the organization-name union alone **0.3166**, and the full set of changes **0.3331** — a 11.4% relative gain, with every one of the 35 metric cells improving and none regressing.
 
 ## Setup
 
@@ -79,13 +87,13 @@ The server boots without the retrieval model present — the model loads lazily 
 | GET    | `/health`               | -                                 | Health check                       |
 | POST   | `/api/services/update`  | `{ "serviceId": "..." }`          | Embed a single service into the retrieval index |
 | POST   | `/api/services/reindex` | `{ "limit": 50, "resume": true }` (both optional) | Scan all of `srm_services`, embed each, insert into the retrieval index. Omit `limit` for the full index. `resume: true` skips services already present in the embeddings index (continue an interrupted run). Streams Server-Sent Events (`text/event-stream`): a `progress` event every 100 processed services and a final `done` event, each `{event, total, embedded, skipped_no_text, not_found}`. |
-| POST   | `/api/retrieve`         | `{ "query": "..." }`              | Hybrid retrieval + request logging. Returns `{documents, services, log_id, log_index}`. Each document carries `score` (fused), plus `semantic_score` and `lexical_score` — `null` when that retriever did not surface it. |
+| POST   | `/api/retrieve`         | `{ "query": "..." }`              | Hybrid retrieval + request logging. Returns `{documents, services, log_id, log_index}`. Each document carries `score` (fused), plus `semantic_score` and `lexical_score` — `null` when that retriever did not surface it. It also carries the two semantic-floor inputs in cosine units: `cosine_score` (what `MIN_SEMANTIC_SCORE` cuts on) and `cosine_score_ratio` (its fraction of the pool's best cosine, what `SEMANTIC_SCORE_RATIO` cuts on), both `null` for a document with no cosine of its own. |
 
 Interactive docs: `http://localhost:8200/docs`.
 
 ## Configuration
 
-All configuration lives in `app/vars.py` (overridable via `.env` — copy `.env.example`) and all text in `app/strings.py`. Service text is built from **templates + a field map** in `strings.py`: `SERVICE_FIELD_MACROS` maps each (possibly derived) field to a token (e.g. `name` → `%%NAME%%`); `SERVICE_EMBEDDING_TEXT_TEMPLATE` and `SERVICE_DISPLAY_TEXT_TEMPLATE` are Hebrew prose containing those tokens. `app/services/service_text_rendering/` builds the field values (unioning/deduping the Hebrew name fields) and substitutes each macro. Two outputs are stored per service: the vectorized **`embedded_text`** and a richer **`context_text`** returned for display.
+All configuration lives in `app/vars.py` (overridable via `.env` — copy `.env.example`) and all text in `app/strings.py`. Service text is built from **templates + a field map** in `strings.py`: `SERVICE_FIELD_MACROS` maps each (possibly derived) field to a token (e.g. `name` → `%%NAME%%`); `SERVICE_EMBEDDING_TEXT_TEMPLATE` and `SERVICE_DISPLAY_TEXT_TEMPLATE` are Hebrew prose containing those tokens. `app/services/service_text_rendering/` builds the field values (`collect_union_of_list_fields` unions and dedupes each group of candidate source columns) and substitutes each macro. Two outputs are stored per service: the vectorized **`embedded_text`** and a richer **`context_text`** returned for display.
 
 ### Environment variables
 

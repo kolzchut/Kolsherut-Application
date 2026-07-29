@@ -1,3 +1,4 @@
+from app.services.retrieval.attach_cosine_scores import attach_cosine_scores
 from app.services.retrieval.select_documents_by_semantic_score import (
     select_documents_by_semantic_score,
 )
@@ -21,6 +22,6 @@ def truncate_documents_by_score(fused_documents: list[dict]) -> tuple[list[dict]
     dropped document to the rule that dropped it.
     """
     score_selected_documents = select_documents_by_semantic_score(
-        filter_documents_by_min_fused_score(fused_documents)
+        attach_cosine_scores(filter_documents_by_min_fused_score(fused_documents))
     )
     return score_selected_documents, cap_documents_to_max_returned(score_selected_documents)
