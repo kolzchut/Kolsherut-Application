@@ -13,9 +13,9 @@ class ReviewSampleRow:
     """One drawn pair, with the review_id the sheet will carry it under.
 
     Holds BOTH the item and the LLM's judgement even though neither is ever written to the sheet.
-    That is the point of the record: the sheet withholds the verdict, the reason and the scores, so
-    the mapping from a review_id back to what the judge actually said has to live somewhere the
-    reviewer never sees. It is reconstructed from the seed at read-back time rather than persisted.
+    That is the point of the record: the sheet withholds the verdict and the scores, so the mapping
+    from a review_id back to what the judge actually said has to live somewhere the reviewer never
+    sees. It is reconstructed from the seed at read-back time rather than persisted.
     """
     review_id: str
     item: JudgementItem
@@ -48,8 +48,9 @@ class AlignedVerdict:
     """One reviewed row with both labels side by side - the unit every agreement number counts.
 
     Only rows a human actually answered become one of these, so `human_verdict` is always a real
-    verdict here. `llm_reason` and `human_notes` are carried for the disagreement rows alone: the
-    Mission 7 session reads those, and a pair of bare labels does not say which rater was right.
+    verdict here. `human_notes` is carried for the disagreement rows alone: the Mission 7 session
+    reads those, and two bare labels alone do not say which rater was right. There is no matching
+    field on the judge's side - as of schema v3 it returns a bare marker and states no rationale.
     """
     review_id: str
     query: str
@@ -59,4 +60,3 @@ class AlignedVerdict:
     human_verdict: str
     human_notes: str
     llm_verdict: str
-    llm_reason: str

@@ -1,4 +1,4 @@
-from evaluation import relevance_vars
+from evaluation import relevance_marker_vars, relevance_vars
 
 # JSON Schema keywords, named once here because this file is the only place the judge's response
 # schema is spelled out. Gemini's supported subset is WIDER than Anthropic's and the constraints
@@ -20,23 +20,25 @@ JUDGEMENTS_FIELD = 'judgements'
 
 
 def build_judgement_entry_schema() -> dict:
-    """One verdict: the echoed item id, the verdict, and its one-sentence reason.
+    """One answer: the echoed item id and one marker, and nothing else.
 
-    Every field is in `required`, and `verdict` is pinned by `enum` to the verdict vocabulary in
-    relevance_vars.py - so the vocabulary has exactly one definition and the schema cannot drift
-    from the cache, the CSV or the band tables.
+    Both fields are in `required`, and `marker` is pinned by `enum` to the three literals in
+    relevance_marker_vars.py, so the model cannot return prose where a verdict belongs. DEVIATION
+    FROM §11.5 (user-directed, documented in relevance_marker_vars.py): the spec's entry carries a
+    spelled-out `verdict` plus a one-sentence `reason` and this one carries neither. The canonical
+    verdict vocabulary in relevance_vars.py is untouched - it is what the marker decodes to at the
+    parse boundary, so the cache, the CSV and the band tables still see only canonical verdicts.
     """
     return {
         SCHEMA_TYPE_KEYWORD: SCHEMA_OBJECT_TYPE,
         SCHEMA_PROPERTIES_KEYWORD: {
             relevance_vars.JUDGEMENT_ID_KEY: {SCHEMA_TYPE_KEYWORD: SCHEMA_INTEGER_TYPE},
-            relevance_vars.JUDGEMENT_VERDICT_KEY: {SCHEMA_TYPE_KEYWORD: SCHEMA_STRING_TYPE,
-                                                   SCHEMA_ENUM_KEYWORD: relevance_vars.VERDICTS},
-            relevance_vars.JUDGEMENT_REASON_KEY: {SCHEMA_TYPE_KEYWORD: SCHEMA_STRING_TYPE},
+            relevance_marker_vars.JUDGEMENT_MARKER_KEY: {
+                SCHEMA_TYPE_KEYWORD: SCHEMA_STRING_TYPE,
+                SCHEMA_ENUM_KEYWORD: relevance_marker_vars.VERDICT_MARKERS},
         },
         SCHEMA_REQUIRED_KEYWORD: [relevance_vars.JUDGEMENT_ID_KEY,
-                                  relevance_vars.JUDGEMENT_VERDICT_KEY,
-                                  relevance_vars.JUDGEMENT_REASON_KEY],
+                                  relevance_marker_vars.JUDGEMENT_MARKER_KEY],
     }
 
 

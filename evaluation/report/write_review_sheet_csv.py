@@ -3,14 +3,17 @@ import csv
 from evaluation import human_review_strings, human_review_vars, relevance_strings, vars
 from evaluation.human_review_schemas import ReviewSampleRow
 
-# What must never reach the sheet: the LLM's verdict, its reason, and all five score columns. Shown
-# first, each of them anchors the reviewer - a cosine of 0.85 is not evidence that a service helps
-# the person who asked, but it reads as evidence and pulls the human toward the retriever's opinion,
-# and then the agreement number measures deference rather than agreement. Compared by exact equality,
-# so `human_verdict` is not mistaken for `verdict`.
+# What must never reach the sheet: the LLM's verdict and all five score columns. Shown first, each of
+# them anchors the reviewer - a cosine of 0.85 is not evidence that a service helps the person who
+# asked, but it reads as evidence and pulls the human toward the retriever's opinion, and then the
+# agreement number measures deference rather than agreement.
+#
+# There is no reason column to withhold as of schema v3: the judge returns a bare marker and writes no
+# free text, so `verdict` is the only answer field that exists. Membership is still tested by EXACT
+# equality rather than by substring or prefix, which is what keeps the sheet's own `human_verdict`
+# column - the one the reviewer fills in - from being read as the withheld `verdict`.
 WITHHELD_COLUMNS = frozenset({
     relevance_strings.JUDGEMENT_CSV_VERDICT_HEADER,
-    relevance_strings.JUDGEMENT_CSV_REASON_HEADER,
     *vars.SERVICE_SCORE_KEYS,
 })
 
@@ -47,7 +50,7 @@ def assert_header_withholds_answers(header: list[str]) -> None:
 def build_review_sheet_row(sample_row: ReviewSampleRow) -> list:
     """One row: what the reviewer needs to judge the pair, and nothing that tells them the answer.
 
-    The judgement on the record supplies only the identity here - never its verdict or its reason.
+    The judgement on the record supplies only the identity here - never its verdict.
     """
     return [
         sample_row.review_id, sample_row.item.query, sample_row.item.side, sample_row.item.rank,

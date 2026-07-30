@@ -85,15 +85,15 @@ JUDGEMENT_CACHE_SCHEMA_VERSION_KEY = 'schema_version'
 JUDGEMENT_CACHE_JUDGEMENTS_KEY = 'judgements'
 JUDGEMENT_ID_KEY = 'id'
 JUDGEMENT_VERDICT_KEY = 'verdict'
-JUDGEMENT_REASON_KEY = 'reason'
 # Cache keys are '<query> <service_name>'. Keyed on those two alone - never rank, never side.
 # Both change with retrieval config while the verdict does not, so keying on either would
 # discard reusable verdicts on every threshold sweep.
 JUDGEMENT_CACHE_KEY_SEPARATOR = ' '
 # Bump whenever the verdict schema SHAPE changes - a new field, a renamed key, a changed verdict
 # vocabulary. prompt_checksum catches prompt edits and model catches model swaps, but neither
-# notices that `reason` became a list. v2 added the frozen inputs' SHA-256 hashes to the payload.
-JUDGEMENT_SCHEMA_VERSION = 2
+# notices that a field vanished. v2 added the frozen inputs' SHA-256 hashes to the payload; v3
+# dropped `reason` when the judge moved to one bare marker per id - see relevance_marker_vars.py.
+JUDGEMENT_SCHEMA_VERSION = 3
 CHECKSUM_PREFIX = vars.CHECKSUM_PREFIX
 
 # Mission 6 human-audit sample. Fixed so the sampled rows are reproducible across runs.

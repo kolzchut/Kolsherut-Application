@@ -6,13 +6,12 @@ from evaluation.schemas import JudgementItem, ServiceJudgement
 def build_cached_judgement(item: JudgementItem, cache_entry: dict) -> ServiceJudgement:
     """A cached verdict re-attached to this run's identity.
 
-    The verdict and reason come from the cache; side and rank come from the item, because those
-    are this run's retrieval provenance and the cache deliberately never stored them.
+    The verdict comes from the cache; side and rank come from the item, because those are this
+    run's retrieval provenance and the cache deliberately never stored them.
     """
     return ServiceJudgement(
         query=item.query, side=item.side, rank=item.rank, service_name=item.service_name,
-        verdict=cache_entry[relevance_vars.JUDGEMENT_VERDICT_KEY],
-        reason=cache_entry[relevance_vars.JUDGEMENT_REASON_KEY])
+        verdict=cache_entry[relevance_vars.JUDGEMENT_VERDICT_KEY])
 
 
 def split_items_by_cache(items: list[JudgementItem], cache: dict[str, dict]

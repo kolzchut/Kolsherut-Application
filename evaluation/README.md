@@ -222,7 +222,7 @@ artifact reproduced by the next run, never committed data:
 - `report.html` — the dashboard with data inlined; **open directly** (double-click).
 - `relevance_judgements.csv` — `--judge` only. Every judged pair with its scores next to its verdict:
   `query, side, rank, service_name, retrieval_score, cosine_score, cosine_score_ratio, lexical_score,
-  semantic_score, verdict, reason, model, judged_at`. The first four columns are `service_diff.csv`'s,
+  semantic_score, verdict, model, judged_at`. The first four columns are `service_diff.csv`'s,
   so the two join on `(query, side, rank)`. Score cells are **blank, never `0.0`**, whenever no
   retriever produced that score — always on the `missed_ground_truth` side, and on the
   `unexpected_retrieved` side wherever BM25 never surfaced the document.
@@ -245,7 +245,7 @@ The judge's verdicts are only worth using if a person agrees with them, so `--re
 **does no evaluation and writes no other artifact**. Judge first: with no labels, `--review-sample`
 raises rather than emitting an empty sheet.
 
-The sheet **withholds the LLM's `verdict`, its `reason` and all five score columns**, and the rows are
+The sheet **withholds the LLM's `verdict` and all five score columns**, and the rows are
 shuffled. That is the whole point: shown the judge's answer, or a cosine of 0.85, a reviewer anchors
 on it and the agreement number stops measuring agreement. A header assertion enforces it.
 

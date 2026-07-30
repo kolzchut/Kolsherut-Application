@@ -50,14 +50,14 @@ AGREEMENT_MATCHED_KEY = 'matched'
 AGREEMENT_TOTAL_KEY = 'total'
 AGREEMENT_RATE_KEY = 'rate'
 
-# A disagreement row: the full identity, both verdicts, and both rationales. The notes and the
-# reason are carried because the M7 session reads these rows, and "who was right" is only legible
-# with both sides' reasoning next to the two labels.
+# A disagreement row: the full identity, both verdicts, and the one rationale that exists. The notes
+# are carried because the M7 session reads these rows and two bare labels do not say who was right.
+# There is no llm_reason counterpart: as of schema v3 the judge answers with a bare marker and states
+# no rationale at all, so the row carries the human's side of the reasoning or nothing.
 ROW_REVIEW_ID_KEY = 'review_id'
 ROW_HUMAN_VERDICT_KEY = 'human_verdict'
 ROW_HUMAN_NOTES_KEY = 'human_notes'
 ROW_LLM_VERDICT_KEY = 'llm_verdict'
-ROW_LLM_REASON_KEY = 'llm_reason'
 
 # The gate. BOTH thresholds are checked and BOTH numbers are always reported: with a skewed verdict
 # distribution raw agreement can look excellent while kappa sits near zero, which means the judge is

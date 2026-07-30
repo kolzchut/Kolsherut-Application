@@ -37,7 +37,7 @@ def build_aligned_verdict(human: HumanVerdict, sample_row: ReviewSampleRow) -> A
     return AlignedVerdict(
         review_id=human.review_id, query=human.query, side=human.side, rank=human.rank,
         service_name=human.service_name, human_verdict=human.verdict, human_notes=human.notes,
-        llm_verdict=sample_row.judgement.verdict, llm_reason=sample_row.judgement.reason)
+        llm_verdict=sample_row.judgement.verdict)
 
 
 def align_verdicts(human_verdicts: list[HumanVerdict],

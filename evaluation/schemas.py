@@ -89,11 +89,12 @@ class ServiceJudgement:
     `side` and `rank` are the retrieval-side provenance of the pair - which diff list it came
     from and its position in that list. They are carried for reporting only, and never key
     anything: the verdict is a pure function of (query, service_name), while both of these
-    change with retrieval configuration.
+    change with retrieval configuration. `verdict` is always one of relevance_vars.VERDICTS -
+    relevance_marker_vars.py's wire markers are decoded before a record is built and never reach
+    one - and there is no reason field: as of schema v3 the judge returns no free text at all.
     """
     query: str
     side: str
     rank: int
     service_name: str
     verdict: str
-    reason: str

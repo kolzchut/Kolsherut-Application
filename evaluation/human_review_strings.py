@@ -15,7 +15,7 @@ REVIEW_SHEET_BLANK_CELL = ''
 # retrieval nor scrape staging - which is why a run that passes either one does no evaluation.
 CLI_REVIEW_SAMPLE_HELP = (
     'Emit the human-review sheet: a stratified, shuffled sample of N already-judged pairs with the '
-    'verdict, reason and score columns withheld. N defaults to 200. Does no evaluation.'
+    'verdict and score columns withheld. N defaults to 200. Does no evaluation.'
 )
 CLI_AGREEMENT_HELP = (
     'Read the filled-in human-review sheet back and write the agreement report. Does no evaluation.'
@@ -93,7 +93,7 @@ ERROR_REVIEW_ROW_IDENTITY_DRIFT = (
     'belong to a different set of pairs. Re-emit the sheet.'
 )
 ERROR_REVIEW_SHEET_LEAKS_ANSWER = (
-    'The review sheet header {header} would carry {leaked}. The LLM verdict, its reason and every '
-    'score are withheld on purpose: shown first they anchor the reviewer and the agreement number '
-    'stops measuring anything.'
+    'The review sheet header {header} would carry {leaked}. The LLM verdict and every score are '
+    'withheld on purpose: shown first they anchor the reviewer and the agreement number stops '
+    'measuring anything.'
 )

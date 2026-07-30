@@ -25,10 +25,13 @@ def compute_prompt_checksum() -> str:
 
 
 def serialize_judgement(judgement: ServiceJudgement) -> tuple[str, dict]:
-    entry = {
-        relevance_vars.JUDGEMENT_VERDICT_KEY: judgement.verdict,
-        relevance_vars.JUDGEMENT_REASON_KEY: judgement.reason,
-    }
+    """One cache entry: the canonical verdict under its cache key, and nothing else.
+
+    The judge returns no reason as of schema v3, so there is no free text left to store. The entry
+    stays an object rather than collapsing to a bare verdict string so a later field is an addition
+    rather than a second shape change.
+    """
+    entry = {relevance_vars.JUDGEMENT_VERDICT_KEY: judgement.verdict}
     return build_judgement_cache_key(judgement.query, judgement.service_name), entry
 
 

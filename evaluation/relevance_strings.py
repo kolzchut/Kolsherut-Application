@@ -21,7 +21,6 @@ JUDGEMENT_CSV_SIDE_HEADER = 'side'
 JUDGEMENT_CSV_RANK_HEADER = 'rank'
 JUDGEMENT_CSV_SERVICE_NAME_HEADER = 'service_name'
 JUDGEMENT_CSV_VERDICT_HEADER = 'verdict'
-JUDGEMENT_CSV_REASON_HEADER = 'reason'
 JUDGEMENT_CSV_MODEL_HEADER = 'model'
 JUDGEMENT_CSV_JUDGED_AT_HEADER = 'judged_at'
 # Written into the score cells of a missed-side row. Blank, never 0.0: nothing ever scored those
@@ -36,12 +35,8 @@ SCORE_BAND_CSV_BAND_END_HEADER = 'band_end'
 SCORE_BAND_CSV_COUNT_HEADER = 'count'
 
 # Progress log messages.
-LOG_JUDGEMENT_CACHE_HIT = 'Reusing cached relevance judgements {path} ({count} pairs)'
-LOG_JUDGEMENT_CACHE_STALE = 'Ignoring relevance-judgement cache {path}: model, prompt or schema changed'
 LOG_WROTE_JUDGEMENT_CACHE = 'Wrote {count} relevance judgements to {path}'
-LOG_WROTE_JUDGEMENT_REQUESTS = 'Wrote {count} judgement requests to {path}'
 LOG_SUBMITTED_BATCH = 'Submitted judgement batch {name} to {model}'
-LOG_WAITING_FOR_BATCH = 'Waiting for judgement batch {name}, currently {state}'
 LOG_BUILT_JUDGEMENT_ITEMS = 'Built {count} judgement items from {directory}'
 LOG_JUDGEMENT_ITEMS_CACHED = '{cached} of {total} pairs already judged; {pending} left to judge'
 # --judge-limit truncates the pair set. Logged loudly because a silently truncated judgement set
@@ -89,6 +84,10 @@ ERROR_CHUNK_ITEM_IDS_MISMATCH = (
 )
 ERROR_CHUNK_UNKNOWN_KEY = 'The judgement batch returned an unknown chunk key {key}'
 ERROR_CHUNK_KEY_DUPLICATED = 'The judgement batch returned chunk key {key} more than once'
+# Raised at the parse boundary. A marker outside the enum is a parse failure, never a "not sure".
+ERROR_UNKNOWN_VERDICT_MARKER = (
+    'Chunk {key} answered id {item_id} with marker {marker!r}, which is not one of {markers}'
+)
 ERROR_RELEVANCE_ROW_COUNT = (
     'Relevance CSV would hold {rows} rows for {judged} judged pairs'
 )

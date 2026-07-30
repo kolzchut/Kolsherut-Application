@@ -19,7 +19,7 @@ def redraw_sample_for_sheet(human_verdicts: list[HumanVerdict],
     """The same rows the sheet was emitted from, rebuilt from the seed rather than read off disk.
 
     Sized by the sheet's own row count, which is the one number the sheet still carries after the
-    verdict, reason and score columns were withheld. Reproducibility is what makes this sound: the
+    verdict and score columns were withheld. Reproducibility is what makes this sound: the
     seed and that count fix the draw completely, and align_verdicts then checks every redrawn identity
     against the sheet's, so a cache or snapshot that moved underneath raises instead of mis-joining.
     """

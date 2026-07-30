@@ -15,7 +15,6 @@ def build_relevance_header() -> list[str]:
         relevance_strings.JUDGEMENT_CSV_SERVICE_NAME_HEADER,
         *vars.SERVICE_SCORE_KEYS,
         relevance_strings.JUDGEMENT_CSV_VERDICT_HEADER,
-        relevance_strings.JUDGEMENT_CSV_REASON_HEADER,
         relevance_strings.JUDGEMENT_CSV_MODEL_HEADER,
         relevance_strings.JUDGEMENT_CSV_JUDGED_AT_HEADER,
     ]
@@ -38,7 +37,7 @@ def build_relevance_row(item: JudgementItem, judgement: ServiceJudgement,
     return [
         judgement.query, judgement.side, judgement.rank, judgement.service_name,
         *[format_score_cell(item.scores.get(score_key)) for score_key in vars.SERVICE_SCORE_KEYS],
-        judgement.verdict, judgement.reason, model, judged_at,
+        judgement.verdict, model, judged_at,
     ]
 
 

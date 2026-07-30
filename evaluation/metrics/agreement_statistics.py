@@ -41,10 +41,11 @@ def build_agreement_by_verdict(aligned: list[AlignedVerdict]) -> dict[str, dict]
 
 
 def build_disagreement_row(row: AlignedVerdict) -> dict:
-    """One disagreeing row: full identity, both labels, both rationales - read at the M7 session.
+    """One disagreeing row: full identity, both labels, the human's notes - read at the M7 session.
 
     The identity is carried under relevance_strings' own header names, the same four the review sheet
     and relevance_judgements.csv use, so a disagreement can be looked up in either without mapping.
+    Only the human states a rationale: the judge answers with a bare marker as of schema v3.
     """
     return {
         human_review_vars.ROW_REVIEW_ID_KEY: row.review_id,
@@ -55,7 +56,6 @@ def build_disagreement_row(row: AlignedVerdict) -> dict:
         human_review_vars.ROW_HUMAN_VERDICT_KEY: row.human_verdict,
         human_review_vars.ROW_LLM_VERDICT_KEY: row.llm_verdict,
         human_review_vars.ROW_HUMAN_NOTES_KEY: row.human_notes,
-        human_review_vars.ROW_LLM_REASON_KEY: row.llm_reason,
     }
 
 

@@ -3,8 +3,8 @@
   "prompt_checksum": "sha256:64a6c593f44c5b8e5a4f4e38b4fb7c03e1f57afee92aeef6fdba7d2d072ba5d0",
   "schema_version": 3,
   "input_sha256": {
-    "unexpected_retrieved.json": "sha256:2db5f5d9bf997371babce93f007f446f0f205ebffe537a57a9bbbc5b14157f7e",
-    "missed_ground_truth.json": "sha256:f30a10cc48b1b88d08c574dcbcef028683a6911963b8f7cbcac0e466ce69a5a7"
+    "unexpected_retrieved.json": "sha256:86e5112ce85c82a2c269d0671c914b8dddfa786e41c8c0b3b9281132efb5c7fe",
+    "missed_ground_truth.json": "sha256:8e69a456f94d367e4de5a73f93a6f2a0ecdd2255c7fb504af7e0272de26e9f3e"
   },
   "scrape_date": "2026-07-29",
   "retrieval_config": {
@@ -17,8 +17,8 @@
     "MIN_FUSED_SCORE": 0.01,
     "MIN_SEMANTIC_SCORE": 0.3,
     "MAX_RETURNED_SERVICES": 400,
-    "SEMANTIC_SCORE_RATIO": null,
-    "KEEP_LEXICAL_ONLY_DOCUMENTS": null
+    "SEMANTIC_SCORE_RATIO": 0.0,
+    "KEEP_LEXICAL_ONLY_DOCUMENTS": false
   },
   "judgements": {
     "לאן פונים שקורסים כלכלית ולא מצליחים לסגור את החובות ואת החודש לחשב מסלול מחדש": {
@@ -6041,6 +6041,18 @@
     },
     "אני נערה טרנסית שסובלת מבריונות בבית הספר, האם יש קבוצת תמיכה לבני נוער כמוני באזור המרכז? מערך עו\"ס טרנס": {
       "verdict": "relevant"
+    },
+    "הוסטל בצפת מועדוניות לילדים בנים ובנות": {
+      "verdict": "irrelevant"
+    },
+    "אמא שלי מרותקת לכסא גלגלים, שירותים ופעילות פנאי בבאר שבע פעילויות נופש וקיטנות קיץ לילדים עם CP": {
+      "verdict": "irrelevant"
+    },
+    "אמא שלי מרותקת לכסא גלגלים, שירותים ופעילות פנאי בבאר שבע שירותים למעוטי יכולת": {
+      "verdict": "unclear"
+    },
+    "אמא שלי מרותקת לכסא גלגלים, שירותים ופעילות פנאי בבאר שבע להיות שם כשצריך": {
+      "verdict": "unclear"
     }
   }
 }

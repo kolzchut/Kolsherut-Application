@@ -1,7 +1,9 @@
 # SPEC — Relevance Judging for the Retrieval Evaluation
 
 Plan for the 7 missions on the `evaluation/` microservice. Written against the state of
-`evaluation/` on branch `fix-embedding-text-and-reindex` (last commit touching it: `6aaf267 Eval enhancement`).
+`evaluation/` on branch `fix-embedding-text-and-reindex` (last commit touching it at the time of writing:
+`6aaf267 Eval enhancement`). **The work has since been committed on the same branch: `501e21c` (the M4–M6
+code, 2026-07-30 10:20) and `9412a69` (the 2,007 real labels, 2026-07-30 13:00).**
 
 **How to read this document**
 
@@ -11,32 +13,46 @@ Plan for the 7 missions on the `evaluation/` microservice. Written against the s
 - **§12–§13** — risks and the convention checklist.
 - **§14** — execution log: what has actually shipped, and the live checks still owed.
 
-> ## STATUS — 2026-07-30
+> ## STATUS — 2026-07-30, after the execution session (§14.9)
 >
-> **All the code for Missions 1–6 is written. Not one real relevance label exists.**
+> **Missions 1–5 are done and measured on real labels. Mission 6 has emitted its review sheet; its gate is
+> OPEN because no human has filled it in. Mission 7 has not started.**
 >
 > | Mission | Code | Measured |
 > | --- | --- | --- |
 > | M1 Recall ALL | ✅ | ✅ |
 > | M2 unexpected-retrieved JSON | ✅ | ✅ live, with real scores |
 > | M3 missed-ground-truth JSON | ✅ | ✅ live |
-> | M4 LLM judging | ✅ Phases 4.1 + 4.2 (18 files under `relevance/`) | ❌ **Phase 4.3 never ran** — `evaluation/data/relevance-judgements.json` does not exist |
-> | M5 relevance statistics | ✅ (10 files) | ❌ synthetic verdicts only |
-> | M6 human audit | ✅ (16 files) | ❌ gate **OPEN**; blocked on the 2–3 h human sitting |
+> | M4 LLM judging | ✅ Phases 4.1 + 4.2 + 4.3 (18 files under `relevance/`) | ✅ **Phase 4.3 RAN 2026-07-30** — **2,007 real labels** in `evaluation/data/relevance-judgements.json`, committed as `9412a69`. 119/119 chunks returned `STOP`, **zero unjudged**. §14.9.3 |
+> | M5 relevance statistics | ✅ (10 files) | ✅ **verified on the real labels** — all 8 acceptance criteria, §14.6.1. Values are **gated**, not quotable |
+> | M6 human audit | ✅ (16 files) | 🟡 **Phase 6.1 done** — 200-row sheet emitted and verified (§14.9.5); gate **OPEN**, blocked on the 2–3 h human sitting |
 > | M7 session with Eli | ❌ | ❌ |
 >
-> **One-line blocker, and it is a typo.** `evaluation/.env:13` sets **`GEMINI_JUDGE_KEY`**, but
-> `evaluation/relevance_vars.py:15` reads **`GEMINI_JUDGE_API_KEY`** (as does `.env.example:17`). So
-> `--judge` raises `ERROR_MISSING_GEMINI_JUDGE_API_KEY` and exits before making a single call. **Renaming
-> that one variable unblocks Phase 4.3 → M5 → M6 in sequence.** See §14.8.
+> **~~One-line blocker, and it is a typo.~~ CLOSED 2026-07-30.** `evaluation/.env:13` was renamed
+> `GEMINI_JUDGE_KEY` → **`GEMINI_JUDGE_API_KEY`**, value unchanged, and now agrees with
+> `relevance_vars.py:15` and `.env.example:17`. `--judge` ran. §14.8.1 is closed — **except** that the key
+> is still byte-identical to `retrieval/`'s `GEMINI_EMBEDDER_API_KEY`: §14.8.1's advice to split them was
+> **not** acted on and still stands.
 >
-> **Second, larger question: the frozen snapshot is now two arms stale.** `results-judge-frozen/` pins the
-> 2,148 pairs of a `0.3025` arm. The retriever has since moved to `0.3694` (the V4 Gemini embedder — see
-> `docs/embedding-v4-gemini-spec.md` §14.4). Decide whether to judge the pinned snapshot or re-freeze on
-> the current arm **before** spending the labels. §14.8.2.
+> **~~Second, larger question: the frozen snapshot is now two arms stale.~~ DECIDED 2026-07-30 by the user:
+> re-frozen on `results-arm4-v4-gemini`.** §14.8.2 left the choice open; its recommendation ("judge the
+> pinned snapshot first") was **not** taken. `results-judge-frozen/` now pins **2,007 pairs**
+> (1,096 unexpected + 911 missed) at `overall_score` **0.36935235358267293**. The previous 2,148-pair /
+> `0.3025` snapshot is archived **intact** at `evaluation/results-judge-frozen-arm0-0.3025/`. §14.5, §14.9.1.
+>
+> **The judge output contract changed, user-directed, and deviates from §11.5.** One marker per id —
+> **`V` = relevant, `X` = irrelevant, `0` = unclear** — and **no `reason` field at all**. Markers decode to
+> the canonical `relevant` / `irrelevant` / `unclear` vocabulary at the parse boundary, so M5, M6,
+> `summary.json` and the κ logic are untouched. `JUDGEMENT_SCHEMA_VERSION` is now **3**. §14.9.2.
+>
+> **Everything M5 emits is still GATED and not quotable.** Per §3.2 and §12 no adjusted metric may be
+> presented without Mission 6's agreement number, and that number does not exist. The judge's own headline
+> rates are in the same position — including `unexpected_actually_relevant_rate` **0.5168**, the first real
+> answer to §0's load-bearing question.
 
 **Status as of 2026-07-29: Missions 1, 2 and 3 are implemented and verified; Missions 4–7 are not started.**
-*(Superseded by the status block above — M4/M5/M6 code has since shipped; see §14.5–§14.8.)*
+*(Superseded by the status block above — M4/M5/M6 code has since shipped and M4/M5 have since run; see
+§14.5–§14.9.)*
 **The M4 gate is MET.** Retrieval was restarted at 17:07 so it imports Phase 2.1's code, and the re-run
 produced both diff files with the score fields **populated** — 2,148 pairs, all five fields real on the
 unexpected side, all five `null` on the missed side. Attempt 1's `null`s were a stale process, not a code
@@ -51,8 +67,8 @@ reasons all differ from the original Anthropic design. §11.2 is the API contrac
 lite-tier judge is kept honest**, and five `⚠️ VERIFY AT IMPLEMENTATION` markers flag details that must be
 confirmed against live docs before Phase 4.1 is coded.
 
-**Marker legend.** Every mission, phase, task and step in §4–§6 carries its outcome. An unmarked
-heading or step (all of §7–§10) has not been started.
+**Marker legend.** Every mission, phase, task and step in **§4–§9** carries its outcome. An unmarked
+heading or step (all of §10, Mission 7) has not been started.
 
 | Marker | Meaning | Count in M1–M3 |
 | --- | --- | ---: |
@@ -65,6 +81,14 @@ heading or step (all of §7–§10) has not been started.
 Steps 2.1.1.5, 2.2.4.2 and 2.2.4.3 — the last ⏳ and both 🟡. `⚠️` Step 2.2.1.3 is unchanged and is not a
 live-check item.
 
+**§7, §8 and §9 markers were added 2026-07-30**, after the execution session, and the evidence sits under
+each step exactly as in §4–§6. Two markers in those sections mean something slightly narrower than above and
+say so in place: `⚠️` on **seven steps — 4.1.2.1, 4.2.2.1, 4.2.3.1, 4.2.5.1, 4.3.2.3, 4.3.2.4, 4.3.3.1** —
+marks a **user-directed or reasoned deviation** from the step as written, not an implementation failure.
+Three causes account for all seven: the judge output-contract change (§14.9.2), the accepted `unclear`
+rate (§14.9.4), and the deliberately skipped `--rescrape` (under Step 4.3.3.1). `⏳ OPEN` on Step 6.2.3.1
+marks the one outcome no code can supply.
+
 ---
 
 ## 0. Why this work exists
@@ -73,10 +97,16 @@ The evaluation today scores retrieval against **what the incumbent staging site 
 golden-set URL. That is a *proxy* for relevance, not relevance itself. The last full run says:
 
 > ⚠️ **Every number in this section is from `evaluation/results-arm0-baseline/`, not from the current
-> `evaluation/results/` run.** Measured 2026-07-29 — the current arm gives `recall_at_returned` 0.3266,
+> `evaluation/results/` run.** Measured 2026-07-29 — the then-current arm gave `recall_at_returned` 0.3266,
 > 1,179 unexpected rows and 966 missed rows, i.e. **2,145 pairs to judge rather than 17,529**. Both arms
 > are local-only (`evaluation/.gitignore` ignores `results*/`). Full comparison in §14.3; re-baseline
 > §11.4 and §11.6 against whichever arm is frozen for judging before trusting them.
+>
+> **Updated 2026-07-30 — the arm that was actually judged is a third one.** `results-judge-frozen/` was
+> re-frozen on **`results-arm4-v4-gemini`** (§14.9.1): `recall_at_returned` **0.4285457466271444**,
+> `precision_at_returned` **0.23972125266925076**, `overall_score` **0.36935235358267293**, and
+> **2,007 pairs** (1,096 unexpected + 911 missed) rather than 2,145 or 17,529. So this section's numbers
+> are now **two** arms behind the labels. §11.6's cost estimate has been replaced by measured actuals.
 
 | Signal | Value | Reading |
 | --- | --- | --- |
@@ -95,6 +125,16 @@ a human.
 **This is the load-bearing risk of the whole plan.** If the judge says most of our 16,953 "false
 positives" are genuinely relevant, then `precision_at_returned` is measuring the golden set, not the
 retriever, and the priorities from mission 7 should change accordingly.
+
+> **First real answer, measured 2026-07-30 — and it is GATED.** On the 1,096 unexpected-side rows of the
+> frozen `results-arm4-v4-gemini` arm (not the 16,953 above), the judge calls **430 of 832 relevant**:
+> `unexpected_actually_relevant_rate` **0.5168269230769231**, or **0.5356200527704486** (406/758) once the
+> empty-golden-set rows are excluded, which is the variant §11.7 requires for any "vs the incumbent"
+> framing. Read literally that is "about half of what we return and the site does not is genuinely
+> useful" — the golden-set-narrowness reading. **It is not quotable yet.** Per §3.2 and §12 this number
+> means nothing until Mission 6's agreement number exists, and that gate is OPEN: an unaudited judge that
+> agrees with us is exactly the failure mode §12's top row describes. Full run in §14.9.3; note also that
+> **19.93% of pairs came back `unclear`** (§14.9.4), so the denominator is 832 of 1,096, not 1,096.
 
 ### 0.1 The retrieval configuration these numbers came from
 
@@ -162,14 +202,16 @@ Original mission text kept verbatim for traceability.
 | 1 | להוסיף Recall ALL | ✅ **Done** — verified 2026-07-29 | §4 — verify only |
 | 2 | להוסיף קובץ json שמראה פר שאילתה איזה שירותים אנחנו שלפנו שלא קיימים ב goldenset | ✅ **Implemented** 2026-07-29 (2 live checks deferred, §14.2) | §5 |
 | 3 | להוסיף קובץ json שמראה פר שאילתה איזה שירותים קיימים ב goldenset שלא שלפנו בכלל | ✅ **Implemented** 2026-07-29 | §6 |
-| 4 | לשלוח גם את סעיף 2 וגם את סעיף 3 ל LLM חכם ולבקש פר שירות אם הוא רלוונטי לשאילתה ולהוציא כטבלה (csv) | 🟡 **Code done (Phases 4.1 + 4.2), never run.** Phase 4.3 is blocked on the `.env` key name — §14.8.1. No CSV exists. | §7 |
-| 5 | להחזיק סטטיסטיקה של איזה אחוז מהדברים שלא שלפנו באמת לא רלוונטים, ואיזה אחוז מהדברים ששלפנו והמקור לא כן רלוונטים | 🟡 **Code done, unmeasured** — verified against synthetic verdicts over the real 2,148 identities only. §14.6 | §8 |
-| 6 | לעבור ידנית על הטבלה מ 5 ולראות באיזה אחוז מהמקרים הוא נתן הערכה נכונה, והוספת סכימה באיזה אחוז המעריך האנושי מסכים עם ה LLM | 🟡 **Code done, gate OPEN.** The deliverable is a human sitting; no code can supply it. §14.7 | §9 |
+| 4 | לשלוח גם את סעיף 2 וגם את סעיף 3 ל LLM חכם ולבקש פר שירות אם הוא רלוונטי לשאילתה ולהוציא כטבלה (csv) | ✅ **Done 2026-07-30.** All three phases ran. **2,007 labels**, zero unjudged, committed as `9412a69`; `results/relevance_judgements.csv` and `results/relevance_by_score_band.csv` both written. Output contract changed to one marker per id, no `reason` — §14.9.2. | §7 |
+| 5 | להחזיק סטטיסטיקה של איזה אחוז מהדברים שלא שלפנו באמת לא רלוונטים, ואיזה אחוז מהדברים ששלפנו והמקור לא כן רלוונטים | ✅ **Done and measured 2026-07-30** on the real labels — all 8 acceptance criteria, §14.6.1. Both rates exist (0.5277 missed, 0.5168 unexpected) and are **GATED, not quotable** (§3.2, §12). | §8 |
+| 6 | לעבור ידנית על הטבלה מ 5 ולראות באיזה אחוז מהמקרים הוא נתן הערכה נכונה, והוספת סכימה באיזה אחוז המעריך האנושי מסכים עם ה LLM | 🟡 **Phase 6.1 done, gate OPEN.** The 200-row sheet is emitted and verified (§14.9.5). The deliverable is a human sitting; no code can supply it. §14.7 | §9 |
 | 7 | לשבת עם אלי, ועם התעדוף שעשינו להבין מה תקין ומה לא | ❌ **Not started (process)** | §10 |
 
-**Read the 🟡 rows as "built but unproven".** M4–M6 are ~50 of the 61 new `evaluation/` files — working
-plumbing whose every number is still synthetic. The load-bearing question in §0 — *is `precision_at_returned` measuring the
-retriever or a narrow golden set?* — is **exactly as unanswered as on day one.**
+**How to read the remaining 🟡.** M6 is the only unproven row left, and only in its second half: the sheet
+exists, the human does not. **§0's load-bearing question — *is `precision_at_returned` measuring the
+retriever or a narrow golden set?* — now has a measured answer for the first time** (about half of the
+unexpected side judged relevant, §0's boxed note), but the answer is **inadmissible until M6 closes**. An
+unaudited judge that happens to agree with us is §12's top risk, not a finding.
 
 ### 1.1 What is already built
 
@@ -193,8 +235,13 @@ under 100 lines, pure functions, all text in `strings.py`, all config in `vars.p
 New files, all following the existing conventions (≤100 lines/file, ≤30 lines/function, pure
 functions, `try/except` only at the orchestrator, no hardcoded text).
 
-`✅` = shipped 2026-07-29. Unmarked = not written yet. Two files were added that this tree did not
-anticipate; both are marked and explained in §14.1.
+`✅` = shipped 2026-07-29 (M1–M3). **`✅⁴` = shipped 2026-07-30 with M4–M6 and committed in `501e21c`,
+except `relevance_marker_vars.py`, which is on disk and untracked.** Unmarked = not written. This tree was
+written before M4–M6 were built and it under-counts them badly: §14.1, §14.5, §14.6 and §14.7 list **28
+further files** created to hold the 100-line rule (six `relevance*_vars.py` / `*_strings.py` files, the
+`relevance/` and `human_review/` stage orchestrators, `metrics/cohens_kappa.py`,
+`metrics/build_confusion_by_side.py`, and so on). Treat those four sections, not this tree, as the file
+inventory; the tree is kept because it is the *intent*, and the deltas from it are each explained.
 
 ```
 retrieval/                          MODIFIED  M2 Phase 2.1 — additive only
@@ -205,36 +252,42 @@ retrieval/                          MODIFIED  M2 Phase 2.1 — additive only
    └─ assemble_services_from_documents.py  ✅ EXTEND pass documents through
 
 evaluation/
-├─ relevance_vars.py            NEW  M4  Gemini model + thinking level, chunk size, paths,
-│                                        verdict + cache keys, seed
-├─ relevance_strings.py         NEW  M4  judge system prompt, CSV headers, log lines
+├─ relevance_vars.py            ✅⁴ NEW  M4  Gemini model + thinking level, chunk size, paths,
+│                                        verdict + cache keys, seed. Sits at exactly 100 lines,
+│                                        which is why five more vars/strings files exist (§14.5)
+├─ relevance_marker_vars.py     ✅⁴ NEW  M4  UNPLANNED, 2026-07-30, still untracked — the judge's
+│                                        WIRE markers V / X / 0 and the decode table back to the
+│                                        canonical verdicts. The §11.5 deviation lives here (§14.9.2)
+├─ relevance_strings.py         ✅⁴ NEW  M4  CSV headers, log lines, errors. The judge system prompt
+│                                        moved to relevance_prompt_strings.py — Step 4.1.1.2
 ├─ clients/
 │  ├─ parse_retrieval_response.py ✅ NEW M2  unplanned — pure parsing split off the HTTP call
-│  └─ llm_client.py             NEW  M4  Gemini Batch API (google-genai): submit / poll / read results
-├─ relevance/                   NEW  M4
-│  ├─ judgement_cache.py             load / save / checksum-invalidate
-│  ├─ build_judgement_items.py       the two diff JSON files → JudgementItem list
-│  ├─ chunk_judgement_items.py       group by (query, side), split at chunk size
-│  ├─ judgement_schema.py            JSON schema for structured output
-│  ├─ build_judgement_request.py     one Gemini batch request (keyed JSONL line)
-│  ├─ parse_judgement_result.py      batch result → ServiceJudgement list
-│  └─ judge_relevance.py             orchestrator
-├─ human_review/                NEW  M6
-│  ├─ build_review_sample.py         stratified sample → blank-verdict CSV
-│  ├─ load_review_verdicts.py        read the filled-in CSV back
-│  └─ align_verdicts.py              join human verdicts to LLM judgements
+│  └─ llm_client.py             ✅⁴ NEW  M4  Gemini Batch API (google-genai): submit / poll / read results
+├─ relevance/                   ✅⁴ NEW  M4  — 18 files on disk, not the 7 below
+│  ├─ judgement_cache.py             ✅⁴ load / save / checksum-invalidate
+│  ├─ build_judgement_items.py       ✅⁴ the two FROZEN diff JSON files → JudgementItem list (§14.5)
+│  ├─ chunk_judgement_items.py       ✅⁴ group by (query, side), split at chunk size → 123 chunks
+│  ├─ judgement_schema.py            ✅⁴ JSON schema for structured output — {id, marker}, §14.9.2
+│  ├─ build_judgement_request.py     ✅⁴ one Gemini batch request (keyed JSONL line)
+│  ├─ parse_judgement_result.py      ✅⁴ batch result → ServiceJudgement list; decodes the marker
+│  └─ judge_relevance.py             ✅⁴ orchestrator
+├─ human_review/                ✅⁴ NEW  M6  — 12 files on disk, not the 3 below (§14.7)
+│  ├─ build_review_sample.py         ✅⁴ stratified sample → blank-verdict CSV
+│  ├─ load_review_verdicts.py        ✅⁴ read the filled-in CSV back
+│  └─ align_verdicts.py              ✅⁴ join human verdicts to LLM judgements
 ├─ metrics/
-│  ├─ aggregate_relevance_statistics.py   NEW  M5
-│  ├─ adjusted_set_metrics.py             NEW  M5
-│  └─ agreement_statistics.py             NEW  M6
+│  ├─ aggregate_relevance_statistics.py   ✅⁴ NEW  M5
+│  ├─ adjusted_set_metrics.py             ✅⁴ NEW  M5
+│  └─ agreement_statistics.py             ✅⁴ NEW  M6
 ├─ report/
 │  ├─ build_service_diff_json.py  ✅ NEW  M2 + M3  both payloads, one shared _build_payload
 │  ├─ build_diff_service_entries.py ✅ NEW M3  unplanned — the service-object builder, split for size
 │  ├─ serialize_service_scores.py ✅ NEW  M2  the single five-key flattener + UNSCORED_SERVICE
-│  ├─ write_relevance_csv.py         NEW  M4  the final scores + verdicts table
-│  ├─ build_score_band_table.py      NEW  M4  verdict share per cosine / ratio band
-│  ├─ build_relevance_table.py       NEW  M5
-│  └─ write_agreement_report.py      NEW  M6
+│  ├─ write_relevance_csv.py      ✅⁴ NEW  M4  the final scores + verdicts table (12 columns — the
+│  │                                     planned `reason` column does not exist, §14.9.2)
+│  ├─ build_score_band_table.py   ✅⁴ NEW  M4  verdict share per cosine / ratio band
+│  ├─ build_relevance_table.py    ✅⁴ NEW  M5
+│  └─ write_agreement_report.py   ✅⁴ NEW  M6
 ├─ clients/retrieval_client.py ✅ EXTEND M2  HTTP only now; renamed to
 │                                           fetch_retrieval_ranked_names_and_scores
 ├─ evaluate_dataset.py         ✅ EXTEND M2  thread the score map through
@@ -245,9 +298,12 @@ evaluation/
 ├─ run_evaluation.py           ✅ EXTEND M2 + M3  LOG_WROTE_RESULTS params only
 ├─ README.md                   ✅ EXTEND M1 + M2 + M3  Recall ALL alias, both Outputs bullets
 ├─ data/
-│  └─ relevance-judgements.json  NEW  M4  committed label cache
+│  └─ relevance-judgements.json  ✅⁴ NEW  M4  **committed** label cache — 2,007 labels,
+│                                        `schema_version: 3`, commit `9412a69`
 └─ schemas.py                 ✅ EXTEND  ServiceScores + service_scores on QueryEvaluation (M2),
-                                        ServiceJudgement (M4), HumanVerdict (M6)
+                                        ServiceJudgement (M4 — **no `reason` field**, §14.9.2).
+                                        `HumanVerdict` did NOT go here: the file was at 99 of 100
+                                        lines, so it lives in `human_review_schemas.py` (Step 6.2.1.3)
 ```
 
 ### 2.1 Data flow
@@ -301,15 +357,16 @@ every task has multiple steps; the hierarchy is kept even when a level has one c
 | --- | --- | --- | --- |
 | 1 | M2 → M3 | none | ✅ implemented, uncommitted |
 | 2 | M4 | M2 + M3 merged (M4 reads their output files) | ✅ **gate MET (2026-07-29, attempt 2)** — retrieval restarted at 17:07 so it imports Phase 2.1's code; the re-run wrote both diff files **carrying real scores**. 2,148 pairs (1,180 unexpected + 968 missed); `retrieval_score` / `cosine_score` / `cosine_score_ratio` / `semantic_score` **1,180/1,180 populated**, `lexical_score` 272/1,180 (correct for `LEXICAL_WEIGHT=0`), missed side 968/968 all-null, zero exact `0.0` in 10,740 cells. **Still uncommitted** — that remains a release blocker, not a gate blocker. §14.2 |
-| 3 | M5 | M4 Phase 4.3 complete (labels exist) | blocked |
-| 4 | M6 | M5 Phase 5.1 complete (statistics exist to sample from) | blocked |
-| 5 | M7 | **M6 gate passed** (Task 6.2.3) | blocked |
+| 3 | M5 | M4 Phase 4.3 complete (labels exist) | ✅ **gate MET (2026-07-30)** — Phase 4.3 ran over all 2,007 frozen pairs; `evaluation/data/relevance-judgements.json` holds **2,007 labels**, `schema_version: 3`, committed `9412a69`. Zero unjudged. §14.9.3 |
+| 4 | M6 | M5 Phase 5.1 complete (statistics exist to sample from) | ✅ **gate MET (2026-07-30)** — the `relevance` block exists and every M5 criterion is verified on the real labels (§14.6.1). Phase 6.1 has run: 200 rows in `results/human_review_sample.csv`, all 6 strata non-zero. §14.9.5 |
+| 5 | M7 | **M6 gate passed** (Task 6.2.3) | **blocked — the gate is OPEN.** No human verdict exists, so `raw_agreement` and `cohens_kappa` do not exist, so no M5 adjusted metric may be presented. This is the only thing standing between today's numbers and Mission 7. |
 
-**The M4 gate is met.** As of 2026-07-29 (attempt 2, after restarting retrieval) both files carry real
-per-service scores and every assertion in §14.2 passes. Phase 4.1 may start. Two things to carry into it:
-the work is **still uncommitted**, and §14.4.3 records that re-running this arm does not reproduce the
-identical pair set — so Mission 4 must judge the **emitted files**, and Task 4.3.3.4 must record the file
-hashes, not just the config.
+**The M4 gate was met 2026-07-29** (attempt 2, after restarting retrieval): both files carry real
+per-service scores and every assertion in §14.2 passes. **The M5 and M6 gates were met 2026-07-30.** Three
+things carried into execution, all honoured: §14.4.3 records that re-running an arm does not reproduce the
+identical pair set — so Mission 4 judged the **emitted files** and Step 4.3.3.4 recorded their content
+hashes, not just the config (§14.5, §14.9.1); and the work is **no longer uncommitted** — `501e21c` and
+`9412a69` landed it, with `relevance_marker_vars.py` the one file still untracked.
 
 Three hard rules:
 
@@ -318,7 +375,19 @@ Three hard rules:
   changes retrieval *code* additively and is not affected.
   **This rule was already broken before the 2026-07-29 run** — the file on disk no longer matches §0.1.
   The drift is tabulated in §14.4.1, and §14.4 freezes the drifted arm as the judged one from here.
+  **Held on 2026-07-30: `retrieval/.env` was not touched during the execution session.** Verified on disk
+  after the run — it still sets `RETRIEVAL_EMBEDDINGS_INDEX_NAME=srm__services_retrieval_embeddings_v3_enriched`
+  and `EMBEDDING_PROVIDER=local`, with the V4 Gemini pair present only as commented-out lines. The judged
+  arm was re-frozen from **already-emitted `results-arm4-v4-gemini` files** (§14.9.1), not by re-pointing
+  the service. Note what this implies and does **not** imply: the local Elasticsearch does hold
+  `srm__services_retrieval_embeddings_v4_gemini` (**9,871 docs, 607.5 MB**, measured 2026-07-30), so the V4
+  arm is *available* locally — any claim that it is not is wrong. The mismatch is purely the `.env` pointer,
+  and reproducing the judged arm live means flipping those two lines and restarting (§14.4.4's rule).
 - **No adjusted metric is presented without its agreement number.** M6 is a gate, not a report.
+  **Live as of 2026-07-30**: the adjusted metrics now exist and are real (`adjusted_precision_at_returned`
+  0.589105185662881, `adjusted_recall_at_returned` 0.5447459382892215, `adjusted_f1_at_returned`
+  0.4340885273707442) and this rule is therefore binding for the first time rather than hypothetical.
+  **None of those three may be quoted, presented, charted or compared until Task 6.2.3 closes.**
 - **Every score the retriever produced reaches the final table unmodified.** No rounding, no
   recomputation, no zero-for-null substitution. Step 4.2.5.5 is the end-to-end check.
 
@@ -333,10 +402,10 @@ its own PR ahead of everything else.
 | M1 | 1 | 0 (verify only) | ✅ as estimated |
 | M2 | 2 | 1.5 d (0.5 d score plumbing incl. retrieval, 0.5 d the file, 0.5 d verification) | ✅ code done; the 0.5 d verification is still owed (§14.2) |
 | M3 | 1 | 0.1 d (reuses M2) | ✅ one task, as predicted |
-| M4 | 3 | 2.5–3.5 d (+0.5 d for the score-band table) | — cost/volume estimate needs re-baselining, §14.3 |
-| M5 | 2 | 1 d | — |
-| M6 | 2 | 1 d + 2–3 h human review | — |
-| M7 | 2 | 0.5 d + the session | — |
+| M4 | 3 | 2.5–3.5 d (+0.5 d for the score-band table) | ✅ **all three phases done.** The cost estimate was re-baselined by measurement, not projection: **$0.0739 list / $0.0370 batched**, ~20× below §11.6's pre-run figure for a comparable arm — §11.6, §14.9.6 |
+| M5 | 2 | 1 d | ✅ code done 2026-07-29, verified on real labels 2026-07-30 (§14.6.1) |
+| M6 | 2 | 1 d + 2–3 h human review | 🟡 code + Phase 6.1 done; **the 2–3 h human review has not happened** and is the whole remaining cost |
+| M7 | 2 | 0.5 d + the session | — not started |
 
 ---
 
@@ -711,9 +780,23 @@ fields, no default behaviour changes, and a full re-scrape is not required.*
 
 ---
 
-## 7. Mission 4 — LLM relevance judging
+## 7. Mission 4 — LLM relevance judging ✅
 
 **Deliverable:** `results/relevance_judgements.csv` + committed `data/relevance-judgements.json`.
+
+**Status: ✅ COMPLETE (2026-07-30).** All three phases ran. Both deliverables exist:
+`evaluation/data/relevance-judgements.json` holds **2,007 labels** (`schema_version: 3`, committed
+`9412a69`), and `evaluation/results/relevance_judgements.csv` plus `results/relevance_by_score_band.csv`
+were written by the same run. **119 of 119 submitted chunks returned `finishReason: STOP`; zero blocked,
+zero completeness failures, zero unjudged pairs.** Full execution log in §14.9.
+
+**Three deviations from the steps below, all recorded in place and all deliberate:**
+
+1. **The output contract changed** (user-directed) — one marker `V` / `X` / `0` per id, no `reason` field.
+   Steps 4.1.2.1, 4.2.2.1, 4.2.3.1 and 4.2.5.1 are all affected. §14.9.2.
+2. **Step 4.3.2.3's 10% `unclear` ceiling tripped** — the full run measured **19.93%** — and the user
+   accepted it and chose to proceed name-only. §14.9.4.
+3. **Step 4.3.3.1's `--rescrape` was deliberately skipped**, with reasoning, under the step.
 
 > **Rule 7 applies in full.** All understanding, parsing and decision-making stays with the LLM. No code
 > may pre-filter, keyword-match, score, or hint. If the judge is wrong, the fix is the **prompt, worked
@@ -723,20 +806,29 @@ Design reasoning: model and API choices §11.2, **operating a lite-tier judge §
 prompt §11.5, cost §11.6. **The judge is `gemini-3.1-flash-lite`** — every step below is written against
 Google's `google-genai` SDK and Batch API, not Anthropic's.
 
-### Phase 4.1 — Plumbing (no LLM calls in anger)
+### Phase 4.1 — Plumbing (no LLM calls in anger) ✅
 
 *Goal: everything except the prompt, verifiable with two hand-written requests.*
 
-#### Task 4.1.1 — Config and text
+#### Task 4.1.1 — Config and text ✅
 
-- **Step 4.1.1.1** — Create `relevance_vars.py`: `JUDGE_MODEL='gemini-3.1-flash-lite'`,
+- **Step 4.1.1.1** ✅ — Create `relevance_vars.py`: `JUDGE_MODEL='gemini-3.1-flash-lite'`,
   `JUDGE_THINKING_LEVEL='minimal'` (the Gemini thinking control that replaces Anthropic's `effort`; it is
   also this model's documented default and thinking cannot be disabled — §11.2),
   `JUDGEMENT_CHUNK_SIZE=40`, `JUDGE_MAX_TOKENS`, `JUDGEMENT_CACHE_PATH`,
   `RELEVANCE_JUDGEMENTS_CSV_PATH`, verdict constants (`VERDICT_RELEVANT`, `VERDICT_IRRELEVANT`,
   `VERDICT_UNCLEAR`), cache keys, `REVIEW_SAMPLE_SEED`, `JUDGEMENT_SCHEMA_VERSION`. Split out of
   `vars.py` following the `scraper_vars.py` precedent.
-- **Step 4.1.1.2** — Create `relevance_strings.py`: the judge's **operational** literals — CLI help, CSV
+  ✅ Shipped, and the file sits at **exactly 100 lines** — which is why every later relevance constant
+  went into a focused sibling (§14.5, §14.9.2). **Two values have since moved:**
+  `JUDGEMENT_SCHEMA_VERSION` is now **3** (2 at Step 4.3.3.4's hash-pinning in `501e21c`, 3 at the
+  contract change, §14.9.2), and `JUDGEMENT_CHUNK_SIZE` **stayed at 40** through the whole run — it was
+  never halved, because §11.2.1(b)'s completeness assertion never fired. The three verdict constants are
+  unchanged and remain the canonical vocabulary; the wire markers that decode into them live in
+  `relevance_marker_vars.py`, never here.
+  **Step 4.2.2.3's `JUDGE_THINKING_LEVEL='minimal'` note about thinking being undisableable is now
+  measured and, in billing terms, moot** — `thoughtsTokenCount` was absent/0 on all 119 chunks. §11.2's ⚠️.
+- **Step 4.1.1.2** ✅ — Create `relevance_strings.py`: the judge's **operational** literals — CLI help, CSV
   headers, log lines, error messages. **Amended 2026-07-29 (Phase 4.2): the judge system prompt lives in
   its own file, `relevance_prompt_strings.py`.** With Phase 4.2's additions `relevance_strings.py` reached
   140 lines, over §13's 100-line rule, and the prompt is the correct seam: it is owned by Phase 4.3 and any
@@ -745,17 +837,22 @@ Google's `google-genai` SDK and Batch API, not Anthropic's.
   `sha256:7151a637…d97b4` before and after — and `relevance/judgement_cache.py` and
   `relevance/build_judgement_request.py` are its only two importers.
 
-#### Task 4.1.2 — Schema
+#### Task 4.1.2 — Schema ⚠️ (amended by the contract change)
 
-- **Step 4.1.2.1** — `schemas.py`: add frozen `ServiceJudgement(query, side, rank, service_name,
+- **Step 4.1.2.1** ⚠️ — `schemas.py`: add frozen `ServiceJudgement(query, side, rank, service_name,
   verdict, reason)`.
+  ⚠️ **Shipped without `reason`.** As of `JUDGEMENT_SCHEMA_VERSION = 3` the judge returns no free text at
+  all, so the field would be permanently empty — `ServiceJudgement` is
+  `(query, side, rank, service_name, verdict, model, judged_at)` and its docstring says why. `verdict` is
+  still always one of `relevance_vars.VERDICTS`; the wire marker is decoded before a record is built and
+  never reaches one. User-directed, §14.9.2.
 
-#### Task 4.1.3 — Dependency and credentials
+#### Task 4.1.3 — Dependency and credentials ✅
 
-- **Step 4.1.3.1** — `requirements.txt`: add `google-genai`, pinned, with a comment matching the file's
+- **Step 4.1.3.1** ✅ — `requirements.txt`: add `google-genai`, pinned, with a comment matching the file's
   existing convention. That is the current official package (`from google import genai`); the older
   `google-generativeai` package is not what these steps describe.
-- **Step 4.1.3.2** — `.env.example`: add `GEMINI_JUDGE_API_KEY=` (name only, never a value), and declare
+- **Step 4.1.3.2** ✅ — `.env.example`: add `GEMINI_JUDGE_API_KEY=` (name only, never a value), and declare
   it in `relevance_vars.py` as `os.getenv('GEMINI_JUDGE_API_KEY', '')`. The name is **purpose-scoped**,
   matching `retrieval/`'s `GEMINI_EMBEDDER_API_KEY`, so the judge's key and the embedder's key are
   independently settable and revocable. That makes explicit construction **mandatory**: `genai.Client()`
@@ -765,12 +862,18 @@ Google's `google-genai` SDK and Batch API, not Anthropic's.
   run that never judges does not trip it. Mirrors
   `retrieval/app/services/text_embedding/providers/gemini/get_gemini_client.py`; the error text lives in
   `relevance_strings.py`.
-- **Step 4.1.3.3** — Confirm `.env` is gitignored in `evaluation/.gitignore`. It is — no change, just
-  verify before the first key is written.
+  ✅ Shipped as specified — **and the purpose-scoped naming is what the 2026-07-30 blocker was.**
+  `evaluation/.env` had the key as `GEMINI_JUDGE_KEY`; it was renamed to `GEMINI_JUDGE_API_KEY` with the
+  value unchanged, and `--judge` ran on the first attempt afterwards. **The second half of this step's
+  intent is still unmet:** the value is byte-identical to `retrieval/`'s `GEMINI_EMBEDDER_API_KEY`, so the
+  two are not independently revocable, which is exactly what "independently settable and revocable" asked
+  for. §14.8.1's advice to split them was not acted on and is still open.
+- **Step 4.1.3.3** ✅ — Confirm `.env` is gitignored in `evaluation/.gitignore`. It is — no change, just
+  verify before the first key is written. ✅ Held through the run: no key reached `501e21c` or `9412a69`.
 
-#### Task 4.1.4 — LLM client
+#### Task 4.1.4 — LLM client ✅
 
-- **Step 4.1.4.1** — Create `clients/llm_client.py`: `submit_judgement_batch(requests)` — write the
+- **Step 4.1.4.1** ✅ — Create `clients/llm_client.py`: `submit_judgement_batch(requests)` — write the
   requests as a JSONL file, upload it via the File API, then `client.batches.create(model=JUDGE_MODEL,
   src=<uploaded_file.name>, config={'display_name': …})`; `wait_for_batch(job_name)` — poll
   `client.batches.get(name=job_name).state.name` until it leaves `JOB_STATE_PENDING` /
@@ -779,54 +882,76 @@ Google's `google-genai` SDK and Batch API, not Anthropic's.
   and yield one parsed JSONL line at a time. **Use the file path, not `src=[inline dicts]`** — inline
   requests carry no `key` and are correlated by position (§11.2, and the §12 row on positional keying).
   `try/except` is allowed here and in `run_evaluation.py` only.
-- **Step 4.1.4.2** — Smoke test with two hand-written requests carrying deliberately distinct `key`
+- **Step 4.1.4.2** ✅ — Smoke test with two hand-written requests carrying deliberately distinct `key`
   values. Confirm each result line can be joined back **by `key`** — the Gemini equivalent of Anthropic's
   `custom_id` — and **never index by position**. Ordering is not documented as guaranteed; treat it as
   arbitrary. This smoke test is also where the ⚠️ marker in §11.2 gets closed: verify the result lines
   actually echo `key` at all, and if a build does not echo it, stop and solve that before Phase 4.2.
-- **Step 4.1.4.3** — Confirm the per-request `generation_config` is honoured inside the batch — system
+- **Step 4.1.4.3** ✅ — Confirm the per-request `generation_config` is honoured inside the batch — system
   instruction, response schema/MIME type, `thinking_config`, `max_output_tokens`. Gemini has no
   batch-rejected-parameter equivalent of Anthropic's `fallbacks`, so there is nothing to omit; the check
   is the reverse one, that what you set is not silently ignored. Assert it by reading back one smoke-test
   response and confirming it is valid JSON matching the schema.
+  ✅ **Confirmed at scale by the real run, not only by the smoke test:** all 119 chunks came back as valid
+  JSON matching the response schema, joined by `key`, with `finishReason: STOP` on every one — so the
+  system instruction, the structured-output config and `max_output_tokens` were all honoured inside the
+  batch. `thinking_config` is the one setting whose effect is *invisible* in the response: at
+  `thinking_level: minimal` the run reported `thoughtsTokenCount` **absent or 0 on all 119 chunks**, which
+  closes §11.2's ⚠️ but cannot by itself distinguish "honoured" from "ignored".
 
-#### Task 4.1.5 — Judgement cache
+#### Task 4.1.5 — Judgement cache ✅
 
-- **Step 4.1.5.1** — Create `relevance/judgement_cache.py`: `load_judgement_cache()`,
+- **Step 4.1.5.1** ✅ — Create `relevance/judgement_cache.py`: `load_judgement_cache()`,
   `save_judgement_cache(judgements)`, `compute_prompt_checksum()`, and invalidation on
   `model` / `prompt_checksum` / `schema_version` mismatch. Model it on
   `ground_truth/ground_truth_cache.py`.
-- **Step 4.1.5.2** — Key strictly on `(query, service_name)` — never rank, never side. Both change with
+- **Step 4.1.5.2** ✅ — Key strictly on `(query, service_name)` — never rank, never side. Both change with
   retrieval config; the verdict does not.
-- **Step 4.1.5.3** — Verify: save/load round trip, and that editing the prompt invalidates the cache.
+  ✅ **Exercised for real on 2026-07-30**, and this is the one place the design paid off visibly: of the
+  2,007 pairs in the re-frozen arm, **40 were served straight from cache** and only **1,967 were sent** —
+  those 40 are pairs whose `(query, service_name)` had already been judged under the same model, prompt
+  checksum and schema version during calibration, and they survived the *arm* change untouched, which is
+  precisely the property §11.3 claims.
+- **Step 4.1.5.3** ✅ — Verify: save/load round trip, and that editing the prompt invalidates the cache.
 
-### Phase 4.2 — The judge
+### Phase 4.2 — The judge ✅
 
-#### Task 4.2.1 — Items and chunks
+#### Task 4.2.1 — Items and chunks ✅
 
-- **Step 4.2.1.1** — Create `relevance/build_judgement_items.py`: read `unexpected_retrieved.json`
+- **Step 4.2.1.1** ✅ — Create `relevance/build_judgement_items.py`: read `unexpected_retrieved.json`
   and `missed_ground_truth.json` **from `JUDGE_INPUT_DIR` (`evaluation/results-judge-frozen/`), not
   from `results/`**, and emit a flat item list carrying `(query, side, rank, service_name)` plus the
   five carried scores. **Amended 2026-07-29 — see §14.5.** `results/` is overwritten by any
   concurrent run, and §14.4.3 proves the same config does not reproduce the same pair set, so the
   frozen file content is the only thing that identifies the judged dataset. Reading `results/` here
   would let a run of a different arm silently redefine what is being judged mid-mission.
-- **Step 4.2.1.2** — Create `relevance/chunk_judgement_items.py`: group by `(query, side)`, split each
-  group at `JUDGEMENT_CHUNK_SIZE`. **Measured on the frozen snapshot: 2,148 pairs → 115
-  `(query, side)` groups → 127 chunks at size 40** (63 unexpected-side, 64 missed-side; largest 40,
-  smallest 1). The earlier "~440 chunks" figure was computed for the 17,529-pair baseline arm and does
-  not apply — §14.3.
+- **Step 4.2.1.2** ✅ — Create `relevance/chunk_judgement_items.py`: group by `(query, side)`, split each
+  group at `JUDGEMENT_CHUNK_SIZE`. ~~**Measured on the frozen snapshot: 2,148 pairs → 115
+  `(query, side)` groups → 127 chunks at size 40**~~ (63 unexpected-side, 64 missed-side; largest 40,
+  smallest 1) — **that is the superseded `0.3025` arm.** The earlier "~440 chunks" figure was computed for
+  the 17,529-pair baseline arm and does not apply — §14.3.
+  ✅ **Re-measured on the re-frozen `results-arm4-v4-gemini` snapshot (§14.9.1): 2,007 pairs → 123 chunks
+  at size 40**, recorded in `judge_input_manifest.json`. Of those, **119 were actually submitted** — the
+  other 4 chunks' pairs were wholly covered by the 40 cache hits. The **grouping order matters for cost**:
+  because the split is by `(query, side)` *first*, chunks are not full at 40 — the mean is **16.3 pairs**,
+  which is the single largest error in §11.6's pre-run estimate (§14.9.6).
 
-#### Task 4.2.2 — Request construction
+#### Task 4.2.2 — Request construction ⚠️ (contract change)
 
-- **Step 4.2.2.1** — Create `relevance/judgement_schema.py`: the structured-output JSON schema. Gemini's
+- **Step 4.2.2.1** ⚠️ — Create `relevance/judgement_schema.py`: the structured-output JSON schema. Gemini's
   supported subset is **wider** than Anthropic's, and the constraints invert (§11.2): `additionalProperties`
   is *allowed but not required*, and `enum` / `minItems` / `maxItems` / `minimum` / `maximum` **are**
   supported. So: put every field in `required`, use `enum` on `verdict` to pin the three verdict
   constants, and keep the schema shallow — the API may reject very large or deeply nested schemas.
   **Unsupported keywords are silently ignored, not rejected**, so never rely on a constraint you have not
   seen take effect; Step 4.2.3.2's completeness assertion is the real guard.
-- **Step 4.2.2.2** — Create `relevance/build_judgement_request.py`: one batch request per chunk — a
+  ⚠️ **Shipped with a different entry shape than this step assumes.** The schema pins each entry to
+  `{id: integer, marker: string}` with `enum` on `marker` over the three **wire markers** `V` / `X` / `0`
+  from `relevance_marker_vars.py` — **not** `enum` over the three spelled-out verdict constants, and with
+  **no `reason` property at all**. Everything else in this step held as written: both fields in `required`,
+  the schema kept shallow (object → array → object → scalars), and no constraint trusted to have taken
+  effect. User-directed; the reasoning is §14.9.2 and the deviation is documented in the code itself.
+- **Step 4.2.2.2** ✅ — Create `relevance/build_judgement_request.py`: one batch request per chunk — a
   `{"key": <chunk id>, "request": {...}}` JSONL line whose request carries the system instruction, a user
   payload of `{query, services: [{id, name}]}`, the structured-output config (response MIME type
   `application/json` + the Step 4.2.2.1 schema), `thinking_config` from `JUDGE_THINKING_LEVEL`, and
@@ -834,43 +959,72 @@ Google's `google-genai` SDK and Batch API, not Anthropic's.
   Anthropic-style `cache_control`: the ~600-token system prompt is far below every published minimum
   cacheable prefix, implicit caching is already on by default, and the input side of this job costs cents
   (§11.2, §11.6).
-- **Step 4.2.2.3** — Thinking: set `thinking_config: {thinking_level: JUDGE_THINKING_LEVEL}` and leave it
+  ✅ Shipped, and the decision is vindicated by measurement: the system prompt is **501 tokens** (measured
+  at calibration, against the ~600 assumed here), an order of magnitude under any published minimum
+  cacheable prefix, and the **whole input side of the run cost $0.0299 list** — 119,387 prompt tokens.
+  There was never anything to optimise.
+- **Step 4.2.2.3** ✅ — Thinking: set `thinking_config: {thinking_level: JUDGE_THINKING_LEVEL}` and leave it
   at `minimal`. Thinking **cannot be disabled** on any Gemini 3 model — `minimal` reduces it, it does not
   remove it — and `minimal` is already this model's documented default. `thinking_budget` is the Gemini
   2.5 control and must not be used here. Thinking tokens are billed at the output rate, so
   `thinking_level` is the cost lever that `effort` used to be; size `JUDGE_MAX_TOKENS` with headroom
   regardless of whether they consume the output cap (§11.2's ⚠️).
+  ✅ **Shipped at `minimal` and never changed — and the premise turned out to be wrong in the cheap
+  direction.** Measured over all 119 chunks: `thoughtsTokenCount` **absent or 0 on every one**, total
+  **0** thinking tokens billed. "Thinking cannot be disabled" may still be true of the model's internals,
+  but at `minimal` it is not true of the bill, and the headroom in `JUDGE_MAX_TOKENS` was never needed —
+  no chunk hit `MAX_TOKENS`. §11.2's ⚠️ is closed there.
 
-#### Task 4.2.3 — Result parsing
+#### Task 4.2.3 — Result parsing ⚠️ (contract change)
 
-- **Step 4.2.3.1** — Create `relevance/parse_judgement_result.py`: batch result → `ServiceJudgement`
+- **Step 4.2.3.1** ⚠️ — Create `relevance/parse_judgement_result.py`: batch result → `ServiceJudgement`
   list, joining back to items via the request **`key`** (Gemini's `custom_id` equivalent) and the echoed
   per-item `id`. Each result line is either a `GenerateContentResponse` or a status object, so branch on
   which one it is before reading any candidate.
-- **Step 4.2.3.2** — Assert every submitted `key` came back and every item id inside each chunk got
+  ⚠️ **Shipped with one extra responsibility: this file is the decode boundary.** Each entry's `marker`
+  is mapped through `relevance_marker_vars.VERDICT_BY_MARKER` into the canonical `relevant` /
+  `irrelevant` / `unclear` vocabulary **before** a `ServiceJudgement` is constructed, so no raw `V` / `X` /
+  `0` ever reaches the cache, the CSV, `summary.json`, the review sheet or κ. The wire field is
+  deliberately named `marker`, not `verdict`, so any code reaching past the boundary fails loudly rather
+  than writing a single letter into a verdict column. The `key` join and the branch-before-reading-a-
+  candidate rule are unchanged and held on all 119 chunks. §14.9.2.
+- **Step 4.2.3.2** ✅ — Assert every submitted `key` came back and every item id inside each chunk got
   exactly one verdict. Raise on any gap — a silently dropped chunk looks like valid output, and on a
   lite-tier model id omission and id drift on long chunks are the *expected* failure, not an exotic one
   (§11.2.1(b)). When this fires repeatedly, halve `JUDGEMENT_CHUNK_SIZE` before touching anything else.
-- **Step 4.2.3.3** — Branch on `finishReason` explicitly. **Only `STOP` yields a verdict.** Treat
+  ✅ **Shipped as `relevance/assert_judgement_completeness.py`, and it never fired.** Over the full run
+  **119 of 119 keys came back and every item id in every chunk got exactly one verdict** — zero gaps, so
+  `JUDGEMENT_CHUNK_SIZE` stayed at 40 and was never halved. Worth stating plainly because §11.2.1(b) and
+  §12 both predicted id drift as the *expected* failure of a lite-tier judge on 40-item lists: **it did not
+  happen once.** The one-character marker contract (§14.9.2) plausibly helped, but that is a hypothesis —
+  the measurement is only that the assertion did not fire.
+- **Step 4.2.3.3** ✅ — Branch on `finishReason` explicitly. **Only `STOP` yields a verdict.** Treat
   `MAX_TOKENS`, `SAFETY`, `RECITATION`, `PROHIBITED_CONTENT`, `BLOCKLIST`, `SPII`, `LANGUAGE`, `OTHER` and
   anything unrecognised as unjudged: log the chunk and its reason, write no verdict, count it. There is no
   `refusal` reason in Gemini — a safety block surfaces as `finishReason: SAFETY` on the response side.
-- **Step 4.2.3.4** — Handle the **no-candidate** case separately: a prompt-side block returns
+  ✅ Shipped. **Measured on the full run: `finishReason` was `STOP` on all 119 chunks** — no `MAX_TOKENS`,
+  no `SAFETY`, no other value, so **zero pairs were counted unjudged**. §12's row on Hebrew
+  social-services text (abuse, addiction, mental health) tripping a safety filter did **not** materialise
+  on this dataset; `safetySettings` were left at default throughout and never needed loosening.
+- **Step 4.2.3.4** ✅ — Handle the **no-candidate** case separately: a prompt-side block returns
   `promptFeedback.blockReason` and **no `candidates` at all**, so never index `candidates[0]` blind — that
   is an `IndexError`/`AttributeError` on a chunk that should have been logged as unjudged. Also handle the
   per-line `error` object the Batch API returns for a failed request. Log the blocked chunk's `key` so the
   affected pairs are identifiable rather than just missing (see the §12 row).
 
-#### Task 4.2.4 — Orchestrator
+#### Task 4.2.4 — Orchestrator ✅
 
-- **Step 4.2.4.1** — Create `relevance/judge_relevance.py`: items → drop cache hits → chunk → submit →
+- **Step 4.2.4.1** ✅ — Create `relevance/judge_relevance.py`: items → drop cache hits → chunk → submit →
   wait → parse → merge into cache → save → return the full judgement list.
+  ✅ Ran end to end on 2026-07-30: 2,007 items in, **40 dropped as cache hits**, 1,967 chunked into 119
+  requests, one batch job (`batches/6rvt6h1tqx89ux9z3bacqamcjtlmsnuum412`, `JOB_STATE_SUCCEEDED`, **91.8 s**
+  wall clock), all parsed, merged and saved. §14.9.3.
 
-#### Task 4.2.5 — The final table
+#### Task 4.2.5 — The final table ⚠️ (one column dropped)
 
 *This is the deliverable the whole plan converges on: every score next to its verdict.*
 
-- **Step 4.2.5.1** — Create `report/write_relevance_csv.py` writing
+- **Step 4.2.5.1** ⚠️ — Create `report/write_relevance_csv.py` writing
   `results/relevance_judgements.csv` with exactly these columns, in this order:
 
   ```
@@ -879,69 +1033,161 @@ Google's `google-genai` SDK and Batch API, not Anthropic's.
   verdict, reason, model, judged_at
   ```
 
-- **Step 4.2.5.2** — Scores come from the two diff JSON files (Phase 2.1 → 2.2 → 3.1), never re-derived.
+  ⚠️ **Shipped with 12 columns, not 13: `reason` is gone.** The judge produces no free text as of
+  `JUDGEMENT_SCHEMA_VERSION = 3` (§14.9.2), so the column would have been blank on all 2,007 rows. The
+  emitted header, read off the file, is
+  `query, side, rank, service_name, retrieval_score, cosine_score, cosine_score_ratio, lexical_score,
+  semantic_score, verdict, model, judged_at` — everything else in this step, including the order, is
+  exactly as written.
+- **Step 4.2.5.2** ✅ — Scores come from the two diff JSON files (Phase 2.1 → 2.2 → 3.1), never re-derived.
   On the `missed_ground_truth` side they are empty by construction (§11.9); write blank cells, not zeroes.
-- **Step 4.2.5.3** — Column order is deliberate: identity, then scores in the order the FE badges read
+  ✅ Confirmed on the emitted file: row 1 carries `lexical_score` as an **empty cell**, not `0`, alongside
+  populated `retrieval_score` / `cosine_score` / `cosine_score_ratio` / `semantic_score` — the same
+  null-not-zero rule §3.2 sets, now visible in the deliverable itself.
+- **Step 4.2.5.3** ✅ — Column order is deliberate: identity, then scores in the order the FE badges read
   them (fused → cosine → ratio → bm25), then the verdict. It should be pivotable in Excel without
   rearranging.
-- **Step 4.2.5.4** — Reuse the existing `side` constants so the table joins to `service_diff.csv` on
+- **Step 4.2.5.4** ✅ — Reuse the existing `side` constants so the table joins to `service_diff.csv` on
   `(query, side, rank)`.
-- **Step 4.2.5.5** — Verify the full chain on one query: pick a service from the mock FE, confirm its four
+- **Step 4.2.5.5** ✅ — Verify the full chain on one query: pick a service from the mock FE, confirm its four
   badge values appear unchanged in this CSV alongside a verdict. **This is the "passes all the way"
   check** — retrieval → client → evaluation → diff JSON → judge → CSV.
-- **Step 4.2.5.6** — Assert row count == judged pairs, and that no row has a verdict without an identity
+  ✅ **Closed against the frozen JSON rather than the mock FE**, for the reason Step 2.2.4.3 already
+  records: the mock FE renders no service-level badges at all, so the raw values are the stricter target.
+  The chain is now visible in one line of the deliverable — `relevance_judgements.csv` row 1,
+  `לחשב מסלול מחדש` at rank 1, carries `retrieval_score` `0.015873015873015872`, `cosine_score` `0.741703`,
+  `cosine_score_ratio` `0.9620966331812907`, `lexical_score` blank, `semantic_score` `0.8708515` **and**
+  `verdict` `relevant`, `model` `gemini-3.1-flash-lite`, `judged_at` `2026-07-30T09:56:53+00:00`.
+- **Step 4.2.5.6** ✅ — Assert row count == judged pairs, and that no row has a verdict without an identity
   or an identity without a verdict.
+  ✅ The label file holds **2,007** entries and the verdict tally across it is **796 relevant / 811
+  irrelevant / 400 unclear = 2,007**, with `unjudged` 0 on both sides in `summary.json`'s `relevance`
+  block. Every entry carries exactly one key, `verdict`.
 
-#### Task 4.2.6 — Score-banded verdict summary
+#### Task 4.2.6 — Score-banded verdict summary ✅
 
 *The reason for carrying the scores: it answers "where in the score range does the judge disagree with
 the golden set?" — which is exactly what picks the operating point in Phase 7.1. Interpretation in §11.10.*
 
-- **Step 4.2.6.1** — Create `report/build_score_band_table.py`: bucket the judged `unexpected_retrieved`
+- **Step 4.2.6.1** ✅ — Create `report/build_score_band_table.py`: bucket the judged `unexpected_retrieved`
   rows by `cosine_score` band (e.g. 0.05-wide bands) and report per band the count and the share judged
   `relevant` / `irrelevant` / `unclear`.
-- **Step 4.2.6.2** — Do the same for `cosine_score_ratio`, since that is what `SEMANTIC_SCORE_RATIO`
+- **Step 4.2.6.2** ✅ — Do the same for `cosine_score_ratio`, since that is what `SEMANTIC_SCORE_RATIO`
   actually cuts on — the band table over the ratio *is* the threshold-selection evidence.
-- **Step 4.2.6.3** — Write it to `results/relevance_by_score_band.csv` and print it to console.
-- **Step 4.2.6.4** — Read the shape before Phase 7.1 and record which of the three §11.10 cases it is.
+- **Step 4.2.6.3** ✅ — Write it to `results/relevance_by_score_band.csv` and print it to console.
+- **Step 4.2.6.4** 🟡 — Read the shape before Phase 7.1 and record which of the three §11.10 cases it is.
+  🟡 **The table exists with real verdicts for the first time; classifying it is deliberately left to
+  Mission 7.** Read off `evaluation/results/relevance_by_score_band.csv` (verified on disk 2026-07-30, all
+  1,096 unexpected-side rows, `SCORE_BAND_WIDTH = 0.05`):
 
-#### Task 4.2.7 — CLI
+  | `cosine_score_ratio` band | rows | `relevant` share |
+  | --- | ---: | ---: |
+  | 0.85–0.90 | 69 | 0.159 |
+  | 0.90–0.95 | 508 | 0.278 |
+  | 0.95–1.00 | 475 | 0.522 |
+  | 1.00–1.05 | 44 | 0.682 |
 
-- **Step 4.2.7.1** — `run_evaluation.py`: add `--judge` and `--judge-limit N`. Judging is **opt-in**;
+  Two observations, and no verdict: the `relevant` share **rises monotonically with the ratio**, which is
+  not §11.10's "flat across all bands" case; and the arm now populates **4 ratio bands and 5 `cosine_score`
+  bands** rather than the 3-and-3 §14.5 measured on the superseded snapshot, so 0.05 is less hopelessly
+  coarse than it was — though re-running at `SCORE_BAND_WIDTH = 0.01` before Phase 7.1 is still the
+  recommendation there. **These shares inherit §12's gate exactly as the rates do**: they are the judge's
+  opinion, unaudited, and must not be used to pick an operating point before Task 6.2.3 closes.
+
+#### Task 4.2.7 — CLI ✅
+
+- **Step 4.2.7.1** ✅ — `run_evaluation.py`: add `--judge` and `--judge-limit N`. Judging is **opt-in**;
   the default run must stay free, offline and reproducible.
-- **Step 4.2.7.2** — When `--judge-limit` is set, `log()` exactly how many pairs were skipped. A
+- **Step 4.2.7.2** ✅ — When `--judge-limit` is set, `log()` exactly how many pairs were skipped. A
   silently truncated judgement set reads as full coverage in the M5 statistics.
+  ✅ Shipped — **and Step 4.3.2.3 is where its one sharp edge showed up.** `--judge-limit` truncates the
+  item list **by position**, so the calibration slice was not a random sample of the dataset: it was the
+  first 200 items, which came entirely from the first 15 queries and entirely from the unexpected side.
+  The log line is honest about *how many* were skipped but says nothing about *which*, and that is what
+  made the 200-pair `unclear` measurement unrepresentative. §14.9.4.
 
-### Phase 4.3 — Calibrate, then run
+### Phase 4.3 — Calibrate, then run ✅
 
-#### Task 4.3.1 — Token baseline
+#### Task 4.3.1 — Token baseline ✅
 
-- **Step 4.3.1.1** — Run `client.models.count_tokens(model=JUDGE_MODEL, contents=…).total_tokens` on one
+- **Step 4.3.1.1** ✅ — Run `client.models.count_tokens(model=JUDGE_MODEL, contents=…).total_tokens` on one
   representative chunk. Record actual input tokens against the §11.6 estimate. Do not use `tiktoken` —
   it is OpenAI's tokenizer and undercounts Hebrew badly, and Gemini's tokenizer is not Anthropic's either,
   so §11.6's per-pair rate is inherited, not measured. After the first real chunk completes, also record
   `usageMetadata.thoughtsTokenCount` next to `candidatesTokenCount`: that is what closes the §11.2 ⚠️ on
   whether thinking tokens consume `max_output_tokens`, and it is the output-side input to §11.6.
+  ✅ **Done, and it corrected three of §11.6's four assumptions.** Measured: the **system prompt is 501
+  tokens** (estimate ~600); a Hebrew service name is **~25 tokens** (estimate ~20); `thoughtsTokenCount`
+  is **0 on all 119 chunks**, closing §11.2's ⚠️ in the cheap direction. The largest estimate error was
+  none of those — it was assuming chunks are full at 40 when the mean is **16.3**, because
+  `chunk_judgement_items` groups by `(query, side)` first, which multiplies the amortised prompt cost per
+  pair. Full actuals and the estimate-vs-measured comparison in §11.6 and §14.9.6.
 
-#### Task 4.3.2 — Prompt iteration on a slice
+#### Task 4.3.2 — Prompt iteration on a slice ⚠️ (ceiling tripped and accepted)
 
-- **Step 4.3.2.1** — Run `--judge --judge-limit 200`. Cost: a few cents.
-- **Step 4.3.2.2** — Measure the `unclear` rate and read 20 verdicts by hand.
-- **Step 4.3.2.3** — If `unclear` > 10%: this is the name-only-vs-enriched decision (§11.5) — resolve it
-  before iterating further, rather than tuning the prompt around missing information.
-- **Step 4.3.2.4** — Revise **prompt only** (rule 7) and repeat until `unclear` ≤ 10% and the
-  spot-check reads correctly.
+- **Step 4.3.2.1** ✅ — Run `--judge --judge-limit 200`. Cost: a few cents.
+  ✅ Ran. Actual cost of the *whole* job afterwards was **$0.037 batched**, so the slice was a fraction of
+  a cent.
+- **Step 4.3.2.2** ✅ — Measure the `unclear` rate and read 20 verdicts by hand.
+  ✅ The slice measured **15.50% `unclear`** — already over the ceiling.
+- **Step 4.3.2.3** ⚠️ **TRIPPED, AND THE USER ACCEPTED IT** — If `unclear` > 10%: this is the
+  name-only-vs-enriched decision (§11.5) — resolve it before iterating further, rather than tuning the
+  prompt around missing information.
+  ⚠️ **It tripped twice over, and the decision went the other way.** The slice said 15.50%; the **full run
+  measured 24.09% on the unexpected side, 14.93% on the missed side, 19.93% overall** — **2.4× this step's
+  10% ceiling**. **The user decided to proceed name-only: no enrichment, no model escalation, no prompt
+  tuning.** Three things must travel with that decision:
+  - **The slice was not representative, and the mechanism is known.** `--judge-limit` truncates **by
+    position** (Step 4.2.7.2), so the 200 pairs came from the **first 15 queries only** and **entirely from
+    the unexpected side** — the side that then measured 24.09%. A slice cannot be read as an estimate of
+    the dataset when it is drawn this way.
+  - **The consequence is a shrunken denominator, and it is large.** Rate denominators are **832 of 1,096**
+    unexpected and **775 of 911** missed — 400 pairs carry no usable verdict. And **47 of the M6 sample's
+    200 rows are `unclear`**, so nearly a quarter of the human's 2–3 hours will be spent auditing the
+    judge's abstentions rather than its judgements.
+  - **§11.6's remedy remains available and is now *more* attractive, not less.** Enriching with
+    `srm_services.description` (populated 94.3%) costs about **$0.5** — and at 19.93% `unclear` it buys
+    back roughly twice what it would have at 15.5%. `unclear` was **never folded into `irrelevant`**
+    (Step 5.1.1.3), so nothing about proceeding name-only corrupts the statistics; it only narrows them.
+- **Step 4.3.2.4** ⚠️ **NOT PERFORMED — superseded by the decision above.** Revise **prompt only** (rule 7)
+  and repeat until `unclear` ≤ 10% and the spot-check reads correctly.
+  ⚠️ No prompt revision cycle was run: the user chose to proceed rather than iterate. **The step is not
+  wrong and is not withdrawn** — if Task 6.2.3 later fails, this is still the first move, followed by
+  §11.2.1(d)'s single-escalation rule. Note the prompt as shipped is already the "instructions only"
+  version rule 8 requires and explicitly tells the model that `0` is a legitimate answer and preferable to
+  guessing, which is one reason the `unclear` share is high: it was asked for.
 
-#### Task 4.3.3 — Full run
+#### Task 4.3.3 — Full run ✅
 
-- **Step 4.3.3.1** — Run `--rescrape` first. The ground-truth cache only invalidates on CSV checksum or
-  base-URL change, never on staging content changing, so refresh it immediately before judging.
-- **Step 4.3.3.2** — Full `--judge` over the frozen arm: **2,145 pairs (~$0.09 batched)** on the current
-  arm, **17,529 (~$0.76 batched)** on the baseline arm. §11.6 prices both; §14.3 is why the arm must be
-  chosen first.
-- **Step 4.3.3.3** — Commit `data/relevance-judgements.json`. It is the reproducible labelled dataset
+- **Step 4.3.3.1** ⚠️ **DELIBERATELY SKIPPED — reasoned deviation.** Run `--rescrape` first. The
+  ground-truth cache only invalidates on CSV checksum or base-URL change, never on staging content
+  changing, so refresh it immediately before judging.
+  ⚠️ **Not run, on purpose.** This step predates the §14.5 freeze and its premise no longer holds: the
+  judging path reads **only** the two content-hash-pinned files in `results-judge-frozen/` and **never
+  consumes ground truth at all**, so a rescrape cannot change which pairs are judged. Running it would have
+  refreshed the ground-truth cache — changing what a *future* evaluation run measures — without touching
+  the frozen bytes the labels are pinned to, i.e. it would have added drift between the labels' arm and the
+  live arm for no benefit to this mission. **The step remains correct for its original context** (judging
+  straight out of a live `results/` run) and should be reinstated the moment the frozen-snapshot design is
+  abandoned. §12's "staging data drifts" row is therefore **still open for the golden set**, just not for
+  this label set. `scrape_date` is recorded as **2026-07-29** in both the manifest and the label file, so
+  the staleness is stated rather than hidden.
+- **Step 4.3.3.2** ✅ — Full `--judge` over the frozen arm: ~~**2,145 pairs (~$0.09 batched)** on the
+  current arm, **17,529 (~$0.76 batched)** on the baseline arm~~. §11.6 prices both; §14.3 is why the arm
+  must be chosen first.
+  ✅ **Ran 2026-07-30 over the re-frozen `results-arm4-v4-gemini` snapshot — a third arm, neither of the
+  two priced here: 2,007 pairs, of which 40 came from cache and 1,967 were sent as 119 chunks.
+  Actual cost $0.0739 list / $0.0370 batched** (§11.6), against the ~$0.09 batched this step projected for
+  a comparably-sized arm. **119/119 chunks returned, every one `finishReason: STOP`, zero blocked, zero
+  unjudged.** Batch job `batches/6rvt6h1tqx89ux9z3bacqamcjtlmsnuum412`, `JOB_STATE_SUCCEEDED`, **91.8 s**
+  of batch wall clock — three orders of magnitude inside the 24 h target and the 48 h expiry.
+- **Step 4.3.3.3** ✅ — Commit `data/relevance-judgements.json`. It is the reproducible labelled dataset
   and lets a clean checkout compute adjusted metrics with no API key.
-- **Step 4.3.3.4** — Record, alongside the labels in `data/relevance-judgements.json`: **the SHA-256
+  ✅ Committed as **`9412a69` "Add the full LLM relevance judgement dataset (2,007 labelled pairs)"** on
+  `fix-embedding-text-and-reindex` — **one file, nothing else in the commit**, which is what makes the
+  dataset independently revertible. (The file first appeared in `501e21c` carrying calibration-era
+  entries; `9412a69` is the full run.)
+- **Step 4.3.3.4** ✅ — Record, alongside the labels in `data/relevance-judgements.json`: **the SHA-256
   of both frozen input files** (`unexpected_retrieved.json`, `missed_ground_truth.json`, as recorded in
   `results-judge-frozen/judge_input_manifest.json`), plus the retrieval configuration
   (`CANDIDATE_POOL_SIZE`, weights, all cutoffs) and the scrape date. **Amended 2026-07-29 — the two
@@ -950,24 +1196,39 @@ the golden set?" — which is exactly what picks the operating point in Phase 7.
   *dataset*; only the file content does. Adding these two keys changes the cache payload shape, so
   **bump `JUDGEMENT_SCHEMA_VERSION`** when this lands (§11.3) — Phase 4.2 deliberately left the
   payload untouched, since no labels exist yet to invalidate.
+  ✅ **Implemented in `501e21c`, before today's execution session — not written today.** The committed
+  payload carries, in this key order: `model`, `prompt_checksum`, `schema_version`, `input_sha256`,
+  `scrape_date`, `retrieval_config`, `judgements`. `input_sha256` holds both frozen hashes
+  (`unexpected_retrieved.json` → `sha256:2db5f5d9…4157f7e`, `missed_ground_truth.json` →
+  `sha256:f30a10cc…ce69a5a7`) and they **match `results-judge-frozen/` on disk**, verified 2026-07-30.
+  `JUDGEMENT_SCHEMA_VERSION` went to **2** with this change in `501e21c`; **only the 2 → 3 bump is
+  today's**, and it belongs to the contract change (§14.9.2).
+  **One deliberate weakening of the config half.** `retrieval_config` is **evidence-derived** — read from
+  what the re-frozen arm's own artifacts establish — so `SEMANTIC_SCORE_RATIO` and
+  `KEEP_LEXICAL_ONLY_DOCUMENTS` are recorded as **`null`**: they cannot be established from the arm's own
+  data, and they were **deliberately not carried over from the old arm's manifest**. That is the honest
+  encoding of this step's own amendment: the config identifies the arm, the hashes identify the dataset,
+  and inventing two config values to make the block look complete would corrupt the only half that is
+  load-bearing.
 
 ---
 
-## 8. Mission 5 — relevance statistics
+## 8. Mission 5 — relevance statistics ✅
 
 **Deliverable:** a `relevance` block in `summary.json`, a console table, a dashboard panel.
 
 Definitions in §11.7.
 
-**Implementation status: code shipped 2026-07-29, verified on synthetic labels only.** Every step
-below is built and driven end to end, but `GEMINI_JUDGE_API_KEY` is unset and Phase 4.3 has not run,
-so `data/relevance-judgements.json` does not exist and **no number this mission emits is real yet**.
-The chain was proven against synthetic verdicts laid over the real 2,148 frozen identities — see
-§14.6, which also records what that does and does not establish.
+**Implementation status: code shipped 2026-07-29, verified against the REAL labels 2026-07-30.** Every
+step below is built, driven end to end, and re-verified on the 2,007 committed labels paired with the
+frozen `results-arm4-v4-gemini` snapshot — **§14.6.1**, which supersedes §14.6's synthetic-only
+verification and lists which of its figures are stale. Phase 4.3 has run; the numbers this mission
+emits are real. **They are still not quotable:** per §12 and §3.2 no adjusted metric may be presented
+without Mission 6's agreement number, and that gate is open.
 
-### Phase 5.1 — Compute ✅ (code)
+### Phase 5.1 — Compute ✅ (code + measured)
 
-#### Task 5.1.1 — Verdict statistics ✅ (code)
+#### Task 5.1.1 — Verdict statistics ✅ (code + measured)
 
 - **Step 5.1.1.1** ✅ — Create `metrics/aggregate_relevance_statistics.py`: per side, the counts of
   `relevant` / `irrelevant` / `unclear` / unjudged, plus `missed_truly_irrelevant_rate` and
@@ -984,7 +1245,7 @@ The chain was proven against synthetic verdicts laid over the real 2,148 frozen 
   Shipped and tested by counter-example: relabelling every `unclear` as `irrelevant` moves the
   bucket, the numerator and the denominator, which is what proves nothing merges them.
 
-#### Task 5.1.2 — Adjusted metrics ✅ (code)
+#### Task 5.1.2 — Adjusted metrics ✅ (code + measured)
 
 - **Step 5.1.2.1** ✅ — Create `metrics/adjusted_set_metrics.py`:
   `adjusted_precision_at_returned = (hits + unexpected_judged_relevant) / |R|`,
@@ -1000,9 +1261,9 @@ The chain was proven against synthetic verdicts laid over the real 2,148 frozen 
   the same 59 queries `aggregate_set_metrics` averages, so the adjusted and unadjusted pairs are
   comparable and the difference between them is the judge's contribution alone.
 
-### Phase 5.2 — Surface ✅ (code)
+### Phase 5.2 — Surface ✅ (code + measured)
 
-#### Task 5.2.1 — `summary.json` ✅ (code)
+#### Task 5.2.1 — `summary.json` ✅ (code + measured)
 
 - **Step 5.2.1.1** ✅ — `report/serialize_summary.py`: add a `relevance` **sibling** block next to
   `set_metrics` and `count_stats`. Shipped, spliced in between `count_stats` and `meta`. The key is
@@ -1014,16 +1275,33 @@ The chain was proven against synthetic verdicts laid over the real 2,148 frozen 
   Closed: no new key enters `METRIC_KEYS` / `SET_METRIC_KEYS` / `COUNT_STAT_KEYS`, and every per-k
   metrics dict still holds exactly `METRIC_KEYS` after the block is added.
 - **Step 5.2.1.3** ✅ — Add a regression check asserting `overall_score` is byte-identical with and
-  without `--judge`. Proven structurally, since `--judge` cannot be run without a key:
+  without `--judge`. ~~Proven structurally, since `--judge` cannot be run without a key:~~
   `compute_overall_score` reads only `aggregate['metrics']`, and `build_summary` called with and
-  without a `relevance` block yields `repr()`-identical `0.3025234053500492` both ways — the frozen
+  without a `relevance` block yields `repr()`-identical ~~`0.3025234053500492`~~ both ways — the frozen
   manifest's value to the last digit. See §14.6.
+  ✅ **Re-proven 2026-07-30 on the re-frozen arm**, where the identical value is
+  **`0.36935235358267293`** — again equal to `judge_input_manifest.json` to the last digit, and again
+  differing on the `relevance` key alone (§14.6.1). `--judge` has since actually run, so the structural
+  proof is no longer the only evidence.
+  > **⚠️ Presentation hazard in `results/summary.json`, and it is unavoidable — read this before
+  > differencing anything in that file.** A judged run's `summary.json` **mixes two arms**. Its
+  > `overall_score` is **0.31548807134154333**, a **v3-local** number produced by the live evaluation
+  > stage, while its `relevance` block describes the **v4-gemini frozen arm** whose `overall_score` is
+  > **0.36935235358267293**. `--judge` cannot skip the evaluation stage: `run_evaluation.py:main()` runs
+  > load → evaluate → `write_results` **unconditionally**, and only `judge_and_rewrite_summary` is gated on
+  > `args.judge`. So this happens on **every** judged run while `retrieval/.env` points at a different arm
+  > than the frozen one. **Never difference adjacent keys inside that one file**: doing so reads
+  > `adjusted_precision_at_returned` 0.589105185662881 against the *live* `precision_at_returned`
+  > 0.19556270779927906 and yields **+0.3935**, when the correct comparison — against the frozen arm's own
+  > `precision_at_returned` **0.23972125266925076** — is **+0.3494**. Both remain **gated** either way.
 
-#### Task 5.2.2 — Console ✅ (code)
+#### Task 5.2.2 — Console ✅ (code + measured)
 
 - **Step 5.2.2.1** ✅ — Create `report/build_relevance_table.py`. One table, so the rates are read in
   sight of the bucket counts they were computed over. Counts are rendered as strings, because
-  `render_table`'s float formatter would otherwise print a pair count of 1,180 as `1180.0000`.
+  `render_table`'s float formatter would otherwise print a pair count of ~~1,180~~ **1,096** as
+  `1096.0000` (the example count moved with the re-freeze; the behaviour did not). ✅ Verified on the real
+  block 2026-07-30: 17 rows, 11 counts as strings, each rate carrying its own numerator and denominator.
 - **Step 5.2.2.2** ✅ — `run_evaluation.py`: print it via `render_titled_table` only when the block exists.
 - **Step 5.2.2.3** ⚠️ **amended** — **not** `strings.py`. That file is 92 lines and the labels would
   have pushed it to ~107, so they went into a new focused `relevance_statistics_strings.py`, the same
@@ -1031,7 +1309,7 @@ The chain was proven against synthetic verdicts laid over the real 2,148 frozen 
   `relevance_strings.py` was not an option either, at 98 lines. Keys went into a new
   `relevance_statistics_vars.py` for the same reason — `relevance_vars.py` is at exactly 100.
 
-#### Task 5.2.3 — Dashboard ✅ (code)
+#### Task 5.2.3 — Dashboard ✅ (code + measured)
 
 - **Step 5.2.3.1** ✅ — `dashboard/dashboard.html`: add a relevance panel that renders nothing when the
   block is absent, so an un-judged run still produces a valid dashboard. Shipped and verified by
@@ -1048,12 +1326,20 @@ The chain was proven against synthetic verdicts laid over the real 2,148 frozen 
 
 Field definitions and the acceptance bar in §11.8.
 
-**Every step below is BUILT. The mission's deliverable is not, and cannot be by code: it needs the
-human. See §14.7 for what was verified how, and for the runbook.**
+**Every step below is BUILT, and as of 2026-07-30 Phase 6.1 has RUN on the real labels.** The mission's
+deliverable is still not built, and cannot be by code: it needs the human. See §14.7 for what was verified
+how and for the runbook, and §14.9.5 for the real sheet.
 
-### Phase 6.1 — Sheet out
+**Status: 🟡 Phase 6.1 ✅ done / Phase 6.2 ⏳ open.** `--review-sample` emitted **200 rows** to
+`evaluation/results/human_review_sample.csv`, with a durable copy at
+`evaluation/data/human_review_sample-2026-07-30.csv` (untracked, byte-identical — both
+`sha256:a1eef25a84f09beaa2ce97b2524ff6eb9b508c4d726e72ed75dcc21adc2fa29c`, verified 2026-07-30). **The
+gate is still OPEN: every `human_verdict` cell is blank and no human verdict has been fabricated,
+simulated or seeded anywhere.**
 
-#### Task 6.1.1 — Stratified sample
+### Phase 6.1 — Sheet out ✅
+
+#### Task 6.1.1 — Stratified sample ✅
 
 - **Step 6.1.1.1** ✅ — Create `human_review/build_review_sample.py`: stratify by `side × verdict` so the
   rare cells (the ~968 missed rows; every `unclear`) are represented rather than drowned by the
@@ -1063,28 +1349,60 @@ human. See §14.7 for what was verified how, and for the runbook.**
   (`allocate_sample_budget.py`, `stratify_judged_pairs.py`). **Note the literal reading of "all 968
   missed rows" is unachievable at N=200** and was implemented as "the missed side and every `unclear`
   cell are represented and lifted above pure proportionality" — §14.7.
+  ✅ **Drawn on the real labels 2026-07-30. All 6 cells non-zero:**
+
+  | side / verdict | population | drawn |
+  | --- | ---: | ---: |
+  | `unexpected_retrieved` / `relevant` | 430 | 40 |
+  | `unexpected_retrieved` / `irrelevant` | 402 | 38 |
+  | `unexpected_retrieved` / `unclear` | 264 | 28 |
+  | `missed_ground_truth` / `relevant` | 366 | 36 |
+  | `missed_ground_truth` / `irrelevant` | 409 | 39 |
+  | `missed_ground_truth` / `unclear` | 136 | 19 |
+
+  Allocation is a floor of `min(10, 200 // 6)` per non-empty cell, then largest-remainder proportional to
+  the headroom.
+  **⚠️ Correction to §14.7.2 — the floor barely does anything on real labels.** §14.7.2 measured a
+  **4.8× lift** on the `unclear` cells. **That figure does not transfer.** It was produced with synthetic
+  verdicts skewed to ~2% `unclear`; the real `unclear` rate is **19.93%** (§14.9.4), so the rare cells are
+  not rare and the floor barely binds. The measured lift over pure proportionality is **1.06× and 1.40× on
+  the two `unclear` cells** — modest, not dramatic. **The mechanism is unchanged and still correct**; what
+  changed is that it had little work to do, because the judge's abstention rate did the protecting instead.
+  Quote 1.06× / 1.40×, not 4.8×.
 - **Step 6.1.1.2** ✅ — Draw with `REVIEW_SAMPLE_SEED` from `relevance_vars.py` so the sheet is
   reproducible and two reviewers can be handed the identical rows. One `random.Random`, seeded once,
   consumed in a fixed stratum order. The read-back **redraws** the sample from that seed rather than
   persisting a review_id → pair mapping, which is what lets the sheet withhold the verdict.
+  ✅ **Re-proven on the real sheet: three consecutive emissions were byte-identical.** So the two-reviewer
+  study in §14.7.3 step 4 is available exactly as designed.
 - **Step 6.1.1.3** ✅ — Shuffle rows and **withhold the `verdict` and `reason` columns**. Showing the LLM's
   answer first is anchoring and would make the agreement number meaningless.
+  ✅ Verified on the real sheet. Note `reason` is now moot rather than withheld — **the judge produces no
+  reasons at all** as of `JUDGEMENT_SCHEMA_VERSION = 3` (§14.9.2), so there is no such column anywhere to
+  leak. `verdict` is genuinely withheld.
 - **Step 6.1.1.4** ✅ — **Withhold the score columns too.** The reviewer is judging whether a service helps
   someone who asked that query — a cosine of 0.85 is not evidence for that, but it will read as
   evidence and pull the human toward the retriever's opinion. The scores belong in the final joined
   table (Task 4.2.5), not in the sheet a human answers from. Enforced by
   `write_review_sheet_csv.assert_header_withholds_answers` against the writers' own header constants,
   by exact equality so `human_verdict` is not mistaken for `verdict`.
+  ✅ Verified on the real sheet: none of the five score keys appears in the header or in any of the 200
+  row bodies.
 
-#### Task 6.1.2 — Emit
+#### Task 6.1.2 — Emit ✅
 
 - **Step 6.1.2.1** ✅ — `run_evaluation.py`: add `--review-sample N` (default 200). `nargs='?'` with
   `const=REVIEW_SAMPLE_SIZE_DEFAULT`, so the flag carries 200 when N is omitted while its **absence**
   still means "emit nothing" — a plain default would have emitted a sheet on every ordinary run.
 - **Step 6.1.2.2** ✅ — Write `review_id, query, side, rank, service_name, human_verdict, human_notes`
   with the last two blank.
+  ✅ **Emitted and checked on the real file.** Header is **exactly** those seven columns; all 200 rows
+  have both answer cells blank; `review_id` is unique across all 200; and **all 200 identities were found
+  in the frozen snapshot on the side each row claims** — so no row points at a pair that is not in the
+  judged dataset. Read-back on the blank sheet reports `reviewed_count` **0** against `sample_size`
+  **200** (Step 6.2.1.4's property), and mutating one identity column makes the guard raise.
 
-### Phase 6.2 — Verdicts in
+### Phase 6.2 — Verdicts in ⏳ (blocked on the human)
 
 #### Task 6.2.1 — Read back
 
@@ -1123,11 +1441,28 @@ human. See §14.7 for what was verified how, and for the runbook.**
   exits 0. Automating any of it from a threshold would re-judge the dataset on a dozen hand-filled rows.
 - **Step 6.2.3.3** ✅ (encoded) — If at or above the bar: the M5 adjusted metrics are usable. Proceed.
 
-**The gate is OPEN and undecided.** `GEMINI_JUDGE_API_KEY` is unset, Phase 4.3 has never run,
-`data/relevance-judgements.json` does not exist, so there are no LLM verdicts to sample and no human has
-reviewed anything. Every number in this section is unmeasured. **No human verdict was fabricated,
-simulated or seeded anywhere** — doing so would make `raw_agreement` and `cohens_kappa` a measurement of
-an LLM against an LLM, which is §12's top risk row and the one failure that still looks like a result.
+**The gate is OPEN and undecided — but for one reason now, not four.** ~~`GEMINI_JUDGE_API_KEY` is unset,
+Phase 4.3 has never run, `data/relevance-judgements.json` does not exist, so there are no LLM verdicts to
+sample and no human has reviewed anything.~~ **All three of those are resolved as of 2026-07-30:** the key
+is set, Phase 4.3 ran, 2,007 labels are committed, and the 200-row sheet has been drawn from them. **What
+remains is only the last clause — no human has reviewed anything.**
+
+`raw_agreement`, `cohens_kappa`, `confusion_by_side`, `agreement_by_verdict` and `disagreement_rows` are
+therefore all still unmeasured, and the gate is **neither passed nor failed**. **No human verdict was
+fabricated, simulated or seeded anywhere** — doing so would make `raw_agreement` and `cohens_kappa` a
+measurement of an LLM against an LLM, which is §12's top risk row and the one failure that still looks
+like a result. That constraint got *harder* to honour today, not easier: every downstream number now
+exists and looks finished, so the only thing separating a report from a fabrication is that these two
+cells stay empty until a person fills them.
+
+**One thing the reviewer should know before sitting down:** **47 of the 200 rows are pairs the judge
+called `unclear`** (28 unexpected + 19 missed), a consequence of the 19.93% abstention rate in §14.9.4.
+That is the sheet working as designed — `unclear` is a stratum like any other and the human's job on those
+rows is to say whether abstaining was right — but it does mean roughly a quarter of the sitting audits
+abstentions. §11.8's `disagreement_rows` will also be a **thinner** Mission 7 reading list than planned:
+with no `reason` field (§14.9.2) it carries the disagreeing identities and the two verdicts, and **no
+explanation of what the judge thought**. Whoever runs the M7 session should expect to re-read the service
+names themselves rather than skim a rationale column.
 
 ---
 
@@ -1287,11 +1622,22 @@ is load-bearing for how the semantic floor imputes, and it must survive into the
   price = output + thinking) and reported separately as `thoughtsTokenCount` / `total_thought_tokens`.
   Take the default: `minimal` is both the cheapest and the documented default, and this is bounded
   classification.
-  > ⚠️ VERIFY AT IMPLEMENTATION: whether thinking tokens are *deducted from* `max_output_tokens` is
-  > stated inconsistently — the Interactions page says thinking tokens "do not count against output
-  > token limits", while Gemini 2.5 behaviour was the reverse and forum reports show `MAX_TOKENS` with
-  > empty text. Size `JUDGE_MAX_TOKENS` with headroom either way and confirm on the Task 4.3.1 baseline —
+  > ~~⚠️ VERIFY AT IMPLEMENTATION:~~ **✅ CLOSED 2026-07-30, in the cheap direction.** whether thinking
+  > tokens are *deducted from* `max_output_tokens` is stated inconsistently — the Interactions page says
+  > thinking tokens "do not count against output token limits", while Gemini 2.5 behaviour was the reverse
+  > and forum reports show `MAX_TOKENS` with empty text. Size `JUDGE_MAX_TOKENS` with headroom either way
+  > and confirm on the Task 4.3.1 baseline —
   > https://ai.google.dev/gemini-api/docs/generate-content/thinking
+  >
+  > **Measured over the full run: at `thinking_level: minimal`, `thoughtsTokenCount` was absent or 0 on
+  > all 119 chunks — 0 thinking tokens in total.** The question the ⚠️ asked is therefore moot here: with
+  > no thinking tokens produced, nothing was deducted from anything, and **no chunk finished on
+  > `MAX_TOKENS`**. Two claims above did not hold in billing terms and are superseded: **"thinking cannot
+  > be disabled"** — it may be true of the model's internals, but at `minimal` it produced no billable
+  > thinking on this workload — and **"thinking roughly doubles output"** (§11.6's assumption), which
+  > contributed **zero** of the 29,397 output tokens actually billed. `JUDGE_MAX_TOKENS`' headroom was
+  > never exercised; keep it anyway, since this is one workload at one thinking level and the docs have
+  > not changed.
 - **Caching: expect implicit only, and expect it not to fire.** Implicit caching is on by default for
   Gemini 2.5 and newer, needs no field, and hits are reported in `usage.total_cached_tokens` /
   `cachedContentTokenCount`. Explicit caching is `client.caches.create(config={system_instruction,
@@ -1380,6 +1726,8 @@ escalation row so the decision can be made on evidence rather than on budget anx
 A verdict is a pure function of `(query, service_name, model, prompt)`. It does **not** depend on
 retrieval configuration, so it caches — exactly as the scraped ground truth already does.
 
+~~The payload as originally planned:~~
+
 ```json
 {
   "model": "gemini-3.1-flash-lite",
@@ -1389,6 +1737,30 @@ retrieval configuration, so it caches — exactly as the scraped ground truth al
 }
 ```
 
+**The committed payload, read off `evaluation/data/relevance-judgements.json` 2026-07-30.** Two changes
+since: Step 4.3.3.4's hash-pinning added `input_sha256`, `scrape_date` and `retrieval_config` in `501e21c`
+(`schema_version` 1 → 2), and the contract change removed `reason` (2 → 3, §14.9.2). **Key order matters
+enough to record, because a reader diffing the file will see it:**
+
+```json
+{
+  "model": "gemini-3.1-flash-lite",
+  "prompt_checksum": "sha256:...",
+  "schema_version": 3,
+  "input_sha256": {
+    "unexpected_retrieved.json": "sha256:...",
+    "missed_ground_truth.json": "sha256:..."
+  },
+  "scrape_date": "2026-07-29",
+  "retrieval_config": { "...": "evidence-derived; unestablishable keys are null" },
+  "judgements": { "<query> <service_name>": { "verdict": "relevant" } }
+}
+```
+
+Each entry now carries **`verdict` and nothing else** — no `reason`, and never a raw wire marker: the
+`V` / `X` / `0` is decoded to the canonical verdict at the parse boundary before anything is cached
+(§14.9.2). The cache key is unchanged, still `(query, service_name)` (Step 4.1.5.2).
+
 **Switching judge model must invalidate the cache — and it already does.** `model` is one of the three
 invalidation keys (Step 4.1.5.1), so the §11.2.1(d) escalation to a stronger model is a clean re-run: the
 lite-tier verdicts are discarded rather than blended with the stronger model's. A cache holding two
@@ -1396,6 +1768,10 @@ models' verdicts under one file would make the M6 agreement number meaningless, 
 stored rather than assumed. Separately, **bump `JUDGEMENT_SCHEMA_VERSION` whenever the verdict schema
 *shape* changes** — a new field, a renamed key, a changed verdict vocabulary. `prompt_checksum` catches
 prompt edits and `model` catches model swaps, but neither notices that `reason` became a list.
+**This rule was exercised twice and worked both times:** version **2** for the hash-pinning keys
+(`501e21c`) and **3** for dropping `reason` (§14.9.2). The second bump was strictly belt-and-braces —
+removing `reason` also rewrote the system prompt, so `prompt_checksum` would have invalidated the cache
+anyway — but the two are independent reasons and both were honoured.
 
 `MAX_RETURNED_SERVICES` and `SEMANTIC_SCORE_RATIO` both filter the *same* fused list, so any narrower
 setting returns a strict **subset** of the current wide config. Judge once at
@@ -1448,14 +1824,33 @@ varies per query, while a hard cap is a fixed top-N that every fixed-k metric is
 
 ### 11.5 The judge prompt (M4)
 
-Lives in `relevance_strings.py` (rule 4). Per **rule 8** the system prompt gives instructions only, and
-worked examples show **structure and types only — never real service names, queries, or domain values**:
+~~Lives in `relevance_strings.py`~~ **Lives in `relevance_prompt_strings.py`** (rule 4; split out at Step
+4.1.1.2 to hold the 100-line rule). Per **rule 8** the system prompt gives instructions only, and worked
+examples show **structure and types only — never real service names, queries, or domain values**:
 
 ```
 input:  {"query": "<free-text query>", "services": [{"id": <int>, "name": "<service name>"}]}
 output: {"judgements": [{"id": <int>, "verdict": "relevant" | "irrelevant" | "unclear",
                          "reason": "<one short sentence>"}]}
 ```
+
+> **⚠️ SUPERSEDED 2026-07-30, user-directed. The output half above is not what shipped.** The judge
+> returns **one single-character marker per id and no `reason` at all**:
+>
+> ```
+> input:  {"query": "<free-text query>", "services": [{"id": <int>, "name": "<service name>"}]}
+> output: {"judgements": [{"id": <int>, "marker": "V" | "X" | "0"}]}
+> ```
+>
+> `V` = relevant, `X` = irrelevant, `0` = unclear. **The input half is unchanged.** The markers are the
+> **wire format only**: `parse_judgement_result.py` decodes each one through
+> `relevance_marker_vars.VERDICT_BY_MARKER` into the canonical `relevant` / `irrelevant` / `unclear`
+> vocabulary at the parse boundary, so **nothing downstream changed** — the judgement cache,
+> `relevance_judgements.csv`, `summary.json`'s `relevance` block, the human review sheet's verdict
+> vocabulary and the κ / confusion-matrix logic all still see exactly the three words they were built and
+> verified against. `JUDGEMENT_SCHEMA_VERSION` is **3**. Reasoning and consequences: §14.9.2. Note the
+> `unclear`-preferred instruction below survived the change verbatim and is one reason the abstention rate
+> is 19.93% (§14.9.4) — the model was asked for it.
 
 The prompt must state, in words rather than in code:
 
@@ -1464,6 +1859,12 @@ The prompt must state, in words rather than in code:
 - Each verdict is independent of the others in the list.
 - `unclear` is legitimate and preferred over guessing.
 - One judgement per input id, any order, ids echoed exactly.
+
+*All four held in the shipped prompt, phrased against the markers.* Two instructions were **added** and are
+worth keeping if the prompt is ever revised: an explicit "there is no expected balance to hit — a list may
+be entirely `V`, entirely `X`, or anything between", which guards the independence requirement against a
+model that rations its markers across a 40-item list; and an explicit "give the marker and nothing else",
+which is what the removal of `reason` needs in words as well as in the schema.
 
 **Open decision — name-only vs. enriched.** The judge currently sees only the service *name*. Some
 Kolsherut names are opaque acronyms, so a name-only judge will over-produce `unclear`. Adding the
@@ -1474,15 +1875,52 @@ a dollar per run rather than the ~$40–60 this line said when the judge was Opu
 enriching is lower with a lite-tier judge** — it has less world knowledge to resolve an opaque acronym
 from the name alone, so treat Step 4.3.2.3 tripping as the expected outcome, not the surprising one.
 
-### 11.6 Cost estimate (M4)
+> **RESOLVED 2026-07-30 — it tripped, and the user chose name-only anyway.** Measured `unclear`: **24.09%**
+> unexpected, **14.93%** missed, **19.93%** overall, against this section's 10% bar. **The expected outcome
+> was indeed the one that happened**, and the recommendation's own trigger fired. The user's decision was
+> to **proceed name-only with no enrichment, no model escalation and no prompt tuning** (§14.9.4). **The
+> enriched variant is not withdrawn** — `srm_services.description` is populated on 94.3% of services and
+> §11.6 prices the enriched run at about **$0.5**, so the option stays on the table and is a better deal at
+> 19.93% than it was at the 15.5% the calibration slice suggested. What the decision costs is written out
+> in Step 4.3.2.3: 400 pairs with no usable verdict, denominators of 832/1,096 and 775/911, and 47 of the
+> M6 sheet's 200 rows auditing abstentions.
 
-Assumptions unchanged from the original estimate: Hebrew service name ≈ 20 tokens (measured mean 31.5
-chars); system prompt ≈ 600 tokens amortised across a chunk; verdict + reason ≈ 25 output tokens;
-thinking roughly doubles output. That is **~40 input and ~51 output tokens per pair** — the per-pair rate
-implied by the original 17,529 → ~0.7 M in / ~0.9 M out figures, reused here so the two arms are
-comparable. **Re-baseline with `count_tokens` (Task 4.3.1) before trusting any of it** — Hebrew
-tokenisation is the single largest source of error in the table, and Gemini's tokenizer is not
-Anthropic's.
+### 11.6 Cost — measured 2026-07-30, estimate kept below it
+
+> **MEASURED. The whole run cost $0.0739 list / $0.0370 batched.** Actuals over the 1,967 pairs actually
+> sent (2,007 minus 40 cache hits), read from `usageMetadata`:
+>
+> | | Measured | Estimate below | Error |
+> | --- | ---: | ---: | --- |
+> | `promptTokenCount` | **119,387** | ~79 k (40/pair) | **+52%** |
+> | `candidatesTokenCount` | **29,397** | ~100 k (51/pair) | **−71%** |
+> | `thoughtsTokenCount` | **0** | inside the 51/pair | **eliminated** |
+> | Input tokens per pair | **60.7** | 40 | +52% |
+> | Output tokens per pair | **14.9** | 51 | −71% |
+> | **List price** | **$0.0739** | ~$0.19 (2,145-pair arm) | |
+> | **Batched (−50%)** | **$0.0370** | ~$0.09 (2,145-pair arm) | |
+>
+> **Where the estimate went wrong, in order of size.** (1) **Chunks are not full.** The estimate amortised
+> the system prompt across 40 pairs; the real mean is **16.3**, because `chunk_judgement_items` groups by
+> `(query, side)` *first* and only then splits at `JUDGEMENT_CHUNK_SIZE` — so the prompt is paid ~2.5×
+> more often per pair than assumed. This alone explains the input overshoot and it is a **structural**
+> property, not a tuning error. (2) **Output collapsed**, because `reason` was removed (§14.9.2): a
+> `{"id": n, "marker": "V"}` entry is a fraction of a sentence. (3) **Thinking contributed nothing** —
+> §11.2's ⚠️ closed at 0 tokens, so the "roughly doubles output" assumption was simply absent. (4) The two
+> smaller calibrations were both close: system prompt **501** tokens against ~600, Hebrew service name
+> **~25** against ~20 — so **Hebrew tokenisation was *not* the largest source of error**, contrary to the
+> warning below. Chunk occupancy was.
+>
+> **Both directions of error partly cancelled**, which is why the total landed *under* the estimate rather
+> than over. Do not read that as the estimate being sound.
+
+**The pre-run estimate, kept for the reasoning.** Assumptions unchanged from the original estimate: Hebrew
+service name ≈ 20 tokens (measured mean 31.5 chars); system prompt ≈ 600 tokens amortised across a chunk;
+verdict + reason ≈ 25 output tokens; thinking roughly doubles output. That is **~40 input and ~51 output
+tokens per pair** — the per-pair rate implied by the original 17,529 → ~0.7 M in / ~0.9 M out figures,
+reused here so the two arms are comparable. ~~**Re-baseline with `count_tokens` (Task 4.3.1) before
+trusting any of it**~~ — done; see the box above. Hebrew tokenisation was expected to be the single largest
+source of error in the table, and Gemini's tokenizer is not Anthropic's.
 
 **Both volumes, because the arm is not yet chosen — see §14.3.** The current arm is **2,145 pairs**, the
 baseline arm **17,529**; §14.3 explains why they differ and Step 4.3.3.4 must record which was frozen.
@@ -1491,7 +1929,8 @@ baseline arm **17,529**; §14.3 explains why they differ and Step 4.3.3.4 must r
 
 | Model | Arm | Pairs | Input | Output | List price | Batch (−50%) |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
-| **`gemini-3.1-flash-lite`** (`$0.25`/`$1.50` per MTok) — **chosen** | current | 2,145 | ~0.09 M | ~0.11 M | ~**$0.19** | ~**$0.09** |
+| **`gemini-3.1-flash-lite`** — **CHOSEN, and this row is MEASURED** | **frozen v4-gemini (judged)** | **1,967 sent** | **0.119 M** | **0.029 M** | **$0.0739** | **$0.0370** |
+| **`gemini-3.1-flash-lite`** (`$0.25`/`$1.50` per MTok) — **chosen** | current *(estimate, superseded)* | 2,145 | ~0.09 M | ~0.11 M | ~**$0.19** | ~**$0.09** |
 | **`gemini-3.1-flash-lite`** — **chosen** | baseline | 17,529 | ~0.70 M | ~0.90 M | ~**$1.53** | ~**$0.76** |
 | `gemini-3.1-pro-preview` (`$2.00`/`$12.00`, ≤200k prompts) — §11.2.1(d) escalation | current | 2,145 | ~0.09 M | ~0.11 M | ~**$1.48** | ~**$0.74** |
 | `gemini-3.1-pro-preview` — §11.2.1(d) escalation | baseline | 17,529 | ~0.70 M | ~0.90 M | ~**$12.20** | ~**$6.10** |
@@ -1499,14 +1938,25 @@ baseline arm **17,529**; §14.3 explains why they differ and Step 4.3.3.4 must r
 **Cost is not a constraint, and at this tier it has stopped being a consideration at all.** Judge
 everything; never sample for cost reasons. Three consequences worth stating outright:
 
-- **`JUDGEMENT_CHUNK_SIZE` is cost-neutral**, so tune it purely on reliability — §11.2.1(b).
-- **The §11.5 enriched variant is affordable outright.** A 5–8× input increase on the baseline arm is
-  ~$0.6–1.1 list, ~$0.3–0.6 batched. The old "~$40–60 per run, still affordable" caveat no longer binds;
-  if Step 4.3.2.3 trips, enrich.
-- **Escalating to Pro costs single-digit dollars.** A gate failure is never a budget decision.
+- **`JUDGEMENT_CHUNK_SIZE` is cost-neutral**, so tune it purely on reliability — §11.2.1(b). **Measured
+  correction: it is *not quite* neutral, and the direction is the opposite of intuition.** Because chunks
+  average 16.3 pairs rather than 40, the amortised system prompt dominates the input side; *lowering* the
+  chunk size would raise input cost per pair, and *raising* it would barely help, since the `(query, side)`
+  grouping — not the size cap — is what bounds most chunks. The effect is worth cents at this tier, so the
+  advice stands: tune on reliability. It never needed tuning — the chunk size stayed 40 (Step 4.2.3.2).
+- **The §11.5 enriched variant is affordable outright.** ~~A 5–8× input increase on the baseline arm is
+  ~$0.6–1.1 list, ~$0.3–0.6 batched.~~ **Re-priced from actuals: a 5–8× input increase on the judged arm is
+  roughly $0.4–0.6 list, $0.2–0.3 batched — call it ~$0.5.** The old "~$40–60 per run, still affordable"
+  caveat no longer binds; if Step 4.3.2.3 trips, enrich. **It did trip, at 19.93% (§14.9.4), and the user
+  chose not to** — a decision made on grounds other than cost, since there is no cost to speak of.
+- **Escalating to Pro costs single-digit dollars.** A gate failure is never a budget decision. On measured
+  volumes the Pro escalation would be roughly **$0.6 list / $0.3 batched**, not the ~$1.48 estimated below.
 
-Thinking tokens are **billed as output** at the output rate (§11.2), so they are already inside the
-~51 output tokens/pair assumption. `minimal` is the Flash-Lite default and cannot be turned off.
+~~Thinking tokens are **billed as output** at the output rate (§11.2), so they are already inside the
+~51 output tokens/pair assumption. `minimal` is the Flash-Lite default and cannot be turned off.~~
+**Measured: `thoughtsTokenCount` was 0 on all 119 chunks**, so thinking contributed nothing to the bill at
+`minimal`. The pricing statement remains true in principle — thinking *is* billed as output — it simply had
+no volume to bill here. §11.2's ⚠️.
 
 ### 11.7 Statistic definitions (M5)
 
@@ -1539,6 +1989,17 @@ Thinking tokens are **billed as output** at the output rate (§11.2), so they ar
 > (1,073 rows), plus the two denominators and `empty_ground_truth_row_count` (107) so a reader can reconstruct
 > either. **Any figure framed as "vs the incumbent" uses the excluding-variant.** The 107 rows contribute 0
 > missed-side rows by construction, so `missed_truly_irrelevant_rate` needs no such split.
+>
+> **Arm correction 2026-07-30 — every row count in this note belongs to the superseded `0.3025` snapshot.**
+> On the re-frozen `results-arm4-v4-gemini` arm the same slice is **97 rows across the same 4 queries**, out
+> of **1,096** unexpected-side rows in a **2,007**-pair job. The shipped keys are
+> `..._excluding_empty_ground_truth` (not `..._empty_gt`) and there are two counts, not one:
+> `empty_ground_truth_row_count` **97** and `empty_ground_truth_query_count` **4**. Measured values, both
+> **GATED**: `unexpected_actually_relevant_rate` **0.5168269230769231** (430/832) and
+> `unexpected_actually_relevant_rate_excluding_empty_ground_truth` **0.5356200527704486** (406/758) — the
+> second is the one any "vs the incumbent" framing must use, and it drops 97 rows and 74 of the denominator.
+> Note the denominators are far below the row counts because 264 unexpected-side pairs came back `unclear`
+> (§14.9.4); that exclusion is Step 5.1.1.2's, and it is separate from this note's.
 
 ### 11.8 Agreement report fields (M6)
 
@@ -1549,9 +2010,13 @@ Thinking tokens are **billed as output** at the output rate (§11.2), so they ar
 | `cohens_kappa` | Agreement corrected for chance. Report alongside raw agreement, never instead of it. |
 | `confusion_by_side` | 3×3 human × LLM matrix per side — shows *which direction* the judge errs. |
 | `agreement_by_verdict` | Per-LLM-verdict accuracy — reliable on `relevant` but not `irrelevant`? |
-| `disagreement_rows` | The disagreeing rows themselves, for reading at the M7 session. |
+| `disagreement_rows` | The disagreeing rows themselves, for reading at the M7 session. **Thinner than planned as of 2026-07-30**: with `reason` removed from the judge's contract (§14.9.2) each row carries the identity and the two verdicts and **no statement of what the judge thought**. Still the right reading list, but the M7 session will have to re-read the service names rather than skim a rationale column. |
 
 **Acceptance bar (proposal, to confirm with Eli):** `raw_agreement ≥ 0.85` **and** `cohens_kappa ≥ 0.60`.
+
+**Status 2026-07-30: the sheet exists (200 rows, §14.9.5) and every field in this table is still
+unmeasured**, because no `human_verdict` cell has been filled. A read-back of the blank sheet reports
+`sample_size` 200 / `reviewed_count` 0, which is the honest encoding of that.
 
 ### 11.9 Why `missed_ground_truth` has no scores — and how to fill them
 
@@ -1593,6 +2058,22 @@ Without the scores in the table, none of those three can be told apart.
 
 ## 12. Risks
 
+> **Status pass 2026-07-30, after Phase 4.3 ran.** Which of these actually happened:
+>
+> - **Materialised:** the `unclear`-rate rows, both of them, at **19.93%** — 2× and 2.4× their tripwires
+>   (§14.9.4). The mitigation was invoked and its remedy declined by the user; the rows stand as written.
+> - **Did not materialise, on 119 chunks:** id echo / omission drift (**zero** completeness failures at
+>   chunk size 40), the safety-filter row (**all 119** `finishReason: STOP`, no block, no
+>   `promptFeedback.blockReason`), positional keying (the `key` join held throughout), and cost creep
+>   (**$0.0370** batched for the whole run).
+> - **Still live and now binding rather than hypothetical:** the **top row** — the judge's numbers exist,
+>   look finished and are **unaudited**. Nothing about a clean run is evidence that the verdicts are right.
+> - **Still open, and re-scoped:** the staging-drift row. Step 4.3.3.1's `--rescrape` was deliberately
+>   skipped (reasoning under that step), so the *golden set* may be stale — but the label set cannot be,
+>   being pinned to content hashes. `scrape_date` is recorded as 2026-07-29.
+> - **Newly observed, not in this table:** a judged `results/summary.json` **mixes two arms**, which is a
+>   presentation hazard rather than a data defect. Step 5.2.1.3's boxed note is the mitigation.
+
 | Risk | Impact | Mitigation |
 | --- | --- | --- |
 | **Judge is systematically wrong** | M5 and M6 both become noise; wrong conclusions at the M7 session. | Task 6.2.3 is a gate. Never present adjusted metrics without agreement numbers. |
@@ -1607,10 +2088,10 @@ Without the scores in the table, none of those three can be told apart.
 | **High `unclear` rate from name-only Hebrew acronyms** | A lite-tier model has less world knowledge to resolve an opaque Kolsherut acronym from the name alone, so it over-produces `unclear` and every M5 rate is computed over a shrunken denominator. | Step 4.3.2.3's 10% ceiling is the tripwire; §11.2.1(c) says resolve it by enriching with the indexed service description (data, not reasoning help — rule 7 intact) rather than tuning the prompt around missing information. §11.6 shows the enriched variant is affordable. Never fold `unclear` into `irrelevant`. |
 | **Id echo / omission drift on long chunks** | A weaker model omits items, invents ids, or mis-echoes them further into a 40-item list. Partial verdict sets read as complete coverage in M5. | Step 4.2.3.2 asserts every `key` returned and exactly one verdict per item id, and raises on any gap. Fix by **halving `JUDGEMENT_CHUNK_SIZE`** — §11.2.1(b) makes chunk size an explicit reliability lever, and §11.6 shows it is cost-neutral. |
 | **Safety filter silently produces no verdict for a chunk** | A prompt-side block returns `promptFeedback.blockReason` and **no `candidates` at all**; a response-side block returns `finishReason: SAFETY` with no content. Blind `candidates[0]` access crashes, and a swallowed exception drops 40 pairs invisibly. Hebrew social-services text (abuse, addiction, mental health) is exactly the content most likely to trip a filter. | Step 4.2.3.3 branches on `finishReason` with only `STOP` yielding a verdict; Step 4.2.3.4 handles the no-candidate and per-line `error` cases and logs the blocked chunk's `key` so the pairs are identifiable. Step 4.2.3.2 then fails the run rather than reporting partial coverage. Do not loosen `safetySettings` reflexively — raise an observed block as a decision. |
-| **Scores joined to the wrong document** | A name spanning several service_ids gets an arbitrary card hit's scores instead of the best-ranked document's. Silent — the CSV looks complete and every threshold decision downstream is made on wrong numbers. | 🟡 **Mitigated, live check owed.** Attached at `order_services_by_ranking` (Step 2.1.1.2 ✅) and reproduced offline on a synthetic two-service_id name. Step 2.1.1.5 still owed — §14.2.2. |
+| **Scores joined to the wrong document** | A name spanning several service_ids gets an arbitrary card hit's scores instead of the best-ranked document's. Silent — the CSV looks complete and every threshold decision downstream is made on wrong numbers. | ✅ **CLOSED 2026-07-29 (attempt 2).** Attached at `order_services_by_ranking` (Step 2.1.1.2), then proven on the raw `POST /api/retrieve` body: 7 names, 4 multi-id, 3 discriminating, all matching the earliest document on all five fields by value and type. Step 2.1.1.5 and §14.2.2 are closed. |
 | **`null` scores written as `0.0`** | "BM25 never surfaced it" becomes "BM25 scored it zero" — changes what the band table means and how the semantic floor reads. | ✅ **Closed for M2/M3.** `dict.get` with no default in every reader, one flattener (`serialize_service_scores`), no `or 0.0` / `float()` / rounding anywhere in the chain. Still applies to Step 4.2.5.2. |
 | **Score columns shown to the human reviewer** | The human anchors on cosine instead of judging relevance; the agreement number stops measuring what it claims to. | Step 6.1.1.4: withhold scores (and verdicts) from the review sheet. |
-| **API key handling** | Secret in the repo. | Step 4.1.3.2/3: `GEMINI_API_KEY` in `.env` only, `.env.example` names never values. `genai.Client()` reads it from the environment — never pass a literal. |
+| **API key handling** | Secret in the repo. | Step 4.1.3.2/3: `GEMINI_JUDGE_API_KEY` in `.env` only, `.env.example` names never values. The client is built as `genai.Client(api_key=…)` from the already-resolved vars value — never a literal in a script. ✅ Held: no key reached `501e21c` or `9412a69`. ⚠️ **Partially unmitigated:** the judge's key is still byte-identical to `retrieval/`'s `GEMINI_EMBEDDER_API_KEY`, so the two cannot be revoked independently — §14.8.1, still open. |
 
 ---
 
@@ -2073,7 +2554,8 @@ amends Step 4.2.1.1 and Step 4.3.3.4; §14.4.3 items 1 and 2 asked for it and th
 
 Together: **a configuration does not identify the dataset. Only the file content does.**
 
-**The frozen snapshot.** `evaluation/results-judge-frozen/`, promoted by copy from the verified
+**The frozen snapshot — SUPERSEDED 2026-07-30, see §14.5.1.** As originally frozen,
+`evaluation/results-judge-frozen/` was promoted by copy from the verified
 `evaluation/results-judge-candidates/run1/` (which is left untouched as the archive):
 
 | | |
@@ -2088,6 +2570,12 @@ Together: **a configuration does not identify the dataset. Only the file content
 
 `unexpected_retrieved.json` → `sha256:21858addb70fffbcfc4948b77b16e5716b90c8d0ce08891fef7e5c402247cf82`
 `missed_ground_truth.json` → `sha256:b2f1b2b4080f04f296ef9f879ec12bf51585d00b36c9394c7f289f0c5a97f18c`
+
+**These two hashes and every number above now describe
+`evaluation/results-judge-frozen-arm0-0.3025/`, not `results-judge-frozen/`.** The directory was
+re-frozen on the V4 Gemini arm before any label was bought; both hashes were re-verified against that
+archive on disk 2026-07-30 and still match. **The design below — content hashes, not config, identify the
+dataset — is unchanged and is what made the swap safe to audit.** §14.5.1.
 
 **The manifest.** `results-judge-frozen/judge_input_manifest.json`, built by
 `relevance/build_judge_input_manifest.py`, records both hashes, both pair counts, the total, the chunk
@@ -2109,6 +2597,58 @@ spans 0.90–1.05 (1,085 in 0.95–1.00; the ratio exceeds 1.0 for 44 rows). The
 kept as shipped, but **0.05 is too coarse to locate a cliff on this arm** — the distribution is that
 compressed, which is itself a §11.10 signal. `SCORE_BAND_WIDTH` is a single constant in
 `relevance_report_vars.py`; expect to re-run the table at 0.01 once real verdicts exist.
+**Update 2026-07-30: real verdicts exist and the arm changed, so this measurement is superseded too** —
+the V4 arm populates **5 `cosine_score` bands and 4 `cosine_score_ratio` bands** at the same 0.05 width,
+not 3 and 3. Numbers under Step 4.2.6.4. The recommendation to re-run at 0.01 before Phase 7.1 stands.
+
+#### 14.5.1 Re-frozen on `results-arm4-v4-gemini` (2026-07-30, user decision)
+
+**§14.8.2 asked whether to judge the pinned `0.3025` snapshot or re-freeze on the V4 Gemini arm, and did
+not choose. The user chose: re-freeze.** §14.8.2's own recommendation — judge the pinned snapshot first —
+was **not** taken, and the reason it gave for the alternative is the one that decided it: adjusted metrics
+on a superseded arm are of limited use to the session with Eli, and Mission 7's operating-point sweep
+should run against the arm that will actually ship.
+
+**What moved:**
+
+| | Old (`results-judge-frozen-arm0-0.3025/`) | New (`results-judge-frozen/`) |
+| --- | ---: | ---: |
+| `unexpected_retrieved.json` rows | 1,180 | **1,096** |
+| `missed_ground_truth.json` rows | 968 | **911** |
+| **Total pairs** | 2,148 | **2,007** |
+| Chunks at size 40 | 127 | **123** |
+| `overall_score` | 0.3025234053500492 | **0.36935235358267293** |
+| empty-golden-set rows / queries | 107 / 4 | **97 / 4** |
+
+`unexpected_retrieved.json` → `sha256:2db5f5d9bf997371babce93f007f446f0f205ebffe537a57a9bbbc5b14157f7e`
+`missed_ground_truth.json` → `sha256:f30a10cc48b1b88d08c574dcbcef028683a6911963b8f7cbcac0e466ce69a5a7`
+
+Both re-verified against the files on disk 2026-07-30, and both appear verbatim in the committed
+`data/relevance-judgements.json` under `input_sha256`. **The old snapshot was archived, not deleted** —
+`evaluation/results-judge-frozen-arm0-0.3025/` holds all three of its files intact, hashes unchanged, so
+the superseded arm remains auditable and a future comparison against it is still possible.
+
+**The manifest's `retrieval_config` is weaker than the old one, on purpose.** It is **evidence-derived**:
+every value in it is established from the arm's own artifacts, and the two that cannot be —
+**`SEMANTIC_SCORE_RATIO` and `KEEP_LEXICAL_ONLY_DOCUMENTS` — are recorded as `null`** rather than carried
+over from the `0.3025` manifest. Copying them would have produced a config block that *looked* complete
+while asserting two values nobody measured for this arm, which is precisely the failure this whole section
+exists to prevent. The block also gains `EMBEDDING_PROVIDER: "gemini"` and
+`RETRIEVAL_EMBEDDINGS_INDEX_NAME: "srm__services_retrieval_embeddings_v4_gemini"`.
+
+**Score integrity was re-verified on the new arm before judging** — the §14.2 / Step 2.2.4.2 assertions,
+re-run: unexpected side **1,096/1,096** populated on `retrieval_score`, `cosine_score`,
+`cosine_score_ratio` and `semantic_score`; `lexical_score` **270/1,096**, correct for `LEXICAL_WEIGHT=0`;
+missed side **0/911** on all five; **zero exact-zeros, zero non-`float` populated values, zero `\uXXXX`
+escapes**; ranks 1-based and contiguous; **65** query entries; **2** skipped queries carrying
+`count: null`. So the re-freeze inherited none of the old arm's evidence — it earned its own.
+
+**One thing the re-freeze did *not* require: re-pointing `retrieval/.env`.** The V4 files already existed
+as emitted artifacts of the A/B work; they were promoted by copy, exactly as §14.5 promoted the V3 ones.
+`retrieval/.env` still serves `srm__services_retrieval_embeddings_v3_enriched` with
+`EMBEDDING_PROVIDER=local`, so §3.2's freeze held. The V4 index **is** present locally (9,871 docs,
+607.5 MB), so reproducing this arm live is a two-line `.env` change plus a restart — §14.4.4's rule
+applies in full.
 
 **Files holding literals after Phase 4.2** — reconciling §13's list, which names only
 `vars.py` / `strings.py` / `relevance_vars.py` / `relevance_strings.py`. Three files were added, each to
@@ -2203,6 +2743,52 @@ mistaken for real labels was written to `evaluation/results/`, `results-judge-fr
 `evaluation/data/`. **The first real numbers arrive with Phase 4.3, and per §12 they must not be
 presented without Mission 6's agreement numbers.**
 
+#### 14.6.1 Superseded by a measured verification (2026-07-30)
+
+**The synthetic verification above is history. Every §8 acceptance criterion has now been re-verified
+against the real committed labels** — `evaluation/data/relevance-judgements.json`, 2,007 labels,
+`schema_version: 3`, commit `9412a69` — paired with the frozen snapshot as re-frozen on the
+`results-arm4-v4-gemini` arm. **33 Python checks and 8 dashboard checks, all passing, plus an
+independent recomputation done straight from the label file and the frozen bytes.** No evaluation run
+was triggered: the shipped pure functions were imported and driven directly, and nothing under
+`evaluation/results/`, `results-judge-frozen/` or `evaluation/data/` was written.
+
+**Where §14.6's figures are now stale.** They describe the superseded 0.3025 snapshot, not this arm.
+The measured replacements are: **2,007 pairs** (1,096 unexpected + 911 missed), not 2,148;
+**`overall_score` 0.36935235358267293**, not 0.3025234053500492; **97 empty-golden-set rows** across the
+same **4** queries, not 107. §8's "`data/relevance-judgements.json` does not exist and no number this
+mission emits is real yet" no longer holds.
+
+**What was measured.** Buckets sum to their side's pair count on both sides (430+402+264+0 = 1,096;
+366+409+136+0 = 911) and remain a closed sum when verdicts are withheld — 118 withheld verdicts land in
+`unjudged` and the sum stays 1,096, which is the items-driven property. Denominators are
+`relevant + irrelevant`: **832** unexpected, **775** missed, with the 264 and 136 `unclear` pairs
+excluded; the emitted rates are exactly 430/832 = 0.5168269230769231 and 409/775 = 0.5277419354838709,
+and every rate key carries its own `_count` and `_denominator`. The `unclear`-is-not-`irrelevant`
+counter-example moves all three quantities on real labels: missed bucket 409 → 545, numerator 409 → 545,
+denominator 775 → 911, rate 0.5277 → 0.5982.
+
+**The adjusted metrics' provenance is measured, not assumed.** `|R|`, `|G|` and both side counts equal
+the frozen files' bytes on all 65 records; `hits = |R| − |unexpected| = |G| − |missed|` holds on all 63
+queries where retrieval was called, and tampering with one recorded count makes the reader raise. The
+59 adjustable records are the *same query set* — set-equal, not merely same-sized — as the frozen arm's
+`num_evaluated`, and rebuilding the **unadjusted** means from those records alone reproduces that arm's
+`set_metrics` to the last digit (0.23972125266925076 / 0.4285457466271444 / 0.21836114552594585). That
+the numbers cannot have come from the live run is positively demonstrated, not merely asserted:
+**52 of the 59 live `returned_count` values differ from the frozen ones**, and the live arm's
+`overall_score` is 0.31548807134154333.
+
+**Surfacing.** `relevance` sits between `count_stats` and `meta`; `build_summary` with and without the
+block differs on that key alone and yields `repr()`-identical `0.36935235358267293`, equal to the frozen
+manifest. No relevance key appears in `METRIC_KEYS` / `SET_METRIC_KEYS` / `COUNT_STAT_KEYS`, and all five
+per-k metrics dicts still hold exactly `METRIC_KEYS`. The console table renders 17 rows from the real
+block with the 11 counts as strings (`1096`, not `1096.0000`) and each rate's numerator/denominator in
+its own label. Executing `dashboard.html`'s real script against both payloads gives **5 rendered panels
+with the block and 4 without, no error panel either way** — the same counts §14.6 recorded.
+
+**Still gated.** Every adjusted value above is **not quotable**: per §12 and §3.2 no adjusted metric may
+be presented without Mission 6's agreement number, and that gate is open.
+
 ### 14.7 Mission 6 — what shipped, and why its deliverable is still open (2026-07-29)
 
 **Sixteen new files, two edited.** New: `human_review_vars.py`, `human_review_strings.py`,
@@ -2222,6 +2808,12 @@ orchestrators keep `run_evaluation.py` inside its budget the same way
 `relevance/judge_and_rewrite_summary.py` did for Mission 5. Longest function in the mission: 24 lines.
 
 #### 14.7.1 The three-way status — read this before quoting anything from §9
+
+> **Superseded in its middle row on 2026-07-30 — §14.9.5.** The "BUILT BUT UNMEASURED" row is now
+> **measured**: `data/relevance-judgements.json` exists (2,007 labels, `9412a69`), `--review-sample`
+> produced the real 200-row sheet, and `sample_strata` on real labels is tabulated under Step 6.1.1.1.
+> The `raw_agreement`, κ and `confusion_by_side` half of that row, and the whole "BLOCKED ON THE HUMAN"
+> row, are unchanged and still true.
 
 | | |
 | --- | --- |
@@ -2347,20 +2939,44 @@ were deleted and the deletion confirmed.
 the strata change, so the draw changes — the seed fixes the draw given the labels, not across label sets.
 Discard the old sheet rather than trying to reconcile the two.
 
-### 14.8 Status review — 2026-07-30
+### 14.8 Status review — 2026-07-30, morning (superseded the same day by §14.9)
+
+> **⚠️ READ §14.9 INSTEAD FOR CURRENT STATE.** This section was written **before** the execution session
+> and before commit `501e21c` (Thu Jul 30 10:20:24 2026). Everything it identifies as blocking has since
+> been resolved or decided. It is kept because its two questions are the ones the session answered, and
+> because §14.8.3's third bullet is still true.
 
 Nothing has been executed since §14.7. This section records what a fresh inspection of the working tree
 found, and the two things that must be decided or fixed before Phase 4.3.
 
 **What exists on disk.** `relevance/` holds 18 files, `human_review/` holds 12, plus 6 new `metrics/`
 files, 13 new `report/` files, 10 new top-level vars/strings/schemas files and 2 new `clients/` files —
-**61 new Python files under `evaluation/`, every one untracked.** `results-judge-frozen/` holds the
-two pinned diff files and `judge_input_manifest.json`. **`evaluation/data/` holds only
-`Raw-Golden-Set.csv` and `golden-set-ground-truth.json`** — there is no `relevance-judgements.json`, which
-is the single fact that keeps M4, M5 and M6 all unmeasured. Every downstream stage raises by design when
-it is absent, so the whole chain is gated on one file that one command produces.
+~~**61 new Python files under `evaluation/`, every one untracked.**~~ **The "every one untracked" half is
+FALSE as of `501e21c`** (Thu Jul 30 10:20:24 2026), which committed them; this section was written before
+that commit landed. Measured 2026-07-30 after the fact: **109 tracked `.py` files under `evaluation/`, and
+exactly one untracked — `relevance_marker_vars.py`**, created later the same day with the contract change
+(§14.9.2). The file *counts* in the sentence are otherwise sound.
+`results-judge-frozen/` holds the two pinned diff files and `judge_input_manifest.json` — **since re-frozen
+on the V4 Gemini arm, §14.5.1.** ~~**`evaluation/data/` holds only `Raw-Golden-Set.csv` and
+`golden-set-ground-truth.json`** — there is no `relevance-judgements.json`, which is the single fact that
+keeps M4, M5 and M6 all unmeasured.~~ **Resolved:** `data/relevance-judgements.json` exists, holds 2,007
+labels and is committed (`9412a69`); `evaluation/data/` also now carries the untracked durable copy of the
+review sheet, `human_review_sample-2026-07-30.csv`. Every downstream stage raises by design when the label
+file is absent, so the whole chain was gated on one file that one command produces — **and that command
+has now been run.**
 
-#### 14.8.1 The blocker is a variable name
+#### 14.8.1 The blocker is a variable name — ✅ CLOSED 2026-07-30 (the key-sharing half is NOT)
+
+> **Closed by doing exactly what the last line of this subsection says.** `evaluation/.env:13` was renamed
+> `GEMINI_JUDGE_KEY` → **`GEMINI_JUDGE_API_KEY`**, **value unchanged**, and `--judge` ran on the first
+> attempt afterwards. The table below now agrees on all four rows.
+>
+> **The second half was NOT acted on and remains open.** The value is still byte-identical to
+> `retrieval/.env`'s `GEMINI_EMBEDDER_API_KEY` — one credential doing both jobs, neither independently
+> revocable, against `.env.example:15`'s explicit instruction. That was the recommendation attached to the
+> rename ("worth splitting them while renaming") and it was not taken. It is now *more* worth doing, not
+> less: the judge has since spent real tokens under that key. Both files remain gitignored and no key
+> reached `501e21c` or `9412a69`.
 
 | Where | Name |
 | --- | --- |
@@ -2380,7 +2996,15 @@ explicitly asks for the opposite ("differ from retrieval's `GEMINI_EMBEDDER_API_
 own"). Worth splitting them while renaming, since the judge is about to spend real tokens under it and a
 shared key cannot be revoked independently. Both files are gitignored; neither key should reach a commit.
 
-#### 14.8.2 The frozen snapshot is two arms behind the retriever — decide before spending labels
+#### 14.8.2 The frozen snapshot is two arms behind the retriever — ✅ DECIDED 2026-07-30: re-freeze
+
+> **The user chose the second reading: re-freeze on `results-arm4-v4-gemini`.** The recommendation at the
+> bottom of this subsection — judge the pinned snapshot first — was **not** taken. The re-freeze happened
+> **before any label was bought**, so nothing was wasted, and the old snapshot was archived intact rather
+> than overwritten. Numbers, hashes and what the swap did and did not require: **§14.5.1**. The reasoning
+> on both sides below is left standing because it is what the decision was made against, and because the
+> first reading's argument — that a relevance label is a fact about a `(query, service)` pair and so
+> partially transfers between arms — is what makes the 40 cache hits in §14.9.3 possible.
 
 §14.5 froze `results-judge-frozen/` deliberately, and the reasoning there is still correct: a config does
 not identify a dataset, only content does. But the *retriever* has moved twice since, under the concurrent
@@ -2416,13 +3040,591 @@ serialized behind one another.
 
 #### 14.8.3 Still true, still worth repeating
 
-- **Everything is uncommitted** — ~30 modified and ~40 new files, mixing this spec's work with the V4
-  embedder spec's. §3.2 called this a release blocker rather than a gate blocker; it has now been true
-  across two specs and a full A/B measurement, and the two bodies of work want separating into their own
-  commits before either lands.
+- ~~**Everything is uncommitted**~~ — **RESOLVED 2026-07-30.** ~30 modified and ~40 new files, mixing this
+  spec's work with the V4 embedder spec's. §3.2 called this a release blocker rather than a gate blocker;
+  it has now been true across two specs and a full A/B measurement, and the two bodies of work want
+  separating into their own commits before either lands. **They were separated and committed:** `501e21c`
+  ("Add LLM relevance judging and its human audit to the evaluation") and `9412a69` (the labels alone, one
+  file). **One file is still untracked** — `evaluation/relevance_marker_vars.py`, written after `501e21c`
+  — and it is load-bearing: without it `judgement_schema.py` and `parse_judgement_result.py` do not
+  import. A clean checkout of `9412a69` **cannot re-run the judge**, though it *can* still compute the
+  adjusted metrics from the committed labels with no API key, which is what Step 4.3.3.3 promised.
 - **No Mission 5 adjusted metric may be presented without Mission 6's agreement numbers** (§12). The gate
-  is OPEN, not passed. Nothing in §14.6's synthetic verification changes that.
+  is OPEN, not passed. ~~Nothing in §14.6's synthetic verification changes that.~~ **And nothing in
+  §14.6.1's *measured* verification changes it either** — real labels make the rule binding rather than
+  academic, not satisfied.
 - **`results/` currently holds the V4 Gemini no-cut arm** (`overall_score` 0.3853), not the judged arm —
   a fourth arm has landed in that directory since §14.4.3 counted three. The judging path reads
   `results-judge-frozen/` and never `results/` (§14.5), so this is harmless, but it is one more reason not
-  to identify a dataset by its directory.
+  to identify a dataset by its directory. **Now a fifth:** the 2026-07-30 judged run rewrote `results/`
+  with a **v3-local** arm (`overall_score` **0.31548807134154333**) whose `relevance` block nonetheless
+  describes the **v4-gemini** frozen arm. Still harmless to the labels, still a real presentation hazard —
+  Step 5.2.1.3's boxed note.
+
+### 14.9 The execution session — 2026-07-30
+
+**This is the day the plan stopped being a plan.** §14.8 was written in the morning and listed one blocker
+and one open decision; both were resolved, the judge ran over the whole dataset, Mission 5 was verified
+against real numbers for the first time, and Mission 6 emitted its sheet. **Mission 6's gate is still
+OPEN and every adjusted metric below is still not quotable** (§3.2, §12) — that has not moved and is the
+only thing that has not.
+
+Order of events, each with its own subsection: re-freeze (§14.9.1) → contract change (§14.9.2) →
+calibration and the tripped ceiling (§14.9.4) → full run and commit (§14.9.3) → M5 verification
+(**§14.6.1**, appended separately) → M6 sheet (§14.9.5). Cost is §14.9.6; what is owed next is §14.9.7.
+
+#### 14.9.1 The judged arm was re-frozen before a single label was bought
+
+§14.8.2's open question was answered by the user: **re-freeze on `results-arm4-v4-gemini`**, against that
+subsection's own recommendation. **Full numbers, hashes, the archived old snapshot and the manifest's
+deliberately-`null` config keys are in §14.5.1**, placed there rather than here because that is where a
+reader looking for "what is frozen" will go.
+
+Three properties of the swap worth stating on their own:
+
+1. **It cost nothing to change our minds**, because it happened before Phase 4.3. The only work discarded
+   was a manifest.
+2. **The old arm was archived, not overwritten** — `evaluation/results-judge-frozen-arm0-0.3025/`, all
+   three files, hashes verified unchanged 2026-07-30. §14.5's whole argument is that content identifies a
+   dataset; deleting the content would have made the superseded arm unciteable.
+3. **§3.2's `retrieval/.env` freeze was not broken to do it.** The V4 files were already on disk as
+   artifacts of the A/B work and were promoted by copy. `retrieval/.env` still points at
+   `srm__services_retrieval_embeddings_v3_enriched` / `EMBEDDING_PROVIDER=local`, verified after the run.
+
+**Correct a claim that has circulated in this project: the V4 index is *not* unavailable locally.**
+`srm__services_retrieval_embeddings_v4_gemini` is present in the local Elasticsearch — **9,871 docs,
+607.5 MB**, measured 2026-07-30, the same doc count as V3. The only thing standing between the running
+service and the judged arm is the two commented-out lines in `retrieval/.env`, plus a restart (§14.4.4).
+
+#### 14.9.2 The judge's output contract changed — user-directed, deviates from §11.5
+
+**What shipped instead of §11.5's contract:** the judge returns **one single-character marker per id** —
+**`V` = relevant, `X` = irrelevant, `0` = unclear** — and **no `reason` field at all**.
+
+```
+output: {"judgements": [{"id": <int>, "marker": "V" | "X" | "0"}]}
+```
+
+**Where it lives.** A new file, `evaluation/relevance_marker_vars.py` (untracked as of `9412a69`), holds
+the three markers, the wire field name `marker`, and `VERDICT_BY_MARKER`, the decode table. It is a sixth
+focused relevance vars file for the same reason as the other five: `relevance_vars.py` is at exactly 100
+lines. The deviation from this spec is documented in the file's own header and in
+`judgement_schema.py`'s docstring, so the code does not silently contradict the document.
+
+**Why this is a contract change and not a vocabulary change.** The markers are the **wire format only**.
+`parse_judgement_result.py` decodes each one into `relevance_vars`' canonical `relevant` / `irrelevant` /
+`unclear` **at the parse boundary**, before a `ServiceJudgement` exists. Consequently **nothing downstream
+of the parser changed**: the judgement cache stores canonical verdicts, `summary.json`'s `relevance` keys
+are the same, the human review sheet's `human_verdict` vocabulary is the same, and Cohen's κ and the 3×3
+confusion matrices operate on exactly the three labels they were built and verified against in §14.7.2.
+The wire field is deliberately named `marker`, not `verdict`, so any code that reaches past the boundary
+fails loudly rather than writing a single letter into a verdict column.
+
+**`JUDGEMENT_SCHEMA_VERSION` went 2 → 3.** (Version 2 was Step 4.3.3.4's hash-pinning, already in
+`501e21c`.) The bump is belt-and-braces — the prompt changed too, so `prompt_checksum` would have
+invalidated the cache anyway — but §11.3 asks for both and both were done.
+
+**The consequences, all of them:**
+
+- **`reason` is gone everywhere it was planned.** `ServiceJudgement` has no such field (Step 4.1.2.1);
+  `relevance_judgements.csv` has **12 columns, not 13** (Step 4.2.5.1); the response schema has no such
+  property (Step 4.2.2.1).
+- **§11.8's `disagreement_rows` is a thinner Mission 7 reading list.** It carries the disagreeing
+  identities and the two verdicts and **no statement of what the judge thought**. The M7 session will have
+  to re-read service names rather than skim a rationale column. This is the one place the change costs
+  something concrete, and it is worth knowing before the session is scheduled.
+- **No number moved because of it.** Every M5 and M6 statistic is computed from canonical verdicts.
+- **A hypothesis, not a finding:** a one-character enum leaves a lite-tier model nowhere to write prose
+  where a verdict belongs, which *may* be part of why the completeness assertion never fired on 119 chunks
+  (§14.9.3). The run is a single observation and does not establish that.
+
+#### 14.9.3 Phase 4.3 — the full run
+
+**Command:** `--judge` over the whole re-frozen snapshot. No `--judge-limit`.
+
+| | |
+| --- | ---: |
+| Pairs in the frozen snapshot | **2,007** |
+| Served from cache (Step 4.1.5.2) | **40** |
+| Sent to the API | **1,967**, as **119 chunks** |
+| `JUDGEMENT_CHUNK_SIZE` | **40**, unchanged all run |
+| Chunks returned | **119 / 119** |
+| Chunks with `finishReason: STOP` | **119 / 119** |
+| Blocked (prompt-side or response-side) | **0** |
+| Completeness-assertion failures (Step 4.2.3.2) | **0** |
+| **Unjudged pairs** | **0** |
+| Batch job | `batches/6rvt6h1tqx89ux9z3bacqamcjtlmsnuum412` |
+| Job state | `JOB_STATE_SUCCEEDED` |
+| Batch wall clock | **91.8 s** |
+
+**Verdicts:**
+
+| side | `relevant` | `irrelevant` | `unclear` | total |
+| --- | ---: | ---: | ---: | ---: |
+| `unexpected_retrieved` | 430 | 402 | 264 | **1,096** |
+| `missed_ground_truth` | 366 | 409 | 136 | **911** |
+| **overall** | **796** | **811** | **400** | **2,007** |
+
+**Rates (Step 5.1.1.1, denominators exclude `unclear` per Step 5.1.1.2) — GATED, not quotable:**
+
+- `unexpected_actually_relevant_rate` **0.5168269230769231** (430/832)
+- `unexpected_actually_relevant_rate_excluding_empty_ground_truth` **0.5356200527704486** (406/758) —
+  dropping **97 rows across 4 queries**; this is the variant any "vs the incumbent" framing must use (§11.7)
+- `missed_truly_irrelevant_rate` **0.5277419354838709** (409/775)
+
+**Adjusted set metrics (Task 5.1.2) — GATED, not quotable:** `adjusted_precision_at_returned`
+**0.589105185662881**, `adjusted_recall_at_returned` **0.5447459382892215**, `adjusted_f1_at_returned`
+**0.4340885273707442**. Per §3.2 and §12 none of these may be presented without Mission 6's agreement
+number, and that gate is OPEN. **Where they are compared from matters too** — see Step 5.2.1.3's boxed
+note on `results/summary.json` mixing two arms, which turns a correct **+0.3494** precision delta into a
+wrong **+0.3935** if adjacent keys in that one file are differenced.
+
+**Two deviations from Task 4.3.3 as written**, both recorded under their steps: Step 4.3.3.1's
+`--rescrape` was **deliberately skipped** (the judging path never consumes ground truth, so it cannot
+change which pairs are judged), and Step 4.3.3.2's arm is a third one, neither of the two §11.6 priced.
+
+**Committed as `9412a69`** — "Add the full LLM relevance judgement dataset (2,007 labelled pairs)", one
+file, `evaluation/data/relevance-judgements.json`, on `fix-embedding-text-and-reindex`.
+
+#### 14.9.4 Step 4.3.2.3 tripped at 19.93%, and the user accepted it
+
+**Calibration said 15.50% on a 200-pair slice. The full run said 19.93%** — 24.09% on the unexpected side,
+14.93% on the missed side. §11.5's ceiling is **10%**, so the full run is **2.4× the bar on the side that
+matters most**.
+
+**The slice was not a sample of the dataset, and this is the lesson worth keeping.** `--judge-limit`
+truncates the item list **by position**, so the 200 pairs came from the **first 15 queries only** and
+**entirely from the unexpected side**. A positional prefix of a `(query, side)`-ordered list cannot
+estimate a rate that varies by side — and it varies here by 9 points. Step 4.3.2.1's "run
+`--judge --judge-limit 200`" is not wrong, but **its output should be read as a smoke test, not as a
+measurement**, until `--judge-limit` samples rather than truncates.
+
+**The user's decision: proceed name-only.** No enrichment, no model escalation, no prompt tuning — so
+Step 4.3.2.4's revision cycle was not run. What that decision costs, stated plainly:
+
+- **400 of 2,007 pairs carry no usable verdict.** Rate denominators are **832 of 1,096** and **775 of
+  911**.
+- **47 of the M6 sample's 200 rows are `unclear`** (§14.9.5), so roughly a quarter of the human's 2–3
+  hours audits abstentions rather than judgements.
+- **`unclear` was never folded into `irrelevant`** (Step 5.1.1.3), so the statistics are narrowed, not
+  corrupted. That is the whole reason a high `unclear` rate is survivable.
+
+**The remedy is still on the table and is now a better deal.** §11.2.1(c) and §11.6 say to enrich with the
+indexed service description — `srm_services.description`, populated **94.3%** — which is supplying data,
+not helping the model reason, so rule 7 is intact. Measured cost of the enriched run: about **$0.5**. At
+19.93% it buys back roughly twice what it would have at the 15.5% the slice suggested. **Note the prompt
+asks for abstention**: it tells the model that `0` is legitimate and preferable to guessing, so some of
+this rate is instruction-following rather than ignorance — which is another reason to reach for data
+before reaching for prompt edits.
+
+#### 14.9.5 Mission 6 Phase 6.1 — the sheet exists, the gate does not move
+
+`--review-sample` emitted **200 rows** to `evaluation/results/human_review_sample.csv`, with a durable
+copy at `evaluation/data/human_review_sample-2026-07-30.csv` (untracked). **Both are byte-identical** —
+`sha256:a1eef25a84f09beaa2ce97b2524ff6eb9b508c4d726e72ed75dcc21adc2fa29c` — which is §14.7.3 step 3's
+"copy the sheet out of `results/`" actually performed rather than merely prescribed.
+
+Strata, allocation, the withheld columns, seed reproducibility across three emissions, the 200/200 identity
+check against the frozen snapshot, the blank-sheet read-back and the identity guard are all under
+**Steps 6.1.1.1 – 6.1.2.2**, with evidence. The correction that matters most is there too: **§14.7.2's
+4.8× lift on the `unclear` cells does not transfer** — it was measured against synthetic verdicts skewed
+to ~2% `unclear`, and at the real 19.93% the floor barely binds, giving **1.06× and 1.40×**.
+
+**The gate is OPEN.** No `human_verdict` cell is filled; `reviewed_count` reads 0 against `sample_size`
+200. **No human verdict was fabricated, simulated or seeded anywhere.** This is now the single point
+between the project and a Mission 7 session, and it is the one point no code can move.
+
+#### 14.9.6 What the run cost, and why the estimate was wrong
+
+**$0.0739 list / $0.0370 batched** over 1,967 pairs: `promptTokenCount` **119,387**,
+`candidatesTokenCount` **29,397**, `thoughtsTokenCount` **0**. Per pair that is **60.7 input / 14.9
+output** against the estimate's 40/51. **The full comparison, and the four reasons the estimate missed,
+are tabulated in §11.6** — the headline being that the largest error was neither Hebrew tokenisation nor
+thinking but **chunk occupancy**: chunks average **16.3** pairs, not 40, because `chunk_judgement_items`
+groups by `(query, side)` before splitting, so the 501-token system prompt is amortised over 2.5× fewer
+pairs than assumed.
+
+The two calibrations that were nearly right are worth recording as well, since they are the ones a future
+estimate should reuse: **system prompt 501 tokens** (est. ~600) and **Hebrew service name ~25 tokens**
+(est. ~20).
+
+#### 14.9.7 What is owed after this session
+
+1. **The human sitting.** 200 rows, 2–3 hours, `human_verdict` ∈ `relevant` / `irrelevant` / `unclear`
+   and `human_notes` only. Runbook: §14.7.3, steps 4–7. **Until this happens, nothing measured today may
+   be presented.**
+2. **Commit `evaluation/relevance_marker_vars.py`.** It is untracked and load-bearing: without it a clean
+   checkout cannot import the judging path. Adjusted metrics from the committed labels still work.
+3. **Split the Gemini keys.** §14.8.1's second half is still open — one credential serves both the judge
+   and retrieval's embedder, so neither is independently revocable.
+4. **Decide on enrichment.** §14.9.4 leaves the door open at ~$0.5; it is a re-judge and a re-sample
+   (§14.7.3's closing note), not a rewrite.
+5. **Re-run the band table at `SCORE_BAND_WIDTH = 0.01`** before Phase 7.1 — §14.5's recommendation,
+   still standing, now with real verdicts to band.
+6. **Before Mission 7, remember Task 7.1.1's constraint has not changed.** §14.4.2 and §14.4.3 item 4: the
+   offline sweep can only explore operating points **at or narrower than the judged arm**, and must not
+   silently re-query.
+
+---
+
+## 15. How the evaluation works — a guide for the team lead
+
+**Read this section alone.** It does not assume you have read §0–§14, and it repeats the few numbers
+that matter rather than pointing at them. Section numbers appear only where you might want to dig
+further; nothing here depends on you following them.
+
+**The one-paragraph version.** We score our retrieval service by asking whether it returns the same
+services the *old* Kolsherut site returns for the same query. It currently reproduces about 43% of
+the old site's services and about 24% of what we return appears on the old site. Those numbers are
+almost certainly pessimistic, because the old site is not a definition of relevance — so we hired an
+LLM to look at every disagreement and say who was right. It says roughly half the disagreements are
+ours to be proud of. **That LLM has not yet been checked against a human, and until it is, none of
+its numbers may be used for anything.** Closing that check is a 2–3 hour manual sitting, and it is
+the only thing standing between us and a decision.
+
+### 15.1 What is being evaluated, and against what
+
+**We are scoring one service: `retrieval/`.** It is a pure hybrid search service over the
+`srm_services` data — no reranker, no LLM answer generation. Given a Hebrew query as free text it
+returns a ranked list of services. Two retrievers run in parallel and are merged:
+
+| Term | In half a sentence |
+| --- | --- |
+| **kNN** | *k-nearest-neighbour* search — the query is turned into a vector ("embedded") and Elasticsearch finds the service vectors closest to it. |
+| **cosine** | The similarity measure between those two vectors, roughly "how close in meaning", on a comparable-across-queries scale. |
+| **BM25** | Classic keyword scoring — rewards documents sharing rare words with the query. This is the *lexical* half. |
+| **RRF** | *Reciprocal rank fusion* — merges the two ranked lists using positions rather than raw scores, so a BM25 score and a cosine never have to be made commensurate. |
+
+**The golden set is not a set of relevance labels. It is the incumbent site's own output.** This is
+the single most important fact in this document. `evaluation/data/Raw-Golden-Set.csv` holds 65 rows,
+each a Hebrew query plus the `kolsherut.org.il` URL a curator landed on. That URL is a complete search
+state, so "the right answer" is defined as *the set of services the existing site renders at that
+URL*. We render each URL on `https://staging.kolsherut.org.il/` in a headless browser, read the
+service-name headings off the page, and cache the result in
+`evaluation/data/golden-set-ground-truth.json`. Matching between the two sides is by service **name**,
+normalised on both sides.
+
+**The consequence, stated bluntly: a low score can mean "we disagree with the old site" rather than
+"we are wrong."** Nobody ever labelled these queries for relevance. The old site's ranking, filtering
+and taxonomy decisions are baked into the ground truth, including its mistakes and its omissions.
+Every number in §15.3 is a *similarity-to-incumbent* number, not a quality number.
+
+**Coverage.** Of the 65 rows, **59 are actually scored**. Two render no results page at all and are
+recorded as `skipped_unsupported` with a reason; six have an empty golden set (the site shows nothing)
+and are excluded from the ranking metrics, because recall would be a division by zero. Those six are
+still counted in the count-parity statistics — "the site returned nothing, so should we" is a real
+signal.
+
+### 15.2 The pipeline, end to end
+
+Five steps, one command, no dependency on the BE:
+
+1. **Load the dataset** — 65 query/URL rows from the CSV.
+2. **Load the ground truth** — from the committed cache, or re-scrape staging in a headless browser
+   if the CSV changed, the host changed, or `--rescrape` was passed.
+3. **Query retrieval** — one `POST /api/retrieve` per query with the free-text query only, taking back
+   the ranked service names *and* the per-service scores (fused RRF score, cosine, cosine ratio, BM25).
+4. **Compute metrics** — per query, then averaged across queries.
+5. **Write outputs and gate** — the process exits non-zero if a configured threshold is unmet, so it
+   can gate CI. No thresholds are configured today, so it is report-only.
+
+Everything lands in `evaluation/results/`, which is **gitignored** — every file is a run artifact, not
+data:
+
+| File | What it is for |
+| --- | --- |
+| `summary.json` | The complete machine-readable result: all metrics, the run meta, and every per-query record. Everything else is derived from it. |
+| `per_query.csv` | One row per query — golden-set size, returned count, missed and unexpected counts, set-level metrics, hits at each cutoff. **This is where you find the weak queries.** |
+| `service_diff.csv` | *Which* services differ, one row per query × service, with a `side` column: `missed_ground_truth` (site shows it, we never returned it — a recall failure) or `unexpected_retrieved` (we returned it, the site does not show it). |
+| `unexpected_retrieved.json` | The `unexpected_retrieved` side with retrieval's scores attached per service. This is the file the LLM judge reads. |
+| `missed_ground_truth.json` | The `missed_ground_truth` side, same schema. Its score columns are always blank by construction — we never retrieved these, so nothing ever scored them. Blank, deliberately not zero. |
+| `report.html` | A self-contained dashboard with the data inlined. Double-click it; no server needed. **Start here if you want a feel for a run.** |
+
+### 15.3 The metrics, in plain language
+
+Seven ranking metrics are computed at five cutoffs, `k ∈ {3, 5, 10, 25, 50}`, and averaged over the
+59 scored queries. The two you will actually be quoted are precision and recall:
+
+- **Precision@k** — of the top k services we showed, what fraction does the site also show. "How much
+  of what we say is corroborated."
+- **Recall@k** — of all the services the site shows, what fraction did we surface in our top k. "How
+  much of the site's answer we reproduce."
+- **F1@k** — their harmonic mean, one number balancing the two.
+
+The others answer narrower questions: **MRR** (how high is the *first* corroborated result), **Hit
+Rate** (did *any* appear at all), **nDCG** and **MAP** (rank-aware quality — the same hits score
+higher when they sit higher).
+
+**"Recall ALL" — `recall_at_returned` — was requested because every metric above is blind to
+truncation.** All of them divide by a fixed `k`, so they cannot see the tail of the list at all;
+dropping a non-hit off the end changes nothing. `recall_at_returned` divides by the golden-set size
+and counts hits anywhere in the list we *actually returned*, however long it is. It answers "did we
+find it at all, anywhere?" — which is the honest recall question. Its two siblings,
+`precision_at_returned` and `f1_at_returned`, divide by the returned length. F1 over the returned set
+is the number to optimise when tuning a score cutoff, because it is the only one with an interior
+maximum: cutting junk raises precision, cutting too far costs recall.
+
+**Count parity** asks a separate question: do we return roughly *as many* services as the site does.
+Per query it is `min(r+1, g+1) / max(r+1, g+1)` with `r` = our count and `g` = the site's — symmetric,
+scale-free, `1.0` at exact parity, and penalising over- and under-returning equally. The counts are
+badly skewed (the golden set runs from 0 to 230 services), so the reported companions are medians and
+a geometric mean rather than a plain average.
+
+**`overall_score` is a composite and its absolute value means very little.** It is the equal-weighted
+mean of all 35 cells (7 metrics × 5 cutoffs) — nothing more. It deliberately excludes the set-level
+metrics and the count statistics. Treat it as a single knob for comparing two runs of the *same*
+shape, never as "the system is 37% good". Two arms measured with different retrieval configuration
+produce `overall_score`s that are not comparable at all.
+
+**The numbers, as of the arm the judge was run against** (`results-arm4-v4-gemini`, the frozen
+snapshot — see §15.10 on why the arm matters):
+
+| Metric | Value | Reading |
+| --- | --- | --- |
+| `recall_at_returned` | **0.4285** | We surface ~43% of the services the site shows, somewhere in our list. |
+| `precision_at_returned` | **0.2397** | ~76% of what we return is not on the site. |
+| `overall_score` | **0.3694** | Composite; comparison-only. |
+
+### 15.4 Why the raw numbers understate quality
+
+**Three reasons, all structural, none of them a bug we could fix by improving ranking.**
+
+**The golden sets are small, so precision is capped arithmetically.** The median golden set is 8
+services. If the site lists 8 and we return 24, our precision cannot exceed 0.33 even if every one of
+those 8 is in our top 8 and everything else we return is excellent. Precision here is partly a measure
+of *list length*, not of correctness.
+
+**A few queries have enormous golden sets, and they distort averages in the other direction.** The
+range runs to 230 services for a single query. That is why the count statistics lead with medians and
+geometric means rather than arithmetic ones.
+
+**The site is not a relevance oracle.** It is a product with its own filters, its own taxonomy and its
+own ranking, built by people making judgement calls. When we return a genuinely useful service that
+the site does not list, we are penalised twice — once on precision, and once because that service can
+never appear in the golden set of any query.
+
+None of this means the numbers are worthless. It means they are a **relative** signal: "arm B beats
+arm A" is trustworthy, "we are 24% precise" is not.
+
+### 15.5 What the LLM judge adds, and why it exists
+
+**The judge exists to separate "our ranking is bad" from "the golden set is narrow."** The base
+pipeline cannot tell those apart, and the difference decides what we work on next. If most of our
+"false positives" are genuinely useful services, then `precision_at_returned` is measuring the golden
+set and we should be arguing about ground truth, not tuning thresholds. If most are junk, precision is
+real and tuning is the job.
+
+**How it works.** Both diff files — everything we returned that the site does not show, and everything
+the site shows that we never returned — are handed to `gemini-3.1-flash-lite` in batches. For each
+pair it sees the **Hebrew query and the Hebrew service name** and answers with a single character:
+`V` = relevant, `X` = irrelevant, `0` = unclear. Those are decoded to `relevant` / `irrelevant` /
+`unclear` at the parsing boundary; nothing downstream sees a letter.
+
+The prompt tells the model to answer one question — *would a person who asked this query be helped by
+this service?* — and explicitly not to judge on shared wording or shared category. It also tells the
+model that `0` is a legitimate answer and preferable to guessing.
+
+**Scale and cost, measured:** 2,007 pairs (1,096 unexpected + 911 missed), of which 1,967 went to the
+API as 119 batched chunks and 40 were already cached; **zero** unjudged; **$0.0370** batched
+(**$0.0739** at list price); 92 seconds of batch wall clock. The labels
+are committed to `evaluation/data/relevance-judgements.json`, pinned to content hashes of the two
+input files, so the judging is not re-bought on every run and cannot silently drift onto a different
+dataset.
+
+### 15.6 What it found — and the gate that makes it unquotable
+
+> ## ⛔ NOTHING IN THIS SUBSECTION MAY BE QUOTED, CHARTED, OR PUT IN A STATUS UPDATE.
+>
+> The judge has **not been audited against a human**. Until the human audit in §15.8 runs and passes,
+> every number below is a hypothesis, not a finding. The specific trap: **`adjusted_precision_at_returned`
+> is 0.5891, and it is not our precision.** It is what our precision would be *if the judge is right*,
+> and we do not yet know whether the judge is right. An unaudited judge that happens to agree with us
+> is the top risk in §12, not a result.
+
+With that stated, here is what the labels say.
+
+| side | `relevant` | `irrelevant` | `unclear` | total |
+| --- | ---: | ---: | ---: | ---: |
+| `unexpected_retrieved` (we returned, site does not show) | 430 | 402 | 264 | **1,096** |
+| `missed_ground_truth` (site shows, we never returned) | 366 | 409 | 136 | **911** |
+
+**Both sides of the disagreement are roughly half genuine.** The two headline rates, each computed
+over the pairs the judge actually decided (`unclear` is excluded from the denominator, never folded
+into `irrelevant`):
+
+| Rate | Value | Reads as |
+| --- | --- | --- |
+| `unexpected_actually_relevant_rate` | **0.5168** (430/832) | About half of what we return and the site does not show is genuinely useful. |
+| …`_excluding_empty_ground_truth` | **0.5356** (406/758) | The same, dropping 97 rows from 4 queries where the site shows *nothing*, so "the site doesn't show it" carries no information. **Any "vs the incumbent" framing must use this variant.** |
+| `missed_truly_irrelevant_rate` | **0.5277** (409/775) | About half of what we "failed" to retrieve was not worth retrieving. |
+
+Read literally, that is the golden-set-narrowness answer to §15.4's question, on both sides at once.
+The three adjusted metrics that follow from it — `adjusted_precision_at_returned` **0.5891**,
+`adjusted_recall_at_returned` **0.5447**, `adjusted_f1_at_returned` **0.4341** — are computed by
+crediting the unexpected services the judge called relevant and shrinking the golden set by the missed
+services it called irrelevant. **They are gated by §3.2 and §12 and are not usable.**
+
+### 15.7 The `unclear` caveat
+
+**One pair in five came back `unclear`, and the reason is that the judge sees very little.** It gets
+the Hebrew query and the Hebrew service name — nothing else. Many Kolsherut service names are
+organisation names or opaque acronyms that say nothing about what is offered, and the prompt correctly
+instructs the model to abstain rather than guess.
+
+| Slice | `unclear` share |
+| --- | --- |
+| Overall | **19.93%** (400 / 2,007) |
+| `unexpected_retrieved` | **24.09%** (264 / 1,096) |
+| `missed_ground_truth` | **14.93%** (136 / 911) |
+
+**What this costs: the rates in §15.6 are computed over ~76–85% of the pairs, not all of them** — 832
+of 1,096 on the unexpected side, 775 of 911 on the missed side. The statistics are therefore
+*narrowed*, not corrupted: `unclear` was never counted as `irrelevant`, and every rate is emitted with
+its own numerator and denominator so a reader can see how far it shrank. The planned tripwire for this
+was 10%; the full run came in at twice that, and the decision at the time was to proceed anyway.
+
+**The fix is known, cheap, and an open decision.** Add the indexed service description to what the
+judge sees — the field is populated for 94.3% of services — and re-judge. Measured cost of the
+enriched run: **about $0.5**. This is supplying data, not helping the model reason, so it does not
+compromise the judge. The catch is that a re-judge invalidates the label cache and therefore requires
+a fresh review sheet, so it should be decided **before** anyone spends the 2–3 hours in §15.8, not
+after.
+
+### 15.8 The human audit — the decision in front of the team
+
+**Someone has to sit for 2–3 hours. That is the entire remaining cost of this project, and no code can
+substitute for it.**
+
+`--review-sample` emits `evaluation/results/human_review_sample.csv`: **200 rows**, each carrying only
+`review_id, query, side, rank, service_name, human_verdict, human_notes`, with the last two blank. The
+reviewer fills in `human_verdict` with `relevant`, `irrelevant` or `unclear` and optionally a note.
+Rows must not be added, removed or reordered. A partly filled sheet is fine — blanks are never counted
+as verdicts, and coverage is reported separately.
+
+**The LLM's verdict and all five score columns are deliberately withheld, and the rows are shuffled.**
+Shown the judge's answer, or a cosine of 0.85, a reviewer anchors on it and the resulting number stops
+measuring agreement. A header assertion enforces the omission. The draw is stratified by side ×
+verdict with a floor per cell so rare cells survive, and it is seeded, so two reviewers can be handed
+byte-identical sheets and the run can recover which row was which.
+
+**The gate is `raw_agreement ≥ 0.85` AND `cohens_kappa ≥ 0.60`, and both are always reported.**
+
+- *Raw agreement* is simply the share of reviewed rows where the human said what the judge said.
+- *Cohen's κ* ("kappa") is the same agreement corrected for how much two raters would have agreed by
+  chance given how often each label is used.
+
+**Why both are required.** With a skewed label distribution, raw agreement can read 0.93 while κ sits
+near zero — that combination means the judge is not judging, it is guessing the majority class and
+being right most of the time because the majority class is common. Raw agreement alone cannot detect
+that; κ alone is hard to interpret and undefined in degenerate cases (it is written as `null` then,
+and `null` does not pass). Reporting one without the other hides the exact failure we are testing for.
+
+**What happens if the gate fails is a decision, not an automatic action** — the run still exits 0. The
+permitted responses are revising the judge prompt, or escalating to a stronger model; either way the
+label cache invalidates and the judging is re-bought (which is cheap). What is *not* permitted is
+presenting §15.6's numbers anyway.
+
+**Practical note before scheduling it:** at the current `unclear` rate, 47 of the 200 sampled rows are
+rows the judge abstained on, so roughly a quarter of the sitting audits abstentions rather than
+judgements. That is another argument for settling §15.7's enrichment decision first.
+
+### 15.9 How to run it
+
+All commands run **from the repo root**. One-time setup lives in `evaluation/README.md` (a venv,
+`pip install -r requirements.txt`, `playwright install chromium`, and a `.env` copied from
+`.env.example`).
+
+**The ordinary run.** Needs the retrieval service on `:8200` and its Elasticsearch up. Free, offline
+with respect to any LLM, no API key read, fully reproducible modulo Elasticsearch tie-breaking.
+
+```bash
+python -m evaluation.run_evaluation
+```
+
+**A quick smoke run** over the first N queries. Same prerequisites. A limited run deliberately never
+overwrites the ground-truth cache with a partial scrape.
+
+```bash
+python -m evaluation.run_evaluation --limit 5
+```
+
+**Refresh the scraped ground truth first.** Additionally needs network access to
+`staging.kolsherut.org.il` and the Playwright Chromium download. Staging data can change without the
+CSV changing and nothing detects that, so this is the only way to refresh — run it whenever the
+underlying service data has moved.
+
+```bash
+python -m evaluation.run_evaluation --rescrape
+```
+
+**Judge the disagreements with the LLM.** Opt-in, costs money, requires `GEMINI_JUDGE_API_KEY` in
+`.env`. It runs the full evaluation first, so retrieval and Elasticsearch must be up; the judging
+stage itself reads a frozen snapshot rather than the run's own output. Already-judged pairs are served
+from the committed cache.
+
+```bash
+python -m evaluation.run_evaluation --judge
+```
+
+**Judge only the first N pairs.** Useful as a smoke test of the judging path. Note that it truncates
+by position rather than sampling, so its output is a smoke test and **not** an estimate of anything.
+
+```bash
+python -m evaluation.run_evaluation --judge --judge-limit 200
+```
+
+**Emit the human review sheet** (default 200 rows; pass a number for a different size). Needs *no*
+retrieval service, no Elasticsearch, no network and no API key — it reads the frozen snapshot and the
+committed labels only. It also **does no evaluation and writes no other artifact**.
+
+```bash
+python -m evaluation.run_evaluation --review-sample
+```
+
+**Read the filled-in sheet back and compute the gate.** Same zero prerequisites as above.
+
+```bash
+python -m evaluation.run_evaluation --agreement
+```
+
+That is the complete flag list: `--limit`, `--rescrape`, `--judge`, `--judge-limit`,
+`--review-sample`, `--agreement`.
+
+### 15.10 What to trust, and what not to quote
+
+**Safe to use today**
+
+- `recall_at_returned` and the per-k metrics, **as a relative signal** — "this arm beats that arm" is
+  a claim the pipeline supports well.
+- `per_query.csv` and `service_diff.csv` as diagnostics. Which queries are weak, and which specific
+  services we miss, are directly observable facts.
+- The count-parity statistics, for the question "do we return a sane number of results".
+- The judge's *operational* record: 2,007 pairs, zero unjudged, $0.037. That the run completed cleanly
+  is a fact; what the verdicts mean is not.
+
+**Not safe to quote**
+
+- **`adjusted_precision_at_returned` 0.5891, `adjusted_recall_at_returned` 0.5447,
+  `adjusted_f1_at_returned` 0.4341** — gated on the human audit. This is the number most likely to end
+  up in a status update by accident.
+- **`unexpected_actually_relevant_rate` 0.5168 and `missed_truly_irrelevant_rate` 0.5277** — same gate.
+- **Any absolute framing of `precision_at_returned`** as a quality statement. It is a
+  similarity-to-incumbent number with an arithmetic ceiling set by golden-set size.
+- **`overall_score` across arms measured differently.** It is an average of 35 cells and is only
+  meaningful against a like-shaped run.
+
+**One specific trap, worth knowing before you open the file.** A judged `results/summary.json` **mixes
+two arms**. Its `set_metrics` block describes whatever retrieval configuration was serving when the
+run executed; its `relevance` block describes the *frozen snapshot* the judge was run against, which
+may be a different arm entirely. Adjacent keys in that one file must not be differenced. Concretely,
+in the current file `set_metrics.precision_at_returned` is 0.1956 (live arm) while
+`relevance.adjusted_set_metrics.adjusted_precision_at_returned` is 0.5891 (frozen arm) — subtracting
+them gives **+0.3935**, which is wrong. The correct comparison is against the frozen arm's own
+unadjusted 0.2397, giving **+0.3494**. Both blocks are individually correct; only the subtraction is
+wrong.
+
+**Where the numbers in this section came from.** The metric definitions are from
+`evaluation/metrics/` and `evaluation/report/compute_overall_score.py`; the run shape and the 65/59
+split are from `evaluation/results/summary.json`; the judge's counts, rates, cost and `unclear` shares
+are §14.9; the gate thresholds are `evaluation/human_review_vars.py`; the flags are
+`run_evaluation.py`'s argument parser.
