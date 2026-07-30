@@ -25,3 +25,8 @@ tokenizers==0.22.2
 huggingface-hub==1.23.0
 safetensors==0.8.0
 numpy==2.5.1
+
+# Gemini embeddings provider (only used when EMBEDDING_PROVIDER=gemini).
+# Independent of the HF stack above - do NOT let installing it move
+# transformers/tokenizers/sentence-transformers.
+google-genai==2.14.0

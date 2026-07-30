@@ -5,7 +5,7 @@ from app.services.elasticsearch.fetch_service_by_id import fetch_service_by_id
 from app.services.elasticsearch.store_service_embedding import store_service_embedding
 from app.services.service_indexing.build_service_texts import build_service_texts
 from app.services.service_indexing.service_has_embeddable_content import service_has_embeddable_content
-from app.services.text_embedding.embedding_model import embed_passage_text
+from app.services.text_embedding.embed_text import embed_passage_text
 from app.strings import (
     SERVICE_EMBED_STATUS_EMBEDDED,
     SERVICE_EMBED_STATUS_NOT_FOUND,

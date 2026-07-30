@@ -10,7 +10,7 @@ from app.services.retrieval.attach_retriever_scores import (
 from app.services.retrieval.build_retrieved_document import build_retrieved_document
 from app.services.retrieval.reciprocal_rank_fusion import fuse_rankings_by_reciprocal_rank
 from app.services.retrieval.truncate_documents_by_score import truncate_documents_by_score
-from app.services.text_embedding.embedding_model import embed_query_text
+from app.services.text_embedding.embed_text import embed_query_text
 from app.services.tracing.build_retrieval_steps import build_retrieval_steps
 from app.services.tracing.time_async_call import time_async_call
 from app.vars import CANDIDATE_POOL_SIZE, LEXICAL_WEIGHT, RRF_RANK_CONSTANT, SEMANTIC_WEIGHT

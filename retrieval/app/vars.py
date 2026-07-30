@@ -28,11 +28,50 @@ CARDS_INDEX_NAME = os.getenv('CARDS_INDEX_NAME', 'srm__cards')
 RETRIEVAL_LOGS_INDEX_NAME = os.getenv('RETRIEVAL_LOGS_INDEX_NAME', 'srm__retrieval_logs')
 LOG_LEVEL = os.getenv('RETRIEVAL_LOG_LEVEL', 'INFO')
 
-# Embedding (relative paths resolve against the service root, absolute paths are kept as-is)
+# Embedding provider selection. 'local' runs the bundled sentence-transformers model;
+# 'gemini' calls the Google Gemini embeddings API. The vectors of the two are NOT
+# interchangeable - each provider needs its own RETRIEVAL_EMBEDDINGS_INDEX_NAME.
+EMBEDDING_PROVIDER_LOCAL = 'local'
+EMBEDDING_PROVIDER_GEMINI = 'gemini'
+EMBEDDING_PROVIDER = os.getenv('EMBEDDING_PROVIDER', EMBEDDING_PROVIDER_LOCAL).strip().lower()
+
+# Local embedding provider only (EMBEDDING_PROVIDER=local) - Gemini ignores all three.
+# Relative model paths resolve against the service root, absolute paths are kept as-is.
 EMBEDDING_MODEL_PATH = str(RETRIEVAL_SERVICE_ROOT / os.getenv('EMBEDDING_MODEL_PATH', 'artifacts/retrieval-model'))
 # E5-style text prefixes - set both to empty strings for models that do not use them
 EMBEDDING_PASSAGE_PREFIX = os.getenv('EMBEDDING_PASSAGE_PREFIX', 'passage: ')
 EMBEDDING_QUERY_PREFIX = os.getenv('EMBEDDING_QUERY_PREFIX', 'query: ')
+
+# Gemini embeddings (EMBEDDING_PROVIDER=gemini). The key is a secret and has no default.
+GEMINI_EMBEDDER_API_KEY = os.getenv('GEMINI_EMBEDDER_API_KEY', '')
+GEMINI_EMBEDDING_MODEL = os.getenv('GEMINI_EMBEDDING_MODEL', 'gemini-embedding-001')
+# Native width is 3072. The model is Matryoshka-trained, so 1536 / 768 are valid truncations
+# that trade a little quality for index size - but any change here is a NEW index, not a
+# re-tune of an existing one. Truncated outputs are not unit-norm and are re-normalized.
+GEMINI_EMBEDDING_DIMENSIONS = int(os.getenv('GEMINI_EMBEDDING_DIMENSIONS', '3072'))
+# Gemini's asymmetric-retrieval task types; the E5 text prefixes are NOT used with Gemini.
+GEMINI_DOCUMENT_TASK_TYPE = 'RETRIEVAL_DOCUMENT'
+GEMINI_QUERY_TASK_TYPE = 'RETRIEVAL_QUERY'
+# Texts per API request. SERVICE_EMBED_BATCH_SIZE (64) is the reindex batch; the provider
+# re-chunks it to this, so the two knobs are independent.
+GEMINI_EMBED_REQUEST_BATCH_SIZE = int(os.getenv('GEMINI_EMBED_REQUEST_BATCH_SIZE', '32'))
+# Retry policy for 429/5xx. Exponential: base * 2**(attempt - 1) seconds.
+GEMINI_EMBED_MAX_ATTEMPTS = int(os.getenv('GEMINI_EMBED_MAX_ATTEMPTS', '5'))
+GEMINI_EMBED_RETRY_BASE_SECONDS = float(os.getenv('GEMINI_EMBED_RETRY_BASE_SECONDS', '2.0'))
+
+# Provider identity stamped into the embeddings index mappings '_meta' at creation time, and
+# read back at startup to prove the index and the live provider agree. Cross-provider kNN does
+# NOT error - it returns confident nonsense - so the stamp is the only way to catch it, and the
+# create-only ensure_retrieval_index_exists cannot fix a dimension mismatch by itself.
+INDEX_MAPPINGS_KEY = 'mappings'
+INDEX_MAPPINGS_META_KEY = '_meta'
+INDEX_MAPPINGS_PROPERTIES_KEY = 'properties'
+INDEX_META_EMBEDDING_PROVIDER_KEY = 'embedding_provider'
+INDEX_META_EMBEDDING_MODEL_KEY = 'embedding_model'
+INDEX_META_EMBEDDING_DIMENSIONS_KEY = 'embedding_dimensions'
+# The dense_vector field whose stored width is compared against the probed dimensions.
+EMBEDDING_VECTOR_FIELD_NAME = 'embedding'
+DENSE_VECTOR_DIMENSIONS_KEY = 'dims'
 
 # srm_services source field keys read while rendering service text (some contain
 # spaces/parentheses). The Hebrew situation names live across a few fields that

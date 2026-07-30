@@ -39,6 +39,36 @@ ERROR_SERVICE_NOT_FOUND = 'Service {service_id} was not found in the services in
 ERROR_SERVICE_HAS_NO_EMBEDDABLE_TEXT = 'Service {service_id} has no text in the configured embedding fields'
 ERROR_INTERNAL_SERVER = 'Internal server error: {error}'
 
+ERROR_UNKNOWN_EMBEDDING_PROVIDER = (
+    "Unknown EMBEDDING_PROVIDER '{provider}'. Supported providers: {supported}"
+)
+# Shortest possible Hebrew input; embedded once at startup to learn the vector width
+# and to fail fast on a missing local model or a bad Gemini API key.
+EMBEDDING_DIMENSION_PROBE_TEXT = 'בדיקה'
+
+# Index/provider agreement guard (checked at warm-up, before /health answers).
+ERROR_INDEX_DIMENSIONS_MISMATCH = (
+    "Embeddings index '{index}' stores {stored_dimensions}-dimension vectors, but embedding "
+    "provider '{provider}' produces {probed_dimensions}-dimension vectors. Index creation is "
+    'create-only, so this index will never be widened: either set EMBEDDING_PROVIDER back to the '
+    'provider that built it, or point RETRIEVAL_EMBEDDINGS_INDEX_NAME at a new index for this provider.'
+)
+ERROR_INDEX_PROVIDER_MISMATCH = (
+    "Embeddings index '{index}' was built by embedding provider '{stored_provider}', but the "
+    "active provider is '{provider}'. Cross-provider kNN does not error - it returns confident "
+    'nonsense - so every provider needs its own RETRIEVAL_EMBEDDINGS_INDEX_NAME.'
+)
+INDEX_MISSING_EMBEDDING_PROVIDER_META_MESSAGE = (
+    "Embeddings index '{index}' carries no mappings '{meta_key}.{provider_key}' stamp, so it "
+    "cannot be checked against the active provider '{provider}'; continuing because its "
+    '{stored_dimensions}-dimension vectors match the {probed_dimensions} dimensions probed. '
+    'Indexes created before the stamp existed (V3) look exactly like this.'
+)
+
+ERROR_MISSING_GEMINI_API_KEY = 'EMBEDDING_PROVIDER is gemini but GEMINI_EMBEDDER_API_KEY is not set'
+ERROR_GEMINI_EMBED_FAILED = 'Gemini embedding request failed after {attempts} attempts: {error}'
+GEMINI_EMBED_RETRY_MESSAGE = 'Gemini embed attempt {attempt}/{attempts} failed ({error}); retrying in {delay}s'
+
 HEALTH_STATUS_OK = 'ok'
 
 SERVICE_EMBED_STATUS_EMBEDDED = 'embedded'
