@@ -2,7 +2,7 @@ from app.services.elasticsearch.bulk_store_service_embeddings import bulk_store_
 from app.services.elasticsearch.ensure_retrieval_index_exists import ensure_retrieval_index_exists
 from app.services.service_indexing.build_service_texts import build_service_texts
 from app.services.service_indexing.service_has_embeddable_content import service_has_embeddable_content
-from app.services.text_embedding.embedding_model import embed_passages_batch
+from app.services.text_embedding.embed_text import embed_passages_batch
 from app.strings import SERVICE_EMBED_STATUS_EMBEDDED, SERVICE_EMBED_STATUS_SKIPPED_NO_TEXT
 from app.vars import SERVICE_ID_FIELD_NAME
 

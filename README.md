@@ -316,6 +316,44 @@ Current automated behavior:
 - Push to `main` updates **staging** (FE + BE independently, only if their folders changed).
 - Creating a Git tag (and publishing a GitHub Release) triggers **production** build & deploy (again only for changed component paths).
 
+### Codebase Knowledge Graph
+
+Every push to `main` / `dev` builds a queryable knowledge graph of the codebase (the
+`Graphify Knowledge Graph` workflow). Use it instead of grepping when you need to know
+how components connect.
+
+**Get the latest graph:**
+```bash
+gh run download -n graphify-graph -D graphify-out
+```
+
+**Query it** (requires `pipx install graphifyy==0.9.29`):
+```bash
+graphify query "how does retrieval connect to ETL?"
+graphify path "<node A>" "<node B>"     # shortest path between two nodes
+graphify affected "<node>"              # what breaks if this changes
+graphify god-nodes --top 10             # most connected hubs
+```
+
+`graphify-out/graph.html` is an interactive visualization; `GRAPH_REPORT.md` lists hubs
+and suggested questions.
+
+**What the graph covers:** Python, TypeScript/TSX and JS across `ETL/`, `FE/`, `be/`,
+`retrieval/` and `evaluation/` — functions, classes, imports and call edges, parsed
+locally with tree-sitter AST.
+
+**What it does NOT cover.** The graph is built `--code-only`, so absence of something is
+not evidence it doesn't exist:
+- No YAML. `Infra/`, `docker-compose.yml` and `.github/workflows/` are **not** in the
+  graph — do not use it to answer infrastructure or deployment questions.
+- No Markdown, and no images.
+- Communities are unnamed placeholders (`Community 1`, ...).
+- `retrieval/artifacts/` (the Git LFS embedding model) is excluded via `.graphifyignore`.
+
+For a fuller graph that *does* include `Infra/` and the docs, run `/graphify .` locally in
+an AI assistant that has the graphify skill installed — that path uses the assistant's own
+model, so it needs no API key.
+
 ---
 ## Deployment & Release Guide (For All Team Members)
 Simple steps for staging (test) and production (live). No local build needed.

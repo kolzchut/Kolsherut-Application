@@ -1,6 +1,6 @@
 from evaluation.strings import ERROR_MISSING_GROUND_TRUTH, LOG_EVALUATING_QUERY, LOG_SKIPPING_QUERY
 from evaluation.schemas import Example, QueryEvaluation, ScrapedPage
-from evaluation.clients.retrieval_client import fetch_retrieval_ranked_names
+from evaluation.clients.retrieval_client import fetch_retrieval_ranked_names_and_scores
 from evaluation.metrics.evaluate_query import evaluate_query
 
 
@@ -13,8 +13,8 @@ def build_skipped_evaluation(example: Example, scraped: ScrapedPage) -> QueryEva
 
 
 def evaluate_single_example(example: Example, scraped: ScrapedPage) -> QueryEvaluation:
-    ranked_names = fetch_retrieval_ranked_names(example.query)
-    return evaluate_query(example, ranked_names, scraped.service_names)
+    ranked_names, service_scores = fetch_retrieval_ranked_names_and_scores(example.query)
+    return evaluate_query(example, ranked_names, scraped.service_names, service_scores)
 
 
 def resolve_scraped_page(example: Example, ground_truth: dict[str, ScrapedPage]) -> ScrapedPage:

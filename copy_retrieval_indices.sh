@@ -3,8 +3,8 @@
 # from a local ES on :9200  ->  a (port-forwarded) ES on :9201.
 #
 # Indices are the ones read by retrieval/app (see retrieval/app/vars.py):
-#   srm_services                         - source services
-#   srm__services_retrieval_embeddings   - kNN embeddings index
+#   srm_services                           - source services
+#   $RETRIEVAL_EMBEDDINGS_INDEX_NAME       - kNN embeddings index (versioned, see below)
 # srm__cards is intentionally NOT copied: the target already holds a larger/newer
 # copy that must stay untouched. The weekly srm__retrieval_logs_* indices are
 # write-only output and are not copied either.
@@ -20,7 +20,12 @@ set -euo pipefail
 export PYTHONUTF8=1
 export PYTHONIOENCODING=utf-8
 
-INDICES=("srm_services" "srm__services_retrieval_embeddings")
+# The embeddings index name is versioned (it changes whenever the embedded text changes), so it is
+# overridable here instead of hardcoded - keep the default in step with Infra/values.yaml, or a
+# rename silently copies the stale index.
+EMBEDDINGS_INDEX="${RETRIEVAL_EMBEDDINGS_INDEX_NAME:-srm__services_retrieval_embeddings_v3_enriched}"
+
+INDICES=("srm_services" "$EMBEDDINGS_INDEX")
 
 SOURCE="http://127.0.0.1:9200"                 # local ES
 TARGET="http://127.0.0.1:9201"                 # port-forwarded remote ES

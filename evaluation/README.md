@@ -117,7 +117,7 @@ The set-level metrics divide by `|R|`, the length of the list retrieval **actual
 | Metric | Formula (per query) |
 | --- | --- |
 | **Precision@returned** | `hits / |R|` |
-| **Recall@returned** | `hits / |G|` |
+| **Recall@returned** (aka **Recall ALL**) | `hits / |G|` |
 | **F1@returned** | `2·P·R / (P+R)` |
 
 Cutting a non-hit shrinks precision's denominator while the numerator holds, so precision rises;
@@ -175,12 +175,26 @@ cp .env.example .env                                  # adjust URLs if not on de
 python -m evaluation.run_evaluation                   # full run (all queries)
 python -m evaluation.run_evaluation --limit 5         # quick smoke run
 python -m evaluation.run_evaluation --rescrape        # refresh the scraped ground truth first
+
+# LLM relevance judging - OPT-IN, costs money, needs GEMINI_JUDGE_API_KEY in .env:
+python -m evaluation.run_evaluation --judge                  # judge the whole frozen snapshot
+python -m evaluation.run_evaluation --judge --judge-limit 200  # judge the first 200 pairs only
+
+# Human audit of the judge - free, offline, no credential. Neither flag evaluates anything:
+python -m evaluation.run_evaluation --review-sample       # emit a 200-row review sheet
+python -m evaluation.run_evaluation --review-sample 400   # ...or N rows
+python -m evaluation.run_evaluation --agreement           # read the filled-in sheet back
 ```
+
+Without `--judge` the run is **free, offline and reproducible** — no API key is read and no LLM is
+called. `--judge-limit` logs exactly how many pairs it skipped, because a truncated judgement set
+otherwise reads as full coverage downstream.
 
 Set `EVAL_BROWSER_HEADLESS=false` to watch the scraper drive a visible browser — useful when a
 selector stops matching after an FE change.
 
-Outputs land in `evaluation/results/`:
+Outputs land in `evaluation/results/`, which is **gitignored** — every file below is a run
+artifact reproduced by the next run, never committed data:
 - `summary.json` — full metrics, meta and per-query data.
 - `per_query.csv` — one row per query (ground-truth size, returned count, missed and unexpected
   counts, set-level metrics, hits@k) for spotting weak queries and count mismatches.
@@ -190,7 +204,79 @@ Outputs land in `evaluation/results/`:
   does not show it). `rank` is the name's 1-based position on its own side, so a low rank on the
   unexpected side is a high-confidence false positive. Filter or pivot this to see *what* is wrong,
   not just how much.
+- `unexpected_retrieved.json` — the `unexpected_retrieved` side of that diff with **retrieval's
+  scores attached**, for feeding a relevance judge that has to decide whether a "false positive"
+  really is one. Per query: `query, ground_truth_size, returned_count, count, services` (plus
+  `skip_reason` when the query was skipped). Each element of `services` is an object —
+  `rank, service_name, retrieval_score, cosine_score, cosine_score_ratio, lexical_score,
+  semantic_score` — so the scores travel with the name instead of needing a join. A `null` score
+  means that retriever never surfaced a document for the service, which is **not** the same as
+  scoring it zero. Written with `ensure_ascii=False`, so Hebrew stays readable. Skipped queries
+  carry `count: null` and `services: []` rather than a misleading zero.
+- `missed_ground_truth.json` — the `missed_ground_truth` side, same schema and same
+  `(query, side, rank)` join to `service_diff.csv`, for judging whether a recall "failure" was a
+  service worth returning at all. All five score fields are **always `null`** here: retrieval never
+  returned these services, so no retriever ever scored them. Blank is the honest value — a zero
+  would claim the embedder scored them maximally dissimilar, which is a different statement. The
+  keys are emitted anyway so both files share one schema and one stable column set.
 - `report.html` — the dashboard with data inlined; **open directly** (double-click).
+- `relevance_judgements.csv` — `--judge` only. Every judged pair with its scores next to its verdict:
+  `query, side, rank, service_name, retrieval_score, cosine_score, cosine_score_ratio, lexical_score,
+  semantic_score, verdict, model, judged_at`. The first four columns are `service_diff.csv`'s,
+  so the two join on `(query, side, rank)`. Score cells are **blank, never `0.0`**, whenever no
+  retriever produced that score — always on the `missed_ground_truth` side, and on the
+  `unexpected_retrieved` side wherever BM25 never surfaced the document.
+- `relevance_by_score_band.csv` — `--judge` only. The verdict share per ~0.05 score band over the
+  `unexpected_retrieved` side, once by `cosine_score` and once by `cosine_score_ratio`. The ratio table
+  is the threshold-selection evidence: `SEMANTIC_SCORE_RATIO` is what actually cuts on it. Also printed
+  to the console.
+- `human_review_sample.csv` — `--review-sample` only. The sheet a **human** fills in: exactly
+  `review_id, query, side, rank, service_name, human_verdict, human_notes`, the last two blank. See
+  the section below for what is deliberately *not* in it.
+- `agreement_report.json` — `--agreement` only. `sample_size`, `reviewed_count`, `raw_agreement`,
+  `cohens_kappa`, `confusion_by_side`, `agreement_by_verdict`, `disagreement_rows`, plus the
+  `gate` verdict, the `sample_strata` counts, the judge model and the sample seed.
+
+### The human audit of the judge
+
+The judge's verdicts are only worth using if a person agrees with them, so `--review-sample` /
+`--agreement` measure that. Both flags read the frozen snapshot and the committed label cache and
+**nothing else** — no credential, no retrieval call, no scrape — so a run that passes either one
+**does no evaluation and writes no other artifact**. Judge first: with no labels, `--review-sample`
+raises rather than emitting an empty sheet.
+
+The sheet **withholds the LLM's `verdict` and all five score columns**, and the rows are
+shuffled. That is the whole point: shown the judge's answer, or a cosine of 0.85, a reviewer anchors
+on it and the agreement number stops measuring agreement. A header assertion enforces it.
+
+The draw is **stratified by `side` × `verdict`** with a floor per non-empty cell before a proportional
+split, so rare cells survive — `unclear` is ~2% of the pairs and would otherwise get a couple of rows
+or none. It is seeded from `REVIEW_SAMPLE_SEED`, so the same N always yields the same rows and two
+reviewers can be handed identical sheets. `--agreement` **redraws** the sample from that seed to
+recover what the judge said, and refuses the sheet if any identity column disagrees with the redraw.
+
+Fill in `human_verdict` with `relevant`, `irrelevant` or `unclear`; `human_notes` is free text. Only
+those two columns may be edited — **do not add, remove or reorder rows**. A **partly filled sheet is
+fine**: a blank verdict is never counted as a verdict, and `reviewed_count` is reported separately
+from `sample_size`.
+
+The gate is `raw_agreement ≥ 0.85` **and** `cohens_kappa ≥ 0.60`, and **both numbers are always
+reported**: with a skewed verdict distribution raw agreement can read 0.93 while κ sits near zero,
+which means the judge is guessing the majority class. A failed gate is **reported, never acted on** —
+the run still exits 0. The response is a decision: revise the judge prompt only, re-judge (the cache
+invalidates on a prompt change), re-sample. An undefined κ (nothing reviewed, or both raters used one
+class) is written as `null` and does **not** pass.
+
+### The frozen judging snapshot
+
+`--judge` reads `evaluation/results-judge-frozen/`, **not** `results/`. That is deliberate: a retrieval
+configuration does not identify the dataset. Elasticsearch's approximate kNN resolves pool-boundary
+near-ties differently between byte-identical calls, so re-running never reproduces the same pair set, and
+any concurrent run overwrites `results/`. The frozen directory holds the two diff JSON files plus
+`judge_input_manifest.json`, which records their SHA-256 hashes, the pair and chunk counts, the headline
+score and the retrieval config the run used. `results*/` is gitignored, so the snapshot stays local — the
+committed artifact is `data/relevance-judgements.json`, the labels plus those two input hashes. Paths live
+in `relevance_input_vars.py` and are intentionally not env-overridable.
 
 Names live in their own file because the two sides are lopsided: median ground truth is 8 services,
 median returned count is ~283, so an unexpected-name list per row would be unreadable.
@@ -219,16 +305,28 @@ run_evaluation.py     entry point: load → scrape/cache → evaluate → aggreg
 evaluate_dataset.py   per-query loop scoring retrieval against the scraped names
 vars.py / strings.py  all config (URLs, k values, metric keys) / all text
 scraper_vars.py       browser + FE-selector config, split out of vars.py
-schemas.py            Example, ScrapedPage, QueryEvaluation dataclasses
+relevance_vars.py     judge model, chunk size, verdicts, batch + cache config
+relevance_strings.py  judge CLI help, judgement CSV headers, judge log lines and errors
+relevance_prompt_strings.py  the judge system prompt, alone - editing it invalidates the cache
+relevance_input_vars.py   the FROZEN judging snapshot: input paths, manifest keys, recorded arm
+relevance_report_vars.py  score-band width and the band-table column keys
+human_review_vars.py  review-sheet + agreement-report paths, keys and the gate's two thresholds
+human_review_strings.py   review-sheet headers, human-audit CLI help, gate outcomes, log lines
+human_review_schemas.py   ReviewSampleRow, HumanVerdict, AlignedVerdict dataclasses
+schemas.py            Example, ScrapedPage, QueryEvaluation, JudgementItem, JudgementChunk,
+                      ServiceJudgement dataclasses
 data/                 raw golden set + the scraped ground-truth cache
 dataset/              raw CSV → Example, and the production → staging URL swap
 scraper/              browser session, readiness waits, name extraction, name normalization
 ground_truth/         scrape-all loop + the ground-truth cache
-clients/              retrieval HTTP client
+clients/              retrieval HTTP client + the Gemini judge Batch API client
+relevance/            LLM relevance judging: items, chunks, request, parsing, cache, orchestrator
+human_review/         the human audit: stratified sample, sheet read-back, verdict alignment, gate
 metrics/              one metric per file + per-query evaluation + aggregation
 report/               overall score, table rendering, JSON/CSV/HTML output, threshold gate
 dashboard/            self-contained HTML dashboard (data inlined into results/report.html)
 results/              generated outputs (gitignored)
+results-judge-frozen/ the frozen pair snapshot --judge reads, plus its hash manifest (gitignored)
 ```
 
 ### A note on `@50`

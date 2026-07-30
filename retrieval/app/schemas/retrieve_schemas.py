@@ -13,6 +13,11 @@ class RetrievedDocument(BaseModel):
     # semantic_score is the Elasticsearch cosine score, i.e. (1 + cosine) / 2.
     semantic_score: float | None = None
     lexical_score: float | None = None
+    # The two semantic-floor inputs in the floors' own COSINE units: cosine_score is what
+    # MIN_SEMANTIC_SCORE cuts on, cosine_score_ratio is its fraction of the pool's best
+    # cosine, which is what SEMANTIC_SCORE_RATIO cuts on.
+    cosine_score: float | None = None
+    cosine_score_ratio: float | None = None
 
 
 class RetrieveRequest(BaseModel):

@@ -131,6 +131,43 @@
         '</div>';
     };
 
+    // Relevance panel. Rendered ONLY when summary.json carries a relevance block, i.e. only for a
+    // run that judged: an un-judged run has no block, this returns '', and the dashboard is still
+    // complete. Keys are read off the block itself and prettified, so nothing here can drift from
+    // the names the aggregation emits.
+    const prettifyEntries = (values) =>
+      Object.entries(values || {}).map(([key, value]) => [key.replace(/_/g, ' '), value]);
+    const relevanceCell = (value) =>
+      typeof value === 'number' && !Number.isInteger(value) ? fmt(value) : String(value);
+
+    const renderRelevanceRows = (entries) => entries.map((entry) =>
+      '<tr><td>' + escapeHtml(entry[0]) + '</td><td>' +
+      escapeHtml(relevanceCell(entry[1])) + '</td></tr>').join('');
+
+    const renderRelevanceTable = (title, entries) =>
+      '<h2>' + title + '</h2><div class="scroll"><table><thead><tr><th>Statistic</th>' +
+      '<th>Value</th></tr></thead><tbody>' + renderRelevanceRows(entries) + '</tbody></table></div>';
+
+    // One row per (side, bucket): unclear and unjudged stay separate buckets here too, and both the
+    // sides and the buckets come from the block rather than from a list this file keeps. The side
+    // keeps its underscores, because it is the same literal service_diff.csv joins on.
+    const flattenVerdictCounts = (verdictCounts) =>
+      Object.entries(verdictCounts || {}).flatMap(([side, counts]) =>
+        Object.entries(counts).map(([bucket, count]) => [side + ' / ' + bucket, count]));
+
+    const renderRelevance = (data) => {
+      const relevance = data.relevance;
+      if (!relevance) return '';
+      return '<div class="panel">' +
+        renderRelevanceTable('Verdict counts by side', flattenVerdictCounts(relevance.verdict_counts)) +
+        '<div style="height:18px"></div>' +
+        renderRelevanceTable('Relevance rates (unclear and unjudged excluded from denominators)',
+                             prettifyEntries(relevance.rates)) +
+        '<div style="height:18px"></div>' +
+        renderRelevanceTable('Adjusted set metrics', prettifyEntries(relevance.adjusted_set_metrics)) +
+        '</div>';
+    };
+
     const buildPolyline = (data, key, colorIndex, width, height, padding) => {
       const stepX = (width - padding * 2) / Math.max(data.k_values.length - 1, 1);
       const points = data.k_values.map((k, i) => {
@@ -222,7 +259,7 @@
     const render = (data) => {
       document.getElementById('root').innerHTML =
         renderHeadline(data) + renderMatrix(data) + renderSetMetrics(data) +
-        renderChart(data) + renderDrill(data);
+        renderRelevance(data) + renderChart(data) + renderDrill(data);
       enableSorting();
     };
 

@@ -42,6 +42,11 @@ PER_QUERY_CSV_PATH = RESULTS_DIR / 'per_query.csv'
 # Long format (one row per query x service), because the unexpected-name lists run to
 # hundreds of services - per_query.csv carries only their counts.
 SERVICE_DIFF_CSV_PATH = RESULTS_DIR / 'service_diff.csv'
+# The same two sides as JSON, one object per service with its retrieval scores attached, so a
+# relevance judge can read a query's false positives without joining two files. RESULTS_DIR is
+# gitignored: both are run artifacts, never committed data.
+UNEXPECTED_RETRIEVED_JSON_PATH = RESULTS_DIR / 'unexpected_retrieved.json'
+MISSED_GROUND_TRUTH_JSON_PATH = RESULTS_DIR / 'missed_ground_truth.json'
 REPORT_HTML_PATH = RESULTS_DIR / 'report.html'
 DASHBOARD_TEMPLATE_PATH = EVALUATION_ROOT / 'dashboard' / 'dashboard.html'
 DASHBOARD_DATA_PLACEHOLDER = '__SUMMARY_JSON__'
@@ -91,6 +96,31 @@ COUNT_STAT_KEYS = [
     COUNT_STAT_MEDIAN_GROUND_TRUTH_COUNT, COUNT_STAT_RATIO_OF_MEDIAN_COUNTS,
     COUNT_STAT_MEDIAN_ABSOLUTE_COUNT_ERROR, COUNT_STAT_GEOMETRIC_MEAN_COUNT_RATIO,
 ]
+
+# Per-service retrieval scores. One constant serves three roles, because the three names are
+# deliberately identical: the field read off each retrieval `services[]` entry, the attribute
+# on ServiceScores, and the JSON / CSV key it is written out under. Ordered as the FE badges
+# read them - fused, then cosine, then ratio, then BM25 - so the report needs no rearranging.
+SERVICE_SCORE_RETRIEVAL_KEY = 'retrieval_score'
+SERVICE_SCORE_COSINE_KEY = 'cosine_score'
+SERVICE_SCORE_COSINE_RATIO_KEY = 'cosine_score_ratio'
+SERVICE_SCORE_LEXICAL_KEY = 'lexical_score'
+SERVICE_SCORE_SEMANTIC_KEY = 'semantic_score'
+SERVICE_SCORE_KEYS = [
+    SERVICE_SCORE_RETRIEVAL_KEY, SERVICE_SCORE_COSINE_KEY, SERVICE_SCORE_COSINE_RATIO_KEY,
+    SERVICE_SCORE_LEXICAL_KEY, SERVICE_SCORE_SEMANTIC_KEY,
+]
+# The per-query block in summary.json that holds the score map, keyed by service name.
+PER_QUERY_SERVICE_SCORES_KEY = 'service_scores'
+
+# Diff-JSON payload keys. Only the wrapper and per-query keys live here: each service object
+# reuses SERVICE_SCORE_KEYS verbatim, so the JSON, the CSV and the FE badges name the same five
+# scores identically and nothing has to be mapped between them.
+DIFF_JSON_SIDE_KEY = 'side'
+DIFF_JSON_GENERATED_FROM_KEY = 'generated_from'
+DIFF_JSON_QUERIES_KEY = 'queries'
+DIFF_JSON_COUNT_KEY = 'count'
+DIFF_JSON_SERVICES_KEY = 'services'
 
 # Final single-number score: weighted mean of every metric across every k. Missing
 # metric weights default to 1.0 (equal weight for all 7 x 5 = 35 cells).

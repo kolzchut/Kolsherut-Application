@@ -17,6 +17,21 @@ class ScrapedPage:
 
 
 @dataclass(frozen=True)
+class ServiceScores:
+    """Every score retrieval reported for one returned service.
+
+    None means the corresponding retriever never surfaced a document for that service, which
+    is a different fact from having scored it zero. The distinction is load-bearing for how
+    the semantic floor reads, so it is never substituted with 0.0 anywhere downstream.
+    """
+    retrieval_score: float | None = None
+    semantic_score: float | None = None
+    lexical_score: float | None = None
+    cosine_score: float | None = None
+    cosine_score_ratio: float | None = None
+
+
+@dataclass(frozen=True)
 class QueryEvaluation:
     """Metrics for a single query, plus the meta needed for aggregation and drill-down."""
     query: str
@@ -34,3 +49,52 @@ class QueryEvaluation:
     # skipped queries. Each keeps its source ordering, so position is its rank.
     missed_ground_truth_names: tuple[str, ...] = ()
     unexpected_retrieved_names: tuple[str, ...] = ()
+    # Carried, never scored on: no metric reads this. Keyed by the same normalized service
+    # name the metrics match on, so both diff lists can look their scores up directly. Empty
+    # for skipped queries, where retrieval was never called.
+    service_scores: dict[str, ServiceScores] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class JudgementItem:
+    """One (query, service) pair awaiting a verdict, read from a frozen diff JSON file.
+
+    `scores` is the five score cells exactly as that file holds them - carried, never re-derived,
+    and null on the missed side by construction.
+    """
+    query: str
+    side: str
+    rank: int
+    service_name: str
+    scores: dict[str, float | None] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class JudgementChunk:
+    """The items of one (query, side) group that go into a single batch request.
+
+    `key` is the user-defined Batch API key, which is what correlates a result line back to this
+    chunk. Results are never joined by position.
+    """
+    key: str
+    query: str
+    side: str
+    items: tuple[JudgementItem, ...] = ()
+
+
+@dataclass(frozen=True)
+class ServiceJudgement:
+    """One LLM verdict on whether a service would help the person who asked the query.
+
+    `side` and `rank` are the retrieval-side provenance of the pair - which diff list it came
+    from and its position in that list. They are carried for reporting only, and never key
+    anything: the verdict is a pure function of (query, service_name), while both of these
+    change with retrieval configuration. `verdict` is always one of relevance_vars.VERDICTS -
+    relevance_marker_vars.py's wire markers are decoded before a record is built and never reach
+    one - and there is no reason field: as of schema v3 the judge returns no free text at all.
+    """
+    query: str
+    side: str
+    rank: int
+    service_name: str
+    verdict: str

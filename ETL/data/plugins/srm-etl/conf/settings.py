@@ -59,7 +59,14 @@ OPENELIGIBILITY_YAML_URL = (
     'https://raw.githubusercontent.com/kolzchut/openeligibility/main/taxonomy.tx.yaml'
 )
 
-BUDGETKEY_DATABASE_URL = get_env('BUDGETKEY_DATABASE_URL')
+BUDGETKEY_QUERY_API = 'https://next.obudget.org/api/query'
+BUDGETKEY_QUERY_TIMEOUT_SECONDS = 60
+
+DATAGOVIL_BASE = 'https://data.gov.il'
+DATAGOVIL_PACKAGE_SEARCH_API = 'https://data.gov.il/api/action/package_search'
+DATAGOVIL_PACKAGE_SHOW_API = 'https://data.gov.il/api/3/action/package_show'
+DATAGOVIL_DATASTORE_SEARCH_API = 'https://data.gov.il/api/3/action/datastore_search'
+DATAGOVIL_REQUEST_TIMEOUT_SECONDS = 60
 
 DATA_DUMP_DIR = 'data'
 

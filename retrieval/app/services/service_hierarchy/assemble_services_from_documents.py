@@ -7,4 +7,4 @@ async def assemble_services_from_documents(retrieved_documents: list[dict]) -> l
     ranked_service_ids = [document['service_id'] for document in retrieved_documents]
     card_hits = await fetch_cards_by_service_ids(ranked_service_ids)
     services_by_name = build_service_hierarchy(card_hits)
-    return order_services_by_ranking(services_by_name, card_hits, ranked_service_ids)
+    return order_services_by_ranking(services_by_name, card_hits, retrieved_documents)
