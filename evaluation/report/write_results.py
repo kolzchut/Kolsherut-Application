@@ -1,8 +1,10 @@
 import csv
 import json
+from pathlib import Path
 
 from evaluation import vars
 from evaluation.report.build_per_query_rows import build_per_query_header, build_per_query_row
+from evaluation.report.build_service_diff_json import build_missed_payload, build_unexpected_payload
 from evaluation.report.build_service_diff_rows import (
     build_service_diff_header, build_service_diff_rows,
 )
@@ -28,6 +30,21 @@ def write_service_diff_csv(summary: dict) -> None:
             writer.writerows(build_service_diff_rows(entry))
 
 
+def write_diff_json(payload: dict, path: Path) -> None:
+    """One side of the service diff, scores attached - what a relevance judge reads."""
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf-8')
+
+
+def write_unexpected_retrieved_json(summary: dict) -> None:
+    """The false positives, each carrying the scores that got it returned."""
+    write_diff_json(build_unexpected_payload(summary), vars.UNEXPECTED_RETRIEVED_JSON_PATH)
+
+
+def write_missed_ground_truth_json(summary: dict) -> None:
+    """The recall failures. Same schema, five null scores - nothing ever scored these."""
+    write_diff_json(build_missed_payload(summary), vars.MISSED_GROUND_TRUTH_JSON_PATH)
+
+
 def write_report_html(summary: dict) -> None:
     template = vars.DASHBOARD_TEMPLATE_PATH.read_text(encoding='utf-8')
     inlined_json = json.dumps(summary, ensure_ascii=False)
@@ -40,4 +57,17 @@ def write_results(summary: dict) -> None:
     write_summary_json(summary)
     write_per_query_csv(summary)
     write_service_diff_csv(summary)
+    write_unexpected_retrieved_json(summary)
+    write_missed_ground_truth_json(summary)
+    write_report_html(summary)
+
+
+def rewrite_summary_artifacts(summary: dict) -> None:
+    """Re-emit the two artifacts that are pure renders of the summary payload, and only those.
+
+    Used for the second write of a judged run, once the `relevance` block exists. The four CSV and
+    diff-JSON artifacts are untouched because no judgement changes them, so a judged run rewrites
+    the minimum: the payload itself, and the self-contained HTML that inlines it.
+    """
+    write_summary_json(summary)
     write_report_html(summary)

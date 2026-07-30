@@ -81,7 +81,9 @@ LOG_SKIPPED_PAGE = 'Scraped {index}/{total}: skipped ({reason}) | {query}'
 LOG_WROTE_GROUND_TRUTH = 'Wrote ground truth to {path} ({scraped} scraped, {skipped} skipped)'
 LOG_EVALUATING_QUERY = 'Evaluating query {index}/{total}: {query}'
 LOG_SKIPPING_QUERY = 'Skipping query {index}/{total} ({reason}): {query}'
-LOG_WROTE_RESULTS = 'Wrote results to {summary}, {csv}, {diff} and {html}'
+LOG_WROTE_RESULTS = (
+    'Wrote results to {summary}, {csv}, {diff}, {unexpected_json}, {missed_json} and {html}'
+)
 LOG_THRESHOLDS_PASSED = 'All thresholds passed'
 LOG_THRESHOLD_FAILED = 'Threshold failed: {name} = {value:.4f} < {threshold:.4f}'
 

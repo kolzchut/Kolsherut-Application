@@ -1,5 +1,5 @@
 from evaluation import vars
-from evaluation.schemas import Example, QueryEvaluation
+from evaluation.schemas import Example, QueryEvaluation, ServiceScores
 from evaluation.metrics.precision_recall_f1 import precision_at_k, recall_at_k, f1_score
 from evaluation.metrics.reciprocal_rank import reciprocal_rank
 from evaluation.metrics.hit_rate import hit_rate
@@ -31,9 +31,13 @@ def compute_metrics_at_k(hit_flags: list[int], ground_truth_size: int, k: int) -
 
 
 def evaluate_query(example: Example, ranked_names: list[str],
-                   ordered_ground_truth_names: tuple[str, ...]) -> QueryEvaluation:
+                   ordered_ground_truth_names: tuple[str, ...],
+                   service_scores: dict[str, ServiceScores]) -> QueryEvaluation:
     """Takes the ground truth in the incumbent site's order, not as a set: the order is what
-    makes the missed-name list rankable. Membership tests use the set derived here."""
+    makes the missed-name list rankable. Membership tests use the set derived here.
+
+    service_scores is carried onto the record untouched and read by no metric: every metric
+    below computes from ranked_names and ground_truth_names exactly as it did before."""
     ground_truth_names = set(ordered_ground_truth_names)
     ground_truth_size = len(ground_truth_names)
     metrics_by_k = {}
@@ -52,4 +56,5 @@ def evaluate_query(example: Example, ranked_names: list[str],
             ordered_ground_truth_names, ranked_names),
         unexpected_retrieved_names=find_unexpected_retrieved_names(
             ranked_names, ground_truth_names),
+        service_scores=service_scores,
     )

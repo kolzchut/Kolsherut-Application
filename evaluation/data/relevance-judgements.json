@@ -1,0 +1,825 @@
+{
+  "model": "gemini-3.1-flash-lite",
+  "prompt_checksum": "sha256:7151a6377a50c9f35d18f74c3a551e3268c97347ae96e1881ff6176deb9d97b4",
+  "schema_version": 2,
+  "input_sha256": {
+    "unexpected_retrieved.json": "sha256:2db5f5d9bf997371babce93f007f446f0f205ebffe537a57a9bbbc5b14157f7e",
+    "missed_ground_truth.json": "sha256:f30a10cc48b1b88d08c574dcbcef028683a6911963b8f7cbcac0e466ce69a5a7"
+  },
+  "scrape_date": "2026-07-29",
+  "retrieval_config": {
+    "EMBEDDING_PROVIDER": "gemini",
+    "RETRIEVAL_EMBEDDINGS_INDEX_NAME": "srm__services_retrieval_embeddings_v4_gemini",
+    "CANDIDATE_POOL_SIZE": 50,
+    "RRF_RANK_CONSTANT": 60,
+    "LEXICAL_WEIGHT": 0.0,
+    "SEMANTIC_WEIGHT": 1.0,
+    "MIN_FUSED_SCORE": 0.01,
+    "MIN_SEMANTIC_SCORE": 0.3,
+    "MAX_RETURNED_SERVICES": 400,
+    "SEMANTIC_SCORE_RATIO": null,
+    "KEEP_LEXICAL_ONLY_DOCUMENTS": null
+  },
+  "judgements": {
+    "לאן פונים שקורסים כלכלית ולא מצליחים לסגור את החובות ואת החודש לחשב מסלול מחדש": {
+      "verdict": "unclear",
+      "reason": "The name is vague and does not specify if the service provides financial assistance or debt counseling."
+    },
+    "לאן פונים שקורסים כלכלית ולא מצליחים לסגור את החובות ואת החודש באחריות לוקחים אחריות!": {
+      "verdict": "unclear",
+      "reason": "The name is a slogan and does not indicate the nature of the service offered."
+    },
+    "לאן פונים שקורסים כלכלית ולא מצליחים לסגור את החובות ואת החודש ליווי פרטני לשיקום כלכלי": {
+      "verdict": "relevant",
+      "reason": "Individual accompaniment for financial rehabilitation is directly relevant to someone struggling with debts and monthly expenses."
+    },
+    "לאן פונים שקורסים כלכלית ולא מצליחים לסגור את החובות ואת החודש ייעוץ כלכלי ליוצאים בשאלה": {
+      "verdict": "irrelevant",
+      "reason": "This service is specifically for a narrow demographic group which the user did not identify with."
+    },
+    "לאן פונים שקורסים כלכלית ולא מצליחים לסגור את החובות ואת החודש התנהלות כלכלית נבונה": {
+      "verdict": "relevant",
+      "reason": "Training in wise economic conduct helps people manage their monthly budget effectively."
+    },
+    "לאן פונים שקורסים כלכלית ולא מצליחים לסגור את החובות ואת החודש תמיכה במשפחות מתמודדות": {
+      "verdict": "unclear",
+      "reason": "It is not clear if the support provided is financial or emotional."
+    },
+    "לאן פונים שקורסים כלכלית ולא מצליחים לסגור את החובות ואת החודש עזרה למשפחות נזקקות": {
+      "verdict": "relevant",
+      "reason": "Help for needy families often includes direct assistance for those unable to cover monthly costs."
+    },
+    "לאן פונים שקורסים כלכלית ולא מצליחים לסגור את החובות ואת החודש תרומות לנזקקים/משפחות במשבר": {
+      "verdict": "relevant",
+      "reason": "Donations for families in crisis can provide immediate relief for those unable to close the month."
+    },
+    "לאן פונים שקורסים כלכלית ולא מצליחים לסגור את החובות ואת החודש עזרה ותמיכה לנזקקים": {
+      "verdict": "relevant",
+      "reason": "Help and support for the needy directly addresses the need for economic assistance."
+    },
+    "לאן פונים שקורסים כלכלית ולא מצליחים לסגור את החובות ואת החודש תמיכה כלכלית למילואימניקים בעלי עסקים": {
+      "verdict": "irrelevant",
+      "reason": "This service is limited to business owners who served in the reserves."
+    },
+    "לאן פונים שקורסים כלכלית ולא מצליחים לסגור את החובות ואת החודש הדרכה כלכלית בקהילה": {
+      "verdict": "relevant",
+      "reason": "Financial guidance in the community can help people manage their debts and monthly budgets."
+    },
+    "לאן פונים שקורסים כלכלית ולא מצליחים לסגור את החובות ואת החודש סיוע למשפחות קשות יום בתרומה כספית ו/או תווי שי": {
+      "verdict": "relevant",
+      "reason": "Financial aid and gift vouchers are directly helpful for those struggling to cover daily living expenses."
+    },
+    "לאן פונים שקורסים כלכלית ולא מצליחים לסגור את החובות ואת החודש סוויצ כלכלית": {
+      "verdict": "unclear",
+      "reason": "The service name does not clarify what kind of economic switch or assistance is provided."
+    },
+    "לאן פונים שקורסים כלכלית ולא מצליחים לסגור את החובות ואת החודש הדרכת משפחות חד הוריות בהתנהלות כלכלית": {
+      "verdict": "irrelevant",
+      "reason": "This is a specific service for single-parent families, which may not apply to the user."
+    },
+    "לאן פונים שקורסים כלכלית ולא מצליחים לסגור את החובות ואת החודש תמיכה וליווי לאוכלוסיות מוחלשות": {
+      "verdict": "relevant",
+      "reason": "Support and accompaniment for vulnerable populations often include financial assistance for those in distress."
+    },
+    "לאן פונים שקורסים כלכלית ולא מצליחים לסגור את החובות ואת החודש תמיכות לנזקקים, תווי קניה": {
+      "verdict": "relevant",
+      "reason": "Financial support and purchase vouchers are direct forms of help for those struggling financially."
+    },
+    "מסגרת לנער אוטיסט בתפקוד גבוה כוללים וישיבות גבוהות": {
+      "verdict": "irrelevant",
+      "reason": "ישיבות אינן מיועדות למתן מענה טיפולי או חברתי לאוטיסטים בתפקוד גבוה."
+    },
+    "מסגרת לנער אוטיסט בתפקוד גבוה הבית של עופר": {
+      "verdict": "unclear",
+      "reason": "לא ניתן לדעת מתוך השם האם המקום מספק שירותים רלוונטיים לנערים על הרצף האוטיסטי."
+    },
+    "מסגרת לנער אוטיסט בתפקוד גבוה בתי כנסת": {
+      "verdict": "irrelevant",
+      "reason": "בתי כנסת הם מוסדות דת ואינם מספקים מסגרות טיפוליות או תומכות לנערים עם אוטיזם."
+    },
+    "מסגרת לנער אוטיסט בתפקוד גבוה הוסטל לאנשים עם מוגבלות": {
+      "verdict": "relevant",
+      "reason": "הוסטל מיועד למתן מגורים ותמיכה לאנשים עם מוגבלות העונים להגדרות אלו."
+    },
+    "מסגרת לנער אוטיסט בתפקוד גבוה מעונות פנימיה לאנשים עם מוגבלות": {
+      "verdict": "relevant",
+      "reason": "מעונות פנימייה עשויים להוות מסגרת מתאימה לנערים עם מוגבלויות הזקוקים למגורים מחוץ לבית."
+    },
+    "מסגרת דיור למתמודדי נפש סוטריה השרון - בית מאזן": {
+      "verdict": "relevant",
+      "reason": "בית מאזן מהווה מסגרת חוץ-ביתית למתמודדי נפש."
+    },
+    "מסגרת דיור למתמודדי נפש יש פתרון - בית מאזן": {
+      "verdict": "relevant",
+      "reason": "בית מאזן מהווה מסגרת חוץ-ביתית למתמודדי נפש."
+    },
+    "מסגרת דיור למתמודדי נפש סוטריה ירושלים - בית מאזן": {
+      "verdict": "relevant",
+      "reason": "בית מאזן מהווה מסגרת חוץ-ביתית למתמודדי נפש."
+    },
+    "מסגרת דיור למתמודדי נפש תמיכה מבפנים": {
+      "verdict": "unclear",
+      "reason": "שם השירות אינו מסגיר האם מדובר במסגרת דיור."
+    },
+    "מסגרת דיור למתמודדי נפש בית מדרש שיקומי למתמודדי נפש": {
+      "verdict": "irrelevant",
+      "reason": "בית מדרש הוא מסגרת לימודית ולא מסגרת דיור."
+    },
+    "מסגרת דיור למתמודדי נפש בית האקליפטוס - בית מאזן": {
+      "verdict": "relevant",
+      "reason": "בית מאזן מהווה מסגרת חוץ-ביתית למתמודדי נפש."
+    },
+    "מסגרת דיור למתמודדי נפש סוטריה ירושלים - בית מאזן לגברים": {
+      "verdict": "relevant",
+      "reason": "בית מאזן מהווה מסגרת חוץ-ביתית למתמודדי נפש."
+    },
+    "מסגרת דיור למתמודדי נפש שירותי שיקום תעסוקה (מפעל מוגן ותעסוקה מוגנת בשוק החופשי) לנכי נפש בקהילה": {
+      "verdict": "irrelevant",
+      "reason": "מדובר בשירותי תעסוקה ולא בשירותי דיור."
+    },
+    "מסגרת דיור למתמודדי נפש רוח ים סניטי - בית מאזן": {
+      "verdict": "relevant",
+      "reason": "בית מאזן מהווה מסגרת חוץ-ביתית למתמודדי נפש."
+    },
+    "מסגרת דיור למתמודדי נפש שירותי שיקום בדיור (הוסטלים) לנכי נפש בקהילה": {
+      "verdict": "relevant",
+      "reason": "הוסטלים הם מסגרת דיור מוגדרת למתמודדי נפש."
+    },
+    "מסגרת דיור למתמודדי נפש מעונות פנימייה לאנשים עם מוגבלות": {
+      "verdict": "irrelevant",
+      "reason": "מעונות פנימייה לאנשים עם מוגבלות אינם מיועדים למתמודדי נפש על רקע נפשי."
+    },
+    "מסגרת דיור למתמודדי נפש סומכות לנכי נפש בקהילה": {
+      "verdict": "irrelevant",
+      "reason": "שירותי סומכות אינם מהווים מסגרת דיור."
+    },
+    "מיצוי זכויות לחולים קו חם - מיצוי זכויות החולה": {
+      "verdict": "relevant",
+      "reason": "השירות מיועד ישירות למיצוי זכויות של חולים."
+    },
+    "מיצוי זכויות לחולים מוקד סיוע לנפגעי פעולות איבה": {
+      "verdict": "irrelevant",
+      "reason": "השירות מתמקד באוכלוסייה ספציפית של נפגעי פעולות איבה ולא בחולים באופן כללי."
+    },
+    "מיצוי זכויות לחולים סיוע במיצוי זכויות": {
+      "verdict": "relevant",
+      "reason": "השירות מציע סיוע כללי במיצוי זכויות שיכול לסייע גם לחולים."
+    },
+    "מיצוי זכויות לחולים מקדימים תרופה": {
+      "verdict": "unclear",
+      "reason": "שם השירות אינו מבהיר איזה סוג סיוע הוא נותן והאם הוא קשור למיצוי זכויות."
+    },
+    "עזרה במיצוי זכויות של פנסיונרים מיצוי זכויות": {
+      "verdict": "relevant",
+      "reason": "השירות עוסק באופן כללי במיצוי זכויות ועשוי לסייע לכל אדם."
+    },
+    "עזרה במיצוי זכויות של פנסיונרים עמותת אביב לגיל השלישי- זכויות ניצולי שואה": {
+      "verdict": "irrelevant",
+      "reason": "השירות ממוקד ספציפית בקהל יעד של ניצולי שואה."
+    },
+    "עזרה במיצוי זכויות של פנסיונרים עמותת אביב לגיל השלישי- ימי מיצוי זכויות": {
+      "verdict": "relevant",
+      "reason": "השירות עוסק במיצוי זכויות ופונה לגיל השלישי, המתאים לאוכלוסיית פנסיונרים."
+    },
+    "עזרה במיצוי זכויות של פנסיונרים קידום זכויות של קבוצות באוכלוסיה": {
+      "verdict": "unclear",
+      "reason": "השירות כללי מדי ולא מבהיר אילו זכויות או קבוצות אוכלוסייה הוא משרת."
+    },
+    "עזרה במיצוי זכויות של פנסיונרים סיוע במיצוי זכויות": {
+      "verdict": "relevant",
+      "reason": "השירות מספק סיוע כללי במיצוי זכויות שיכול להתאים לפנסיונרים."
+    },
+    "עזרה במיצוי זכויות של פנסיונרים סיוע בקבלת מידע לגביי זכויות": {
+      "verdict": "relevant",
+      "reason": "הנגשת מידע על זכויות היא חלק מהותי בתהליך מיצוי הזכויות."
+    },
+    "עזרה במיצוי זכויות של פנסיונרים ייעוץ פנסיוני וביטוחי ללא עלות": {
+      "verdict": "relevant",
+      "reason": "ייעוץ פנסיוני הוא שירות קריטי עבור פנסיונרים במיצוי זכויותיהם הכספיות."
+    },
+    "עזרה במיצוי זכויות של פנסיונרים קבלות קהל למיצוי זכויות בחינם": {
+      "verdict": "relevant",
+      "reason": "קבלת קהל למתן עזרה במיצוי זכויות היא שירות ישיר ורלוונטי."
+    },
+    "עזרה במיצוי זכויות של פנסיונרים סיוע בירוקרטי בכל הנוגע למיצוי זכויות מול גופי ציבור ורשויות המדינה": {
+      "verdict": "relevant",
+      "reason": "סיוע בירוקרטי מול רשויות המדינה הוא צורך מרכזי במיצוי זכויות."
+    },
+    "עזרה במיצוי זכויות של פנסיונרים יחידת סגולה - מוקד זכויות בריאותיות לאזרחים ותיקים בבתי חולים - המשרד לשוויון חברתי וקידום מעמד האישה": {
+      "verdict": "relevant",
+      "reason": "השירות מתמקד באזרחים ותיקים ומסייע להם במיצוי זכויות בתחום הבריאות."
+    },
+    "עזרה במיצוי זכויות של פנסיונרים מיצוי זכויות לנפגעות זנות": {
+      "verdict": "irrelevant",
+      "reason": "השירות מיועד לקבוצת אוכלוסייה אחרת ואינו רלוונטי לפנסיונרים ככלל."
+    },
+    "תור לבדיקת שמיעה בדיקות שמיעה לילדים": {
+      "verdict": "relevant",
+      "reason": "מדובר במתן בדיקת שמיעה לילדים."
+    },
+    "תור לבדיקת שמיעה מכון שמיעה- שמעיה": {
+      "verdict": "relevant",
+      "reason": "מכון שמיעה מספק שירותי בדיקות שמיעה."
+    },
+    "תור לבדיקת שמיעה שירותי תרגום שפת סימנים/תמלול/תיווך תקשורת": {
+      "verdict": "irrelevant",
+      "reason": "שירותי תרגום ותיווך אינם בדיקת שמיעה."
+    },
+    "תור לבדיקת שמיעה קבלות קהל למיצוי זכויות בחינם": {
+      "verdict": "irrelevant",
+      "reason": "שירות למיצוי זכויות אינו רלוונטי לבדיקת שמיעה."
+    },
+    "תור לבדיקת שמיעה תחנות מידע לאנשים עם מוגבלות בשמיעה/חירשות": {
+      "verdict": "irrelevant",
+      "reason": "תחנות מידע אינן מבצעות בדיקות שמיעה."
+    },
+    "תור לבדיקת שמיעה מעון יום שיקומי לפעוטות עם מוגבלות": {
+      "verdict": "irrelevant",
+      "reason": "מעון יום שיקומי אינו מספק בדיקות שמיעה."
+    },
+    "תור לבדיקת שמיעה בדיקות עיניים למפונים": {
+      "verdict": "irrelevant",
+      "reason": "בדיקות עיניים אינן רלוונטיות לבדיקת שמיעה."
+    },
+    "תור לבדיקת שמיעה פעילות העשרה": {
+      "verdict": "irrelevant",
+      "reason": "פעילות העשרה אינה כוללת בדיקות רפואיות."
+    },
+    "תור לבדיקת שמיעה התפתחות הילד- שמעיה": {
+      "verdict": "unclear",
+      "reason": "השירות עוסק בהתפתחות הילד ולא ברור אם כולל בדיקת שמיעה טכנית."
+    },
+    "תור לבדיקת שמיעה מועדונית יום שהות ארוך לילדים ואנשים עם מוגבלות": {
+      "verdict": "irrelevant",
+      "reason": "מועדונית אינה מספקת שירותי בדיקות שמיעה."
+    },
+    "תור לבדיקת שמיעה שיחות חירום לקהילת החירשים וכבדי השמיעה - sign-now": {
+      "verdict": "irrelevant",
+      "reason": "שיחות חירום אינן בדיקת שמיעה."
+    },
+    "תור לבדיקת שמיעה גני שמעיה- לילדים כבדי שמיעה וחרשים": {
+      "verdict": "irrelevant",
+      "reason": "גן ילדים אינו מקום לביצוע בדיקת שמיעה."
+    },
+    "תור לבדיקת שמיעה תרגום שפת סימנים ותיווך מרחוק (מרכז תקשורת)": {
+      "verdict": "irrelevant",
+      "reason": "שירותי תרגום אינם בדיקת שמיעה."
+    },
+    "תור לבדיקת שמיעה בריאות": {
+      "verdict": "unclear",
+      "reason": "השם כללי מדי מכדי לקבוע אם מספק בדיקות שמיעה."
+    },
+    "תור לבדיקת שמיעה מוקד תרגום שפת סימנים לחרשים - משרד הרווחה והביטחון החברתי": {
+      "verdict": "irrelevant",
+      "reason": "מוקד תרגום שפת סימנים אינו מבצע בדיקות שמיעה."
+    },
+    "תור לבדיקת שמיעה הדרכת הורים לילדים לקויי שמיעה וחרשים": {
+      "verdict": "irrelevant",
+      "reason": "הדרכת הורים אינה כוללת בדיקת שמיעה."
+    },
+    "תור לבדיקת שמיעה מבחן התאמה לגידול": {
+      "verdict": "irrelevant",
+      "reason": "מבחן התאמה לגידול אינו בדיקת שמיעה."
+    },
+    "תור לבדיקת שמיעה קשר ותמיכה אוזן קשבת": {
+      "verdict": "irrelevant",
+      "reason": "שירות תמיכה נפשית אינו בדיקת שמיעה."
+    },
+    "תור לבדיקת שמיעה שיקום ילדים לקויי שמיעה וחרשים בגישה השמיעתית-מילולית": {
+      "verdict": "irrelevant",
+      "reason": "שיקום שמיעתי הוא טיפול ולא בדיקת אבחון בסיסית."
+    },
+    "תור לבדיקת שמיעה מועדוניות שמעיה- לילדים ונוער כבדי שמיעה וחרשים": {
+      "verdict": "irrelevant",
+      "reason": "מועדונית אינה מספקת בדיקות שמיעה."
+    },
+    "תור לבדיקת שמיעה מרכז הורים וילדים - שמעיה": {
+      "verdict": "irrelevant",
+      "reason": "מרכז הורים אינו מבצע בדיקות שמיעה."
+    },
+    "תור לבדיקת שמיעה אספקת מכשירי שיקום": {
+      "verdict": "irrelevant",
+      "reason": "אספקת מכשירי שיקום אינה בדיקת שמיעה."
+    },
+    "תור לבדיקת שמיעה מועדונית שפ\"ס - שמעיה": {
+      "verdict": "irrelevant",
+      "reason": "מועדונית אינה מקום לביצוע בדיקת שמיעה."
+    },
+    "תור לבדיקת שמיעה בקורת שגר": {
+      "verdict": "unclear",
+      "reason": "לא ברור מה מהות השירות משמו."
+    },
+    "תור לבדיקת שמיעה מניעת נשירה": {
+      "verdict": "irrelevant",
+      "reason": "מניעת נשירה אינה קשורה לבדיקות שמיעה."
+    },
+    "תור לבדיקת שמיעה ושננתם": {
+      "verdict": "irrelevant",
+      "reason": "שם השירות אינו מצביע על שירות רפואי או בדיקת שמיעה."
+    },
+    "תור לבדיקת שמיעה פעילות קיץ לילדים ובני נוער במצבי סיכון גבוה": {
+      "verdict": "irrelevant",
+      "reason": "פעילות קיץ אינה כוללת בדיקות שמיעה."
+    },
+    "תור לבדיקת שמיעה הארכת יום לימודים לילדים וצעירים עם מוגבלות": {
+      "verdict": "irrelevant",
+      "reason": "שירות לילדים עם מוגבלות אינו בדיקת שמיעה."
+    },
+    "תור לבדיקת שמיעה הדרכה טכנולוגית לבעלי מוגבלות: ראיה, שמיעה, שניהם": {
+      "verdict": "irrelevant",
+      "reason": "הדרכה טכנולוגית אינה בדיקת שמיעה."
+    },
+    "תור לבדיקת שמיעה התעמלות בריאותית משקמת": {
+      "verdict": "irrelevant",
+      "reason": "התעמלות אינה בדיקת שמיעה."
+    },
+    "תור לבדיקת שמיעה הגברת מודעות לנושאי עיוורון וחירשות": {
+      "verdict": "irrelevant",
+      "reason": "הגברת מודעות אינה בדיקת שמיעה."
+    },
+    "תור לבדיקת שמיעה מרכז לאבחון אדם עם מוגבלות שכלית התפתחותית": {
+      "verdict": "irrelevant",
+      "reason": "אבחון מוגבלות שכלית אינו בדיקת שמיעה."
+    },
+    "אוכל למשפחה מעוטת אמצעים המוקד למאבק בעוני": {
+      "verdict": "irrelevant",
+      "reason": "המוקד עוסק במאבק ציבורי ומדיני בעוני ולא בחלוקת אוכל ישירה."
+    },
+    "אוכל למשפחה מעוטת אמצעים סיוע למשפחות קשות יום בתרומה כספית ו/או תווי שי": {
+      "verdict": "relevant",
+      "reason": "הסיוע הכספי או תווי השי מאפשרים למשפחה לרכוש מוצרי מזון נחוצים."
+    },
+    "אוכל למשפחה מעוטת אמצעים מחלקת שערי מזון, מוקד חמול עוללים": {
+      "verdict": "relevant",
+      "reason": "השירות מספק מזון למשפחות הזקוקות לכך."
+    },
+    "אוכל למשפחה מעוטת אמצעים סיוע למשפחות נזקקות, סלי מזון": {
+      "verdict": "relevant",
+      "reason": "השירות מספק ישירות סלי מזון למשפחות נזקקות."
+    },
+    "אמא שלי השתחררה מבית החולים, מה מגיע לה? השיבה הביתה": {
+      "verdict": "relevant",
+      "reason": "זהו שירות המסייע בתהליך המעבר מבית החולים לבית."
+    },
+    "אמא שלי השתחררה מבית החולים, מה מגיע לה? מוקד ביקור חולים": {
+      "verdict": "irrelevant",
+      "reason": "זהו שירות רפואי דחוף ולא סיוע זכויות לאחר שחרור."
+    },
+    "אמא שלי השתחררה מבית החולים, מה מגיע לה? נופשון לזמן קצוב בבית אבות לאזרח הוותיק": {
+      "verdict": "relevant",
+      "reason": "פתרון נופשון עשוי לסייע לקשיש בתקופת ההחלמה לאחר השחרור."
+    },
+    "אמא שלי השתחררה מבית החולים, מה מגיע לה? שירותי ביצוע בדיקות הערכה תפקודית לקשישים": {
+      "verdict": "relevant",
+      "reason": "הערכה תפקודית חיונית לקביעת זכאות לסיוע לאחר השחרור מבית החולים."
+    },
+    "אמא שלי השתחררה מבית החולים, מה מגיע לה? השאלת ציוד רפואי לשיקום ביתי": {
+      "verdict": "relevant",
+      "reason": "ציוד שיקומי הוא חלק בלתי נפרד מהצרכים לאחר אשפוז."
+    },
+    "אמא שלי השתחררה מבית החולים, מה מגיע לה? חנות מתנות למאושפזים": {
+      "verdict": "irrelevant",
+      "reason": "מדובר בחנות מתנות שאינה מספקת סיוע בזכויות או בטיפול."
+    },
+    "אמא שלי השתחררה מבית החולים, מה מגיע לה? להיות שם כשצריך": {
+      "verdict": "unclear",
+      "reason": "שם השירות כללי מדי ולא ניתן להבין מהות הסיוע."
+    },
+    "אמא שלי השתחררה מבית החולים, מה מגיע לה? תמיכה": {
+      "verdict": "unclear",
+      "reason": "השם כללי מאוד ולא ברור איזה סוג תמיכה ניתן."
+    },
+    "אמא שלי השתחררה מבית החולים, מה מגיע לה? שירות טיפול ביתי על פי חוק סיעוד": {
+      "verdict": "relevant",
+      "reason": "טיפול ביתי הוא מענה משמעותי למי שזקוק לעזרה לאחר אשפוז."
+    },
+    "אמא שלי השתחררה מבית החולים, מה מגיע לה? סיוע למשפחות חולים הנצרכים לשיקום ארוך טווח": {
+      "verdict": "relevant",
+      "reason": "סיוע למשפחות חולים בשיקום עונה ישירות על צרכי המשתחררים מהחולים."
+    },
+    "אמא שלי השתחררה מבית החולים, מה מגיע לה? תן כבוד, יחידות חילוץ": {
+      "verdict": "irrelevant",
+      "reason": "יחידות חילוץ אינן רלוונטיות לצורך של חולה המשתחרר לביתו."
+    },
+    "אמא שלי השתחררה מבית החולים, מה מגיע לה? סיוע לנפגעי פעולות האיבה": {
+      "verdict": "irrelevant",
+      "reason": "הסיוע מיועד לנפגעי פעולות איבה ולא לשחרור כללי מבית חולים."
+    },
+    "אמא שלי השתחררה מבית החולים, מה מגיע לה? בית אבות לאזרחים ותיקים": {
+      "verdict": "relevant",
+      "reason": "מעבר לבית אבות עשוי להיות רלוונטי לחלק מהקשישים לאחר אשפוז."
+    },
+    "אמא שלי השתחררה מבית החולים, מה מגיע לה? בתי אבות מסובסדים": {
+      "verdict": "relevant",
+      "reason": "סיוע במימון בית אבות רלוונטי לקשישים הזקוקים להשגחה לאחר שחרור."
+    },
+    "הוסטל בצפת בית חם לנוער וצעירים/ות בסיכון": {
+      "verdict": "unclear",
+      "reason": "The service does not specify its geographic location."
+    },
+    "הוסטל בצפת הוסטל לצעירים ולצעירות בסיכון": {
+      "verdict": "unclear",
+      "reason": "The service does not specify its geographic location."
+    },
+    "הוסטל בצפת הוסטל צעירים וצעירות חרדיות": {
+      "verdict": "unclear",
+      "reason": "The service does not specify its geographic location."
+    },
+    "הוסטל בצפת הוסטל כוללני - הוסטל לבני נוער ולצעירים בסיכון": {
+      "verdict": "unclear",
+      "reason": "The service does not specify its geographic location."
+    },
+    "הוסטל בצפת הוסטל משלב בקהילה - הוסטל טיפולי לנוער בסיכון": {
+      "verdict": "unclear",
+      "reason": "The service does not specify its geographic location."
+    },
+    "אבחון אוטיזם בבאר שבע שירותים לתסמונות ואוטיזם": {
+      "verdict": "relevant",
+      "reason": "The service specifically deals with autism syndromes."
+    },
+    "אבחון אוטיזם בבאר שבע מעגן קשת": {
+      "verdict": "unclear",
+      "reason": "The name does not provide enough information to know if they perform autism diagnostics."
+    },
+    "אבחון אוטיזם בבאר שבע אבחון וסיוע בלקויות למידה": {
+      "verdict": "irrelevant",
+      "reason": "The service focuses on learning disabilities, which is different from autism diagnosis."
+    },
+    "אבחון אוטיזם בבאר שבע ברסלבר נאמן": {
+      "verdict": "unclear",
+      "reason": "The name of the service does not explain its purpose or activity."
+    },
+    "אבחון אוטיזם בבאר שבע מעטפת - תמיכה במגורים עצמאיים בקהילה לאנשים עם מוגבלות": {
+      "verdict": "irrelevant",
+      "reason": "The service provides housing support rather than diagnostic services."
+    },
+    "אבחון אוטיזם בבאר שבע סמך מקצועי - חונכות": {
+      "verdict": "irrelevant",
+      "reason": "Mentoring is not a diagnostic service for autism."
+    },
+    "אמא שלי מרותקת לכסא גלגלים, שירותים ופעילות פנאי בבאר שבע מרכז יום לאזרחים ותיקים": {
+      "verdict": "relevant",
+      "reason": "מרכז יום לאזרחים ותיקים מציע מענה חברתי וטיפולי שיכול להתאים לאם מבוגרת."
+    },
+    "אמא שלי מרותקת לכסא גלגלים, שירותים ופעילות פנאי בבאר שבע דירות לבעלי מוגבלויות": {
+      "verdict": "irrelevant",
+      "reason": "האם אינה מחפשת פתרון מגורים אלא שירותים ופעילויות פנאי."
+    },
+    "אמא שלי מרותקת לכסא גלגלים, שירותים ופעילות פנאי בבאר שבע מרכז יום לבוגרים עם מוגבלות": {
+      "verdict": "relevant",
+      "reason": "מרכז יום לבוגרים עם מוגבלות עשוי להציע מסגרת ופעילות פנאי לאדם המרותק לכיסא גלגלים."
+    },
+    "אמא שלי מרותקת לכסא גלגלים, שירותים ופעילות פנאי בבאר שבע סיוע לבעלי מוגבלויות ולמשפחותיהם": {
+      "verdict": "relevant",
+      "reason": "שירות סיוע כללי לבעלי מוגבלויות עשוי לכוון לשירותים רלוונטיים נוספים."
+    },
+    "אמא שלי מרותקת לכסא גלגלים, שירותים ופעילות פנאי בבאר שבע עידוד לחיים עצמאיים לאנשים עם מוגבלות ופעילויות קהילתיות": {
+      "verdict": "relevant",
+      "reason": "שירות זה מתמקד בקידום חיים עצמאיים ופעילויות קהילתיות המתאימות לאדם עם מוגבלות."
+    },
+    "אמא שלי מרותקת לכסא גלגלים, שירותים ופעילות פנאי בבאר שבע מועדון מופת לאזרחים ותיקים": {
+      "verdict": "relevant",
+      "reason": "מועדון חברתי לאזרחים ותיקים יכול לספק מענה לפעילות פנאי."
+    },
+    "אמא שלי מרותקת לכסא גלגלים, שירותים ופעילות פנאי בבאר שבע מועדון מועשר לאזרחים ותיקים": {
+      "verdict": "relevant",
+      "reason": "מועדון חברתי לאזרחים ותיקים יכול לספק מענה לפעילות פנאי."
+    },
+    "אמא שלי מרותקת לכסא גלגלים, שירותים ופעילות פנאי בבאר שבע שילוב נכים בסביבה תומכת": {
+      "verdict": "relevant",
+      "reason": "שילוב נכים בסביבה תומכת מתאים לצרכים חברתיים של אדם המרותק לכיסא גלגלים."
+    },
+    "אמא שלי מרותקת לכסא גלגלים, שירותים ופעילות פנאי בבאר שבע מרכז תעסוקה- סבי": {
+      "verdict": "irrelevant",
+      "reason": "מרכז תעסוקה אינו עונה על הצורך בפעילויות פנאי."
+    },
+    "אמא שלי מרותקת לכסא גלגלים, שירותים ופעילות פנאי בבאר שבע הפקות והצגות": {
+      "verdict": "unclear",
+      "reason": "לא ניתן לדעת אם ההפקות נגישות או מתאימות לאדם עם מוגבלות ניידות."
+    },
+    "אמא שלי מרותקת לכסא גלגלים, שירותים ופעילות פנאי בבאר שבע תמיכה בחולים": {
+      "verdict": "unclear",
+      "reason": "שירות תמיכה כללי לא מציין אם הוא מתאים לצרכי פנאי או ניידות."
+    },
+    "אמא שלי מרותקת לכסא גלגלים, שירותים ופעילות פנאי בבאר שבע סומכות לנכי נפש בקהילה": {
+      "verdict": "irrelevant",
+      "reason": "השירות מיועד לנכי נפש ולא צוין צורך כזה בשאלה."
+    },
+    "אמא שלי מרותקת לכסא גלגלים, שירותים ופעילות פנאי בבאר שבע נסיעה של חוויה": {
+      "verdict": "unclear",
+      "reason": "שם השירות לא מבהיר מהות הפעילות או הנגישות."
+    },
+    "אמא שלי מרותקת לכסא גלגלים, שירותים ופעילות פנאי בבאר שבע פעילויות פנאי": {
+      "verdict": "relevant",
+      "reason": "פעילויות פנאי הן בדיוק מה שהוגדר כצורך בשאלה."
+    },
+    "אמא שלי מרותקת לכסא גלגלים, שירותים ופעילות פנאי בבאר שבע מרחבים קהילתיים לפעילויות חברתיות, חוגים ומפגשים משלבים לאנשים עם וללא מוגבלות": {
+      "verdict": "relevant",
+      "reason": "מרחבים קהילתיים משלבים הם מקום מתאים לפעילות פנאי לאדם עם מוגבלות."
+    },
+    "אמא שלי מרותקת לכסא גלגלים, שירותים ופעילות פנאי בבאר שבע מיצוי זכויות": {
+      "verdict": "irrelevant",
+      "reason": "מיצוי זכויות אינו נותן מענה לפעילויות פנאי."
+    },
+    "אמא שלי מרותקת לכסא גלגלים, שירותים ופעילות פנאי בבאר שבע שירות טיפול ביתי על פי חוק סיעוד": {
+      "verdict": "relevant",
+      "reason": "טיפול סיעודי ביתי רלוונטי למי שמרותק לכיסא גלגלים וזקוק לסיוע."
+    },
+    "פעילות למבוגר מוגבל מרכז יום לבוגרים עם מוגבלות": {
+      "verdict": "relevant",
+      "reason": "מרכז יום מיועד לספק מסגרת ופעילות לאנשים עם מוגבלות."
+    },
+    "סיוע משפטי למשפחות של נעדרים איתור נעדרים": {
+      "verdict": "irrelevant",
+      "reason": "The service focuses on finding missing persons rather than providing legal assistance to their families."
+    },
+    "סיוע משפטי למשפחות של נעדרים מיצוי וקידום זכויות של נפגעי פעולות איבה מול הרשויות וגופים": {
+      "verdict": "relevant",
+      "reason": "Legal aid for victims of hostilities often covers families of those missing in such events."
+    },
+    "סיוע משפטי למשפחות של נעדרים סיוע משפטי": {
+      "verdict": "relevant",
+      "reason": "General legal aid services are relevant for families seeking legal support."
+    },
+    "סיוע משפטי למשפחות של נעדרים סיוע משפטי להורים יוצאי החברה החרדית בהליכי גירושין": {
+      "verdict": "irrelevant",
+      "reason": "The service is specific to divorce proceedings for Haredi families."
+    },
+    "סיוע משפטי למשפחות של נעדרים ייעוץ וייצוג משפטי לנשים מסורבות גט": {
+      "verdict": "irrelevant",
+      "reason": "The service is specific to women refused a get (divorce document)."
+    },
+    "סיוע משפטי למשפחות של נעדרים סיוע משפטי לנשים ערביות בתחום משפחה ודיני יישות": {
+      "verdict": "irrelevant",
+      "reason": "The service is specific to Arab women in family and personal status law matters."
+    },
+    "סיוע משפטי למשפחות של נעדרים השדולה למען משפחות השכול ונפגעי פעולות איבה": {
+      "verdict": "relevant",
+      "reason": "Organizations advocating for bereaved families or victims of hostilities often provide relevant legal guidance and support."
+    },
+    "סיוע משפטי למשפחות של נעדרים יעוץ משפטי": {
+      "verdict": "relevant",
+      "reason": "General legal advice is relevant for families in need of legal assistance."
+    },
+    "סיוע משפטי למשפחות של נעדרים סיוע משפטי לנפגעות אלימות מינית": {
+      "verdict": "irrelevant",
+      "reason": "The service is specific to survivors of sexual violence."
+    },
+    "סיוע משפטי למשפחות של נעדרים תמיכה משפטית": {
+      "verdict": "relevant",
+      "reason": "Legal support services are appropriate for families needing assistance."
+    },
+    "סיוע משפטי למשפחות של נעדרים סיוע משפטי למיצוי זכויות אזרחיות בציבור החרדי": {
+      "verdict": "irrelevant",
+      "reason": "The service is specific to civil rights in the Haredi community."
+    },
+    "סיוע משפטי למשפחות של נעדרים סיוע למשפחות חד הוריות יוצאות בשאלה": {
+      "verdict": "irrelevant",
+      "reason": "The service is specific to single-parent families who have left the Haredi community."
+    },
+    "סיוע משפטי למשפחות של נעדרים עזרה וסיוע לחיילים ומשפחות העולים שבטיפולינו בתקופת חירום-מלחמה": {
+      "verdict": "relevant",
+      "reason": "This service provides support to families of soldiers, which may include families of missing persons during wartime."
+    },
+    "סיוע משפטי למשפחות של נעדרים ליווי וסיוע למשפחות לוחמים נפגעי תגובות קרב": {
+      "verdict": "irrelevant",
+      "reason": "The service is specific to families of combat soldiers suffering from battle-related reactions."
+    },
+    "סיוע משפטי למשפחות של נעדרים ליווי וטיפול נפשי למשפחות שחוו אבדן פתאומי עקב רצח, התאבדות או תאונות דרכים": {
+      "verdict": "irrelevant",
+      "reason": "The service provides psychological support rather than legal assistance for those specific types of loss."
+    },
+    "סיוע משפטי למשפחות של נעדרים סיוע לנפגעי פעולות האיבה": {
+      "verdict": "relevant",
+      "reason": "Assistance for victims of hostilities includes support for families, which is relevant to missing persons in these contexts."
+    },
+    "סיוע משפטי למשפחות של נעדרים המרכז למיצוי זכויות": {
+      "verdict": "unclear",
+      "reason": "The service name does not specify the types of rights or populations served."
+    },
+    "סיוע משפטי למשפחות של נעדרים Legal clinic": {
+      "verdict": "unclear",
+      "reason": "The nature and focus of the legal clinic are not specified."
+    },
+    "סיוע משפטי למשפחות של נעדרים מבצע \"משגיח מרחוק\"": {
+      "verdict": "irrelevant",
+      "reason": "This appears to be a technological or surveillance service, not legal aid."
+    },
+    "סיוע משפטי למשפחות של נעדרים מיצוי זכויות": {
+      "verdict": "unclear",
+      "reason": "The service name does not specify which rights or populations are assisted."
+    },
+    "סיוע משפטי למשפחות של נעדרים ייצוג וייעוץ משפטי לאנשים שהופלו או נפגעו מחמת מוגבלותם": {
+      "verdict": "irrelevant",
+      "reason": "The service is specific to individuals discriminated against due to disabilities."
+    },
+    "סיוע משפטי למשפחות של נעדרים לווי והענקת יעוץ משפטי ותמיכה לנשים חרדיות ודתיות המתמודדות עם גירושין": {
+      "verdict": "irrelevant",
+      "reason": "The service is specific to Haredi and religious women dealing with divorce."
+    },
+    "סיוע משפטי למשפחות של נעדרים חולי אפילפסיה": {
+      "verdict": "irrelevant",
+      "reason": "The service is specific to people with epilepsy."
+    },
+    "סיוע משפטי למשפחות של נעדרים JustLaw Israel": {
+      "verdict": "unclear",
+      "reason": "The service name does not provide enough information about its target audience or area of law."
+    },
+    "סיוע משפטי למשפחות של נעדרים קידום רווחתם ושיקומם של נפגעי פעולות איבה": {
+      "verdict": "relevant",
+      "reason": "Support for victims of hostilities includes legal aid and advocacy for families."
+    },
+    "סיוע משפטי למשפחות של נעדרים מרכזי סיוע למשפחות שכולות עקב התאבדות, תאונות דרכים או עבירות המתה": {
+      "verdict": "irrelevant",
+      "reason": "The service focuses on support for specific types of deaths, not necessarily missing persons."
+    },
+    "סיוע משפטי למשפחות של נעדרים הקשבה, יעוץ כלכלי, יעוץ משפטי ואחר": {
+      "verdict": "relevant",
+      "reason": "Provides legal advice among other things, which is relevant for families in need."
+    },
+    "סיוע משפטי למשפחות של נעדרים סיוע במיצוי זכויות": {
+      "verdict": "unclear",
+      "reason": "The service name is too general to determine if it addresses legal needs of families of missing persons."
+    },
+    "סיוע משפטי למשפחות של נעדרים ליווי וסיוע לקהילות ותושבי ירושלים בהליכי התכנון והבניה ו/או הקצאות משאבי ציבור": {
+      "verdict": "irrelevant",
+      "reason": "The service is specific to urban planning and community resources in Jerusalem."
+    },
+    "סיוע משפטי למשפחות של נעדרים סיוע בהגשת תביעה קטנה": {
+      "verdict": "irrelevant",
+      "reason": "Small claims assistance is a specific legal domain not matching the query."
+    },
+    "סיוע משפטי למשפחות של נעדרים מוקד להכוונה משפטית בעת מצב החירום - משרד המשפטים": {
+      "verdict": "relevant",
+      "reason": "A Ministry of Justice hotline for legal guidance during emergencies is highly relevant for families of missing persons."
+    },
+    "סיוע משפטי למשפחות של נעדרים סיוע למשפחות": {
+      "verdict": "unclear",
+      "reason": "The name is too generic to know if it provides legal assistance."
+    },
+    "סיוע משפטי למשפחות של נעדרים טיפול, ליווי ותמיכה סוציאלית לנשים מסורבות גט": {
+      "verdict": "irrelevant",
+      "reason": "The service is specific to women refused a get."
+    },
+    "דיור לנשים נפגעות אלימות סיוע לנערות במצוקה": {
+      "verdict": "irrelevant",
+      "reason": "The service focuses on girls in distress rather than specifically on victims of domestic violence."
+    },
+    "דיור לנשים נפגעות אלימות דירות שהייה למורחקי בית - הוסטל לגברים אלימים": {
+      "verdict": "irrelevant",
+      "reason": "This service is for men who are violent, not for the women who are victims of violence."
+    },
+    "דיור לנשים נפגעות אלימות הוסטל לנשים נפגעות טראומה מינית": {
+      "verdict": "relevant",
+      "reason": "Trauma resulting from sexual violence is a relevant form of violence for this request."
+    },
+    "דיור לנשים נפגעות אלימות ליווי ותמיכה בנשים נפגעות אלימות וילדיהן": {
+      "verdict": "relevant",
+      "reason": "This provides essential support for women who are victims of violence."
+    },
+    "דיור לנשים נפגעות אלימות הוסטל בית אלה - הוסטל טיפולי קצר מועד לנפגעות טראומה מינית": {
+      "verdict": "relevant",
+      "reason": "This provides housing and therapy for women who have suffered sexual trauma."
+    },
+    "דיור לנשים נפגעות אלימות טיפולי תמיכה לנפגעי תקיפה": {
+      "verdict": "irrelevant",
+      "reason": "This service offers therapy but does not provide the housing requested."
+    },
+    "דיור לנשים נפגעות אלימות דירה וליווי לצעירות בסיכון - העמותה ע\"ש אהרן שנדור": {
+      "verdict": "irrelevant",
+      "reason": "The focus is on youth at risk rather than women who are victims of violence."
+    },
+    "דיור לנשים נפגעות אלימות לווי ומתן מענה ותמיכה לנשים חרדיות ודתיות במצבי פרידה וגירושין": {
+      "verdict": "irrelevant",
+      "reason": "The service focuses on divorce support rather than housing for victims of violence."
+    },
+    "דיור לנשים נפגעות אלימות בית לינה\" מיצוי זכויות לטרנסיות במעגל הזנות - משרד הרווחה והביטחון החברתי וקבוצת רמות\"": {
+      "verdict": "irrelevant",
+      "reason": "This service is specifically for trans women in the cycle of prostitution."
+    },
+    "דיור לנשים נפגעות אלימות הגנה על נערות ונשים בסיכון": {
+      "verdict": "unclear",
+      "reason": "The description is too general to confirm if it includes housing services for victims of violence."
+    },
+    "דיור לנשים נפגעות אלימות בית לינה\" טיפול רגשי לטרנסיות במעגל הזנות - משרד הרווחה והביטחון החברתי וקבוצת רמות\"": {
+      "verdict": "irrelevant",
+      "reason": "This service provides therapy for trans women in the cycle of prostitution."
+    },
+    "דיור לנשים נפגעות אלימות תמיכה ולווי בנשים ובמשפחותיהן בהתמודדות במצבי שגרה וחירום": {
+      "verdict": "irrelevant",
+      "reason": "This is a general support service and does not specify housing for victims of violence."
+    },
+    "דיור לנשים נפגעות אלימות בית לינה\" סיוע בתעסוקה לטרנסיות במעגל הזנות - משרד הרווחה והביטחון החברתי וקבוצת רמות\"": {
+      "verdict": "irrelevant",
+      "reason": "This service focuses on employment for trans women in the cycle of prostitution."
+    },
+    "דיור לנשים נפגעות אלימות בית לינה\" הלנת חירום לטרנסיות במעגל הזנות - משרד הרווחה והביטחון החברתי וקבוצת רמות\"": {
+      "verdict": "irrelevant",
+      "reason": "The target population is specifically trans women in the cycle of prostitution."
+    },
+    "דיור לנשים נפגעות אלימות קו הסיוע לנשים": {
+      "verdict": "irrelevant",
+      "reason": "This is a helpline and does not offer housing services."
+    },
+    "דיור לנשים נפגעות אלימות שירותי שיקום בדיור (דיור מוגן) לנכי נפש בקהילה": {
+      "verdict": "irrelevant",
+      "reason": "This service is for people with mental disabilities."
+    },
+    "דיור לנשים נפגעות אלימות הלנת חירום לנשים וצעירים נפגעי התמכרויות": {
+      "verdict": "irrelevant",
+      "reason": "The target population is victims of addictions, not general violence victims."
+    },
+    "דיור לנשים נפגעות אלימות ליווי ותמיכה במשתתפות התוכנית שנפגעו מהמלחמה": {
+      "verdict": "irrelevant",
+      "reason": "This service is for women affected by the war."
+    },
+    "דיור לנשים נפגעות אלימות סיוע סוציאלי": {
+      "verdict": "unclear",
+      "reason": "The term social assistance is too broad to confirm if it provides housing for victims of violence."
+    },
+    "דיור לנשים נפגעות אלימות יחידות אשפוזיות לנפגעות טראומה מינית": {
+      "verdict": "relevant",
+      "reason": "This provides housing and hospitalization for victims of sexual trauma."
+    },
+    "דיור לנשים נפגעות אלימות הוסטל לצעירים ולצעירות בסיכון": {
+      "verdict": "irrelevant",
+      "reason": "This targets youth at risk rather than adult women victims of domestic violence."
+    },
+    "דיור לנשים נפגעות אלימות בתים טיפוליים לגברים הנוהגים באלימות זוגית": {
+      "verdict": "irrelevant",
+      "reason": "This service is for men who act violently."
+    },
+    "דיור לנשים נפגעות אלימות בית חם לנערות": {
+      "verdict": "irrelevant",
+      "reason": "This service is for girls rather than adult women."
+    },
+    "דיור לנשים נפגעות אלימות להיות שם בשבילן - מגורים לצעירות חסרות עורף משפחתי ובסיכון": {
+      "verdict": "irrelevant",
+      "reason": "The service focuses on young women without family support."
+    },
+    "דיור לנשים נפגעות אלימות הוסטל לאנשים עם מוגבלות": {
+      "verdict": "irrelevant",
+      "reason": "This service is for people with disabilities."
+    },
+    "בתים מאזנים למתמודדי נפש בית מאזן - חלופת אשפוז": {
+      "verdict": "relevant",
+      "reason": "This service provides an alternative to hospitalization, which is the definition of a balancing home."
+    },
+    "בתים מאזנים למתמודדי נפש ביתינו - בית מאזן - שווה בנפשך": {
+      "verdict": "relevant",
+      "reason": "This is a recognized balancing home for mental health coping."
+    },
+    "בתים מאזנים למתמודדי נפש אי-זון בית מאזן": {
+      "verdict": "relevant",
+      "reason": "This is a therapeutic balancing home facility."
+    },
+    "בתים מאזנים למתמודדי נפש תקוה על ההר - בית מאזן - בית של תקוה": {
+      "verdict": "relevant",
+      "reason": "This service specifically identifies as a balancing home."
+    },
+    "בתים מאזנים למתמודדי נפש בית העוגן - בית מאזן - איזונפש": {
+      "verdict": "relevant",
+      "reason": "This is a therapeutic balancing home."
+    },
+    "בתים מאזנים למתמודדי נפש בית בטבע - בית מאזן": {
+      "verdict": "relevant",
+      "reason": "This service provides a balancing home environment."
+    },
+    "בתים מאזנים למתמודדי נפש רוח ים פרובנס - בית מאזן": {
+      "verdict": "relevant",
+      "reason": "This is a recognized balancing home."
+    },
+    "בתים מאזנים למתמודדי נפש רגעים - בית מאזן": {
+      "verdict": "relevant",
+      "reason": "This service operates as a balancing home."
+    },
+    "בתים מאזנים למתמודדי נפש בית תמר - בית מאזן": {
+      "verdict": "relevant",
+      "reason": "This is a designated balancing home."
+    },
+    "בתים מאזנים למתמודדי נפש וילה מטריקס - בית מאזן - א.ח. קארו": {
+      "verdict": "relevant",
+      "reason": "This facility operates as a balancing home."
+    },
+    "בתים מאזנים למתמודדי נפש בית מען - בית מאזן - בית מען חלופת אשפוז לנוער": {
+      "verdict": "relevant",
+      "reason": "This provides a balancing home specifically as an alternative to hospitalization for youth."
+    },
+    "בתים מאזנים למתמודדי נפש מגורים טיפוליים כולל קהילה שיקומית בגישה אקולוגית": {
+      "verdict": "irrelevant",
+      "reason": "Therapeutic housing and rehabilitation communities are different services from a balancing home."
+    },
+    "בתים מאזנים למתמודדי נפש השביל- בית מאזן": {
+      "verdict": "relevant",
+      "reason": "This is a service defined as a balancing home."
+    },
+    "בתים מאזנים למתמודדי נפש בית עלות השחר - בית מאזן - איזונפש": {
+      "verdict": "relevant",
+      "reason": "This is a recognized balancing home facility."
+    },
+    "בתים מאזנים למתמודדי נפש בית מדרש שיקומי למתמודדי נפש": {
+      "verdict": "irrelevant",
+      "reason": "A study house is an educational or day program, not a balancing home for crisis."
+    }
+  }
+}
