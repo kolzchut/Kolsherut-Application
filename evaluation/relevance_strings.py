@@ -66,7 +66,6 @@ ERROR_BATCH_POLL_TIMED_OUT = (
     'Judgement batch {name} was still {state} after {seconds:.0f}s. Batch jobs expire at 48h.'
 )
 ERROR_BATCH_HAS_NO_RESULT_FILE = 'Judgement batch {name} succeeded but produced no result file'
-ERROR_MISSING_JUDGEMENT = 'No relevance judgement for service "{service_name}" of query "{query}"'
 ERROR_JUDGE_INPUT_FILE_MISSING = (
     'Frozen judging input {path} is missing. Mission 4 judges a frozen file snapshot, not '
     'results/: copy the verified run into {directory} before judging.'

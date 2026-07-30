@@ -28,10 +28,11 @@ MANIFEST_SOURCE_RUN_KEY = 'source_run'
 
 # The run these files came from, and the arm that produced them. Re-frozen 2026-07-30 on a clean rerun
 # of the same V4 gemini arm, which reproduced 0.36935235358267293 exactly and landed 2,011 pairs against
-# the previous freeze's 2,007 - so the committed labels still cover 99.8% of it. Both superseded
-# snapshots are kept whole, manifest included, at results-judge-frozen-arm0-0.3025/ and
-# results-judge-frozen-arm4-gemini-0.3694/. The ground truth was NOT re-scraped for this freeze, so the
-# scrape date below is carried over unchanged rather than restamped.
+# the previous freeze's 2,007 - so the committed labels still cover 99.8% of it. The two superseded
+# snapshots (arm0 at 0.3025 and the earlier arm4 freeze at 0.3694) have been deleted; this file and the
+# manifest in results-judge-frozen/ are now the only record of what the committed labels were judged
+# against. The ground truth was NOT re-scraped for this freeze, so the scrape date below is carried
+# over unchanged rather than restamped.
 JUDGE_INPUT_SOURCE_RUN = 'results rerun of the V4 gemini arm (2026-07-30 15:05)'
 JUDGE_INPUT_OVERALL_SCORE = 0.36935235358267293
 JUDGE_INPUT_SCRAPE_DATE = '2026-07-29'
