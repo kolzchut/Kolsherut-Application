@@ -5,9 +5,8 @@
 # pruning (upstream issue #1274).
 
 # Git LFS embedding model: 2.2 GB locally, including a 17 MB tokenizer.json that
-# would be parsed as code. .gitignore deliberately re-includes this path via
-# "!retrieval/artifacts/" so CI can bake the model into the image, so it has to
-# be excluded here instead.
+# would be parsed as code. The model is tracked in git so CI can bake it into the
+# image, which means .gitignore does not cover it - it has to be excluded here.
 retrieval/artifacts/
 
 # Graphify's own output
