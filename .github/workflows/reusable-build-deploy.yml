@@ -147,7 +147,9 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           build-args: |
             ENVIRONMENT=${{ steps.get_version.outputs.VERSION }}
-          platforms: linux/amd64,linux/arm64
+          # The AKS node pools are ARM, so amd64 is dead weight in both build
+          # time and ACR storage.
+          platforms: linux/arm64
           provenance: false
 
       - name: Azure Login
