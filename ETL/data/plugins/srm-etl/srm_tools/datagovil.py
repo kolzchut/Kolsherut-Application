@@ -78,10 +78,18 @@ def resolve_datagovil_resource(dataset_name, resource_name):
 
 
 def fetch_datagovil_datastore(dataset_name, resource_name):
+    # Resolution and the first datastore call run eagerly, so an unpublished
+    # dataset or a renamed resource raises here - at the call site, naming the
+    # dataset - instead of surfacing later from inside the dataflows Flow that
+    # consumes the returned generator.
     resource_id = resolve_datagovil_resource(dataset_name, resource_name)['id']
-    payload = fetch_datagovil_json(
+    first_payload = fetch_datagovil_json(
         settings.DATAGOVIL_DATASTORE_SEARCH_API, dict(resource_id=resource_id)
     )
+    return iterate_datastore_records(first_payload, dataset_name)
+
+
+def iterate_datastore_records(payload, dataset_name):
     while True:
         records = payload.get('result', {}).get('records') or []
         if len(records) == 0:
