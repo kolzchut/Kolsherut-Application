@@ -1,6 +1,6 @@
 from evaluation import relevance_statistics_vars, relevance_vars
 from evaluation.report.pair_judged_items import build_identity, index_judgements_by_identity
-from evaluation.schemas import JudgementItem, ServiceJudgement
+from evaluation.relevance_schemas import JudgementItem, ServiceJudgement
 
 
 def build_empty_verdict_counts() -> dict[str, int]:

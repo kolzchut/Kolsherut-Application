@@ -9,7 +9,7 @@ from evaluation.relevance.chunk_judgement_items import chunk_judgement_items
 from evaluation.relevance.judgement_cache import load_judgement_cache, save_judgement_cache
 from evaluation.relevance.parse_judgement_result import parse_judgement_results
 from evaluation.relevance.read_cached_judgement import split_items_by_cache
-from evaluation.schemas import JudgementChunk, JudgementItem, ServiceJudgement
+from evaluation.relevance_schemas import JudgementChunk, JudgementItem, ServiceJudgement
 
 
 def log_unjudged_chunks(unjudged_chunks: list[tuple[JudgementChunk, str]],

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from evaluation.schemas import JudgementItem, ServiceJudgement
+from evaluation.relevance_schemas import JudgementItem, ServiceJudgement
 
 # Mission 6's three records. A sibling of schemas.py rather than an addition to it: schemas.py is at
 # 99 of its 100 lines, and one frozen dataclass with a docstring cannot fit in one. Grouped in a

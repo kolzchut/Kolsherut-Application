@@ -3,7 +3,7 @@ import json
 
 from evaluation import relevance_prompt_strings, relevance_vars
 from evaluation.relevance.read_judge_input_provenance import read_judge_input_provenance
-from evaluation.schemas import ServiceJudgement
+from evaluation.relevance_schemas import ServiceJudgement
 
 
 def build_judgement_cache_key(query: str, service_name: str) -> str:

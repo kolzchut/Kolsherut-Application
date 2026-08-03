@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 from evaluation import relevance_strings, relevance_vars, vars
 from evaluation.report.build_relevance_rows import build_relevance_header, build_relevance_rows
-from evaluation.schemas import JudgementItem, ServiceJudgement
+from evaluation.relevance_schemas import JudgementItem, ServiceJudgement
 
 # The identity is the leading (query, side, rank, service_name) block - the same four columns
 # service_diff.csv leads with. The verdict's position is looked up in the header rather than

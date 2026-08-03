@@ -1,5 +1,5 @@
 from evaluation import relevance_strings
-from evaluation.schemas import JudgementItem
+from evaluation.relevance_schemas import JudgementItem
 
 
 def limit_judgement_items(items: list[JudgementItem], limit: int) -> list[JudgementItem]:

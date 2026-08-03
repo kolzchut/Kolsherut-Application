@@ -1,5 +1,6 @@
 from evaluation import vars
-from evaluation.schemas import Example, QueryEvaluation, ServiceScores
+from evaluation.retrieval_schemas import RetrievalResult
+from evaluation.schemas import Example, QueryEvaluation
 from evaluation.metrics.precision_recall_f1 import precision_at_k, recall_at_k, f1_score
 from evaluation.metrics.reciprocal_rank import reciprocal_rank
 from evaluation.metrics.hit_rate import hit_rate
@@ -7,7 +8,7 @@ from evaluation.metrics.ndcg import ndcg_at_k
 from evaluation.metrics.average_precision import average_precision_at_k
 from evaluation.metrics.compute_returned_set_metrics import compute_returned_set_metrics
 from evaluation.metrics.compute_service_name_diff import (
-    find_missed_ground_truth_names, find_unexpected_retrieved_names,
+    find_missed_ground_truth_names, find_mutual_retrieved_names, find_unexpected_retrieved_names,
 )
 
 
@@ -30,14 +31,15 @@ def compute_metrics_at_k(hit_flags: list[int], ground_truth_size: int, k: int) -
     }
 
 
-def evaluate_query(example: Example, ranked_names: list[str],
-                   ordered_ground_truth_names: tuple[str, ...],
-                   service_scores: dict[str, ServiceScores]) -> QueryEvaluation:
+def evaluate_query(example: Example, retrieval: RetrievalResult,
+                   ordered_ground_truth_names: tuple[str, ...]) -> QueryEvaluation:
     """Takes the ground truth in the incumbent site's order, not as a set: the order is what
     makes the missed-name list rankable. Membership tests use the set derived here.
 
-    service_scores is carried onto the record untouched and read by no metric: every metric
-    below computes from ranked_names and ground_truth_names exactly as it did before."""
+    The whole RetrievalResult is carried onto the record and read by no metric: every metric
+    below computes from ranked_names and ground_truth_names exactly as it did before, and the
+    third name list is a partition of what the other two already covered, not a new input."""
+    ranked_names = list(retrieval.ranked_names)
     ground_truth_names = set(ordered_ground_truth_names)
     ground_truth_size = len(ground_truth_names)
     metrics_by_k = {}
@@ -52,9 +54,12 @@ def evaluate_query(example: Example, ranked_names: list[str],
         metrics_by_k=metrics_by_k, hits_by_k=hits_by_k,
         returned_count=len(ranked_names),
         set_metrics=compute_returned_set_metrics(ranked_names, ground_truth_names),
+        ranked_names=retrieval.ranked_names,
         missed_ground_truth_names=find_missed_ground_truth_names(
             ordered_ground_truth_names, ranked_names),
         unexpected_retrieved_names=find_unexpected_retrieved_names(
             ranked_names, ground_truth_names),
-        service_scores=service_scores,
+        mutual_retrieved_names=find_mutual_retrieved_names(ranked_names, ground_truth_names),
+        service_scores=retrieval.service_scores,
+        service_details=retrieval.service_details,
     )

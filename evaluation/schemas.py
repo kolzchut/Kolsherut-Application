@@ -32,6 +32,22 @@ class ServiceScores:
 
 
 @dataclass(frozen=True)
+class ServiceDetails:
+    """What one service IS, as opposed to how it scored: its description and its two tag sets.
+
+    Read off the same srm__cards fields whether they arrive on a retrieval response or on a BE
+    search response, and carried to the judgement table untouched. Every field is optional at
+    the source, so an absent one stays empty here and is written as a BLANK cell - never a
+    placeholder and never a guess at what the service might be about.
+    """
+    service_description: str = ''
+    response_ids: tuple[str, ...] = ()
+    response_names: tuple[str, ...] = ()
+    situation_ids: tuple[str, ...] = ()
+    situation_names: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
 class QueryEvaluation:
     """Metrics for a single query, plus the meta needed for aggregation and drill-down."""
     query: str
@@ -44,57 +60,19 @@ class QueryEvaluation:
     # retrieval was never called - distinct from a genuine zero.
     returned_count: int | None = None
     set_metrics: dict[str, float] = field(default_factory=dict)
-    # The two set differences behind the metrics: which ground-truth services were never
-    # returned, and which returned services the incumbent site does not show. Empty for
-    # skipped queries. Each keeps its source ordering, so position is its rank.
+    # Retrieval's returned list in its own rank order, whole and unfiltered. The ONLY source of
+    # raw_rank: position here is the rank retrieval actually assigned, which the three partitions
+    # below cannot express because each renumbers from 1 within itself.
+    ranked_names: tuple[str, ...] = ()
+    # The three partitions of (returned union golden set) behind the metrics: which ground-truth
+    # services were never returned, which returned services the incumbent site does not show, and
+    # which both agree on. Empty for skipped queries. Each keeps its source ordering.
     missed_ground_truth_names: tuple[str, ...] = ()
     unexpected_retrieved_names: tuple[str, ...] = ()
-    # Carried, never scored on: no metric reads this. Keyed by the same normalized service
-    # name the metrics match on, so both diff lists can look their scores up directly. Empty
-    # for skipped queries, where retrieval was never called.
+    mutual_retrieved_names: tuple[str, ...] = ()
+    # Carried, never scored on: no metric reads either map. Both are keyed by the same normalized
+    # service name the metrics match on, so every partition can look its rows up directly. The
+    # score map covers the returned names only; the detail map also covers missed names, whose
+    # content is fetched separately because retrieval never returned them.
     service_scores: dict[str, ServiceScores] = field(default_factory=dict)
-
-
-@dataclass(frozen=True)
-class JudgementItem:
-    """One (query, service) pair awaiting a verdict, read from a frozen diff JSON file.
-
-    `scores` is the five score cells exactly as that file holds them - carried, never re-derived,
-    and null on the missed side by construction.
-    """
-    query: str
-    side: str
-    rank: int
-    service_name: str
-    scores: dict[str, float | None] = field(default_factory=dict)
-
-
-@dataclass(frozen=True)
-class JudgementChunk:
-    """The items of one (query, side) group that go into a single batch request.
-
-    `key` is the user-defined Batch API key, which is what correlates a result line back to this
-    chunk. Results are never joined by position.
-    """
-    key: str
-    query: str
-    side: str
-    items: tuple[JudgementItem, ...] = ()
-
-
-@dataclass(frozen=True)
-class ServiceJudgement:
-    """One LLM verdict on whether a service would help the person who asked the query.
-
-    `side` and `rank` are the retrieval-side provenance of the pair - which diff list it came
-    from and its position in that list. They are carried for reporting only, and never key
-    anything: the verdict is a pure function of (query, service_name), while both of these
-    change with retrieval configuration. `verdict` is always one of relevance_vars.VERDICTS -
-    relevance_marker_vars.py's wire markers are decoded before a record is built and never reach
-    one - and there is no reason field: as of schema v3 the judge returns no free text at all.
-    """
-    query: str
-    side: str
-    rank: int
-    service_name: str
-    verdict: str
+    service_details: dict[str, ServiceDetails] = field(default_factory=dict)

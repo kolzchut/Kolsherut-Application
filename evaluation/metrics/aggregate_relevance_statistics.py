@@ -3,7 +3,7 @@ from evaluation.metrics.count_relevance_verdicts import (
     count_verdicts, count_verdicts_by_side, select_items_of_side,
 )
 from evaluation.relevance.frozen_query_record import FrozenQueryRecord
-from evaluation.schemas import JudgementItem, ServiceJudgement
+from evaluation.relevance_schemas import JudgementItem, ServiceJudgement
 
 
 def compute_decisive_rate(counts: dict[str, int], numerator_verdict: str) -> tuple[float, int, int]:

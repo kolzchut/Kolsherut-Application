@@ -4,7 +4,9 @@ from pathlib import Path
 
 from evaluation import vars
 from evaluation.report.build_per_query_rows import build_per_query_header, build_per_query_row
-from evaluation.report.build_service_diff_json import build_missed_payload, build_unexpected_payload
+from evaluation.report.build_service_diff_json import (
+    build_missed_payload, build_mutual_payload, build_unexpected_payload,
+)
 from evaluation.report.build_service_diff_rows import (
     build_service_diff_header, build_service_diff_rows,
 )
@@ -40,8 +42,15 @@ def write_unexpected_retrieved_json(summary: dict) -> None:
     write_diff_json(build_unexpected_payload(summary), vars.UNEXPECTED_RETRIEVED_JSON_PATH)
 
 
+def write_mutual_retrieved_json(summary: dict) -> None:
+    """The true positives, each carrying the scores and the raw rank that got it returned."""
+    write_diff_json(build_mutual_payload(summary), vars.MUTUAL_RETRIEVED_JSON_PATH)
+
+
 def write_missed_ground_truth_json(summary: dict) -> None:
-    """The recall failures. Same schema, five null scores - nothing ever scored these."""
+    """The recall failures. Same schema, five null scores - nothing ever scored these. Their
+    content is the exception: it comes from the backend, so it is the one thing these rows can
+    carry that retrieval never produced."""
     write_diff_json(build_missed_payload(summary), vars.MISSED_GROUND_TRUTH_JSON_PATH)
 
 
@@ -59,6 +68,7 @@ def write_results(summary: dict) -> None:
     write_service_diff_csv(summary)
     write_unexpected_retrieved_json(summary)
     write_missed_ground_truth_json(summary)
+    write_mutual_retrieved_json(summary)
     write_report_html(summary)
 
 

@@ -11,6 +11,8 @@ PER_QUERY_KEY = 'per_query'
 META_KEY = 'meta'
 UNEXPECTED_NAMES_KEY = 'unexpected_retrieved_names'
 MISSED_NAMES_KEY = 'missed_ground_truth_names'
+MUTUAL_NAMES_KEY = 'mutual_retrieved_names'
+RANKED_NAMES_KEY = 'ranked_names'
 # Derived from the paths actually involved, so the provenance line cannot drift from them.
 GENERATED_FROM_SUMMARY = f'{vars.RESULTS_DIR.name}/{vars.SUMMARY_JSON_PATH.name}'
 
@@ -27,7 +29,9 @@ def _build_query_entry(entry: dict, names_key: str) -> dict:
     was_skipped = returned_count is None
     service_names = [] if was_skipped else (entry.get(names_key) or [])
     services = build_service_entries(
-        service_names, entry.get(vars.PER_QUERY_SERVICE_SCORES_KEY) or {})
+        service_names, entry.get(vars.PER_QUERY_SERVICE_SCORES_KEY) or {},
+        entry.get(vars.PER_QUERY_SERVICE_DETAILS_KEY) or {},
+        entry.get(RANKED_NAMES_KEY) or [])
     query_entry = {
         QUERY_KEY: entry[QUERY_KEY],
         GROUND_TRUTH_SIZE_KEY: entry[GROUND_TRUTH_SIZE_KEY],
@@ -61,6 +65,19 @@ def build_unexpected_payload(summary: dict) -> dict:
     """Everything retrieval returned that the incumbent site does not show - false positives."""
     return _build_payload(
         summary, strings.SERVICE_DIFF_SIDE_UNEXPECTED_RETRIEVED, UNEXPECTED_NAMES_KEY)
+
+
+def build_mutual_payload(summary: dict) -> dict:
+    """Everything retrieval returned that the incumbent site also shows - the true positives.
+
+    The same builder as the other two sides, because it is the same kind of list: a partition of
+    one query's names, in retrieval's rank order, with every score and every content field
+    carried. It is the side that makes raw_rank readable - the unexpected file alone renumbers
+    over the positions these rows occupy, so the two only reconstruct the returned ordering when
+    read together.
+    """
+    return _build_payload(
+        summary, strings.SERVICE_DIFF_SIDE_MUTUAL_RETRIEVED, MUTUAL_NAMES_KEY)
 
 
 def build_missed_payload(summary: dict) -> dict:

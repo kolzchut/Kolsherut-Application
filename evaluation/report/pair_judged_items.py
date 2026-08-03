@@ -1,4 +1,4 @@
-from evaluation.schemas import JudgementItem, ServiceJudgement
+from evaluation.relevance_schemas import JudgementItem, ServiceJudgement
 
 
 def build_identity(query: str, side: str, rank: int) -> tuple[str, str, int]:

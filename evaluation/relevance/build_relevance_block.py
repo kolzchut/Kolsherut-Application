@@ -2,7 +2,7 @@ from evaluation import relevance_statistics_vars
 from evaluation.metrics.adjusted_set_metrics import aggregate_adjusted_set_metrics
 from evaluation.metrics.aggregate_relevance_statistics import aggregate_relevance_statistics
 from evaluation.relevance.read_frozen_query_records import read_frozen_query_records
-from evaluation.schemas import JudgementItem, ServiceJudgement
+from evaluation.relevance_schemas import JudgementItem, ServiceJudgement
 
 
 def build_relevance_block(items: list[JudgementItem],

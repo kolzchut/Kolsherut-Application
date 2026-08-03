@@ -2,7 +2,7 @@ import json
 
 from evaluation import relevance_prompt_strings, relevance_vars
 from evaluation.relevance.judgement_schema import build_judgement_response_schema
-from evaluation.schemas import JudgementChunk
+from evaluation.relevance_schemas import JudgementChunk
 
 # The user payload's own field names, matching the input shape the system prompt describes.
 PAYLOAD_QUERY_FIELD = 'query'

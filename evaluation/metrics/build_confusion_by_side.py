@@ -1,4 +1,4 @@
-from evaluation import relevance_statistics_vars, relevance_vars
+from evaluation import human_review_vars, relevance_vars
 from evaluation.human_review_schemas import AlignedVerdict
 
 
@@ -24,13 +24,18 @@ def select_rows_of_side(aligned: list[AlignedVerdict], side: str) -> list[Aligne
 
 
 def build_confusion_by_side(aligned: list[AlignedVerdict]) -> dict[str, dict[str, dict[str, int]]]:
-    """One 3x3 per diff side, both sides always present.
+    """One 3x3 per audited side, both sides always present.
 
     Per side rather than pooled because the two sides ask opposite questions - whether the golden set
     holds noise, and whether it is too narrow - so a judge can be reliable on one and wrong on the
     other, and a pooled matrix would average that away. The matrix is what shows WHICH DIRECTION the
     judge errs in: a mass of (human irrelevant, llm relevant) on the unexpected side is a judge that
     rubber-stamps retrieval, and it fails the mission for a different reason than the mirror cell.
+
+    Keyed on the sides the DRAW covers, not on every side the judge scores. A side the sample never
+    contained would come out as a grid of zeroes, and an empty grid here means "the human and the
+    judge never once agreed", which is a finding - so a side that was never audited must not produce
+    one rather than produce one that reads as its opposite.
     """
     return {side: build_confusion_matrix(select_rows_of_side(aligned, side))
-            for side in relevance_statistics_vars.RELEVANCE_SIDES}
+            for side in human_review_vars.REVIEW_SAMPLE_SIDES}

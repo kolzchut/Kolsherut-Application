@@ -1,9 +1,10 @@
 from evaluation import vars
+from evaluation.clients.build_service_detail_map import build_service_detail_map
+from evaluation.retrieval_schemas import RetrievalResult
 from evaluation.schemas import ServiceScores
 from evaluation.scraper.normalize_service_name import normalize_and_dedupe, normalize_service_name
 
 SERVICES_FIELD = 'services'
-SERVICE_NAME_FIELD = 'service_name'
 
 
 def build_service_scores(service_entry: dict) -> ServiceScores:
@@ -33,18 +34,24 @@ def build_service_score_map(service_entries: list[dict]) -> dict[str, ServiceSco
     """
     score_map: dict[str, ServiceScores] = {}
     for service_entry in service_entries:
-        service_name = normalize_service_name(service_entry.get(SERVICE_NAME_FIELD) or '')
+        service_name = normalize_service_name(service_entry.get(vars.SERVICE_NAME_FIELD) or '')
         if service_name and service_name not in score_map:
             score_map[service_name] = build_service_scores(service_entry)
     return score_map
 
 
-def parse_retrieval_response(payload: dict) -> tuple[list[str], dict[str, ServiceScores]]:
-    """Split one retrieve response into its ranked service names and their scores.
+def parse_retrieval_response(payload: dict) -> RetrievalResult:
+    """Split one retrieve response into the three things the evaluation reads from it.
 
-    Both come from `services` rather than `documents`: it is the same name-collapsed,
-    rank-ordered shape the FE renders, which is what the scraped ground truth is made of.
+    All three come from `services` rather than `documents`: it is the same name-collapsed,
+    rank-ordered shape the FE renders, which is what the scraped ground truth is made of - and
+    it is the only one of the two that carries the description and tags at all.
     """
     service_entries = payload.get(SERVICES_FIELD, [])
-    raw_names = [service_entry.get(SERVICE_NAME_FIELD) or '' for service_entry in service_entries]
-    return list(normalize_and_dedupe(raw_names)), build_service_score_map(service_entries)
+    raw_names = [service_entry.get(vars.SERVICE_NAME_FIELD) or ''
+                 for service_entry in service_entries]
+    return RetrievalResult(
+        ranked_names=normalize_and_dedupe(raw_names),
+        service_scores=build_service_score_map(service_entries),
+        service_details=build_service_detail_map(service_entries),
+    )

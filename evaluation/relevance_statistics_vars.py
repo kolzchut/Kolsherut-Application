@@ -20,10 +20,14 @@ RELEVANCE_ADJUSTED_SET_METRICS_KEY = 'adjusted_set_metrics'
 # and is never folded into `irrelevant` - see relevance_vars.VERDICTS for the vocabulary itself.
 VERDICT_COUNT_UNJUDGED_KEY = 'unjudged'
 VERDICT_COUNT_TOTAL_KEY = 'total'
-# Both diff sides, under the same literals service_diff.csv and the two frozen JSON files use.
+# All three sides, under the same literals service_diff.csv and the three frozen JSON files use.
+# The mutual side is counted here so the verdict tables cover the whole judged set, but it is
+# deliberately absent from adjusted_set_metrics, which names its two sides explicitly: those rows
+# are already counted as hits, so crediting them again would inflate precision against itself.
 RELEVANCE_SIDES = [
     strings.SERVICE_DIFF_SIDE_UNEXPECTED_RETRIEVED,
     strings.SERVICE_DIFF_SIDE_MISSED_GROUND_TRUTH,
+    strings.SERVICE_DIFF_SIDE_MUTUAL_RETRIEVED,
 ]
 
 # The two rates, each shipped with its own numerator and denominator. The denominator counts only

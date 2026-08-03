@@ -1,6 +1,7 @@
 from evaluation import relevance_statistics_vars, vars
 from evaluation.strings import COUNT_STAT_LABELS, METRIC_LABELS, SET_METRIC_LABELS
 from evaluation.schemas import QueryEvaluation
+from evaluation.report.serialize_service_details import serialize_service_detail_map
 from evaluation.report.serialize_service_scores import serialize_service_score_map
 
 
@@ -14,9 +15,13 @@ def serialize_query_evaluation(evaluation: QueryEvaluation) -> dict:
         'hits_by_k': evaluation.hits_by_k,
         'metrics_by_k': evaluation.metrics_by_k,
         'set_metrics': evaluation.set_metrics,
+        'ranked_names': list(evaluation.ranked_names),
         'missed_ground_truth_names': list(evaluation.missed_ground_truth_names),
         'unexpected_retrieved_names': list(evaluation.unexpected_retrieved_names),
+        'mutual_retrieved_names': list(evaluation.mutual_retrieved_names),
         vars.PER_QUERY_SERVICE_SCORES_KEY: serialize_service_score_map(evaluation.service_scores),
+        vars.PER_QUERY_SERVICE_DETAILS_KEY: serialize_service_detail_map(
+            evaluation.service_details),
     }
 
 

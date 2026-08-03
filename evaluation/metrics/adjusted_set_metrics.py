@@ -2,7 +2,7 @@ from evaluation import relevance_statistics_vars, relevance_vars, strings
 from evaluation.metrics.central_tendency import mean
 from evaluation.metrics.precision_recall_f1 import f1_score, precision_at_k, recall_at_k
 from evaluation.relevance.frozen_query_record import FrozenQueryRecord
-from evaluation.schemas import ServiceJudgement
+from evaluation.relevance_schemas import ServiceJudgement
 
 
 def count_verdicts_by_query(judgements: list[ServiceJudgement], side: str,

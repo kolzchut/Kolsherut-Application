@@ -1,6 +1,6 @@
 from evaluation import relevance_strings, relevance_vars
 from evaluation.relevance.build_judgement_request import FIRST_ITEM_ID
-from evaluation.schemas import JudgementChunk
+from evaluation.relevance_schemas import JudgementChunk
 
 # Both assertions RAISE. A silently dropped chunk, or a chunk that answered about 37 of the 40
 # services it was given, produces output that still looks valid - and on a lite-tier model id

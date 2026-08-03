@@ -37,8 +37,8 @@ EMPTY_GROUND_TRUTH_ROW_LABEL = (
 # would pair the labels with the wrong arm, which is silent unless it raises.
 ERROR_FROZEN_HIT_COUNTS_DISAGREE = (
     'The frozen diff files disagree on how many golden-set services query "{query}" retrieved: '
-    '{from_returned} by the unexpected side, {from_ground_truth} by the missed side. '
-    'They must come from the same run.'
+    '{from_returned} by the unexpected side, {from_ground_truth} by the missed side, '
+    '{from_mutual} by the mutual side. They must come from the same run.'
 )
 
 # Adjusted set metrics, keyed by the identifiers in relevance_statistics_vars.py - the same shape

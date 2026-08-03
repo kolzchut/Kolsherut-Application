@@ -15,9 +15,32 @@ REQUEST_TIMEOUT_SECONDS = float(os.getenv('EVAL_REQUEST_TIMEOUT_SECONDS', '30'))
 # The site whose rendered results are the ground truth.
 STAGING_BASE_URL = os.getenv('STAGING_BASE_URL', 'https://staging.kolsherut.org.il')
 
+# The incumbent backend, used for ONE thing: looking a service's description and tags up by name.
+# Missed golden-set services were never returned by retrieval, so their content cannot come off a
+# retrieval response - but /search reads the same srm__cards fields and returns the same service
+# shape, so both sides of the table end up carrying content from one source.
+BACKEND_BASE_URL = os.getenv('BACKEND_BASE_URL', 'http://localhost:5000')
+BACKEND_SEARCH_ENDPOINT_PATH = '/search'
+# The search route's request fields. `service_name` is what narrows the query to one service;
+# `search_query` is required by the route (it calls .replace on it unconditionally) and is sent
+# empty so the route takes its filtered branch rather than its free-text one.
+BACKEND_SEARCH_QUERY_FIELD = 'searchQuery'
+BACKEND_SEARCH_IS_FAST_FIELD = 'isFast'
+BACKEND_SEARCH_SERVICE_NAME_FIELD = 'serviceName'
+BACKEND_SEARCH_RESULTS_FIELD = 'data'
+# Deliberately the FAST branch. The rest branch pages from offset 50, so a name matching fewer
+# than fifty cards comes back empty; the cost is that the route answers 404 rather than an empty
+# list when nothing matched, which the client reads as "not found" instead of as a failure.
+BACKEND_SEARCH_IS_FAST = True
+BACKEND_NOT_FOUND_STATUS_CODE = 404
+
 # Dataset: the raw golden set, and the service names scraped from it once and reused.
 DATASET_PATH = EVALUATION_ROOT / 'data' / 'Raw-Golden-Set.csv'
 GROUND_TRUTH_PATH = EVALUATION_ROOT / 'data' / 'golden-set-ground-truth.json'
+# Descriptions and tags looked up from the BE, cached next to the ground truth and committed for
+# the same reason: it is stable reference data about services, not a measurement of retrieval, so
+# re-running must not depend on the BE being up or re-ask it 900 questions it already answered.
+SERVICE_DETAILS_CACHE_PATH = EVALUATION_ROOT / 'data' / 'service-details-cache.json'
 DATASET_HAS_HEADER = True
 QUERY_COLUMN_INDEX = 0
 URL_COLUMN_INDEX = 1
@@ -47,6 +70,10 @@ SERVICE_DIFF_CSV_PATH = RESULTS_DIR / 'service_diff.csv'
 # gitignored: both are run artifacts, never committed data.
 UNEXPECTED_RETRIEVED_JSON_PATH = RESULTS_DIR / 'unexpected_retrieved.json'
 MISSED_GROUND_TRUTH_JSON_PATH = RESULTS_DIR / 'missed_ground_truth.json'
+# The third side: what retrieval returned AND the incumbent site shows - the true positives. Same
+# schema as the other two, so nothing downstream has to special-case it. It is the side that makes
+# the raw ranking readable: without it the other two renumber over the gaps it leaves.
+MUTUAL_RETRIEVED_JSON_PATH = RESULTS_DIR / 'mutual_retrieved.json'
 REPORT_HTML_PATH = RESULTS_DIR / 'report.html'
 DASHBOARD_TEMPLATE_PATH = EVALUATION_ROOT / 'dashboard' / 'dashboard.html'
 DASHBOARD_DATA_PLACEHOLDER = '__SUMMARY_JSON__'
@@ -112,6 +139,36 @@ SERVICE_SCORE_KEYS = [
 ]
 # The per-query block in summary.json that holds the score map, keyed by service name.
 PER_QUERY_SERVICE_SCORES_KEY = 'service_scores'
+
+# Per-service content. Same three-roles-one-constant rule as the scores above: each name is the
+# attribute on ServiceDetails, the JSON key inside a diff-file service object, and the CSV header.
+# The two tag sets are carried as ids AND names - ids so a row joins back to the taxonomy, names
+# so it can be read without one.
+SERVICE_DETAIL_DESCRIPTION_KEY = 'service_description'
+SERVICE_DETAIL_RESPONSE_IDS_KEY = 'response_ids'
+SERVICE_DETAIL_RESPONSE_NAMES_KEY = 'response_names'
+SERVICE_DETAIL_SITUATION_IDS_KEY = 'situation_ids'
+SERVICE_DETAIL_SITUATION_NAMES_KEY = 'situation_names'
+SERVICE_DETAIL_KEYS = [
+    SERVICE_DETAIL_DESCRIPTION_KEY, SERVICE_DETAIL_RESPONSE_IDS_KEY,
+    SERVICE_DETAIL_RESPONSE_NAMES_KEY, SERVICE_DETAIL_SITUATION_IDS_KEY,
+    SERVICE_DETAIL_SITUATION_NAMES_KEY,
+]
+# Which of the five are tag sets rather than free text: the ones written as a joined list.
+SERVICE_DETAIL_TAG_KEYS = [
+    SERVICE_DETAIL_RESPONSE_IDS_KEY, SERVICE_DETAIL_RESPONSE_NAMES_KEY,
+    SERVICE_DETAIL_SITUATION_IDS_KEY, SERVICE_DETAIL_SITUATION_NAMES_KEY,
+]
+# The per-query block in summary.json that holds the detail map, keyed by service name.
+PER_QUERY_SERVICE_DETAILS_KEY = 'service_details'
+# Fields read off one service object, as both retrieval and the BE return it. SERVICE_NAME_FIELD
+# is what every map below is keyed on, after normalization.
+SERVICE_NAME_FIELD = 'service_name'
+# Fields of one `responses[]` / `situations[]` tag object, as both retrieval and the BE return it.
+SERVICE_TAG_ID_FIELD = 'id'
+SERVICE_TAG_NAME_FIELD = 'name'
+SERVICE_RESPONSES_FIELD = 'responses'
+SERVICE_SITUATIONS_FIELD = 'situations'
 
 # Diff-JSON payload keys. Only the wrapper and per-query keys live here: each service object
 # reuses SERVICE_SCORE_KEYS verbatim, so the JSON, the CSV and the FE badges name the same five

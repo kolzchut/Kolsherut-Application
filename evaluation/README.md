@@ -160,9 +160,14 @@ would silently change what the score means and break comparison with past runs. 
 
 ## Running
 
-Prerequisites: the **retrieval** service (`:8200`) is running, and staging is reachable. Retrieval
-should point at the **same** underlying `srm__cards` data staging serves — otherwise names diverge
-for reasons unrelated to ranking.
+Prerequisites: the **retrieval** service (`:8200`) is running, the **be** service (`BACKEND_BASE_URL`,
+default `:5000`) is running, and staging is reachable. All three should point at the **same**
+underlying `srm__cards` data — otherwise names diverge for reasons unrelated to ranking.
+
+`be` is used for exactly one thing: looking a service's description and tags up by name, for the
+golden-set services retrieval never returned. Those have no content on any retrieval response, so
+without it their content columns come out blank. Answers are cached in
+`data/service-details-cache.json` and committed, so a repeat run makes no backend calls at all.
 
 ```bash
 cd evaluation
@@ -175,6 +180,8 @@ cp .env.example .env                                  # adjust URLs if not on de
 python -m evaluation.run_evaluation                   # full run (all queries)
 python -m evaluation.run_evaluation --limit 5         # quick smoke run
 python -m evaluation.run_evaluation --rescrape        # refresh the scraped ground truth first
+
+python -m evaluation.freeze_judge_input               # freeze results/ as the judging snapshot
 
 # LLM relevance judging - OPT-IN, costs money, needs GEMINI_JUDGE_API_KEY in .env:
 python -m evaluation.run_evaluation --judge                  # judge the whole frozen snapshot
@@ -198,34 +205,51 @@ artifact reproduced by the next run, never committed data:
 - `summary.json` — full metrics, meta and per-query data.
 - `per_query.csv` — one row per query (ground-truth size, returned count, missed and unexpected
   counts, set-level metrics, hits@k) for spotting weak queries and count mismatches.
-- `service_diff.csv` — **which** services differ, one row per query × service:
+- `service_diff.csv` — **which** services fell where, one row per query × service:
   `query, side, rank, service_name`. `side` is `missed_ground_truth` (the site shows it, retrieval
-  never returned it — a recall failure) or `unexpected_retrieved` (retrieval returned it, the site
-  does not show it). `rank` is the name's 1-based position on its own side, so a low rank on the
-  unexpected side is a high-confidence false positive. Filter or pivot this to see *what* is wrong,
-  not just how much.
+  never returned it — a recall failure), `unexpected_retrieved` (retrieval returned it, the site
+  does not show it) or `mutual_retrieved` (both — a true positive). The three partition
+  *returned ∪ golden set* with nothing dropped and nothing counted twice. `rank` is the name's
+  1-based position on its own side, so a low rank on the unexpected side is a high-confidence false
+  positive. Filter or pivot this to see *what* is wrong, not just how much.
 - `unexpected_retrieved.json` — the `unexpected_retrieved` side of that diff with **retrieval's
   scores attached**, for feeding a relevance judge that has to decide whether a "false positive"
   really is one. Per query: `query, ground_truth_size, returned_count, count, services` (plus
   `skip_reason` when the query was skipped). Each element of `services` is an object —
-  `rank, service_name, retrieval_score, cosine_score, cosine_score_ratio, lexical_score,
-  semantic_score` — so the scores travel with the name instead of needing a join. A `null` score
+  `rank, raw_rank, service_name, service_description, response_ids, response_names, situation_ids,
+  situation_names, retrieval_score, cosine_score, cosine_score_ratio, lexical_score,
+  semantic_score` — so the scores and the content travel with the name instead of needing a join.
+  `raw_rank` is the service's position in retrieval's **whole** returned list, which is not `rank`:
+  `rank` renumbers from 1 within each side, so it closes the gaps the other sides leave. A `null` score
   means that retriever never surfaced a document for the service, which is **not** the same as
   scoring it zero. Written with `ensure_ascii=False`, so Hebrew stays readable. Skipped queries
   carry `count: null` and `services: []` rather than a misleading zero.
 - `missed_ground_truth.json` — the `missed_ground_truth` side, same schema and same
   `(query, side, rank)` join to `service_diff.csv`, for judging whether a recall "failure" was a
-  service worth returning at all. All five score fields are **always `null`** here: retrieval never
-  returned these services, so no retriever ever scored them. Blank is the honest value — a zero
-  would claim the embedder scored them maximally dissimilar, which is a different statement. The
-  keys are emitted anyway so both files share one schema and one stable column set.
+  service worth returning at all. All five score fields and `raw_rank` are **always `null`** here:
+  retrieval never returned these services, so no retriever ever scored them and they have no
+  position in a list they are not in. Blank is the honest value — a zero would claim the embedder
+  scored them maximally dissimilar, which is a different statement. The keys are emitted anyway so
+  all three files share one schema and one stable column set. The **content** fields are the
+  exception: they are filled in from the `be` name lookup, and are `null` only for a name that
+  lookup could not resolve exactly.
+- `mutual_retrieved.json` — the `mutual_retrieved` side: what retrieval returned *and* the site
+  shows. Same schema again, fully scored. This is the file that makes `raw_rank` readable — the
+  unexpected side alone renumbers over the positions these rows occupy, so only the two together
+  reconstruct retrieval's actual ordering.
 - `report.html` — the dashboard with data inlined; **open directly** (double-click).
-- `relevance_judgements.csv` — `--judge` only. Every judged pair with its scores next to its verdict:
-  `query, side, rank, service_name, retrieval_score, cosine_score, cosine_score_ratio, lexical_score,
+- `relevance_judgements.csv` — `--judge` only. Every judged pair, across **all three** sides, with
+  its raw rank, its content and its scores next to its verdict:
+  `query, side, rank, service_name, raw_rank, service_description, response_ids, response_names,
+  situation_ids, situation_names, retrieval_score, cosine_score, cosine_score_ratio, lexical_score,
   semantic_score, verdict, model, judged_at`. The first four columns are `service_diff.csv`'s,
-  so the two join on `(query, side, rank)`. Score cells are **blank, never `0.0`**, whenever no
-  retriever produced that score — always on the `missed_ground_truth` side, and on the
-  `unexpected_retrieved` side wherever BM25 never surfaced the document.
+  so the two join on `(query, side, rank)`; `raw_rank` sits *after* that block rather than inside
+  it, because the identity block is asserted complete on every row and `raw_rank` is blank on the
+  missed side. **Sort a query by `raw_rank` to read retrieval's actual ranking** with the true
+  positives interleaved. Tag sets are pipe-joined into one cell, as ids and names both. Score cells
+  are **blank, never `0.0`**, whenever no retriever produced that score — always on the
+  `missed_ground_truth` side, and on the `unexpected_retrieved` side wherever BM25 never surfaced
+  the document.
 - `relevance_by_score_band.csv` — `--judge` only. The verdict share per ~0.05 score band over the
   `unexpected_retrieved` side, once by `cosine_score` and once by `cosine_score_ratio`. The ratio table
   is the threshold-selection evidence: `SEMANTIC_SCORE_RATIO` is what actually cuts on it. Also printed
@@ -272,9 +296,16 @@ class) is written as `null` and does **not** pass.
 `--judge` reads `evaluation/results-judge-frozen/`, **not** `results/`. That is deliberate: a retrieval
 configuration does not identify the dataset. Elasticsearch's approximate kNN resolves pool-boundary
 near-ties differently between byte-identical calls, so re-running never reproduces the same pair set, and
-any concurrent run overwrites `results/`. The frozen directory holds the two diff JSON files plus
+any concurrent run overwrites `results/`. The frozen directory holds the three diff JSON files plus
 `judge_input_manifest.json`, which records their SHA-256 hashes, the pair and chunk counts, the headline
-score and the retrieval config the run used. `results*/` is gitignored, so the snapshot stays local — the
+score and the retrieval config the run used.
+
+Refreeze with `python -m evaluation.freeze_judge_input`, which copies the three files across and
+regenerates the manifest from the **copies** it just wrote. It **overwrites the previous freeze**, which
+is the only record of what the committed labels were judged against — copy that directory aside first if
+those labels still matter. Two manifest fields cannot be observed from `results/` and are carried over
+from `relevance_input_vars.py` instead: `scrape_date` and `retrieval_config`. Update those constants
+whenever the arm changes, or the manifest will confidently describe the wrong configuration. `results*/` is gitignored, so the snapshot stays local — the
 committed artifact is `data/relevance-judgements.json`, the labels plus those two input hashes. Paths live
 in `relevance_input_vars.py` and are intentionally not env-overridable.
 

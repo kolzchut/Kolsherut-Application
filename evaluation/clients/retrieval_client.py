@@ -2,15 +2,13 @@ import requests
 
 from evaluation import vars
 from evaluation.clients.parse_retrieval_response import parse_retrieval_response
-from evaluation.schemas import ServiceScores
+from evaluation.retrieval_schemas import RetrievalResult
 
 QUERY_REQUEST_FIELD = 'query'
 
 
-def fetch_retrieval_ranked_names_and_scores(
-    query: str,
-) -> tuple[list[str], dict[str, ServiceScores]]:
-    """POST the free-text query to retrieval, return its ranked service names and their scores.
+def fetch_retrieval_result(query: str) -> RetrievalResult:
+    """POST the free-text query to retrieval, return its ranked names, scores and content.
 
     Parsing lives in parse_retrieval_response so it stays pure; this function is only the call.
     """

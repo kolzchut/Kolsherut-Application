@@ -59,6 +59,10 @@ SERVICE_DIFF_CSV_RANK_HEADER = 'rank'
 SERVICE_DIFF_CSV_SERVICE_NAME_HEADER = 'service_name'
 SERVICE_DIFF_SIDE_MISSED_GROUND_TRUTH = 'missed_ground_truth'
 SERVICE_DIFF_SIDE_UNEXPECTED_RETRIEVED = 'unexpected_retrieved'
+# The agreement side. Named a `side` like the other two even though it is not a difference, so a
+# reader gets the whole (returned union golden set) partition from one column instead of having to
+# know that the rows both systems agree on are simply absent.
+SERVICE_DIFF_SIDE_MUTUAL_RETRIEVED = 'mutual_retrieved'
 
 # Why a golden-set URL yields no usable ground truth.
 SKIP_REASON_NOT_A_RESULTS_PAGE = 'URL does not render a results page (card page or homepage fallback)'
@@ -81,8 +85,18 @@ LOG_SKIPPED_PAGE = 'Scraped {index}/{total}: skipped ({reason}) | {query}'
 LOG_WROTE_GROUND_TRUTH = 'Wrote ground truth to {path} ({scraped} scraped, {skipped} skipped)'
 LOG_EVALUATING_QUERY = 'Evaluating query {index}/{total}: {query}'
 LOG_SKIPPING_QUERY = 'Skipping query {index}/{total} ({reason}): {query}'
+# Missed-side content lookup. The unresolved count is logged at every run rather than once at
+# write time, because those names are the rows whose content cells come out blank, and a reader
+# comparing sides needs to know the blanks are unresolved names and not empty services.
+LOG_SERVICE_DETAILS_CACHE_HIT = 'Reusing service content {path} ({count} names)'
+LOG_LOOKING_UP_SERVICE_DETAILS = 'Looking up {count} service names on {base_url}'
+LOG_LOOKED_UP_SERVICE_DETAILS = 'Looked up {index}/{total} service names'
+LOG_WROTE_SERVICE_DETAILS = (
+    'Wrote service content to {path}: {found} resolved, {unresolved} with no exact match'
+)
 LOG_WROTE_RESULTS = (
-    'Wrote results to {summary}, {csv}, {diff}, {unexpected_json}, {missed_json} and {html}'
+    'Wrote results to {summary}, {csv}, {diff}, {unexpected_json}, {missed_json}, {mutual_json} '
+    'and {html}'
 )
 LOG_THRESHOLDS_PASSED = 'All thresholds passed'
 LOG_THRESHOLD_FAILED = 'Threshold failed: {name} = {value:.4f} < {threshold:.4f}'

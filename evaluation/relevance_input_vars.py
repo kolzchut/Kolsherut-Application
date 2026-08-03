@@ -13,6 +13,7 @@ from evaluation import vars
 JUDGE_INPUT_DIR = vars.EVALUATION_ROOT / 'results-judge-frozen'
 JUDGE_INPUT_UNEXPECTED_JSON_PATH = JUDGE_INPUT_DIR / vars.UNEXPECTED_RETRIEVED_JSON_PATH.name
 JUDGE_INPUT_MISSED_JSON_PATH = JUDGE_INPUT_DIR / vars.MISSED_GROUND_TRUTH_JSON_PATH.name
+JUDGE_INPUT_MUTUAL_JSON_PATH = JUDGE_INPUT_DIR / vars.MUTUAL_RETRIEVED_JSON_PATH.name
 JUDGE_INPUT_MANIFEST_PATH = JUDGE_INPUT_DIR / 'judge_input_manifest.json'
 
 # Manifest keys. The two content hashes are the real dataset identity; the config and scrape date

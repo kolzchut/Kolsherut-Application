@@ -8,7 +8,7 @@ from evaluation.relevance.build_judgement_request import FIRST_ITEM_ID
 from evaluation.relevance.read_judgement_response import (
     read_judgement_entries, read_result_line_key, read_unjudged_reason,
 )
-from evaluation.schemas import JudgementChunk, ServiceJudgement
+from evaluation.relevance_schemas import JudgementChunk, ServiceJudgement
 
 
 def index_chunks_by_key(chunks: list[JudgementChunk]) -> dict[str, JudgementChunk]:

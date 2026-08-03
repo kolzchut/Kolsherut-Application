@@ -10,7 +10,7 @@ from evaluation.relevance.limit_judgement_items import (
 from evaluation.report.build_score_band_table import build_score_band_tables
 from evaluation.report.write_relevance_csv import write_relevance_csv
 from evaluation.report.write_score_band_csv import render_score_band_table, write_score_band_csv
-from evaluation.schemas import JudgementItem
+from evaluation.relevance_schemas import JudgementItem
 
 
 def read_items_to_judge(judge_limit: int | None, logger: Logger) -> list[JudgementItem]:

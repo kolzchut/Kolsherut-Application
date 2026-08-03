@@ -1,21 +1,18 @@
-import argparse
 import sys
 
 from evaluation import vars
 from evaluation.strings import (
-    APP_TITLE, CLI_DESCRIPTION, CLI_LIMIT_HELP, CLI_RESCRAPE_HELP,
     COUNT_STATS_TABLE_TITLE, LOG_LOADED_DATASET, LOG_WROTE_RESULTS,
     LOG_THRESHOLDS_PASSED, SET_METRICS_TABLE_TITLE,
 )
-from evaluation.relevance_strings import CLI_JUDGE_HELP, CLI_JUDGE_LIMIT_HELP
 from evaluation.relevance_statistics_strings import RELEVANCE_TABLE_TITLE
-from evaluation.human_review_strings import CLI_AGREEMENT_HELP, CLI_REVIEW_SAMPLE_HELP
-from evaluation.human_review_vars import REVIEW_SAMPLE_SIZE_DEFAULT
 from evaluation.logger import build_logger
+from evaluation.parse_evaluation_args import parse_evaluation_args
 from evaluation.human_review.run_human_review_stage import run_human_review_stage
 from evaluation.relevance.judge_and_rewrite_summary import judge_and_rewrite_summary
 from evaluation.dataset.load_dataset import load_dataset
 from evaluation.ground_truth.load_ground_truth import load_ground_truth
+from evaluation.ground_truth.enrich_missed_service_details import enrich_missed_service_details
 from evaluation.evaluate_dataset import evaluate_dataset
 from evaluation.metrics.aggregate_metrics import aggregate_metrics
 from evaluation.report.compute_overall_score import compute_overall_score
@@ -26,22 +23,6 @@ from evaluation.report.build_relevance_table import build_relevance_table
 from evaluation.report.build_set_metrics_table import build_count_stats_table, build_set_metrics_table
 from evaluation.report.render_table import render_table, render_titled_table
 from evaluation.report.check_thresholds import check_thresholds
-
-
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(prog=APP_TITLE, description=CLI_DESCRIPTION)
-    parser.add_argument('--limit', type=int, default=None, help=CLI_LIMIT_HELP)
-    parser.add_argument('--rescrape', action='store_true', help=CLI_RESCRAPE_HELP)
-    # Judging is opt-in: it is the only part of this pipeline that costs money and needs a
-    # credential, so the default run stays free, offline and reproducible.
-    parser.add_argument('--judge', action='store_true', help=CLI_JUDGE_HELP)
-    parser.add_argument('--judge-limit', type=int, default=None, help=CLI_JUDGE_LIMIT_HELP)
-    # Mission 6. `nargs='?'` so the flag carries the default 200 when N is omitted while its ABSENCE
-    # still means "do not emit a sheet" - a plain default would emit one on every ordinary run.
-    parser.add_argument('--review-sample', type=int, nargs='?', default=None,
-                        const=REVIEW_SAMPLE_SIZE_DEFAULT, help=CLI_REVIEW_SAMPLE_HELP)
-    parser.add_argument('--agreement', action='store_true', help=CLI_AGREEMENT_HELP)
-    return parser.parse_args()
 
 
 def report_and_gate(aggregate: dict, overall_score: float, relevance: dict | None, logger) -> int:
@@ -62,7 +43,7 @@ def report_and_gate(aggregate: dict, overall_score: float, relevance: dict | Non
 
 
 def main() -> int:
-    args = parse_args()
+    args = parse_evaluation_args()
     logger = build_logger()
     # Mission 6 first, and it RETURNS: both stages read the frozen snapshot and the committed label
     # cache only, so evaluating would call retrieval and overwrite results/ for no gain.
@@ -76,6 +57,10 @@ def main() -> int:
     ground_truth = load_ground_truth(examples, source_checksum, logger,
                                      rescrape=args.rescrape, persist=args.limit is None)
     evaluations = evaluate_dataset(examples, ground_truth, logger)
+    # After every retrieval call and before any aggregation. It only fills in content for names
+    # retrieval never returned, so no metric can see it - but it must land before write_results,
+    # which is what serializes the content into summary.json and the three diff files.
+    evaluations = enrich_missed_service_details(evaluations, logger)
     aggregate = aggregate_metrics(evaluations)
     overall_score = compute_overall_score(aggregate['metrics'])
     # Every base artifact lands here, before any network call and before any judgement exists. An
@@ -84,7 +69,8 @@ def main() -> int:
     logger.info(LOG_WROTE_RESULTS.format(
         summary=vars.SUMMARY_JSON_PATH, csv=vars.PER_QUERY_CSV_PATH,
         diff=vars.SERVICE_DIFF_CSV_PATH, unexpected_json=vars.UNEXPECTED_RETRIEVED_JSON_PATH,
-        missed_json=vars.MISSED_GROUND_TRUTH_JSON_PATH, html=vars.REPORT_HTML_PATH))
+        missed_json=vars.MISSED_GROUND_TRUTH_JSON_PATH,
+        mutual_json=vars.MUTUAL_RETRIEVED_JSON_PATH, html=vars.REPORT_HTML_PATH))
     # Judging LAST, and only on --judge: it reads the frozen snapshot, and everything above is
     # already safely on disk before the one stage that is expected to raise.
     relevance = judge_and_rewrite_summary(args.judge, args.judge_limit, aggregate, overall_score,

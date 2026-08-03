@@ -13,19 +13,34 @@ CLI_JUDGE_LIMIT_HELP = 'Judge only the first N pairs of the frozen snapshot.'
 # Batch job label, shown in the Gemini console alongside the uploaded request file.
 BATCH_JOB_DISPLAY_NAME = 'kolsherut-relevance-judgements'
 
-# Relevance-judgement CSV: one row per judged (query, service) pair. The five score headers are
-# not listed here - they are vars.SERVICE_SCORE_KEYS verbatim, so the JSON, this CSV and the FE
-# badges name the same five scores identically and nothing has to be mapped between them.
+# Freeze stage. The source_run line is written INTO the manifest, so it is a value that leaves the
+# pipeline rather than a log message. It names the day rather than the arm: the arm is recorded in
+# the retrieval_config block right below it, and stating it twice invites the two to disagree.
+MANIFEST_SOURCE_RUN = 'results run of {date}'
+LOG_FROZE_JUDGE_INPUT = 'Froze {pairs} pairs from {source} into {directory}'
+LOG_FROZE_SIDE = '  {side}: {pairs} pairs, {hash}'
+
+# Relevance-judgement CSV: one row per judged (query, service) pair. Neither the five score
+# headers nor the five content headers are listed here - they are vars.SERVICE_SCORE_KEYS and
+# vars.SERVICE_DETAIL_KEYS verbatim, so the JSON, this CSV and the FE badges name them
+# identically and nothing has to be mapped between them.
 JUDGEMENT_CSV_QUERY_HEADER = 'query'
 JUDGEMENT_CSV_SIDE_HEADER = 'side'
 JUDGEMENT_CSV_RANK_HEADER = 'rank'
 JUDGEMENT_CSV_SERVICE_NAME_HEADER = 'service_name'
+# Position in retrieval's whole returned list, next to the per-side `rank` rather than replacing
+# it: `rank` is half of the (query, side, rank) key service_diff.csv joins on.
+JUDGEMENT_CSV_RAW_RANK_HEADER = 'raw_rank'
 JUDGEMENT_CSV_VERDICT_HEADER = 'verdict'
 JUDGEMENT_CSV_MODEL_HEADER = 'model'
 JUDGEMENT_CSV_JUDGED_AT_HEADER = 'judged_at'
 # Written into the score cells of a missed-side row. Blank, never 0.0: nothing ever scored those
-# services, and a zero would claim the embedder rated them maximally dissimilar.
+# services, and a zero would claim the embedder rated them maximally dissimilar. The same cell
+# stands in for an unknown raw rank and for content no lookup could resolve.
 JUDGEMENT_CSV_BLANK_SCORE_CELL = ''
+# Separator between the tags of one set. A pipe rather than a comma so a cell survives the CSV
+# without quoting games, and rather than a semicolon, which occurs inside tag names.
+JUDGEMENT_CSV_TAG_SEPARATOR = ' | '
 
 # Score-band summary CSV and its console table.
 SCORE_BAND_TABLE_TITLE = 'Verdict share by score band (unexpected_retrieved only)'

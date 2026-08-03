@@ -1,6 +1,6 @@
 from evaluation import relevance_vars
 from evaluation.relevance.judgement_cache import build_judgement_cache_key
-from evaluation.schemas import JudgementItem, ServiceJudgement
+from evaluation.relevance_schemas import JudgementItem, ServiceJudgement
 
 
 def build_cached_judgement(item: JudgementItem, cache_entry: dict) -> ServiceJudgement:

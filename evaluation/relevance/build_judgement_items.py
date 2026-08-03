@@ -2,9 +2,12 @@ import json
 from pathlib import Path
 
 from evaluation import relevance_input_vars, relevance_strings, vars
-from evaluation.report.build_diff_service_entries import RANK_KEY, SERVICE_NAME_KEY
+from evaluation.report.build_diff_service_entries import (
+    RANK_KEY, RAW_RANK_KEY, SERVICE_NAME_KEY,
+)
+from evaluation.report.serialize_service_details import deserialize_service_details
 from evaluation.report.build_service_diff_json import QUERY_KEY
-from evaluation.schemas import JudgementItem
+from evaluation.relevance_schemas import JudgementItem
 
 
 def read_judge_input_payload(path: Path) -> dict:
@@ -26,12 +29,14 @@ def read_carried_scores(service_entry: dict) -> dict[str, float | None]:
 
 
 def build_items_for_query(query_entry: dict, side: str) -> list[JudgementItem]:
-    """Every service of one query's diff list, keeping the file's rank and its scores."""
+    """Every service of one query's list, keeping the file's ranks, scores and content."""
     return [
         JudgementItem(query=query_entry[QUERY_KEY], side=side,
                       rank=service_entry[RANK_KEY],
+                      raw_rank=service_entry.get(RAW_RANK_KEY),
                       service_name=service_entry[SERVICE_NAME_KEY],
-                      scores=read_carried_scores(service_entry))
+                      scores=read_carried_scores(service_entry),
+                      details=deserialize_service_details(service_entry))
         for service_entry in query_entry[vars.DIFF_JSON_SERVICES_KEY]
     ]
 
@@ -57,4 +62,5 @@ def build_judgement_items() -> list[JudgementItem]:
     return [
         *build_items_for_side(relevance_input_vars.JUDGE_INPUT_UNEXPECTED_JSON_PATH),
         *build_items_for_side(relevance_input_vars.JUDGE_INPUT_MISSED_JSON_PATH),
+        *build_items_for_side(relevance_input_vars.JUDGE_INPUT_MUTUAL_JSON_PATH),
     ]

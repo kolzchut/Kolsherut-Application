@@ -1,5 +1,5 @@
 from evaluation import relevance_vars
-from evaluation.schemas import JudgementChunk, JudgementItem
+from evaluation.relevance_schemas import JudgementChunk, JudgementItem
 
 FIRST_CHUNK_INDEX = 1
 

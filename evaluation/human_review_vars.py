@@ -1,4 +1,4 @@
-from evaluation import vars
+from evaluation import strings, vars
 
 # Mission 6's config: the human-audit sample, the agreement report and its acceptance bar. A fifth
 # focused relevance-side vars file for the same reason as the other four - relevance_vars.py sits at
@@ -18,6 +18,16 @@ REVIEW_SAMPLE_SIZE_DEFAULT = 200
 # best and can give it none, and a cell with no rows cannot be audited at all. Capped by the cell's
 # own size and by an equal share of the budget, so it can never over-subscribe a small sample.
 REVIEW_SAMPLE_MIN_PER_STRATUM = 10
+# Which sides the draw covers. Deliberately the two DISAGREEMENT sides only, and deliberately NOT
+# relevance_statistics_vars.RELEVANCE_SIDES, which now also carries mutual_retrieved. The audit asks
+# whether the judge can be trusted where the golden set and retrieval disagree - that is where its
+# verdicts move a number. Widening the draw would re-cut every stratum, so the committed sheet would
+# no longer be a sample of what is drawn and the gate would stop being comparable across runs. Pairs
+# of any other side are dropped before stratification rather than silently landing in a cell.
+REVIEW_SAMPLE_SIDES = [
+    strings.SERVICE_DIFF_SIDE_UNEXPECTED_RETRIEVED,
+    strings.SERVICE_DIFF_SIDE_MISSED_GROUND_TRUTH,
+]
 
 # review_id: the sheet's own row identity, and the only key the read-back joins on. Zero-padded so a
 # spreadsheet sorts it in draw order instead of lexicographically as 1, 10, 100.

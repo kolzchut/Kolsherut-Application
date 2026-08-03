@@ -2,7 +2,7 @@ import math
 
 from evaluation import relevance_report_vars, relevance_vars, strings
 from evaluation.report.pair_judged_items import pair_items_with_judgements
-from evaluation.schemas import JudgementItem, ServiceJudgement
+from evaluation.relevance_schemas import JudgementItem, ServiceJudgement
 
 BAND_START_ROUNDING_DIGITS = 10
 

@@ -18,33 +18,37 @@ def read_side_counts(path: Path) -> dict[str, dict]:
     return {entry[QUERY_KEY]: entry for entry in payload[vars.DIFF_JSON_QUERIES_KEY]}
 
 
-def compute_hits(unexpected_entry: dict, missed_entry: dict) -> int | None:
-    """Golden-set services that WERE returned, from the two recorded counts and nothing else.
+def compute_hits(unexpected_entry: dict, missed_entry: dict, mutual_entry: dict) -> int | None:
+    """Golden-set services that WERE returned, from the three recorded counts and nothing else.
 
-    Two independent expressions of the same set identity, so the recorded counts check each other:
-    |returned| - |unexpected| and |golden set| - |missed|. They disagreeing means the two frozen
-    files describe different runs, which would silently pair labels with the wrong arm - so it
-    raises rather than picking one.
+    Three independent expressions of the same set identity, so the recorded counts check each
+    other: |returned| - |unexpected|, |golden set| - |missed|, and the mutual side's own count.
+    The third is the direct one and the other two are derived, which is exactly why all three are
+    compared rather than the direct one simply trusted. Any disagreement means the frozen files
+    describe different runs, which would silently pair labels with the wrong arm - so it raises
+    rather than picking one.
     """
     if unexpected_entry[RETURNED_COUNT_KEY] is None:
         return None
     from_returned = unexpected_entry[RETURNED_COUNT_KEY] - unexpected_entry[vars.DIFF_JSON_COUNT_KEY]
     from_ground_truth = missed_entry[GROUND_TRUTH_SIZE_KEY] - missed_entry[vars.DIFF_JSON_COUNT_KEY]
-    if from_returned != from_ground_truth:
+    from_mutual = mutual_entry[vars.DIFF_JSON_COUNT_KEY]
+    if not from_returned == from_ground_truth == from_mutual:
         raise ValueError(relevance_statistics_strings.ERROR_FROZEN_HIT_COUNTS_DISAGREE.format(
             query=unexpected_entry[QUERY_KEY], from_returned=from_returned,
-            from_ground_truth=from_ground_truth))
+            from_ground_truth=from_ground_truth, from_mutual=from_mutual))
     return from_returned
 
 
-def build_frozen_query_record(unexpected_entry: dict, missed_entry: dict) -> FrozenQueryRecord:
+def build_frozen_query_record(unexpected_entry: dict, missed_entry: dict,
+                              mutual_entry: dict) -> FrozenQueryRecord:
     return FrozenQueryRecord(
         query=unexpected_entry[QUERY_KEY],
         ground_truth_size=unexpected_entry[GROUND_TRUTH_SIZE_KEY],
         returned_count=unexpected_entry[RETURNED_COUNT_KEY],
         unexpected_count=unexpected_entry[vars.DIFF_JSON_COUNT_KEY],
         missed_count=missed_entry[vars.DIFF_JSON_COUNT_KEY],
-        hits=compute_hits(unexpected_entry, missed_entry),
+        hits=compute_hits(unexpected_entry, missed_entry, mutual_entry),
     )
 
 
@@ -58,5 +62,6 @@ def read_frozen_query_records() -> list[FrozenQueryRecord]:
     """
     unexpected_entries = read_side_counts(relevance_input_vars.JUDGE_INPUT_UNEXPECTED_JSON_PATH)
     missed_entries = read_side_counts(relevance_input_vars.JUDGE_INPUT_MISSED_JSON_PATH)
-    return [build_frozen_query_record(entry, missed_entries[query])
+    mutual_entries = read_side_counts(relevance_input_vars.JUDGE_INPUT_MUTUAL_JSON_PATH)
+    return [build_frozen_query_record(entry, missed_entries[query], mutual_entries[query])
             for query, entry in unexpected_entries.items()]
