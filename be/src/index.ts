@@ -27,7 +27,8 @@ app.use(cors({origin}));
 app.get('/test', (req: Request, res: Response) => {
     res.status(200).json({message:'Server is running 🍍☺', success: true});
 });
-app.get('/autocomplete/:search', autoCompleteRoute);
+app.get('/autocomplete', autoCompleteRoute);
+app.get('/autocomplete/:search', autoCompleteRoute); // legacy, remove once configs are updated
 app.get('/card/:card_id', [sanitizeCardRoute, cardRoute]);
 app.post('/search', searchRoute);
 app.post('/logs/:provider', logRoute);

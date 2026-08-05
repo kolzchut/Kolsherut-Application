@@ -2,6 +2,7 @@ import {ChangeEvent} from "react";
 import {useDebounce} from "./useDebounce";
 import AutocompleteType from "../types/autocompleteType";
 import sendMessage from "../services/sendMessage/sendMessage";
+import buildAutocompleteRequestURL from "../services/searchUtilities/buildAutocompleteRequestURL";
 
 interface Params {
     setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
@@ -13,10 +14,11 @@ const emptyAutocomplete: AutocompleteType = {structured: [], unstructured: []};
 
 const useSearchAutocomplete = ({setSearchTerm, setOptionalSearchValues, debounceMs = 500}: Params) => {
     const debouncedGetAutoComplete = useDebounce(async (value: unknown) => {
-        if (value === '') return setOptionalSearchValues(emptyAutocomplete);
-        const requestURL = window.config.routes.autocomplete.replace('%%search%%', value);
+        const searchTerm = String(value ?? '').trim();
+        if (searchTerm === '') return setOptionalSearchValues(emptyAutocomplete);
+        const requestURL = buildAutocompleteRequestURL(searchTerm);
         const response = await sendMessage({method: 'get', requestURL});
-        setOptionalSearchValues(response.data);
+        setOptionalSearchValues(response?.success && response.data ? response.data : emptyAutocomplete);
     }, debounceMs);
 
     const inputChangeEvent = (v: ChangeEvent<HTMLInputElement>) => {

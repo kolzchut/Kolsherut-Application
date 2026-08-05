@@ -24,7 +24,7 @@
     "logs": "/logs",
     "search": "/search",
     "card": "/card/%%cardId%%",
-    "autocomplete": "/autocomplete/%%search%%",
+    "autocomplete": "/autocomplete?search=%%search%%",
     "siteMapForModal": "/siteMapForModal"
   },
   "map": {
