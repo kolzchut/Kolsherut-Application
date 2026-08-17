@@ -41,14 +41,6 @@
         "content": "%%serviceDescription%%"
       },
       {
-        "name": "robots",
-        "content": "index, follow"
-      },
-      {
-        "name": "viewport",
-        "content": "width=device-width, initial-scale=1"
-      },
-      {
         "name": "theme-color",
         "content": "#ffffff"
       },
@@ -104,14 +96,6 @@
         "content": "%%situations%% %%responses%% %%by%% %%serviceName%% %%location%%"
       },
       {
-        "name": "robots",
-        "content": "index, follow"
-      },
-      {
-        "name": "viewport",
-        "content": "width=device-width, initial-scale=1"
-      },
-      {
         "name": "theme-color",
         "content": "#ffffff"
       }
@@ -150,14 +134,6 @@
       }
     ],
     "names": [
-      {
-        "name": "robots",
-        "content": "index, follow"
-      },
-      {
-        "name": "viewport",
-        "content": "width=device-width, initial-scale=1"
-      },
       {
         "name": "theme-color",
         "content": "#ffffff"
