@@ -14,6 +14,7 @@ import QuickAction from "./components/quickActions/quickAction";
 import {useEffect, useRef, useState} from "react";
 import {useTheme} from 'react-jss';
 import IDynamicThemeApp from "../../../types/dynamicThemeApp";
+import {splitPhoneNumbers} from "../../../services/phone";
 
 const CardDetails = ({card}: { card: ICard }) => {
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -47,7 +48,7 @@ const CardDetails = ({card}: { card: ICard }) => {
     const classes = useStyle({accessibilityActive: theme.accessibilityActive});
     const email: string =  card.service_email_address || card.branch_email_address || card.organization_email_address;
     const websites: ServiceURL[] = card.service_urls || [];
-    const phoneNumbers: string[] = [card.service_phone_numbers,card.branch_phone_numbers, card.organization_phone_numbers].find(arr => arr.length > 0) || [];
+    const phoneNumbers: string[] = splitPhoneNumbers([card.service_phone_numbers,card.branch_phone_numbers, card.organization_phone_numbers].find(arr => arr.length > 0) || []);
     const address = {text: card.branch_address, geom: card.branch_geometry};
     return <section ref={scrollRef} className={classes.root}>
         <Header branchOperatingUnit={card.branch_operating_unit|| ""}
@@ -71,7 +72,7 @@ const CardDetails = ({card}: { card: ICard }) => {
                         organizationName={card.organization_name}
                         organizationUrls={card.organization_urls}
                         organizationEmailAddress={card.organization_email_address}
-                        organizationPhoneNumbers={card.organization_phone_numbers}/>
+                        organizationPhoneNumbers={splitPhoneNumbers(card.organization_phone_numbers)}/>
             <DataSource dataSource={card.data_sources}/>
             <JotForm cardId={card.card_id} serviceName={card.service_name || ""}/>
 
