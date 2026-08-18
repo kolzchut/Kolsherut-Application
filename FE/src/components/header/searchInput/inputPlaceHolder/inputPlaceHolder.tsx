@@ -33,7 +33,7 @@ const InputPlaceHolder = ({onClick}: { onClick: () => void }) => {
 
 
     const classes = useStyles({theme});
-    return <div
+    return <header
         className={classes.mainDiv}
         onClick={onClick}
         tabIndex={0}
@@ -41,12 +41,12 @@ const InputPlaceHolder = ({onClick}: { onClick: () => void }) => {
         role="button"
         aria-label="Search input placeholder"
     >
-        {text.responseSentence && <span className={classes.firstSentence}>{text.responseSentence}</span>}
+        {text.responseSentence && <h1 className={classes.firstSentence}>{text.responseSentence}</h1>}
         <div className={classes.bottomDiv}>
             {text.situationSentence &&
                 <span className={classes.secondSentence}>{baseSituationSentence + " " + text.situationSentence}</span>}
             {text.bySentence && <span className={classes.secondSentence}>{text.bySentence}</span>}
         </div>
-    </div>
+    </header>
 }
 export default InputPlaceHolder;

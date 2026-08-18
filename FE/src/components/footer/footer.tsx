@@ -26,10 +26,10 @@ const Footer = ({hideLinks=false}: {hideLinks?: boolean}) => {
 
     return (<footer className={classes.root}>
         <div className={classes.disclaimer}>
-            <span className={classes.firstParagraph}>
+            {/* <span className={classes.firstParagraph}>
                 <span className={classes.bolder}>{nameOfWebsite} </span>
                 {firstParagraph}
-            </span>
+            </span> */}
             <p className={classes.secondAndThirdParagraphs}>{runBy}
                 <a href={kzLink} target='_blank'>
                     <img className={classes.icons} src={logoKZ} alt={"logo kolzchut"}/>
