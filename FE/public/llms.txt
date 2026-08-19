@@ -20,9 +20,10 @@ The platform is currently in beta. Some information may be incomplete or not ful
 - [Search Results](https://www.kolsherut.org.il/): Filtered results showing matching services with map view, quick filters, and location-based search
 - [Service Card](https://www.kolsherut.org.il/p/card/c/{serviceId}): Detailed page for each service including description, target audience, eligibility, contact details, branches, and map location
 - [Site Map](https://www.kolsherut.org.il/map): Full catalog of all service responses and life situations indexed on the platform
-- [About](https://www.kolsherut.org.il/): Information about the Kol Sherut project, its mission, and its operators
-- [Partners](https://www.kolsherut.org.il/): Organizations supporting Kol Sherut including government ministries and agencies
-- [Add a Missing Service](https://www.kolsherut.org.il/): Crowdsourced service reporting — users can flag missing services
+- [About](https://www.kolsherut.org.il/about): Information about the Kol Sherut project, its mission, and its operators
+- [Partners](https://www.kolsherut.org.il/partners): Organizations supporting Kol Sherut including government ministries and agencies
+- [Add a Missing Service](https://www.kolsherut.org.il/missing): Crowdsourced service reporting — users can flag missing services
+- [Contact](https://www.kolsherut.org.il/contact): How to reach the Kol Sherut team and report incorrect data
 - [Accessibility Statement](https://www.kolzchut.org.il/he/%D7%9B%D7%9C_%D7%A9%D7%99%D7%A8%D7%95%D7%AA:%D7%A0%D7%92%D7%99%D7%A9%D7%95%D7%AA): Accessibility policy and features
 
 ## Service Categories

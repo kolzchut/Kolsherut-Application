@@ -2,6 +2,7 @@ import {useSelector} from "react-redux";
 import {getUrlParams} from "../../store/shared/urlSelector";
 import UrlParams from "../../types/urlParams";
 import matchSubSlugTaxonomy from "../../utilities/matchSubSlugTaxonomy";
+import {isStaticPageSlug} from "./staticPages";
 
 const globals = {
     initialized: false,
@@ -21,6 +22,12 @@ export const getRouteParams = (): UrlParams => {
     if (routeBsnf) searchParams.bsnf = routeBsnf.replace('bsnf-', '');
     if (pathParts[1] === 'map') return {
         p: 'map',
+    }
+
+    // Matched before the taxonomy check on purpose: a static page slug always wins over a
+    // taxonomy sub-slug of the same name, so adding a taxonomy entry can never shadow /about.
+    if (isStaticPageSlug(pathParts[1])) return {
+        p: pathParts[1],
     }
 
     if (pathParts[2] === 'card') return {
@@ -50,6 +57,7 @@ export const buildUrl = (params: UrlParams) => {
     const routeParams = {...params};
     if (!routeParams.p) return base + hash;
     if (routeParams.p === 'map') return `${base}/map${hash}`
+    if (isStaticPageSlug(routeParams.p)) return `${base}/${routeParams.p}${hash}`;
     if (routeParams.p === 'card' && routeParams.c) return `${base}/p/card/c/${routeParams.c}${hash}`;
 
     const categories = [];

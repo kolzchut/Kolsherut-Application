@@ -1,4 +1,4 @@
-import {setAccessibility, setModal, setPage, setShowSidebar} from "../../store/general/generalSlice";
+import {setAccessibility, setPage, setShowSidebar} from "../../store/general/generalSlice";
 import hamburger from "../../assets/icon-hamburger.svg";
 import accessibilityInactive from "../../assets/accessability.svg";
 import accessibilityActive from "../../assets/accessabilityActive.svg";
@@ -8,11 +8,14 @@ import {useTheme} from 'react-jss';
 import {isAccessibilityActive} from "../../store/general/general.selector";
 import useStyles from "./header.css"
 import IDynamicThemeApp from "../../types/dynamicThemeApp";
+import PageLink from "../links/pageLink";
 
 
 const logo = "/icons/logo.svg"
 
-const Header = ({showLogo = true, showSearchbar = true, refreshPage}: { showLogo?: boolean, showSearchbar?: boolean, refreshPage?: ()=>void }) => {
+// showHomeLink is for pages that hide the logo (which is the usual way back home),
+// so the links row carries an explicit "home" link instead.
+const Header = ({showLogo = true, showSearchbar = true, showHomeLink = false, refreshPage}: { showLogo?: boolean, showSearchbar?: boolean, showHomeLink?: boolean, refreshPage?: ()=>void }) => {
     const accessibilityActiveFromRedux = useSelector(isAccessibilityActive);
 
     const theme = useTheme<IDynamicThemeApp>();
@@ -28,11 +31,6 @@ const Header = ({showLogo = true, showSearchbar = true, refreshPage}: { showLogo
     }
     const accessibilityIcon = accessibilityActiveFromRedux ? accessibilityActive : accessibilityInactive;
 
-    const onClick = (e: React.MouseEvent<HTMLAnchorElement>, modalName: string) => {
-        e.preventDefault();
-        dispatch(setModal(modalName))
-    }
-
     return <>
         <div className={classes.root} key={'1'}>
 
@@ -43,14 +41,11 @@ const Header = ({showLogo = true, showSearchbar = true, refreshPage}: { showLogo
                 </button>
                 
                 <div className={classes.linksDiv}>
-                    <a href={`#`} className={classes.link}
-                       onClick={(e: React.MouseEvent<HTMLAnchorElement>) => onClick(e, "About")}>{names.about}</a>
-                    <a href={`#`} className={classes.link}
-                       onClick={(e: React.MouseEvent<HTMLAnchorElement>) => onClick(e, "AddService")}>{names.addService}</a>
-                    <a href={`#`} className={classes.link}
-                       onClick={(e: React.MouseEvent<HTMLAnchorElement>) => onClick(e, "Partners")}>{names.partners}</a>
-                    <a href={`#`} className={classes.link}
-                       onClick={(e: React.MouseEvent<HTMLAnchorElement>) => onClick(e, "Contact")}>{names.contact}</a>
+                    {showHomeLink && <PageLink page={"home"} className={classes.link}>{names.home}</PageLink>}
+                    <PageLink page={"about"} className={classes.link}>{names.about}</PageLink>
+                    <PageLink page={"missing"} className={classes.link}>{names.addService}</PageLink>
+                    <PageLink page={"partners"} className={classes.link}>{names.partners}</PageLink>
+                    <PageLink page={"contact"} className={classes.link}>{names.contact}</PageLink>
                 </div>
 
             </div>

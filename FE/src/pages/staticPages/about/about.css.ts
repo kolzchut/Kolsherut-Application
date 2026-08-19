@@ -1,22 +1,14 @@
 import {createUseStyles} from 'react-jss';
-import {
-    secondaryTextColorTwo,
-} from "../../../../services/theme";
-import {
-    getModalRootStyle,
-    modalCloseIconStyle,
-    modalTitleStyle,
-    modalSubtitleStyle
-} from "../../utils/commonModalStyles";
+import {secondaryTextColorTwo} from "../../../services/theme";
+import {pageRootStyle, pageSubtitleStyle, pageTitleStyle} from "../utils/staticPageStyles";
 
 export default createUseStyles({
-    root: ({isMobile}: { isMobile: boolean, accessibilityActive: boolean }) => getModalRootStyle({isMobile}, 'fit-content'),
-    closeIcon: modalCloseIconStyle,
+    root: pageRootStyle,
     header: {
         marginBottom: 20
     },
-    title: modalTitleStyle,
-    subtitle: modalSubtitleStyle,
+    title: pageTitleStyle,
+    subtitle: pageSubtitleStyle,
     boldStartText: ({accessibilityActive}: { accessibilityActive: boolean }) => ({
         fontWeight: 700,
         fontSize: accessibilityActive ? 22 : 18

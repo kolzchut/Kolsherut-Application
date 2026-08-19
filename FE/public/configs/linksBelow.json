@@ -6,11 +6,11 @@
   },
   {
     "title": "הוסיפו שירות חסר",
-    "modal": "AddService"
+    "url": "/missing"
   },
   {
     "title": "שותפים",
-    "modal": "Partners"
+    "url": "/partners"
   },
   {
     "title": "הצהרת נגישות",
@@ -18,10 +18,10 @@
   },
   {
     "title": "צור קשר",
-    "modal": "Contact"
+    "url": "/contact"
   },
   {
     "title": "אודות",
-    "modal": "About"
+    "url": "/about"
   }
 ]
