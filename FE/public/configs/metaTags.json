@@ -139,5 +139,177 @@
         "content": "#ffffff"
       }
     ]
+  },
+  "about": {
+    "title": "אודות | כל שירות",
+    "properties": [
+      {
+        "property": "og:title",
+        "content": "אודות | כל שירות"
+      },
+      {
+        "property": "og:description",
+        "content": "כל שירות הוא מאגר מידע פתוח על שירותים ומענים חברתיים בישראל, המופעל על ידי כל זכות בסיוע משרד המשפטים ומערך הדיגיטל הלאומי."
+      },
+      {
+        "property": "og:image",
+        "content": "https://www.kolsherut.org.il/icons/logo.png"
+      },
+      {
+        "property": "og:url",
+        "content": "https://www.kolsherut.org.il/about"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      },
+      {
+        "property": "og:site_name",
+        "content": "כל-שירות"
+      },
+      {
+        "property": "og:locale",
+        "content": "he_IL"
+      }
+    ],
+    "names": [
+      {
+        "name": "description",
+        "content": "כל שירות הוא מאגר מידע פתוח על שירותים ומענים חברתיים בישראל, המופעל על ידי כל זכות בסיוע משרד המשפטים ומערך הדיגיטל הלאומי."
+      },
+      {
+        "name": "theme-color",
+        "content": "#ffffff"
+      }
+    ]
+  },
+  "missing": {
+    "title": "הוספת שירות חסר | כל שירות",
+    "properties": [
+      {
+        "property": "og:title",
+        "content": "הוספת שירות חסר | כל שירות"
+      },
+      {
+        "property": "og:description",
+        "content": "חסרים שירותים באתר כל שירות? כך תוכלו להוסיף את השירותים של העמותה או הארגון שלכם למאגר."
+      },
+      {
+        "property": "og:image",
+        "content": "https://www.kolsherut.org.il/icons/logo.png"
+      },
+      {
+        "property": "og:url",
+        "content": "https://www.kolsherut.org.il/missing"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      },
+      {
+        "property": "og:site_name",
+        "content": "כל-שירות"
+      },
+      {
+        "property": "og:locale",
+        "content": "he_IL"
+      }
+    ],
+    "names": [
+      {
+        "name": "description",
+        "content": "חסרים שירותים באתר כל שירות? כך תוכלו להוסיף את השירותים של העמותה או הארגון שלכם למאגר."
+      },
+      {
+        "name": "theme-color",
+        "content": "#ffffff"
+      }
+    ]
+  },
+  "partners": {
+    "title": "שותפים | כל שירות",
+    "properties": [
+      {
+        "property": "og:title",
+        "content": "שותפים | כל שירות"
+      },
+      {
+        "property": "og:description",
+        "content": "הגופים והארגונים השותפים להקמת אתר כל שירות ולהנגשת המידע על שירותים חברתיים בישראל."
+      },
+      {
+        "property": "og:image",
+        "content": "https://www.kolsherut.org.il/icons/logo.png"
+      },
+      {
+        "property": "og:url",
+        "content": "https://www.kolsherut.org.il/partners"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      },
+      {
+        "property": "og:site_name",
+        "content": "כל-שירות"
+      },
+      {
+        "property": "og:locale",
+        "content": "he_IL"
+      }
+    ],
+    "names": [
+      {
+        "name": "description",
+        "content": "הגופים והארגונים השותפים להקמת אתר כל שירות ולהנגשת המידע על שירותים חברתיים בישראל."
+      },
+      {
+        "name": "theme-color",
+        "content": "#ffffff"
+      }
+    ]
+  },
+  "contact": {
+    "title": "צרו קשר | כל שירות",
+    "properties": [
+      {
+        "property": "og:title",
+        "content": "צרו קשר | כל שירות"
+      },
+      {
+        "property": "og:description",
+        "content": "דרכי יצירת קשר עם צוות כל שירות, ואיך לדווח על טעות בנתונים המוצגים באתר."
+      },
+      {
+        "property": "og:image",
+        "content": "https://www.kolsherut.org.il/icons/logo.png"
+      },
+      {
+        "property": "og:url",
+        "content": "https://www.kolsherut.org.il/contact"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      },
+      {
+        "property": "og:site_name",
+        "content": "כל-שירות"
+      },
+      {
+        "property": "og:locale",
+        "content": "he_IL"
+      }
+    ],
+    "names": [
+      {
+        "name": "description",
+        "content": "דרכי יצירת קשר עם צוות כל שירות, ואיך לדווח על טעות בנתונים המוצגים באתר."
+      },
+      {
+        "name": "theme-color",
+        "content": "#ffffff"
+      }
+    ]
   }
 }
