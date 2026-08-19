@@ -18,7 +18,7 @@
     "dev": "vite",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prebuild": "npm run sitemap:homepage && npm run sitemap:main && npm run synonyms:update",
+    "prebuild": "npm run sitemap:staticpages && npm run sitemap:homepage && npm run sitemap:main && npm run synonyms:update",
     "build": "vite build",
     "postbuild": "node scripts/postbuild.cjs",
     "ssg:generate": "node scripts/ssg-crawler/index.cjs",
@@ -48,6 +48,7 @@
     "tar:local": "npm run tar --env=local",
     "tar:stage": "npm run tar --env=stage",
     "tar:production": "npm run tar --env=production",
+    "sitemap:staticpages": "node scripts/generateStaticPagesSitemap.cjs",
     "sitemap:homepage": "node scripts/generateHomepageSitemap.cjs",
     "sitemap:main": "node scripts/generateMainSitemap.cjs",
     "synonyms:update": "node scripts/updateSynonyms.cjs"

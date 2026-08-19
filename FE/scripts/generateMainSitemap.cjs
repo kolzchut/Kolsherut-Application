@@ -15,7 +15,10 @@ if (!fs.existsSync(publicFolder)) {
 }
 
 // List of sitemap files (relative paths)
+// Order matters: the SSG crawler fills its route set in this order and truncates at
+// MAX_PAGES, so the small, always-local sitemaps go first and can never be dropped.
 const sitemaps = [
+    "/sitemap/staticpages.xml",
     "/sitemap/cards.xml",
     "/sitemap/taxonomy.xml",
     "/sitemap/mixedtaxonomy.xml",

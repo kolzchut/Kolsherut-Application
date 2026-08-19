@@ -13,7 +13,9 @@ const nationalDigitalLogo = "/icons/logo-digital-israel.png"
 const kolzchutLogo = "/icons/logo-kolzchut.png"
 const mojLogo = "/icons/logo-moj.png"
 
-const Search = () => {
+// titleAs lets a page that already owns the document <h1> render this headline as a
+// plain paragraph instead, keeping exactly one h1 per page. Visuals are class driven.
+const Search = ({titleAs: TitleTag = 'h1'}: { titleAs?: 'h1' | 'p' }) => {
     const theme = useTheme<IDynamicThemeApp>();
     const classes = useStyle({accessibilityActive: theme.accessibilityActive});
     const isMobile = isMobileScreen();
@@ -35,7 +37,7 @@ const Search = () => {
                 {isMobile && <img onClick={handleIconClick} className={classes.hamburger} src={hamburger}
                                   alt={"hamburger button"}/>}
                 <img className={classes.kolsherutLogo} src={kolsherutLogo} alt={"kolsherut Logo"}/>
-                <h1 className={classes.aboveDivText}>{window.strings.home.aboveDivText}</h1>
+                <TitleTag className={classes.aboveDivText}>{window.strings.home.aboveDivText}</TitleTag>
             </div>
             <SearchInput/>
             <div className={classes.bottomDiv}>

@@ -28,10 +28,10 @@ const Sidebar = () => {
                     onClose();
                 }}/>
             </div>
-            <SidebarButton text={names.about} modalName={"About"}/>
-            <SidebarButton text={names.addService} modalName={"AddService"}/>
-            <SidebarButton text={names.partners} modalName={"Partners"}/>
-            <SidebarButton text={names.contact} modalName={"Contact"}/>
+            <SidebarButton text={names.about} page={"about"}/>
+            <SidebarButton text={names.addService} page={"missing"}/>
+            <SidebarButton text={names.partners} page={"partners"}/>
+            <SidebarButton text={names.contact} page={"contact"}/>
             <SidebarButton text={accessibilityText} onClick={toggleAccessibility}/>
         </div>
     </div>
