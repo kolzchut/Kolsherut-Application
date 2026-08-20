@@ -22,7 +22,9 @@ const LinksMenu = () => {
     const [links, setLinks] = useState<Array<ILinks>>([])
     const dispatch = useDispatch();
     const theme = useTheme<IDynamicThemeApp>();
-    const classes = useStyles(theme);
+    const classes = useStyles();
+    // The accessibility size is a separate static class, see linksMenu.css.ts.
+    const linksClass = theme.accessibilityActive ? `${classes.links} ${classes.linksA11y}` : classes.links;
 
     useEffect(() => {
         const getLinks = async () => {
@@ -48,8 +50,8 @@ const LinksMenu = () => {
             const slug = toSlug(link);
             // an internal content page: navigate in-app, never in a new tab
             if (!link.modal && isStaticPageSlug(slug))
-                return <PageLink key={link.title} page={slug} className={classes.links}>{link.title}</PageLink>;
-            return <a className={classes.links} key={link.title}
+                return <PageLink key={link.title} page={slug} className={linksClass}>{link.title}</PageLink>;
+            return <a className={linksClass} key={link.title}
                       href={link.url || "#"}
                       target={isExternal(link) ? '_blank' : undefined}
                       rel={isExternal(link) ? 'noopener noreferrer' : undefined}

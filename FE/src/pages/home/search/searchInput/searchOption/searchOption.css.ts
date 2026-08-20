@@ -1,10 +1,12 @@
 import {createUseStyles} from 'react-jss';
 import {primaryBorderColorOne, secondaryTextColorOne} from "../../../../../services/theme";
+import {widthOfMobile} from "../../../../../constants/mediaQueryProps";
 
-interface IProps {
-    accessibilityActive: boolean;
-}
+const mobileMediaQuery = `@media (max-width: ${widthOfMobile}px)`;
 
+// `iconAndTextA11y` is a static sibling rule rather than an `accessibilityActive` branch
+// inside a function rule - see the note in ../searchInput.css.ts for why an `@media` block
+// must never live inside a function rule. This list remounts on every keystroke.
 export default createUseStyles({
     optionalSearchValue: {
         borderBottom: `1px dotted ${primaryBorderColorOne}`,
@@ -21,21 +23,27 @@ export default createUseStyles({
     },
     searchIcon: {
         height: '30px',
-        "@media (max-width: 768px)": {
+        [mobileMediaQuery]: {
             height: '20px',
         }
     },
-    iconAndText: ({ accessibilityActive }: IProps) => ({
+    iconAndText: {
         display: 'flex',
         alignItems: 'center',
         color: secondaryTextColorOne,
         gap: 10,
         paddingRight: 10,
-        fontSize: accessibilityActive ? 28 : 24,
-        "@media (max-width: 768px)": {
-            fontSize: accessibilityActive ? 24 : 20,
+        fontSize: 24,
+        [mobileMediaQuery]: {
+            fontSize: 20,
         },
-    }),
+    },
+    iconAndTextA11y: {
+        fontSize: 28,
+        [mobileMediaQuery]: {
+            fontSize: 24,
+        },
+    },
     boldText:{
         fontWeight: 'bold',
     }

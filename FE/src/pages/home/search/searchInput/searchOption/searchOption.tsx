@@ -19,7 +19,11 @@ const SearchOption = ({value, onCloseSearchOptions, isStructured, refreshPage}: 
 }) => {
     const theme = useTheme<IDynamicThemeApp>();
 
-    const classes = useStyles({accessibilityActive: theme.accessibilityActive});
+    const classes = useStyles();
+    // The accessibility sizes are a separate static class, see searchOption.css.ts.
+    const iconAndTextClass = theme.accessibilityActive
+        ? `${classes.iconAndText} ${classes.iconAndTextA11y}`
+        : classes.iconAndText;
 
     const handleKeyDown = createKeyboardHandler(() => executeSearch({
         refreshPage,
@@ -38,7 +42,7 @@ const SearchOption = ({value, onCloseSearchOptions, isStructured, refreshPage}: 
                 role="button"
                 aria-label={`Search option: ${value.label}`}
                 className={classes.optionalSearchValue}>
-                        <span className={classes.iconAndText}>
+                        <span className={iconAndTextClass}>
                             <img className={classes.searchIcon} alt={"חיפוש"} src={lightIconSearch}/>
                             {segments ? (
                                 <span>
