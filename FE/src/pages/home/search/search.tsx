@@ -23,6 +23,7 @@ const Search = ({titleAs: TitleTag = 'h1'}: { titleAs?: 'h1' | 'p' }) => {
         if (!isMobile) return store.dispatch(setPage('home'))
         return store.dispatch(setShowSidebar(true));
     }
+    const handleLogoClick = () => store.dispatch(setPage('home'));
     return (
         <section className={classes.root}>
             <img
@@ -33,10 +34,10 @@ const Search = ({titleAs: TitleTag = 'h1'}: { titleAs?: 'h1' | 'p' }) => {
                 loading="eager"
                 decoding="sync"
             />
-            <div className={classes.aboveDiv}>
+            <div className={classes.aboveDiv} >
                 {isMobile && <img onClick={handleIconClick} className={classes.hamburger} src={hamburger}
                                   alt={"hamburger button"}/>}
-                <img className={classes.kolsherutLogo} src={kolsherutLogo} alt={"kolsherut Logo"}/>
+                <img onClick={handleLogoClick} className={classes.kolsherutLogo} src={kolsherutLogo} alt={"kolsherut Logo"}/>
                 <TitleTag className={classes.aboveDivText}>{window.strings.home.aboveDivText}</TitleTag>
             </div>
             <SearchInput/>
