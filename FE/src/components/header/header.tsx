@@ -14,7 +14,8 @@ import PageLink from "../links/pageLink";
 const logo = "/icons/logo.svg"
 
 // showHomeLink is for pages that hide the logo (which is the usual way back home),
-// so the links row carries an explicit "home" link instead.
+// so the header carries an explicit "home" link instead. It sits outside the links row,
+// in the free space to its right, so the four links keep their exact home-page layout.
 const Header = ({showLogo = true, showSearchbar = true, showHomeLink = false, refreshPage}: { showLogo?: boolean, showSearchbar?: boolean, showHomeLink?: boolean, refreshPage?: ()=>void }) => {
     const accessibilityActiveFromRedux = useSelector(isAccessibilityActive);
 
@@ -41,14 +42,21 @@ const Header = ({showLogo = true, showSearchbar = true, showHomeLink = false, re
                 </button>
                 
                 <div className={classes.linksDiv}>
-                    {showHomeLink && <PageLink page={"home"} className={classes.link}>{names.home}</PageLink>}
-                    <PageLink page={"about"} className={classes.link}>{names.about}</PageLink>
-                    <PageLink page={"missing"} className={classes.link}>{names.addService}</PageLink>
-                    <PageLink page={"partners"} className={classes.link}>{names.partners}</PageLink>
-                    <PageLink page={"contact"} className={classes.link}>{names.contact}</PageLink>
+                    <PageLink page={"about"} className={classes.link}
+                              activeClassName={classes.activeLink}>{names.about}</PageLink>
+                    <PageLink page={"missing"} className={classes.link}
+                              activeClassName={classes.activeLink}>{names.addService}</PageLink>
+                    <PageLink page={"partners"} className={classes.link}
+                              activeClassName={classes.activeLink}>{names.partners}</PageLink>
+                    <PageLink page={"contact"} className={classes.link}
+                              activeClassName={classes.activeLink}>{names.contact}</PageLink>
                 </div>
 
             </div>
+            {showHomeLink && <PageLink page={"home"} className={`${classes.link} ${classes.homeLink}`}
+                                       activeClassName={classes.activeLink}>
+                {names.home}
+            </PageLink>}
             {showSearchbar && <SearchInput refreshPage={refreshPage}/>}
             {showLogo && <>
                 <img onClick={handleHamburgerClick} className={classes.hamburgerIcon} src={hamburger}

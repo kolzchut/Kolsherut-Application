@@ -79,6 +79,20 @@ export default createUseStyles((theme: IDynamicThemeApp) => ({
             cursor: 'pointer',
         }
     },
+    // Marks the link to the page you are already on. Declared after `link` so it wins the
+    // textDecoration:none there, and carries no weight/size change so the row never reflows.
+    activeLink: {
+        textDecoration: 'underline',
+        textDecorationThickness: '2px',
+        textUnderlineOffset: '6px',
+    },
+    // Sits next to the capped links group rather than inside it, so it never squeezes the links.
+    homeLink: {
+        flexShrink: 0,
+        [headerCollapseMediaQuery]: {
+            display: 'none',
+        }
+    },
     button: {
         height: 50,
         margin: 15,
