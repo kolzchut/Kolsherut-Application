@@ -1,9 +1,25 @@
 # KolSherut - כל שירות 
 
+### Production
+
+[![FE Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/fe-ACR.yml/badge.svg?event=release)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/fe-ACR.yml)
+[![BE Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/be-ACR.yml/badge.svg?event=release)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/be-ACR.yml)
+[![ETL Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/etl-ACR.yml/badge.svg?event=release)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/etl-ACR.yml)
+[![Retrieval Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/retrieval-ACR.yml/badge.svg?event=release)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/retrieval-ACR.yml)
+
+### Stage
+
 [![FE Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/fe-ACR.yml/badge.svg?branch=main)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/fe-ACR.yml)
 [![BE Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/be-ACR.yml/badge.svg?branch=main)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/be-ACR.yml)
 [![ETL Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/etl-ACR.yml/badge.svg?branch=main)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/etl-ACR.yml)
 [![Retrieval Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/retrieval-ACR.yml/badge.svg?branch=main)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/retrieval-ACR.yml)
+
+### Dev
+
+[![FE Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/fe-ACR.yml/badge.svg?branch=dev)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/fe-ACR.yml)
+[![BE Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/be-ACR.yml/badge.svg?branch=dev)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/be-ACR.yml)
+[![ETL Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/etl-ACR.yml/badge.svg?branch=dev)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/etl-ACR.yml)
+[![Retrieval Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/retrieval-ACR.yml/badge.svg?branch=dev)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/retrieval-ACR.yml)
 
 ### [Repo][GitHub]
 ### [Board][Board]

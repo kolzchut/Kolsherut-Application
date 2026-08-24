@@ -4,7 +4,8 @@ on:
   push:
     branches: ['main', 'dev', 'production']
     paths: ['be/**', '.github/workflows/be-ACR.yml']
-    tags: ['v*']
+  release:
+    types: [published]
 
 concurrency:
   group: be-${{ github.ref }}

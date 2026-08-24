@@ -4,7 +4,8 @@ on:
   push:
     branches: ['main', 'dev', 'production']
     paths: ['retrieval/**', '.github/workflows/retrieval-ACR.yml']
-    tags: ['v*']
+  release:
+    types: [published]
 
 concurrency:
   group: retrieval-${{ github.ref }}

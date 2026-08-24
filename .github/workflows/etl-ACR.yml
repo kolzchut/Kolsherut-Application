@@ -4,7 +4,8 @@ on:
   push:
     branches: ['main', 'dev', 'production']
     paths: [ 'ETL/**', '.github/workflows/etl-ACR.yml' ]
-    tags: ['v*']
+  release:
+    types: [published]
 
 concurrency:
   group: etl-${{ github.ref }}
