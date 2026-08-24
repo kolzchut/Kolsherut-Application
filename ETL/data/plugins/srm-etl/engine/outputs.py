@@ -43,7 +43,7 @@ def sync_missing_rows_status(frame, output_spec, table_name, base_id):
 def load_output(frame, output_spec):
     if 'table' not in output_spec:
         return
-    table_name = resolve_settings_name(output_spec['table'])
+    table_name = output_spec['table']
     base_id = resolve_settings_name(output_spec['base'])
     prepared_frame = prepare_frame_for_load(frame, output_spec)
     logger.info(f'Loading output "{output_spec["name"]}" into {table_name} ({len(prepared_frame)} rows)')

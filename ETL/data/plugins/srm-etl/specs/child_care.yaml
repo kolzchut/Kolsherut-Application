@@ -9,7 +9,7 @@ description: >-
 
 apis:
   - name: fetch
-    url: "settings:CHILDCARE_API_URL"
+    url: "https://parents.education.gov.il/prhnet/Api/MeonotController/GetExcel?0=%%CURRENT_YEAR%%&1=0&2=0&3=0&4=0&5=0&csrt=6690085414305040436"
     format: html_table
     flavor: lxml
     promote_first_row_header: true
@@ -39,7 +39,7 @@ lookups:
 outputs:
   - name: service
     derive_from: fetch
-    table: AIRTABLE_SERVICE_TABLE
+    table: Services
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: meonot
     manage_status: true

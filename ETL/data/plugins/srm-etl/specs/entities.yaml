@@ -38,7 +38,7 @@ outputs:
   # Register every Guidestar organization with a fresh last_tag_date
   - name: organization_tags
     derive_from: guidestar_orgs
-    table: AIRTABLE_ORGANIZATION_TABLE
+    table: Organizations
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: entities
     manage_status: false
@@ -58,7 +58,7 @@ outputs:
   # Enrich organization details from Guidestar (BudgetKey as fallback)
   - name: organization_details
     derive_from: entities_orgs
-    table: AIRTABLE_ORGANIZATION_TABLE
+    table: Organizations
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: entities
     set_source: false
@@ -91,7 +91,7 @@ outputs:
 
   - name: branch
     derive_from: entities_active_orgs
-    table: AIRTABLE_BRANCH_TABLE
+    table: Branches
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: entities
     manage_status: false
@@ -121,7 +121,7 @@ outputs:
 
   - name: service
     derive_from: active_orgs
-    table: AIRTABLE_SERVICE_TABLE
+    table: Services
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: guidestar
     manage_status: true

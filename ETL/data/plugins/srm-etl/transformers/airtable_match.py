@@ -48,7 +48,7 @@ def match_name(org_name, org_map, prefixes, normalizations):
 
 def airtable_lookup_match(frame, params, context):
     lookup_frame = extract_data_from_airtable.load_airtable_as_dataframe(
-        table_name=getattr(settings, params['lookup_table']),
+        table_name=params['lookup_table'],
         base_id=getattr(settings, params['lookup_base']),
     )
     normalizations = params.get('normalizations', {})

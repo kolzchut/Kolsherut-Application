@@ -10,7 +10,7 @@ description: >-
 
 apis:
   - name: resolve
-    url: "settings:DATAGOVIL_PACKAGE_SEARCH_API"
+    url: "https://data.gov.il/api/action/package_search"
     format: json
     params:
       q: '"social-departments"'
@@ -22,7 +22,7 @@ apis:
         resource: "המחלקות לשירותים חברתיים"
 
   - name: fetch
-    url: "settings:DATAGOVIL_DATASTORE_SEARCH_API"
+    url: "https://data.gov.il/api/3/action/datastore_search"
     format: json
     params:
       resource_id: "${resolve.resource_id}"
@@ -119,7 +119,7 @@ static_data:
 outputs:
   - name: branch
     derive_from: fetch
-    table: AIRTABLE_BRANCH_TABLE
+    table: Branches
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: revaha
     columns:
@@ -161,7 +161,7 @@ outputs:
 
   - name: service
     derive_from: static_data.services
-    table: AIRTABLE_SERVICE_TABLE
+    table: Services
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: revaha
     columns:

@@ -14,7 +14,7 @@ apis:
 outputs:
   - name: organization
     derive_from: fetch
-    table: AIRTABLE_ORGANIZATION_TABLE
+    table: Organizations
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: entities
     manage_status: false

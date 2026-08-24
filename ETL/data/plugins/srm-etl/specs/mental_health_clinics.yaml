@@ -13,7 +13,7 @@ description: >-
 
 apis:
   - name: resolve
-    url: "settings:DATAGOVIL_PACKAGE_SEARCH_API"
+    url: "https://data.gov.il/api/action/package_search"
     format: json
     params:
       q: '"mentalhealthclinics"'
@@ -25,7 +25,7 @@ apis:
         resource: "מרפאות בריאות הנפש - משרד הבריאות"
 
   - name: fetch
-    url: "settings:DATAGOVIL_DATASTORE_SEARCH_API"
+    url: "https://data.gov.il/api/3/action/datastore_search"
     format: json
     params:
       resource_id: "${resolve.resource_id}"
@@ -117,7 +117,7 @@ outputs:
 
   - name: branch
     derive_from: clinics
-    table: AIRTABLE_BRANCH_TABLE
+    table: Branches
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: mental-health-clinics
     row_transforms:
@@ -157,7 +157,7 @@ outputs:
 
   - name: service
     derive_from: clinics
-    table: AIRTABLE_SERVICE_TABLE
+    table: Services
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: mental-health-clinics
     row_transforms:
@@ -189,7 +189,7 @@ outputs:
   # Always-loaded static records — not derived from the fetched api calls at all
   - name: organization
     derive_from: static_data.organizations
-    table: AIRTABLE_ORGANIZATION_TABLE
+    table: Organizations
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: mental-health-clinics
     columns:

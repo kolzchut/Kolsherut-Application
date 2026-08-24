@@ -10,7 +10,7 @@ description: >-
 
 apis:
   - name: suppliers
-    url: "settings:BUDGETKEY_QUERY_API"
+    url: "https://next.obudget.org/api/query"
     format: json
     paginate: budgetkey
     query: >-
@@ -19,7 +19,7 @@ apis:
       select supplier->>'entity_id' as entity_id, supplier->>'entity_kind' as entity_kind from suppliers
 
   - name: activities
-    url: "settings:BUDGETKEY_QUERY_API"
+    url: "https://next.obudget.org/api/query"
     format: json
     paginate: budgetkey
     query: select * from activities
@@ -39,7 +39,7 @@ lookups:
 outputs:
   - name: organization
     derive_from: suppliers
-    table: AIRTABLE_ORGANIZATION_TABLE
+    table: Organizations
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: entities
     manage_status: false
@@ -80,7 +80,7 @@ outputs:
 
   - name: service
     derive_from: service_base
-    table: AIRTABLE_SERVICE_TABLE
+    table: Services
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: social-procurement
     manage_status: true

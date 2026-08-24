@@ -32,9 +32,9 @@ def map_values_to_record_ids(value, record_id_map):
 def resolve_foreign_key(frame, params, context):
     airtable_key = params.get('airtable_key', 'id')
     record_id_map = build_record_id_map(
-        getattr(settings, params['source_table']), getattr(settings, params['base']), airtable_key)
+        params['source_table'], getattr(settings, params['base']), airtable_key)
     existing_links = build_existing_links_map(
-        getattr(settings, params['current_table']), getattr(settings, params['base']),
+        params['current_table'], getattr(settings, params['base']),
         params['target_field'], airtable_key)
     result_frame = frame.copy()
     mapped = frame[params['base_field']].map(

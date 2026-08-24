@@ -9,7 +9,7 @@ description: >-
 
 apis:
   - name: fetch
-    url: "settings:SHIL_API"
+    url: "https://www.gov.il/he/api/BureausApi/Index?OfficeId=4fa63b79-3d73-4a66-b3f5-ff385dd31cc7&categories=7cbc48b1-bf90-4136-8c16-749e77d1ecca"
     format: json
     paginate: gov_batch
 
@@ -32,7 +32,7 @@ static_data:
 outputs:
   - name: branch
     derive_from: fetch
-    table: AIRTABLE_BRANCH_TABLE
+    table: Branches
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: shil
     row_transforms:
@@ -83,7 +83,7 @@ outputs:
 
   - name: service
     derive_from: static_data.services
-    table: AIRTABLE_SERVICE_TABLE
+    table: Services
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: shil
     columns:

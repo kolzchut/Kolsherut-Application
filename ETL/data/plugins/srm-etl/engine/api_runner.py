@@ -3,7 +3,6 @@ import re
 
 from engine.fetchers import get_fetcher
 from engine.fetchers.extractors import EXTRACTORS
-from engine.settings_resolver import resolve_settings_reference
 
 PROVIDED_VALUE_PATTERN = re.compile(r'^\$\{([^.}]+)\.([^}]+)\}$')
 URL_MACRO_GENERATORS = {
@@ -42,7 +41,7 @@ def run_apis(api_specs):
     fetched_frames, provided_values = {}, {}
     for api_spec in api_specs or []:
         fetcher = get_fetcher(api_spec.get('format', 'json'), api_spec.get('paginate', 'none'))
-        url = apply_url_macros(resolve_settings_reference(api_spec['url']), api_spec.get('url_macros'))
+        url = apply_url_macros(api_spec['url'], api_spec.get('url_macros'))
         result = fetcher(url, resolve_params(api_spec.get('params'), provided_values), api_spec)
         fetched_frames[api_spec['name']] = result['frame']
         if 'provides' in api_spec:

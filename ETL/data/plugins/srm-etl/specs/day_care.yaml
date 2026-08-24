@@ -9,7 +9,7 @@ description: >-
 
 apis:
   - name: fetch
-    url: "settings:DAYCARE_API_URL"
+    url: "https://data.gov.il/api/3/action/datastore_search?resource_id=0f67a263-d9f4-44d4-9816-c96e9dfbc7e5"
     format: json
     paginate: link_next   # NOTE: the old code fetched only the first datastore page
 
@@ -64,7 +64,7 @@ outputs:
       # override the business id with the matched organization's id
       - op: airtable_lookup_match
         match_field: שם ארגון
-        lookup_table: AIRTABLE_ORGANIZATION_TABLE
+        lookup_table: Organizations
         lookup_base: AIRTABLE_DATA_IMPORT_BASE
         lookup_field: x_final_org_name
         override_field: ח.פ. ארגון
@@ -84,7 +84,7 @@ outputs:
 
   - name: service
     derive_from: static_data.services
-    table: AIRTABLE_SERVICE_TABLE
+    table: Services
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: mol_daycare
     manage_status: true
@@ -100,7 +100,7 @@ outputs:
 
   - name: organization
     derive_from: daycare_records
-    table: AIRTABLE_ORGANIZATION_TABLE
+    table: Organizations
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: mol_daycare
     manage_status: true
@@ -141,20 +141,20 @@ outputs:
 
   - name: branch
     derive_from: branch_base
-    table: AIRTABLE_BRANCH_TABLE
+    table: Branches
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: mol_daycare
     manage_status: true
     row_transforms:
       - op: resolve_foreign_key
-        source_table: AIRTABLE_ORGANIZATION_TABLE
-        current_table: AIRTABLE_BRANCH_TABLE
+        source_table: Organizations
+        current_table: Branches
         base: AIRTABLE_DATA_IMPORT_BASE
         base_field: org_business_id
         target_field: organization
       - op: resolve_foreign_key
-        source_table: AIRTABLE_SERVICE_TABLE
-        current_table: AIRTABLE_BRANCH_TABLE
+        source_table: Services
+        current_table: Branches
         base: AIRTABLE_DATA_IMPORT_BASE
         base_field: service_id_matcher
         target_field: services

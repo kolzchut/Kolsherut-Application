@@ -8,7 +8,7 @@ description: >-
 
 apis:
   - name: resolve
-    url: "settings:DATAGOVIL_PACKAGE_SEARCH_API"
+    url: "https://data.gov.il/api/action/package_search"
     format: json
     params:
       q: welfare-frames
@@ -21,7 +21,7 @@ apis:
         fallback_first_resource: true
 
   - name: fetch
-    url: "settings:DATAGOVIL_DATASTORE_SEARCH_API"
+    url: "https://data.gov.il/api/3/action/datastore_search"
     format: json
     params:
       resource_id: "${resolve.resource_id}"
@@ -69,7 +69,7 @@ outputs:
   # The local-authority organizations themselves, loaded as-is from the curated CSV
   - name: local_authority_organizations
     derive_from: static_data.local_authorities
-    table: AIRTABLE_ORGANIZATION_TABLE
+    table: Organizations
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: meser
     set_source: false
@@ -112,7 +112,7 @@ outputs:
 
   - name: organization
     derive_from: meser_records
-    table: AIRTABLE_ORGANIZATION_TABLE
+    table: Organizations
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: meser
     manage_status: true
@@ -121,14 +121,14 @@ outputs:
 
   - name: branch
     derive_from: meser_records
-    table: AIRTABLE_BRANCH_TABLE
+    table: Branches
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: meser
     manage_status: true
     row_transforms:
       - op: resolve_foreign_key
-        source_table: AIRTABLE_ORGANIZATION_TABLE
-        current_table: AIRTABLE_BRANCH_TABLE
+        source_table: Organizations
+        current_table: Branches
         base: AIRTABLE_DATA_IMPORT_BASE
         base_field: organization_id
         target_field: organization
@@ -160,14 +160,14 @@ outputs:
 
   - name: service
     derive_from: service_base
-    table: AIRTABLE_SERVICE_TABLE
+    table: Services
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: meser
     manage_status: true
     row_transforms:
       - op: resolve_foreign_key
-        source_table: AIRTABLE_BRANCH_TABLE
-        current_table: AIRTABLE_SERVICE_TABLE
+        source_table: Branches
+        current_table: Services
         base: AIRTABLE_DATA_IMPORT_BASE
         base_field: branch_id
         target_field: branches

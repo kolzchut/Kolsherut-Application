@@ -33,7 +33,7 @@ static_data:
 outputs:
   - name: branch
     derive_from: fetch
-    table: AIRTABLE_BRANCH_TABLE
+    table: Branches
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: gilzahav
     columns:
@@ -68,7 +68,7 @@ outputs:
 
   - name: service
     derive_from: static_data.services
-    table: AIRTABLE_SERVICE_TABLE
+    table: Services
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: gilzahav
     columns:
