@@ -391,7 +391,7 @@ SSG for tens of thousands of pages takes a long time. To get code changes live f
 **Phase 1 — base (no SSG), in the `build-fe` job:**
 1. `npm run build:<env>:base` (prebuild → vite → postbuild).
 2. Docker image built & pushed to ACR with the env tag; `dist/` is uploaded as the `fe-dist` artifact for phase 2.
-3. Non-prod (dev/main): the shared `deploy-nonprod` job **starts the cluster once** (if it was stopped), deploys the BE first (so the SSG crawl hits the fresh backend), then `kubectl set env` (`ENVIRONMENT=<env>`) + `rollout restart` + waits for the FE rollout. The new code is now live, serving CSR/bot-SSR (old SSG pages are gone until phase 2).
+3. Non-prod (dev/main): the shared `deploy-nonprod` job **starts the cluster once** (if it was stopped), deploys the BE first (so the SSG crawl hits the fresh backend), then `rollout restart` + waits for the FE rollout. The new code is now live, serving CSR/bot-SSR (old SSG pages are gone until phase 2).
 
 **Phase 2 — SSG, inside the same `deploy-nonprod` job (the cluster is up):**
 4. The job downloads the `fe-dist` artifact and runs `npm run build:<env>:ssg` — the crawler discovers routes from the (now live) sitemaps and renders every page into `dist/`.

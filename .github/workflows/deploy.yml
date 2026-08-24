@@ -346,7 +346,6 @@ jobs:
         if: ${{ !cancelled() && steps.ctx.outcome == 'success' && needs.build-be.result == 'success' }}
         timeout-minutes: 5
         run: |
-          kubectl set env deployment/kolsherut-be ENVIRONMENT=${{ env.ENV_TAG }} -n default
           kubectl rollout restart deployment/kolsherut-be -n default
           kubectl rollout status deployment/kolsherut-be -n default --timeout=2m
 
@@ -355,7 +354,6 @@ jobs:
         if: ${{ !cancelled() && steps.ctx.outcome == 'success' && needs.build-etl.result == 'success' }}
         timeout-minutes: 5
         run: |
-          kubectl set env deployment/kolsherut-etl ENVIRONMENT=${{ env.ENV_TAG }} -n default
           kubectl rollout restart deployment/kolsherut-etl -n default
           kubectl rollout status deployment/kolsherut-etl -n default --timeout=2m
 
@@ -366,7 +364,6 @@ jobs:
         if: ${{ !cancelled() && steps.ctx.outcome == 'success' && needs.build-retrieval.result == 'success' }}
         timeout-minutes: 15
         run: |
-          kubectl set env deployment/kolsherut-retrieval ENVIRONMENT=${{ env.ENV_TAG }} -n default
           kubectl rollout restart deployment/kolsherut-retrieval -n default
           kubectl rollout status deployment/kolsherut-retrieval -n default --timeout=12m
 
@@ -375,7 +372,6 @@ jobs:
         if: ${{ !cancelled() && steps.ctx.outcome == 'success' && needs.build-fe.result == 'success' }}
         timeout-minutes: 15
         run: |
-          kubectl set env deployment/kolsherut-fe ENVIRONMENT=${{ env.ENV_TAG }} -n default
           kubectl rollout restart deployment/kolsherut-fe -n default
           kubectl rollout status deployment/kolsherut-fe -n default --timeout=14m
 
