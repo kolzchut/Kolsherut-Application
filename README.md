@@ -20,11 +20,12 @@ Last known result per service and environment (updated by the `Deploy` workflow 
 
 ### Monitoring Versions
 
-Versions are monitored on the **[Releases page][Releases]** — every production version is a GitHub Release there:
+Versions are tracked on the **[Releases page][Releases]** — no technical setup needed, it's a plain web page:
 
-- Each release is one production deploy: its **tag** is the version (`vMAJOR.MINOR.PATCH`), its **title** is a one-line description of what shipped, and its notes list the notable changes. Publishing it deployed all services with `CODE_VERSION=<tag>` (see the [Deployment & Release Guide](#deployment--release-guide-for-all-team-members)).
-- The release marked **Latest** at the top is the version currently running in production; the list below it is the full version history, newest first — click a release to expand its notes.
-- Reading a version: a **MINOR** bump (`v1.17.0`) is a batch of new features, a **PATCH** bump (`v1.17.1`, `v1.17.2`) is fixes on top of the previous release (versioning rules in the guide below).
+- **Every version that went live is listed there**, newest first. Each entry shows the version number (e.g. `v1.17.2`), a short title saying what the version is about, the date it went live, and — when expanded — a bullet list of the changes it included.
+- **The entry marked `Latest` at the top is the version currently running on the live site.** Everything below it is the version history.
+- **Reading the version number** (`v1.MINOR.PATCH`): when the middle number goes up (`v1.16.x` → `v1.17.0`) the version delivered new features; when only the last number goes up (`v1.17.0` → `v1.17.1`) it delivered fixes to the previous version.
+- Publishing a release on that page is also what triggers the production deployment itself — so the page is always in sync with what's live. The mechanics are in the [Deployment & Release Guide](#deployment--release-guide-for-all-team-members) below.
 
 
 
