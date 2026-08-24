@@ -51,6 +51,10 @@ jobs:
         if: github.event_name == 'push'
         uses: dorny/paths-filter@v3
         with:
+          # Compare against the commit before this push. Without this, the
+          # action diffs against the repo default branch (main), which on dev
+          # marks every service as changed.
+          base: ${{ github.ref }}
           filters: |
             fe:
               - 'FE/**'
