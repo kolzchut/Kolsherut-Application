@@ -23,16 +23,16 @@ All JSON responses follow the shape `{ success: true, data: ... }`. Unhandled er
 | Route | Method | Input | Output |
 |---|---|---|---|
 | `/test` | GET | — | `200 { message, success: true }` — liveness check. |
-| `/autocomplete/:search` | GET | `search` — free text typed by the user (path param). | Top 5 autocomplete options: `{ structured: [...], unstructured: [...] }`. Structured entries carry response/situation/service references; unstructured are plain text suggestions. Falls back to a generic suggestion when nothing passes `AUTOCOMPLETE_MIN_SCORE`. |
+| `/autocomplete` | GET | `search` — free text typed by the user (query param, `?search=`). `GET /autocomplete/:search` (path param) is a legacy alias kept until client configs are updated. | Top 5 autocomplete options: `{ structured: [...], unstructured: [...] }`. Structured entries carry response/situation/service references; unstructured are plain text suggestions. When no structured result is found, the raw search text is prepended as a fallback suggestion; an empty search returns empty lists. |
 | `/card/:card_id` | GET | `card_id` (path param, sanitized). | The full card document plus `servicesInSameBranch` — sibling cards sharing the same `branch_key`. `404` if not found. |
-| `/search` | POST | JSON body: `searchQuery` (string, `_` is treated as space), `isFast` (boolean — first fast page vs. the rest), `responseId`, `situationId`, `serviceName`, `by` (organization filter). All except `searchQuery` optional. | Cards grouped into a service hierarchy. When only `searchQuery` is given a free-text query is used; otherwise filters become ES `must` conditions. `isFast: true` returns the first `SEARCHCARDS_FIRST_LENGTH` results (`404` when empty); `isFast: false` returns the remainder. |
+| `/search` | POST | JSON body: `searchQuery` (string, required; the first `_` is replaced with a space), `isFast` (boolean — first fast page vs. the rest), `responseId`, `situationId`, `serviceName`, `by` (organization filter). All except `searchQuery` optional. | Cards grouped into a service hierarchy. When only `searchQuery` is given a free-text query is used; otherwise filters become ES `must` conditions. `isFast: true` returns the first `SEARCHCARDS_FIRST_LENGTH` results (`404` when empty); `isFast: false` returns the remainder. |
 | `/logs/:provider` | POST | JSON body: `{ message, payload }`; `provider` names the client-side source. | `200 "Log Received"`. Writes the client event into this service's logger. |
 
 ### SEO / crawler surfaces
 
 | Route | Method | Output |
 |---|---|---|
-| `/sitemap/cards` | GET | XML sitemap of all card pages (filtered by `SITEMAP_MINIMUM_LAST_MODIFIED_FOR_CARDS`). |
+| `/sitemap/cards` | GET | XML sitemap of all card pages (each entry's `<lastmod>` is floored to `SITEMAP_MINIMUM_LAST_MODIFIED_FOR_CARDS`). |
 | `/sitemap/taxonomy` | GET | XML sitemap of all response and situation taxonomy pages. |
 | `/sitemap/mixedtaxonomy` | GET | XML sitemap of combined response×situation search pages. |
 | `/sitemap/organizations` | GET | XML sitemap of organization pages. |
@@ -53,7 +53,7 @@ All environment variables are read **only** in [src/vars.ts](src/vars.ts); every
 | `ELASTIC_USERNAME` | `elastic` | Elasticsearch basic-auth username. |
 | `ELASTIC_PASS` | — | Elasticsearch basic-auth password. |
 | `ELASTIC_RECONNECT_TIMEOUT` | `5` | Seconds between reconnect attempts when the initial cluster-health check fails. |
-| `AUTOCOMPLETE_MIN_SCORE` | `5000` | Minimum ES score for an autocomplete hit to be considered; below it the fallback suggestion is used. |
+| `AUTOCOMPLETE_MIN_SCORE` | `5000` | ES `min_score` applied to the card-derived autocomplete query; hits scoring below it are dropped. |
 | `SEARCHCARDS_FIRST_LENGTH` | `50` | Size of the fast first page of `/search`; also the offset of the "rest" page. |
 | `VERBOSE` | `false` | `true` enables verbose console logging (`logger.log`). |
 | `LOG_TO_FILE` | `false` | `true` additionally writes logs to the `logs/` folder. |
@@ -62,7 +62,7 @@ All environment variables are read **only** in [src/vars.ts](src/vars.ts); every
 | `EMAIL_NOTIFIER_PASSWORD` | — | App password for the sender address. |
 | `EMAIL_NOTIFIER_RECIPIENT_LIST` | team list | Comma-separated recipients of notification emails. |
 | `EMAIL_INTERVAL_HOURS` | `6` | Batching interval for queued notification emails. |
-| `SITEMAP_MINIMUM_LAST_MODIFIED_FOR_CARDS` | `2026-02-01T09:00:00` | Cards modified before this timestamp are excluded from `/sitemap/cards`. |
+| `SITEMAP_MINIMUM_LAST_MODIFIED_FOR_CARDS` | `2026-02-01T09:00:00` | Floor for the `<lastmod>` value in `/sitemap/cards` — cards modified earlier are reported with this date (no card is excluded). |
 
 Elasticsearch **index names are not env vars** — they are pinned per `ENV` in the `indices` map at the top of [src/vars.ts](src/vars.ts) and must be updated there after each reindex.
 
@@ -71,7 +71,7 @@ Elasticsearch **index names are not env vars** — they are pinned per `ENV` in 
 If the `EMAIL_NOTIFIER_*` variables are set, the service sends:
 - **Immediate error emails** — every unhandled route error (via the global error handler) is pushed to a queue and flushed immediately.
 - **Batched notifications** — queued items are flushed every `EMAIL_INTERVAL_HOURS`.
-- **Weekly keep-alive** — in `prod` only, a weekly email proving the service is up (also keeps the Gmail app password active).
+- **Weekly keep-alive** — only when `ENV` is exactly `prod`, a weekly email proving the service is up (also keeps the Gmail app password active).
 
 ## Local development
 
@@ -80,7 +80,7 @@ npm install
 npm run dev
 ```
 
-`npm run dev` runs nodemon, which starts `src/index.ts` with `node --env-file=.env` — configuration goes in a git-ignored [.env](.env) file in this folder (see the variables table above). You need a reachable Elasticsearch with the index pair matching your `ENV`.
+`npm run dev` runs nodemon, which starts `src/index.ts` with `node --env-file=.env -r ts-node/register` — configuration goes in a git-ignored [.env](.env) file in this folder (see the variables table above). You need a reachable Elasticsearch with the index pair matching your `ENV`.
 
 Other scripts:
 
