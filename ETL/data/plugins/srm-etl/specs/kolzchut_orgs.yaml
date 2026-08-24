@@ -1,5 +1,10 @@
 name: kolzchut_orgs
-description: null   # TODO: fill in manually — business description of this data source
+description: >-
+  מקור מידע זה שואב מאתר כל זכות את רשימת מספרי הארגון (עמותות, חברות ורשויות)
+  המתועדים במאמרי הארגונים באתר.
+
+  המידע משמש להשלמת זיהוי הארגונים הרשומים במערכת ולעדכון תאריך התיוג האחרון שלהם,
+  ואינו מוסיף בעצמו מידע עסקי חדש על השירותים או הארגונים.
 
 apis:
   - name: fetch
