@@ -1,6 +1,6 @@
 from engine.settings_resolver import resolve_settings_name
 from load.airtable import update_if_exists_if_not_create
-from operators.meser.utilities.trigger_status_check import trigger_status_check
+from srm_tools.trigger_status_check import trigger_status_check
 from srm_tools.logger import logger
 from utilities.update import prepare_airtable_dataframe
 
