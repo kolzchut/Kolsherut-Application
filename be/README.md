@@ -25,7 +25,7 @@ All JSON responses follow the shape `{ success: true, data: ... }`. Unhandled er
 | `/test` | GET | — | `200 { message, success: true }` — liveness check. |
 | `/autocomplete` | GET | `search` — free text typed by the user (query param, `?search=`). `GET /autocomplete/:search` (path param) is a legacy alias kept until client configs are updated. | Top 5 autocomplete options: `{ structured: [...], unstructured: [...] }`. Structured entries carry response/situation/service references; unstructured are plain text suggestions. When no structured result is found, the raw search text is prepended as a fallback suggestion; an empty search returns empty lists. |
 | `/card/:card_id` | GET | `card_id` (path param, sanitized). | The full card document plus `servicesInSameBranch` — sibling cards sharing the same `branch_key`. `404` if not found. |
-| `/search` | POST | JSON body: `searchQuery` (string, required; the first `_` is replaced with a space), `isFast` (boolean — first fast page vs. the rest), `responseId`, `situationId`, `serviceName`, `by` (organization filter). All except `searchQuery` optional. | Cards grouped into a service hierarchy. When only `searchQuery` is given a free-text query is used; otherwise filters become ES `must` conditions. `isFast: true` returns the first `SEARCHCARDS_FIRST_LENGTH` results (`404` when empty); `isFast: false` returns the remainder. |
+| `/search` | POST | JSON body: `searchQuery` (string, required; underscores are replaced with spaces), `isFast` (boolean — first fast page vs. the rest), `responseId`, `situationId`, `serviceName`, `by` (organization filter). All except `searchQuery` optional. | Cards grouped into a service hierarchy. When only `searchQuery` is given a free-text query is used; otherwise filters become ES `must` conditions. `isFast: true` returns the first `SEARCHCARDS_FIRST_LENGTH` results (`404` when empty); `isFast: false` returns the remainder. |
 | `/logs/:provider` | POST | JSON body: `{ message, payload }`; `provider` names the client-side source. | `200 "Log Received"`. Writes the client event into this service's logger. |
 
 ### SEO / crawler surfaces
@@ -71,7 +71,7 @@ Elasticsearch **index names are not env vars** — they are pinned per `ENV` in 
 If the `EMAIL_NOTIFIER_*` variables are set, the service sends:
 - **Immediate error emails** — every unhandled route error (via the global error handler) is pushed to a queue and flushed immediately.
 - **Batched notifications** — queued items are flushed every `EMAIL_INTERVAL_HOURS`.
-- **Weekly keep-alive** — only when `ENV` is exactly `prod`, a weekly email proving the service is up (also keeps the Gmail app password active).
+- **Weekly keep-alive** — in `production` only, a weekly email proving the service is up (also keeps the Gmail app password active).
 
 ## Local development
 
@@ -80,7 +80,7 @@ npm install
 npm run dev
 ```
 
-`npm run dev` runs nodemon, which starts `src/index.ts` with `node --env-file=.env -r ts-node/register` — configuration goes in a git-ignored [.env](.env) file in this folder (see the variables table above). You need a reachable Elasticsearch with the index pair matching your `ENV`.
+`npm run dev` runs nodemon, which starts `src/index.ts` with `node --env-file=.env -r ts-node/register` — configuration goes in a git-ignored [.env](.env) file in this folder (copy [.env.example](.env.example) and fill it in; see the variables table above). You need a reachable Elasticsearch with the index pair matching your `ENV`.
 
 Other scripts:
 

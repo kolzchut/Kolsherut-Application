@@ -21,7 +21,7 @@ export function initEmailService() {
             },
         });
         logger.log({ service: "Email Service", message: 'Email service initialized.' });
-        if (env !== "prod") return;
+        if (env !== "production") return;
         const oneWeekMs = 7 * 24 * 60 * 60 * 1000;
         setInterval(() => {
             sendEmail({
