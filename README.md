@@ -28,31 +28,23 @@ Fully documented in **[FE/README.md](FE/README.md)** — architecture, the CSR /
 
 The BE is built with TypeScript and Node.js, using the Express framework. It handles requests from the frontend, processes data, interacts with Elasticsearch, and provides the on-demand SSR endpoint (`/ssr`) and live sitemap endpoints that the FE's nginx proxies to.
 
-#### Environment Variables of BE:
-
-| Variable                  | Description                              | Default               |
-| ------------------------- | ---------------------------------------- | --------------------- |
-| ORIGIN                    | the front end origin for cors (Need to change default) | *                     |
-| ENV                       | the environment you working on  (prod/stage/local) | local                 |
-| PORT                      | the port for the back end                | 5000                  |
-| ELASTIC_URL               | the elastic search URL (Need to change default) | http://localhost:9200 |
-| ELASTIC_USERNAME          | the elastic search username (Need to change default) | elastic               |
-| ELASTIC_PASS              | the elastic search password (Need to change default) | your-password         |
-| ELASTIC_RECONNECT_TIMEOUT | the time to wait before reconnecting to elastic search (seconds) | 5                     |
-| VERBOSE                   | Default to false, if true will log more information to the console | false                 |
-| LOG_TO_FILE               | Default to false, if true will log to file | false                 |
-| LOG_DURATION              | The duration content of each file. (minutes) | 10                    |
-| SEARCHCARDS_FIRST_LENGTH  | The amount of services it will pull initially from server in searchCards | 50                    |
-| AUTOCOMPLETE_MIN_SCORE    | Minimum final score required for autocomplete results (higher = stricter) | 5000                  |
+Fully documented in **[be/README.md](be/README.md)** — routes, all environment variables, the email notifier, local development, Docker, and CI/CD.
 
 ## ETL
 
+- **[README](ETL/README.md)**
 - **[Data](ETL/data.md)**
 - **[Cronicle](ETL/CRONICLE.md)**
 
+## Elasticsearch Tooling (`ES/`)
+
+- **[Kibana](ES/kibana/README.md)** — run Kibana locally against any Elasticsearch (the local replica, a port-forwarded remote cluster, or a reachable remote cluster).
+- **[Reindex](ES/reindex/README.md)** — bootstrap a local Elasticsearch replica filled with real data copied from a remote cluster.
+
 ## AI
 
-- **Retrieval** — see `retrieval/`
+- **Retrieval** — [retrieval/README.md](retrieval/README.md): the hybrid retrieval microservice.
+- **Evaluation** — [evaluation/README.md](evaluation/README.md): offline evaluation of the retrieval service against ground truth from the live staging site.
 
 ## CI CD
 
@@ -114,13 +106,13 @@ model, so it needs no API key.
 1. In case you got `.tar`s for **FE** and **BE**, load them using `docker load -i {fileName}` and skip to step 4.
 2. Make sure Docker is installed and running on your machine.
 3. In the **FE** folder run `npm run docker:build:local`, and in the **BE** folder run `npm run docker:build`.
-4. Make sure all the environment variables in the `docker-compose.yml` file are set correctly.
+4. Make sure all the environment variables in the `docker-compose.yml` file are set correctly, and that its `image:` tags match the images you built/loaded (the build scripts tag images with the `version` from each `package.json`).
 5. Make sure all the configuration files are set correctly (FE configs: see [FE/README.md](FE/README.md#configuration-files)).
 6. Run in the main folder:
     ```bash
     docker compose up -d
     ```
-* Be aware, frontend runs on port 4000 and backend on port 5000 (BE port can be set via environment variable PORT).
+* Be aware, frontend is served on host port 5173 (nginx listens on 4000 inside the container, mapped in `docker-compose.yml`) and backend on port 5000 (BE port can be set via environment variable PORT).
 
 ### Building tar files for FE and BE
 
