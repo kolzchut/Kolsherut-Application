@@ -35,11 +35,18 @@ Fully documented in **[be/README.md](be/README.md)** — routes, all environment
 - **[README](ETL/README.md)**
 - **[Data](ETL/data.md)**
 - **[Cronicle](ETL/CRONICLE.md)**
+- Operator docs: **[publish](ETL/data/plugins/srm-etl/operators/publish/README.md)** (the current pipeline), **[derive](ETL/data/plugins/srm-etl/operators/derive/README.md)** (legacy pipeline reference), **[deploy](ETL/data/plugins/srm-etl/operators/deploy/README.md)** (Airtable base sync).
 
 ## Elasticsearch Tooling (`ES/`)
 
+Overview in **[ES/README.md](ES/README.md)**.
+
 - **[Kibana](ES/kibana/README.md)** — run Kibana locally against any Elasticsearch (the local replica, a port-forwarded remote cluster, or a reachable remote cluster).
 - **[Reindex](ES/reindex/README.md)** — bootstrap a local Elasticsearch replica filled with real data copied from a remote cluster.
+
+## Infrastructure (`Infra/`)
+
+The Helm chart that deploys all services to AKS — base [values.yaml](Infra/values.yaml), per-environment `values-<env>.yaml` overrides, and secrets templates. Deployment instructions in **[Infra/DEPLOYMENT.md](Infra/DEPLOYMENT.md)**.
 
 ## AI
 
