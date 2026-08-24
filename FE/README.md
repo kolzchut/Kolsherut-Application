@@ -2,6 +2,7 @@
 
 The front end of KolSherut (כל שירות) — an open database of public services in Israel.
 
+
 A React 19 + TypeScript SPA, built with Vite, served by nginx inside a Docker container, with a **three-layer rendering strategy**: Client-Side Rendering (CSR) for humans, build-time Static Site Generation (SSG) for pages known ahead of time, and on-demand Server-Side Rendering (SSR) via the BE for bots hitting pages that were not pre-generated.
 
 ## Table of Contents
