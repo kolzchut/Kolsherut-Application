@@ -4,7 +4,8 @@ on:
   push:
     branches: ['main', 'dev', 'production']
     paths: ['FE/**', '.github/workflows/fe-ACR.yml']
-    tags: ['v*']
+  release:
+    types: [published]
 
 concurrency:
   group: fe-${{ github.ref }}
