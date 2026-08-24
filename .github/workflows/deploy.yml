@@ -453,9 +453,10 @@ jobs:
           echo "At least one build job failed"
           exit 1
 
-  # Publishes per-service pass/fail + timestamp to the 'badges' branch, which
-  # feeds the shields.io status matrix in the root README. Services skipped in
-  # this run keep their previous badge (last known status per environment).
+  # Publishes per-service pass/fail + timestamp to .badges/ on the dev branch,
+  # which feeds the shields.io status matrix in the root README. Services
+  # skipped in this run keep their previous badge (last known status per
+  # environment). The badge commit carries [skip ci] so it triggers nothing.
   report-status:
     needs: [detect, build-fe, build-be, build-etl, build-retrieval, deploy-nonprod, deploy-production]
     if: >
@@ -466,10 +467,10 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout Badges Branch
+      - name: Checkout Badges Location
         uses: actions/checkout@v4
         with:
-          ref: badges
+          ref: dev
 
       - name: Update Badge Files
         env:
@@ -511,7 +512,7 @@ jobs:
               STATUS=failing; COLOR=red
             fi
             printf '{"schemaVersion":1,"label":"%s","message":"%s · %s","color":"%s"}\n' \
-              "$LABEL" "$STATUS" "$TIMESTAMP" "$COLOR" > "${ENV_NAME}-${SVC}.json"
+              "$LABEL" "$STATUS" "$TIMESTAMP" "$COLOR" > ".badges/${ENV_NAME}-${SVC}.json"
             echo "$LABEL ($ENV_NAME): $STATUS"
           }
 
@@ -524,17 +525,17 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet; then
+          if git diff --quiet .badges; then
             echo "No badge changes to publish"
             exit 0
           fi
-          git add .
-          git commit -m "Update deploy status badges"
+          git add .badges
+          git commit -m "Update deploy status badges [skip ci]"
           for i in 1 2 3 4 5; do
-            if git push origin badges; then
+            if git push origin HEAD:dev; then
               exit 0
             fi
-            git pull --rebase origin badges
+            git pull --rebase origin dev
           done
           exit 1
 
