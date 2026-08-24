@@ -274,8 +274,9 @@ shuffled. That is the whole point: shown the judge's answer, or a cosine of 0.85
 on it and the agreement number stops measuring agreement. A header assertion enforces it.
 
 The draw is **stratified by `side` × `verdict`** with a floor per non-empty cell before a proportional
-split, so rare cells survive — `unclear` is ~2% of the pairs and would otherwise get a couple of rows
-or none. It is seeded from `REVIEW_SAMPLE_SEED`, so the same N always yields the same rows and two
+split, so rare cells survive — `unclear` has run as low as ~2% of the pairs on past arms (it is ~20%
+of the currently committed labels) and would otherwise get a couple of rows or none. It is seeded
+from `REVIEW_SAMPLE_SEED`, so the same N always yields the same rows and two
 reviewers can be handed identical sheets. `--agreement` **redraws** the sample from that seed to
 recover what the judge said, and refuses the sheet if any identity column disagrees with the redraw.
 
@@ -306,11 +307,13 @@ is the only record of what the committed labels were judged against — copy tha
 those labels still matter. Two manifest fields cannot be observed from `results/` and are carried over
 from `relevance_input_vars.py` instead: `scrape_date` and `retrieval_config`. Update those constants
 whenever the arm changes, or the manifest will confidently describe the wrong configuration. `results*/` is gitignored, so the snapshot stays local — the
-committed artifact is `data/relevance-judgements.json`, the labels plus those two input hashes. Paths live
-in `relevance_input_vars.py` and are intentionally not env-overridable.
+committed artifact is `data/relevance-judgements.json`, the labels plus the three frozen inputs'
+hashes (and those two carried-over fields). Paths live in `relevance_input_vars.py` and are
+intentionally not env-overridable.
 
-Names live in their own file because the two sides are lopsided: median ground truth is 8 services,
-median returned count is ~283, so an unexpected-name list per row would be unreadable.
+Names live in their own file because the two sides can be lopsided: median ground truth is 8 services,
+and the unfiltered baseline arm returned a median of ~283 (the current filtered arm returns a median
+of ~20), so an unexpected-name list per row would be unreadable.
 
 The **dashboard** shows the overall score, the metric×k matrix (heat-colored), the set-level metrics
 and count-parity tables, metric curves across k, and a sortable per-query drill-down whose
@@ -333,24 +336,32 @@ Thresholds live in `vars.py` (empty by default = report-only, exit 0):
 
 ```
 run_evaluation.py     entry point: load → scrape/cache → evaluate → aggregate → report → exit code
+freeze_judge_input.py copies results/ into results-judge-frozen/ and regenerates its hash manifest
 evaluate_dataset.py   per-query loop scoring retrieval against the scraped names
 vars.py / strings.py  all config (URLs, k values, metric keys) / all text
 scraper_vars.py       browser + FE-selector config, split out of vars.py
 relevance_vars.py     judge model, chunk size, verdicts, batch + cache config
 relevance_strings.py  judge CLI help, judgement CSV headers, judge log lines and errors
 relevance_prompt_strings.py  the judge system prompt, alone - editing it invalidates the cache
+relevance_marker_vars.py  the judge's one-character wire markers + their decode table to verdicts
 relevance_input_vars.py   the FROZEN judging snapshot: input paths, manifest keys, recorded arm
 relevance_report_vars.py  score-band width and the band-table column keys
+relevance_statistics_vars.py  summary.json's `relevance` block: verdict buckets, the two rates,
+                      adjusted set metrics
+relevance_statistics_strings.py  the relevance console table's labels + the rewrite log line
 human_review_vars.py  review-sheet + agreement-report paths, keys and the gate's two thresholds
 human_review_strings.py   review-sheet headers, human-audit CLI help, gate outcomes, log lines
 human_review_schemas.py   ReviewSampleRow, HumanVerdict, AlignedVerdict dataclasses
-schemas.py            Example, ScrapedPage, QueryEvaluation, JudgementItem, JudgementChunk,
-                      ServiceJudgement dataclasses
+relevance_schemas.py  JudgementItem, JudgementChunk, ServiceJudgement dataclasses
+retrieval_schemas.py  RetrievalResult: one /api/retrieve response, split for the evaluation
+schemas.py            Example, ScrapedPage, ServiceScores, ServiceDetails, QueryEvaluation
+                      dataclasses
 data/                 raw golden set + the scraped ground-truth cache
 dataset/              raw CSV → Example, and the production → staging URL swap
 scraper/              browser session, readiness waits, name extraction, name normalization
-ground_truth/         scrape-all loop + the ground-truth cache
-clients/              retrieval HTTP client + the Gemini judge Batch API client
+ground_truth/         scrape-all loop + the ground-truth cache + the BE service-details
+                      lookup, cache and enrichment
+clients/              retrieval HTTP client, BE name-lookup client, Gemini judge Batch API client
 relevance/            LLM relevance judging: items, chunks, request, parsing, cache, orchestrator
 human_review/         the human audit: stratified sample, sheet read-back, verdict alignment, gate
 metrics/              one metric per file + per-query evaluation + aggregation

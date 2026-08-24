@@ -27,15 +27,13 @@ MANIFEST_RETRIEVAL_CONFIG_KEY = 'retrieval_config'
 MANIFEST_SCRAPE_DATE_KEY = 'scrape_date'
 MANIFEST_SOURCE_RUN_KEY = 'source_run'
 
-# The run these files came from, and the arm that produced them. Re-frozen 2026-07-30 on a clean rerun
-# of the same V4 gemini arm, which reproduced 0.36935235358267293 exactly and landed 2,011 pairs against
-# the previous freeze's 2,007 - so the committed labels still cover 99.8% of it. The two superseded
-# snapshots (arm0 at 0.3025 and the earlier arm4 freeze at 0.3694) have been deleted; this file and the
-# manifest in results-judge-frozen/ are now the only record of what the committed labels were judged
-# against. The ground truth was NOT re-scraped for this freeze, so the scrape date below is carried
-# over unchanged rather than restamped.
-JUDGE_INPUT_SOURCE_RUN = 'results rerun of the V4 gemini arm (2026-07-30 15:05)'
-JUDGE_INPUT_OVERALL_SCORE = 0.36935235358267293
+# The run these files came from, and the arm that produced them. Re-frozen 2026-08-03 on a fresh run
+# of the same V4 gemini arm (2,278 pairs at 0.36924961536524054, superseding the 2026-07-30 freeze's
+# 2,011 pairs at 0.36935235358267293). This file and the manifest in results-judge-frozen/ are the only
+# record of what the committed labels were judged against. The ground truth was NOT re-scraped for this
+# freeze, so the scrape date below is carried over unchanged rather than restamped.
+JUDGE_INPUT_SOURCE_RUN = 'results run of 2026-08-03'
+JUDGE_INPUT_OVERALL_SCORE = 0.36924961536524054
 JUDGE_INPUT_SCRAPE_DATE = '2026-07-29'
 
 # The retrieval configuration behind that arm, READ DIRECTLY OFF retrieval/.env at rerun time. The

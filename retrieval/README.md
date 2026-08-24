@@ -122,7 +122,7 @@ truncation and will always prefer no cut at all.
 
 The vectorized (and BM25-matched) text is **Hebrew only** — every English machine ID is omitted. It is built from `srm_services` fields in this order: `name`, `description`, `details` (when present, with HTML markup stripped), the deduped Hebrew response categories (`x_resp_hebrew`), the deduped Hebrew situation names (union of `x_manual_sit_hebrew` / `x_sit_hebrew` / `x_final_situation_tag_hebrew`), and the deduped Hebrew organization names (union of `x_branch_org_name` / `organization_name` / `name (from organizations)`). Contact/payment/provider-kind fields are kept out of the vector and rendered into a separate `context_text` returned for display.
 
-Every one of those groups **must** be read as a union of candidate columns, never as a single column: `srm_services` populates the variants disjointly, so reading only the legacy `name (from organizations)` lookup put the organization clause on just **194 of 11,748** services instead of 11,638. The same split applies to the provider kind (`organization kind (from branches)` covers 11,271 docs, `kind (from organizations)` only 194).
+Every one of those groups **must** be read as a union of candidate columns, never as a single column: `srm_services` populates the variants disjointly, so reading only the legacy `name (from organizations)` lookup put the organization clause on just **194 of 11,748** services instead of 11,639. The same split applies to the provider kind (`organization kind (from branches)` covers 11,271 docs, `kind (from organizations)` only 194).
 
 `details` carries raw HTML on 939 services (`<br/>`, `<li>`, `<p>`, entities). `strip_html_markup` turns it into prose at the source-field level, before template rendering, so the tag→space substitution collapses cleanly through the whitespace normalizer. Tags were measured to appear **only** in `details`; entities also appear in `description` on one service and are deliberately left alone there.
 
@@ -194,17 +194,19 @@ services at a measured mean of 134.2 tokens each, from a 400-document sample), t
 purpose, because the price moves. Same measurement as under "The swap is close to single-variable" below,
 repeated here so the score and its price are read together.
 
-### The V4 adoption decision is open
+### The V4 arm is the deployed default
 
-The measurement supports adopting `gemini`. What blocks the rollout is not a metric: adoption puts a
-**per-query Google dependency in `/api/retrieve` with no degraded path** — `embed_query_text` raises before
-the hybrid search runs, so a Gemini outage 500s the endpoint even though BM25 is still healthy. Whether that
-availability trade is acceptable is a product decision rather than a retrieval one, and it is deliberately
-still open.
+The measurement supported adopting `gemini`, and the flip has since been made: `Infra/values.yaml` now
+ships `EMBEDDING_PROVIDER: "gemini"` against the `srm__services_retrieval_embeddings_v4_gemini` index.
+That index was built out-of-band and already holds all 9,871 services at 3072 dims, so this particular
+flip needed no reindex; the V3 index is left intact, so rollback is the local/V3 pair changed together
+in one commit (see "Switching arms, and rolling back").
 
-Until it is closed, `Infra/values.yaml` continues to ship `EMBEDDING_PROVIDER: "local"` against the V3
-index, and that remains the mandated cluster default *even now that the V4 arm has won the measurement*.
-Flipping it is a separate, deliberate commit — not a side effect of recording this result.
+The accepted cost is a **per-query Google dependency in `/api/retrieve` with no degraded path** —
+`embed_query_text` raises before the hybrid search runs, so a Gemini outage 500s the endpoint even
+though BM25 is still healthy. In the cluster `GEMINI_EMBEDDER_API_KEY` comes from the shared secret and
+is required at this setting: the startup dimension probe is itself an embed call, so a missing or
+unauthorised key crashes the pod at boot rather than serving.
 
 ## Embedding providers
 
@@ -224,8 +226,9 @@ The E5 prefixes live inside the local provider and the task types inside the Gem
 
 ### The swap is close to single-variable
 
-The outcome of the swap is measured in "The model axis" above — `gemini` wins on both pairs, with the
-adoption decision still open. What follows is why that comparison can be read as a model result at all.
+The outcome of the swap is measured in "The model axis" above — `gemini` wins on both pairs, and is now
+the deployed cluster default ("The V4 arm is the deployed default"). What follows is why that comparison
+can be read as a model result at all.
 
 The 512 → 2048 token jump rides along with the provider change, so a win in the `gemini` arm could in principle be "more text got embedded" rather than "better model". Measured over the full live V3 corpus (9,871 documents), it can't be much of either: `embedded_text` runs **p50 432 characters, p95 596, p99 753, max 4,906**, which the E5 tokenizer turns into **p50 137 tokens, p95 190, max 1,739**. Only **27 of 9,871 services (0.27%)** cross the local model's 512-token cap and are being silently truncated today, and **zero** cross Gemini's 2,048. The truncation confound is therefore quantified and small — it can touch at most a quarter of a percent of the corpus. (Token counts use the E5 tokenizer as a proxy; Gemini's own tokenizer will differ slightly, but not by the 4× that would matter.)
 
@@ -295,6 +298,7 @@ When copying indices between clusters, `copy_retrieval_indices.sh` reads the emb
 
 | Method | Path                    | Body                              | Description                        |
 | ------ | ----------------------- | --------------------------------- | ---------------------------------- |
+| GET    | `/`                     | -                                 | Mock FE — serves `mock_fe/index.html`, a minimal manual-testing page. Excluded from the OpenAPI schema. |
 | GET    | `/health`               | -                                 | Health check                       |
 | POST   | `/api/services/update`  | `{ "serviceId": "..." }`          | Embed a single service into the retrieval index |
 | POST   | `/api/services/reindex` | `{ "limit": 50, "resume": true }` (both optional) | Scan all of `srm_services`, embed each, insert into the retrieval index. Omit `limit` for the full index. `resume: true` skips services already present in the embeddings index (continue an interrupted run). Streams Server-Sent Events (`text/event-stream`): a `progress` event every 100 processed services and a final `done` event, each `{event, total, embedded, skipped_no_text, not_found}`. |
@@ -329,7 +333,7 @@ All configuration lives in `app/vars.py` (overridable via `.env` — copy `.env.
 | --- | --- | --- |
 | `SERVICES_INDEX_NAME` | `srm_services` | Source index of service documents, owned by the ETL. This service only reads it — never modifies it. |
 | `SERVICE_ID_FIELD_NAME` | `id` | Field holding the service id inside a `srm_services` document. |
-| `RETRIEVAL_EMBEDDINGS_INDEX_NAME` | `srm__services_retrieval_embeddings` | Dedicated embeddings index owned by this service; created automatically on first embed. **Paired with `EMBEDDING_PROVIDER`** — one index per provider, always changed together. The deployed local arm uses `srm__services_retrieval_embeddings_v3_enriched`. |
+| `RETRIEVAL_EMBEDDINGS_INDEX_NAME` | `srm__services_retrieval_embeddings` | Dedicated embeddings index owned by this service; created automatically on first embed. **Paired with `EMBEDDING_PROVIDER`** — one index per provider, always changed together. The deployed gemini arm uses `srm__services_retrieval_embeddings_v4_gemini`; the local arm's index is `srm__services_retrieval_embeddings_v3_enriched`. |
 | `CARDS_INDEX_NAME` | `srm__cards` | Branch-level cards index published by the ETL, read-only: it supplies the service/organization/branch hierarchy and the card set that `REQUIRE_CARD_FOR_EMBEDDING` filters on. |
 
 **Logging**

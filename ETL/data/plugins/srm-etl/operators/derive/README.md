@@ -11,6 +11,9 @@
 > the CKAN dumps in `stats.py`, and every other commented-out block mentioned in this document.
 > Only the code that actually executes today defines the required behavior.
 
+> **Status note:** the rewrite this document was written for now exists as `operators/publish/`
+> ("Publish (SRM derive rewrite)"). This file remains the reference for the legacy `derive` code.
+
 ---
 
 ## 1. What it is
@@ -184,7 +187,8 @@ For each of the three curation tables:
    `source`, `fixes`, plus `extra_fields` — org: `services`/`branch_services`,
    branch: `services`/`org_services`, service: `organizations`/`branches`).
 2. In the same flow, *after* the dump: rows whose `decision` is empty get `decision='New'`
-   written **back to the curation base** (only `id` + `decision` are pushed). This flags
+   written **back to the curation base** (only `id` + `decision` are pushed, keyed by the
+   Airtable record id). This flags
    never-reviewed records for the curation team. The local dump keeps the original (empty) value.
 
 ### 6.2 Promote each table into the main base
@@ -255,8 +259,9 @@ drops `dummy` rows, and renames the Airtable record-id field to `key`):
 ¹ `ACCURATE_TYPES = (ROOFTOP, RANGE_INTERPOLATED, STREET_MID_POINT, ADDR_V1, ADDRESS_POINT, ADDRESS)`.
 
 **7.1.1 Phone normalization** (`transform_phone_numbers`): per newline-separated entry, keep
-digits; strip a `972` prefix (re-adding a leading `0`); format as `0X-XXX-XXXX` / `0XX-XXX-XXX` /
-`1-XXX-XXX`; anything else is kept as the raw original string.
+digits; strip a `972` prefix (re-adding a leading `0`); format as `0X-XXX-XXXX` (9 digits) /
+`0XX-XXX-XXXX` (10 digits) / `1-XXX-XXXXXX` (10 digits starting with `1`); anything else is kept
+as the raw original string.
 
 ### 7.2 `flat_branches_flow` → `data/flat_branches`
 
@@ -447,7 +452,7 @@ The universal "sync into Airtable" primitive:
 
 Loads the curation base `Manual Fixes` table (record id → `{field, current_value,
 fixed_value}`); if a referenced fix id isn't found it reloads once *without* the view filter,
-then raises `AssertionError`. `apply_manual_fixes()` — for each fix id in a row's `fixes` links:
+and raises `AssertionError` only if the fix is still missing after the reload. `apply_manual_fixes()` — for each fix id in a row's `fixes` links:
 if the row's current field value equals the fix's `current_value` (or `current_value == '*'`),
 set `row[field] = fixed_value` and mark the fix `Active`, else leave the row and mark the fix
 `Obsolete`. For `responses`/`situations` fields, values are compared as normalized sorted
@@ -547,10 +552,12 @@ but `Report.save()`'s CKAN dump is commented out, so reports are currently **dis
 
 ## 12. Verified dead-code inventory (do not port to the rewrite)
 
-Every item below was verified by searching the **entire plugin** for callers (other operators do
-import from `derive` — e.g. `geocode` uses `helpers.ACCURATE_TYPES`, `manual_data_entry` uses
-`autocomplete.VERIFY_ORG_ID`, `presets` uses `es_utils.dump_to_es_and_delete` — so those are
-*not* dead). Together with the commented-out code (see the rewrite-guidance note at the top),
+Every item below was verified by searching the **entire plugin** for callers. (No other operator
+imports from `derive` anymore — the former external consumers switched to the copies in
+`operators/publish/shared/`: `geocode` and `manual_data_entry` now take `ACCURATE_TYPES` /
+`VERIFY_ORG_ID` from there, and `presets` no longer uses `es_utils`. `helpers.ACCURATE_TYPES`,
+`autocomplete.VERIFY_ORG_ID` and `es_utils.dump_to_es_and_delete` are still *not* dead because
+`derive` itself uses them.) Together with the commented-out code (see the rewrite-guidance note at the top),
 none of the following should be carried over.
 
 ### 12.1 Live code whose output nobody consumes (runs on every production run)

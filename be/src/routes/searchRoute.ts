@@ -4,7 +4,7 @@ import searchCards from "../services/db/es/searchCards";
 
 export default asyncHandler(async (req: Request, res: Response) => {
     const {searchQuery, isFast, responseId, situationId,serviceName, by} = req.body;
-    const fixedSearchQuery = searchQuery.replace('_', " ")
+    const fixedSearchQuery = searchQuery.replace(/_/g, " ")
 
     const results = await searchCards({fixedSearchQuery, isFast, responseId, situationId,serviceName, by})
     // if (!results.length && isFast) sendEmailWhenNoResults({fixedSearchQuery, responseId, situationId, by});

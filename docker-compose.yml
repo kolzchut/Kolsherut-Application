@@ -1,6 +1,6 @@
 services:
   be:
-    image: kolsherut_be:0.0.0
+    image: kolsherut_be:1.0.0
     restart: unless-stopped
     ports:
       - 5000:5000
@@ -20,7 +20,7 @@ services:
     volumes:
       - ./volumes/be/logs:/app/logs
   fe:
-    image: kolsherut_fe:0.0.0
+    image: kolsherut_fe:1.0.0
     restart: unless-stopped
     ports:
       - 5173:4000
