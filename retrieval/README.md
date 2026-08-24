@@ -2,7 +2,6 @@
 
 A FastAPI microservice that embeds and searches the **service** documents in the Kolsherut Elasticsearch (`srm_services`). It is a pure hybrid retriever: it returns the matching services and their scores. There is **no reranker and no LLM answer generation**.
 
-
 ## Flow
 
 1. **Embed** — `POST /api/services/update` receives a `serviceId`, fetches the service from `srm_services`, builds Hebrew text from the configured fields, embeds it with the configured embedding provider (see "Embedding providers"), and stores it in a dedicated embeddings index (`srm__services_retrieval_embeddings`).
