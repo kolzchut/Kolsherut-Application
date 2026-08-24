@@ -94,4 +94,4 @@ does for the Back End.
   cluster's security setting.
 - **TLS / certificate errors** against an https cluster — set `ELASTICSEARCH_SSL_VERIFICATIONMODE=none`.
 - **Version mismatch warnings** — Kibana's major.minor must match the target Elasticsearch. Bump the
-  image tag in `docker-compose.yml` (and `../Dockerfile`) together if you upgrade.
+  base-image tag in [`Dockerfile`](Dockerfile) (and `../Dockerfile`) together if you upgrade.
