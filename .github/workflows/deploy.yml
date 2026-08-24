@@ -461,7 +461,11 @@ jobs:
   # Publishes per-service pass/fail + timestamp to .badges/ on the dev branch,
   # which feeds the shields.io status matrix in the root README. Services
   # skipped in this run keep their previous badge (last known status per
-  # environment). The badge commit carries [skip ci] so it triggers nothing.
+  # environment). Badge commits trigger nothing: .badges/ is outside this
+  # workflow's paths filter and in graphify's paths-ignore. Never put
+  # "[skip ci]" in these commit messages — squash-merging dev into main
+  # concatenates them into the merge commit, which then skips ALL workflows
+  # on main (this happened with PR #56).
   report-status:
     needs: [detect, build-fe, build-be, build-etl, build-retrieval, deploy-nonprod, deploy-production]
     if: >
@@ -535,7 +539,7 @@ jobs:
             exit 0
           fi
           git add .badges
-          git commit -m "Update deploy status badges [skip ci]"
+          git commit -m "Update deploy status badges"
           for i in 1 2 3 4 5; do
             if git push origin HEAD:dev; then
               exit 0
