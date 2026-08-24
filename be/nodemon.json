@@ -3,4 +3,3 @@
   "ext": "ts,json",
   "exec": "node --env-file=.env -r ts-node/register src/index.ts"
 }
-
