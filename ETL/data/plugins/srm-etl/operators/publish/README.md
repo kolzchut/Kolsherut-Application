@@ -66,11 +66,12 @@ run_publish_pipeline()
 Everything else - card identity (`card_id = hasher(branch_id, service_id)`), Cards lifecycle,
 autocomplete templates/scoring, ES revision swap - is preserved exactly.
 
-## Before the first run: freeze the ES mappings
+## The frozen ES mappings
 
 The index mappings are frozen JSON snapshots of the mappings the legacy generator produced
-(`es_publish/mappings/srm__*.json`). They are committed EMPTY and the operator refuses to
-publish until they are frozen from the live cluster:
+(`es_publish/mappings/srm__*.json`). They are committed already frozen; the operator refuses
+to publish while a mapping file is missing or empty, so a wrong mapping can never be created
+silently. To re-freeze from the live cluster:
 
 ```
 python -m verification.run_verification freeze_mappings
