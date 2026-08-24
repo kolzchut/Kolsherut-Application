@@ -7,9 +7,11 @@
 
 ### [Repo][GitHub]
 ### [Board][Board]
+### [Version Changes][Releases]
 
 [GitHub]: https://github.com/kolzchut/Kolsherut-Application
 [Board]: https://github.com/orgs/kolzchut/projects/8
+[Releases]: https://github.com/kolzchut/Kolsherut-Application/releases
 
 
 
