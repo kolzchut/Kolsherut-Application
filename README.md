@@ -18,6 +18,14 @@ Last known result per service and environment (updated by the `Deploy` workflow 
 [Board]: https://github.com/orgs/kolzchut/projects/8
 [Releases]: https://github.com/kolzchut/Kolsherut-Application/releases
 
+### Monitoring Versions
+
+Versions are monitored on the **[Releases page][Releases]** — every production version is a GitHub Release there:
+
+- Each release is one production deploy: its **tag** is the version (`vMAJOR.MINOR.PATCH`), its **title** is a one-line description of what shipped, and its notes list the notable changes. Publishing it deployed all services with `CODE_VERSION=<tag>` (see the [Deployment & Release Guide](#deployment--release-guide-for-all-team-members)).
+- The release marked **Latest** at the top is the version currently running in production; the list below it is the full version history, newest first — click a release to expand its notes.
+- Reading a version: a **MINOR** bump (`v1.17.0`) is a batch of new features, a **PATCH** bump (`v1.17.1`, `v1.17.2`) is fixes on top of the previous release (versioning rules in the guide below).
+
 
 
 ## Front End
@@ -198,7 +206,7 @@ Q: Can I edit a release note after publishing?
 A: Yes. Editing text doesn't redeploy. To redeploy you must create a new tag.
 
 Q: How do I know which image is live?  
-A: Check the deployment's image tag in AKS / ArgoCD, or the `CODE_VERSION` env on the production deployment.
+A: The release marked **Latest** on the [Releases page][Releases] is the current production version. To verify at the cluster level, check the deployment's image tag in AKS / ArgoCD, or the `CODE_VERSION` env on the production deployment.
 
 Q: I can't find the correct json config file, where is it?  
 A: FE config files are in `FE/public/configs/`; some rarely-changed data lives in `FE/src/assets/`. Full list in [FE/README.md](FE/README.md#configuration-files).
