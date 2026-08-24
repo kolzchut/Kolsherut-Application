@@ -1,5 +1,5 @@
 const { Cluster } = require('puppeteer-cluster');
-const { MAX_CONCURRENCY, LOCAL_BASE_URL, MAX_RETRIES } = require('../config.cjs');
+const { MAX_CONCURRENCY, LOCAL_BASE_URL, MAX_RETRIES, SSG_USER_AGENT } = require('../config.cjs');
 const { renderPage } = require('./browser.cjs');
 const { cleanHtmlContent } = require('../utils/html.cjs');
 const { savePage } = require('../utils/files.cjs');
@@ -38,12 +38,20 @@ async function taskHandler({ page, data }, stats, cluster) {
     const attempt = typeof data === 'string' ? 1 : data.attempt;
 
     const url = `${LOCAL_BASE_URL}${route}`;
-
     try {
         if (global.gc) { global.gc(); }
 
+        await page.setUserAgent(SSG_USER_AGENT);
+
         const rawHtml = await renderPage(page, url);
         const finalHtml = cleanHtmlContent(rawHtml);
+
+        if (!stats.firstHtmlPrinted) {
+            stats.firstHtmlPrinted = true;
+            console.log(`\n📄 --- First Generated HTML (${route}) ---\n`);
+            console.log(finalHtml);
+            console.log(`\n📄 --- End of First Generated HTML ---\n`);
+        }
 
         await savePage(route, finalHtml);
 

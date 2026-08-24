@@ -4,17 +4,22 @@ import logger from "../logger/logger";
 import {store} from "../../store/store";
 import {getIsLandingPage} from "../../store/general/general.selector";
 
+let isInitialized = false;
+
 const init = () => {
+    if (navigator.userAgent.includes("KolsherutBot")) return;
     const analyticsId = window.environment.analyticsId;
     ReactGA.initialize(analyticsId, {
         gtagOptions: {
             cookie_flags: "SameSite=None;Secure",
         }
     });
+    isInitialized = true;
     logger.log({ message: `Initializing Google Analytics on ${analyticsId}` });
 };
 
 const logEvent = ({ event, params }: LogEventArgs) => {
+    if (!isInitialized) return;
     ReactGA.event(event, {
         ...params
     });
@@ -35,6 +40,7 @@ const getIsLandingPageAsString = (): string => {
 }
 
 const onPageView = (page: string) => {
+    if (!isInitialized) return;
     const isLanding = getIsLandingPageAsString();
 
     ReactGA.send({

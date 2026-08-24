@@ -172,3 +172,32 @@ node_modules/
 /tars/
 
 ignore/
+
+
+/ETL/data/data
+/ETL/data/logs
+
+# Local ES replica credentials (see ES/reindex/.env.example)
+ES/reindex/.env
+
+# Kibana target/credentials (see ES/kibana/.env.example)
+ES/kibana/.env
+
+# One-shot migration verification reports (see ETL/data/plugins/srm-etl/verification)
+ETL/data/plugins/srm-etl/verification/reports/
+
+# Scratch artifacts the old dataflows pipelines (and their parity tests) write
+ETL/data/plugins/srm-etl/temp/
+ETL/data/plugins/srm-etl/.checkpoints/
+ETL/data/plugins/srm-etl/data/
+ETL/data/plugins/srm-etl/gacache/
+ETL/data/plugins/srm-etl/tests/parity/results
+.claude
+test-scripts/
+
+# The retrieval embedding model is tracked via Git LFS (see .gitattributes) so CI can
+# bake it into the image. Only its Hugging Face download cache is ignored.
+retrieval/artifacts/**/.cache/
+
+# Graphify knowledge graph output (built in CI, see README "Codebase Knowledge Graph")
+graphify-out/

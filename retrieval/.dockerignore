@@ -1,0 +1,20 @@
+# Local virtualenv - rebuilt inside the image
+venv/
+
+# Hugging Face download caches inside the model dirs (not needed at runtime)
+artifacts/**/.cache/
+
+# Reranker was removed in the retrieval-only refactor - never ship it in the image.
+artifacts/reranker-model/
+
+# Local secrets - env is injected at run time, never baked into the image
+.env
+
+# Python / tooling cruft
+__pycache__/
+*.pyc
+.git/
+.gitignore
+.pytest_cache/
+.mypy_cache/
+README.md

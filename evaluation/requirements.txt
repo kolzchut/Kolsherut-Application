@@ -1,0 +1,13 @@
+# HTTP client for calling the retrieval service.
+requests==2.32.3
+
+# .env overrides for vars.py (URLs, timeouts).
+python-dotenv==1.2.2
+
+# Headless browser used to render the staging site for ground truth.
+# After installing, fetch the browser binary once: python -m playwright install chromium
+playwright==1.49.1
+
+# Gemini SDK for the relevance judge's Batch API calls (`from google import genai`).
+# The judge passes GEMINI_JUDGE_API_KEY to it explicitly; set that in .env, never here.
+google-genai==2.14.0

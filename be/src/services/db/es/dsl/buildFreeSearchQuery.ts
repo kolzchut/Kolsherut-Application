@@ -1,6 +1,8 @@
 import vars from "../../../../vars";
 import { tokenizeSearch } from "../../../../utilities/tokenizeSearch";
 import { cardSearchSourceFields } from "../sourceFields/cardSearchSourceFields";
+import { freeSearchFields } from "./freeSearchFields";
+import { fuzzySearchFields } from "./fuzzySearchFields";
 
 export default (
   search: string,
@@ -17,7 +19,7 @@ export default (
   const size = options?.size ?? 1000;
   const from = options?.from ?? 0;
   const innerHitsSize = options?.innerHitsSize ?? 3000;
-  const minScore = options?.minScore ?? 25.0;
+  const minScore = options?.minScore ?? 12.0;
 
   const outerBool: any = {
     must: [
@@ -32,63 +34,24 @@ export default (
                       {
                         multi_match: {
                           query: trimmed,
-                          fields: [
-                            "address_parts.primary^1.0",
-                            "address_parts.secondary^1.0",
-                            "branch_address^1.0",
-                            "branch_city^1.0",
-                            "branch_description^1.0",
-                            "branch_description.hebrew^1.0",
-                            "branch_operating_unit^1.0",
-                            "branch_orig_address^1.0",
-                            "national_service_details^1.0",
-                            "national_service_details.hebrew^1.0",
-                            "organization_description^1.0",
-                            "organization_description.hebrew^1.0",
-                            "organization_kind^1.0",
-                            "organization_name_parts.primary^1.0",
-                            "organization_name_parts.secondary^1.0",
-                            "organization_purpose^1.0",
-                            "organization_purpose.hebrew^1.0",
-                            "service_details^1.0",
-                            "service_details.hebrew^1.0",
-                            "service_implements^1.0",
-                            "service_payment_details^1.0",
-                            "service_payment_details.hebrew^1.0",
-                            "branch_name^10.0",
-                            "branch_name.hebrew^10.0",
-                            "organization_name^10.0",
-                            "organization_name.hebrew^10.0",
-                            "organization_original_name^10.0",
-                            "organization_original_name.hebrew^10.0",
-                            "organization_resolved_name^10.0",
-                            "organization_resolved_name.hebrew^10.0",
-                            "organization_short_name^10.0",
-                            "organization_short_name.hebrew^10.0",
-                            "responses.name^10.0",
-                            "responses.name.hebrew^10.0",
-                            "responses.synonyms^10.0",
-                            "responses.synonyms.hebrew^10.0",
-                            "responses_parents.name^10.0",
-                            "responses_parents.name.hebrew^10.0",
-                            "responses_parents.synonyms^10.0",
-                            "responses_parents.synonyms.hebrew^10.0",
-                            "situations.name^10.0",
-                            "situations.name.hebrew^10.0",
-                            "situations.synonyms^10.0",
-                            "situations.synonyms.hebrew^10.0",
-                            "situations_parents.name^10.0",
-                            "situations_parents.name.hebrew^10.0",
-                            "situations_parents.synonyms^10.0",
-                            "situations_parents.synonyms.hebrew^10.0",
-                            "service_name^10.0",
-                            "service_name.hebrew^10.0",
-                            "service_description^3.0",
-                            "service_description.hebrew^3.0"
-                          ],
+                          fields: freeSearchFields,
                           type: "cross_fields",
                           operator: "AND",
-                          tie_breaker: 0.3
+                          tie_breaker: 0.3,
+                          boost: 2.0
+                        }
+                      },
+                      {
+                        multi_match: {
+                          query: trimmed,
+                          fields: fuzzySearchFields,
+                          type: "best_fields",
+                          operator: "AND",
+                          fuzziness: "AUTO",
+                          prefix_length: 1,
+                          max_expansions: 30,
+                          tie_breaker: 0.3,
+                          boost: 1.0
                         }
                       },
                       ...(termsArray.length
@@ -137,56 +100,6 @@ export default (
         bool: outerBool
       },
       min_score: minScore,
-      aggregations: {
-        collapse_key: {
-          terms: {
-            field: "collapse_key",
-            size: 20000,
-            order: [{ _count: "desc" }, { _key: "asc" }]
-          }
-        }
-      },
-      highlight: {
-        highlight_query: {
-          multi_match: {
-            query: trimmed,
-            fields: [
-              "branch_address^1.0",
-              "branch_operating_unit^1.0",
-              "organization_name^1.0",
-              "organization_purpose^1.0",
-              "organization_purpose.hebrew^1.0",
-              "organization_short_name^1.0",
-              "responses.name.hebrew^1.0",
-              "service_description^1.0",
-              "service_description.hebrew^1.0",
-              "service_details^1.0",
-              "service_details.hebrew^1.0",
-              "service_name^1.0",
-              "service_name.hebrew^1.0",
-              "situations.name.hebrew^1.0"
-            ],
-            type: "best_fields",
-            operator: "OR"
-          }
-        },
-        fields: {
-          service_name: { number_of_fragments: 0 },
-          "service_name.hebrew": { number_of_fragments: 0 },
-          organization_name: { number_of_fragments: 0 },
-          organization_short_name: { number_of_fragments: 0 },
-          branch_operating_unit: { number_of_fragments: 0 },
-          "situations.name.hebrew": { number_of_fragments: 0 },
-          "responses.name.hebrew": { number_of_fragments: 0 },
-          "service_description.hebrew": {},
-          service_description: {},
-          "organization_purpose.hebrew": {},
-          organization_purpose: {},
-          "service_details.hebrew": {},
-          service_details: {},
-          branch_address: {}
-        }
-      },
       collapse: {
         field: "service_id",
         inner_hits: {

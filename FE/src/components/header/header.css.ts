@@ -4,6 +4,9 @@ import {
     primaryTextColorOne
 } from "../../services/theme";
 import IDynamicThemeApp from "../../types/dynamicThemeApp.ts";
+import {widthOfHeaderCollapse} from "../../constants/mediaQueryProps";
+
+const headerCollapseMediaQuery = `@media (max-width: ${widthOfHeaderCollapse}px)`;
 
 export default createUseStyles((theme: IDynamicThemeApp) => ({
     root: {
@@ -27,6 +30,19 @@ export default createUseStyles((theme: IDynamicThemeApp) => ({
         width: 'auto',
         '&:hover': {
             cursor: 'pointer',
+        },
+        [headerCollapseMediaQuery]: {
+            display: 'none',
+        }
+    },
+    hamburgerIcon: {
+        display: 'none',
+        [headerCollapseMediaQuery]: {
+            display: 'block',
+            flexShrink: 0,
+            height: 30,
+            width: 30,
+            cursor: 'pointer',
         }
     },
     linksAndAcc: {
@@ -45,9 +61,13 @@ export default createUseStyles((theme: IDynamicThemeApp) => ({
         justifyContent: 'space-between',
         flex:8,
         maxWidth: 500,
+        [headerCollapseMediaQuery]: {
+            display: 'none',
+        }
     },
     link: {
         lineHeight: 4,
+        whiteSpace: 'nowrap',
         fontSize: theme?.accessibilityActive ? 24 : 20,
         textDecoration: "none",
         fontWeight: 300,
@@ -57,6 +77,20 @@ export default createUseStyles((theme: IDynamicThemeApp) => ({
             fontWeight: 400,
             textDecoration: 'underline',
             cursor: 'pointer',
+        }
+    },
+    // Marks the link to the page you are already on. Declared after `link` so it wins the
+    // textDecoration:none there, and carries no weight/size change so the row never reflows.
+    activeLink: {
+        textDecoration: 'underline',
+        textDecorationThickness: '2px',
+        textUnderlineOffset: '6px',
+    },
+    // Sits next to the capped links group rather than inside it, so it never squeezes the links.
+    homeLink: {
+        flexShrink: 0,
+        [headerCollapseMediaQuery]: {
+            display: 'none',
         }
     },
     button: {

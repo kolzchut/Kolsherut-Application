@@ -17,7 +17,7 @@ const ControlledModal = () => {
 
     const onClose = () => {
         dispatch(setModal(null))
-        if (page === "sitemap")
+        if (page === "map")
             dispatch(setPage(null))
     };
     const {modalRef} = useModalAccessibility(!!modal, onClose);

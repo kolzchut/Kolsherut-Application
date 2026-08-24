@@ -13,21 +13,52 @@
       {
         "situation_id": "human_situations:deprivation:low_income",
         "response_id": "human_services:legal:advocacy_legal_aid:understand_government_programs",
-        "title": "הכנסה נמוכה וקשיים כלכליים ",
+        "title": "הכנסה נמוכה וקשיים כלכליים",
         "query": "מיצוי_זכויות_עבור_בעלי_הכנסה_נמוכה"
       },
           {
         "situation_id": null,
         "response_id": "human_services:legal:advocacy_legal_aid",
-        "title": "סיוע משפטי ",
+        "title": "סיוע משפטי",
         "query": "סיוע_משפטי"
       }
     ]
   },
   {
-    "group": "מצב החירום",
+    "group": "הגיל הרך",
+    "situation_id": "human_situations:age_group:infants",
+    "group_link": "לכל שירותי הגיל הרך",
+    "labels": [
+      {
+        "situation_id": "human_situations:age_group:infants",
+        "response_id": "human_services:education:skills_training:parenting_education",
+        "title": "הדרכת הורים",
+        "query": "הדרכת_הורים_עבור_הגיל_הרך"
+      },
+      {
+        "situation_id": null,
+        "response_id": "human_services:place:health:clinic:well_baby_clinic",
+        "title": "טיפת חלב",
+        "query": "טיפת_חלב"
+      },
+      {
+        "response_id": "human_services:education:afterschool_care",
+        "title": "צהרונים",
+        "situation_id": null,
+        "query": "צהרונים"
+      },
+      {
+        "response_id": "human_services:care:daytime_care",
+        "title": "משפחתונים",
+        "situation_id": "human_situations:age_group:infants",
+        "query": "מסגרת_יום_עבור_הגיל_הרך"
+      }
+    ]
+  },
+  {
+    "group": "נפגעים ומשפחותיהם",
     "response_id": "human_services:internal_emergency_services",
-    "group_link": "לכל השירותים למצב החירום",
+    "group_link": "לכל השירותים לנפגעים ומשפחותיהם",
     "labels": [
       {
         "situation_id": "human_situations:armed_forces:bereaved_families",
@@ -145,6 +176,12 @@
         "response_id": "human_services:work",
         "title": "תעסוקה",
         "query": "עבודה_עבור_מתמודדי_נפש"
+      },
+      {
+        "situation_id": "human_situations:mental_health:mental_conditions_and_diseases:ptsd",
+        "response_id": null,
+        "title": "מתמודדים עם פוסט טראומה (PTSD)",
+        "query": "בעלי_הפרעת_דחק_פוסט_טראומתית_PTSD"
       }
     ]
   },
@@ -170,6 +207,12 @@
         "response_id": "human_services:housing",
         "title": "דיור",
         "query": "דיור_עבור_אזרחים_ותיקים"
+      },
+     {
+        "situation_id": "human_situations:benefit_holders:holocaust_survivors",
+        "title": "ניצולי שואה",
+        "response_id": null,
+        "query": "ניצולי_שואה"
       }
     ]
   },
@@ -252,17 +295,17 @@
   {
     "group": "אוכלוסיות נוספות",
     "labels": [
-      {
-        "situation_id": "human_situations:benefit_holders:holocaust_survivors",
-        "title": "ניצולי שואה",
-        "response_id": null,
-        "query": "ניצולי_שואה"
-      },
-      {
+       {
         "situation_id": "human_situations:survivors:prostition_survivors",
         "title": "שורדות זנות",
         "response_id": null,
         "query": "קורבנות_זנות"
+      },
+       {
+        "situation_id": "human_situations:deprivation:at_risk:at_risk_teens",
+        "title": "נוער בסיכון",
+        "response_id": null,
+        "query": "נערים_בסיכון"
       },
       {
         "situation_id": "human_situations:disability:autistic_spectrum",

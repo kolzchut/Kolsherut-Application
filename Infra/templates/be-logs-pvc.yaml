@@ -1,0 +1,20 @@
+{{- $logs := .Values.backend.logs | default dict -}}
+{{- $logsPersistence := $logs.persistence | default dict -}}
+{{- if and ($logs.enabled | default false) ($logsPersistence.enabled | default false) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "backend.fullname" . }}-be-logs
+  labels:
+    component: backend
+    {{- include "backend.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  {{- if $logsPersistence.storageClass }}
+  storageClassName: {{ $logsPersistence.storageClass | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ $logsPersistence.size | default "4Gi" | quote }}
+{{- end }}

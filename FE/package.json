@@ -18,7 +18,7 @@
     "dev": "vite",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prebuild": "npm run staticwebapp:generate && npm run sitemap:homepage && npm run sitemap:main && npm run synonyms:update",
+    "prebuild": "npm run sitemap:staticpages && npm run sitemap:homepage && npm run sitemap:main && npm run synonyms:update",
     "build": "vite build",
     "postbuild": "node scripts/postbuild.cjs",
     "ssg:generate": "node scripts/ssg-crawler/index.cjs",
@@ -48,10 +48,10 @@
     "tar:local": "npm run tar --env=local",
     "tar:stage": "npm run tar --env=stage",
     "tar:production": "npm run tar --env=production",
+    "sitemap:staticpages": "node scripts/generateStaticPagesSitemap.cjs",
     "sitemap:homepage": "node scripts/generateHomepageSitemap.cjs",
     "sitemap:main": "node scripts/generateMainSitemap.cjs",
-    "synonyms:update": "node scripts/updateSynonyms.cjs",
-    "staticwebapp:generate": "node scripts/generateStaticWebAppConfig.cjs"
+    "synonyms:update": "node scripts/updateSynonyms.cjs"
   },
   "dependencies": {
     "@fontsource/poppins": "^5.2.5",
@@ -61,6 +61,7 @@
     "cross-env": "^10.0.0",
     "dompurify": "^3.3.0",
     "http-proxy-middleware": "^3.0.5",
+    "js-yaml": "^4.1.1",
     "ol": "^10.6.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -70,6 +71,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.16.5",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",

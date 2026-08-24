@@ -27,7 +27,7 @@ const ResponseSection = () => {
             <div className={classes.responseOptionsContainer}>
                 {responseOptions.map(([title, responses], index) => (
                     <div key={index} className={classes.sectionDiv}>
-                        <h3 className={classes.title} onClick={() => onClick(responses)}>{title}</h3>
+                        <span className={classes.title} role="button" tabIndex={0} onClick={() => onClick(responses)}>{title}</span>
                         {responses.map((response) => (
                             <ResponseSectionButton isSelected={response.selected} response={response}
                                                    key={response.id}/>

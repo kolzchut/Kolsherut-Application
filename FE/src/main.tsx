@@ -14,6 +14,8 @@ const main = (
     </Provider>
 );
 
+
+
 initialize(main).catch(error => {
     console.error(`Initialization failed: ${error}`);
 });

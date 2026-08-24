@@ -1,0 +1,100 @@
+{
+  "defaults": {
+    "country": "ישראל",
+    "resultsDescriptionPrefix": "שירותים חברתיים:",
+    "searchResultsFallback": "תוצאות חיפוש"
+  },
+  "home": [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "כל שירות",
+      "alternateName": "Kol Sherut",
+      "url": "https://www.kolsherut.org.il/",
+      "description": "כל-שירות הוא מאגר מידע פתוח על שירותים ציבוריים בישראל.",
+      "inLanguage": "he",
+      "publisher": {
+        "@type": "Organization",
+        "name": "כל זכות",
+        "url": "https://www.kolzchut.org.il/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.kolsherut.org.il/icons/logo.svg"
+        }
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://www.kolsherut.org.il/?sq={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "כל זכות",
+      "alternateName": "Kol Zchut",
+      "url": "https://www.kolzchut.org.il/",
+      "logo": "https://www.kolsherut.org.il/icons/logo.svg",
+      "description": "כל-שירות הוא מאגר מידע פתוח על שירותים ציבוריים בישראל, מופעל ע״י כל זכות בע״מ (חל״צ).",
+      "sameAs": [],
+      "funder": [
+        {
+          "@type": "GovernmentOrganization",
+          "name": "משרד המשפטים",
+          "url": "https://www.gov.il/he/departments/ministry_of_justice/govil-landing-page"
+        },
+        {
+          "@type": "GovernmentOrganization",
+          "name": "מערך הדיגיטל הלאומי",
+          "url": "https://www.gov.il/he/departments/national-digital-agency/govil-landing-page"
+        }
+      ]
+    }
+  ],
+  "card": [
+    {
+      "@context": "https://schema.org",
+      "@type": "GovernmentService",
+      "name": "%%serviceName%%",
+      "description": "%%serviceDescription%%",
+      "url": "%%cardUrl%%",
+      "provider": {
+        "@type": "Organization",
+        "name": "%%organizationName%%"
+      },
+      "areaServed": {
+        "@type": "AdministrativeArea",
+        "name": "%%areaServed%%"
+      },
+      "serviceType": "%%responseNames%%",
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "%%situationNames%%"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": "%%breadcrumbs%%"
+    }
+  ],
+  "results": [
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "%%search%%",
+      "description": "%%resultsDescription%%",
+      "url": "%%currentUrl%%",
+      "numberOfItems": "%%resultsCount%%",
+      "itemListElement": "%%itemListElements%%"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": "%%breadcrumbs%%"
+    }
+  ]
+}

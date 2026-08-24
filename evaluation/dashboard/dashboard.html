@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kolsherut Retrieval Evaluation</title>
+  <style>
+    :root {
+      --bg: #0f1420; --panel: #182033; --border: #2a3450; --text: #e7ecf5;
+      --muted: #93a0bd; --accent: #5b8cff;
+    }
+    @media (prefers-color-scheme: light) {
+      :root { --bg: #f4f6fb; --panel: #ffffff; --border: #dfe4ee; --text: #1a2233; --muted: #5c6b88; --accent: #2f6bff; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; }
+    h1 { font-size: 20px; margin: 0 0 4px; }
+    .sub { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+    .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+      padding: 20px; margin-bottom: 22px; }
+    .headline { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+    .score { font-size: 54px; font-weight: 700; line-height: 1; }
+    .score small { display: block; font-size: 13px; font-weight: 400; color: var(--muted); margin-top: 6px; }
+    .chips { display: flex; gap: 10px; flex-wrap: wrap; }
+    .chip { background: var(--bg); border: 1px solid var(--border); border-radius: 999px;
+      padding: 7px 13px; font-size: 12px; color: var(--muted); }
+    .chip b { color: var(--text); }
+    h2 { font-size: 15px; margin: 0 0 14px; }
+    .scroll { overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; font-size: 13px; }
+    th, td { padding: 8px 10px; text-align: right; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    th:first-child, td:first-child { text-align: left; }
+    thead th { color: var(--muted); font-weight: 600; cursor: default; }
+    .drill thead th { cursor: pointer; user-select: none; }
+    .cell { color: #08110c; font-weight: 600; border-radius: 6px; }
+    .empty { color: var(--muted); }
+    /* Diff cells collapse to a count: the unexpected-name lists run to hundreds of services,
+       so an expanded cell scrolls inside itself instead of blowing out the column. */
+    .diff summary { cursor: pointer; }
+    /* An explicit width, not just a max: the cell is only as wide as its collapsed count, and
+       the names would otherwise wrap to shreds inside it. */
+    .diff-names { width: 22rem; max-height: 12rem; overflow-y: auto; margin-top: 6px;
+      white-space: normal; font-size: 12px; color: var(--muted); }
+    .diff-names div { padding: 2px 0; border-bottom: 1px solid var(--border); }
+    svg { width: 100%; height: 320px; display: block; }
+    .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; font-size: 12px; color: var(--muted); }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+    .error { color: #ff6b6b; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Kolsherut Retrieval Evaluation</h1>
+    <div class="sub">Retrieval ranking vs. BE-derived ground truth &middot; metrics at k = 3, 5, 10, 25, 50 &middot; plus set-level metrics over the returned list and count parity</div>
+    <div id="root"><div class="panel">Loading results&hellip;</div></div>
+  </div>
+
+  <script>
+    let INLINE_DATA;
+    try { INLINE_DATA = __SUMMARY_JSON__; } catch (e) { INLINE_DATA = null; }
+
+    const CHART_COLORS = ['#5b8cff', '#37c98b', '#ffb84d', '#ff6b8b', '#b98cff', '#4dd0e1', '#f06292'];
+
+    const loadData = async () => {
+      if (INLINE_DATA) return INLINE_DATA;
+      const response = await fetch('../results/summary.json');
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      return response.json();
+    };
+
+    const heatColor = (value) => 'hsl(' + Math.round(value * 120) + ', 65%, ' + (62 - value * 6) + '%)';
+    const fmt = (value) => value.toFixed(4);
+    const escapeHtml = (text) => String(text).replace(/[&<>"]/g, (character) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[character]);
+
+    const renderHeadline = (data) => {
+      const meta = data.meta;
+      const counts = data.count_stats || {};
+      const chips = [
+        ['queries', meta.num_queries], ['evaluated', meta.num_evaluated],
+        ['skipped (unsupported URL)', meta.num_skipped_unsupported],
+        ['skipped (empty GT)', meta.num_skipped_empty_gt],
+        ['avg GT size', meta.avg_ground_truth_size.toFixed(2)],
+        ['median returned', (counts.median_returned_count ?? 0).toFixed(1)],
+        ['median GT', (counts.median_ground_truth_count ?? 0).toFixed(1)],
+        ['count parity', (counts.mean_count_parity ?? 0).toFixed(3)],
+      ].map((entry) => '<div class="chip"><b>' + entry[1] + '</b> ' + entry[0] + '</div>').join('');
+      return '<div class="panel headline"><div class="score">' + fmt(data.overall_score) +
+        '<small>overall score</small></div><div class="chips">' + chips + '</div></div>';
+    };
+
+    const renderMatrix = (data) => {
+      const head = '<th>Metric</th>' + data.k_values.map((k) => '<th>@' + k + '</th>').join('');
+      const rows = data.metric_keys.map((key) => {
+        const cells = data.k_values.map((k) => {
+          const value = data.metrics[k][key];
+          return '<td class="cell" style="background:' + heatColor(value) + '">' + fmt(value) + '</td>';
+        }).join('');
+        return '<tr><td>' + data.metric_labels[key] + '</td>' + cells + '</tr>';
+      }).join('');
+      return '<div class="panel"><h2>Metrics &times; k</h2><div class="scroll"><table><thead><tr>' +
+        head + '</tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+    };
+
+    // Two tables: the set metrics are all in [0,1] so they get the same heat scale as the
+    // matrix; the count stats are unbounded ratios and counts, so they stay plain - heatColor
+    // maps 0 to red and 1 to green, which is meaningless for "median returned = 12".
+    const renderValueTable = (title, keys, values, labels, heat) => {
+      const rows = keys.filter((key) => key in values).map((key) => {
+        const value = values[key];
+        const cell = heat
+          ? '<td class="cell" style="background:' + heatColor(value) + '">' + fmt(value) + '</td>'
+          : '<td>' + fmt(value) + '</td>';
+        return '<tr><td>' + labels[key] + '</td>' + cell + '</tr>';
+      }).join('');
+      return '<h2>' + title + '</h2><div class="scroll"><table><thead><tr><th>Metric</th>' +
+        '<th>Value</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+    };
+
+    const renderSetMetrics = (data) => {
+      if (!data.set_metrics) return '';
+      return '<div class="panel">' +
+        renderValueTable('Set metrics over the returned list', data.set_metric_keys || [],
+                         data.set_metrics, data.set_metric_labels || {}, true) +
+        '<div style="height:18px"></div>' +
+        renderValueTable('Count parity', data.count_stat_keys || [],
+                         data.count_stats || {}, data.count_stat_labels || {}, false) +
+        '</div>';
+    };
+
+    // Relevance panel. Rendered ONLY when summary.json carries a relevance block, i.e. only for a
+    // run that judged: an un-judged run has no block, this returns '', and the dashboard is still
+    // complete. Keys are read off the block itself and prettified, so nothing here can drift from
+    // the names the aggregation emits.
+    const prettifyEntries = (values) =>
+      Object.entries(values || {}).map(([key, value]) => [key.replace(/_/g, ' '), value]);
+    const relevanceCell = (value) =>
+      typeof value === 'number' && !Number.isInteger(value) ? fmt(value) : String(value);
+
+    const renderRelevanceRows = (entries) => entries.map((entry) =>
+      '<tr><td>' + escapeHtml(entry[0]) + '</td><td>' +
+      escapeHtml(relevanceCell(entry[1])) + '</td></tr>').join('');
+
+    const renderRelevanceTable = (title, entries) =>
+      '<h2>' + title + '</h2><div class="scroll"><table><thead><tr><th>Statistic</th>' +
+      '<th>Value</th></tr></thead><tbody>' + renderRelevanceRows(entries) + '</tbody></table></div>';
+
+    // One row per (side, bucket): unclear and unjudged stay separate buckets here too, and both the
+    // sides and the buckets come from the block rather than from a list this file keeps. The side
+    // keeps its underscores, because it is the same literal service_diff.csv joins on.
+    const flattenVerdictCounts = (verdictCounts) =>
+      Object.entries(verdictCounts || {}).flatMap(([side, counts]) =>
+        Object.entries(counts).map(([bucket, count]) => [side + ' / ' + bucket, count]));
+
+    const renderRelevance = (data) => {
+      const relevance = data.relevance;
+      if (!relevance) return '';
+      return '<div class="panel">' +
+        renderRelevanceTable('Verdict counts by side', flattenVerdictCounts(relevance.verdict_counts)) +
+        '<div style="height:18px"></div>' +
+        renderRelevanceTable('Relevance rates (unclear and unjudged excluded from denominators)',
+                             prettifyEntries(relevance.rates)) +
+        '<div style="height:18px"></div>' +
+        renderRelevanceTable('Adjusted set metrics', prettifyEntries(relevance.adjusted_set_metrics)) +
+        '</div>';
+    };
+
+    const buildPolyline = (data, key, colorIndex, width, height, padding) => {
+      const stepX = (width - padding * 2) / Math.max(data.k_values.length - 1, 1);
+      const points = data.k_values.map((k, i) => {
+        const value = data.metrics[k][key];
+        const x = padding + i * stepX;
+        const y = height - padding - value * (height - padding * 2);
+        return x.toFixed(1) + ',' + y.toFixed(1);
+      }).join(' ');
+      return '<polyline fill="none" stroke="' + CHART_COLORS[colorIndex % CHART_COLORS.length] +
+        '" stroke-width="2" points="' + points + '" />';
+    };
+
+    const renderChart = (data) => {
+      const width = 1040, height = 320, padding = 34;
+      const axisY = ['0', '0.25', '0.5', '0.75', '1'].map((label, i) => {
+        const y = height - padding - (i / 4) * (height - padding * 2);
+        return '<line x1="' + padding + '" y1="' + y + '" x2="' + (width - padding) + '" y2="' + y +
+          '" stroke="var(--border)" /><text x="6" y="' + (y + 4) + '" fill="var(--muted)" font-size="11">' + label + '</text>';
+      }).join('');
+      const xLabels = data.k_values.map((k, i) => {
+        const stepX = (width - padding * 2) / Math.max(data.k_values.length - 1, 1);
+        const x = padding + i * stepX;
+        return '<text x="' + x + '" y="' + (height - 10) + '" fill="var(--muted)" font-size="11" text-anchor="middle">@' + k + '</text>';
+      }).join('');
+      const lines = data.metric_keys.map((key, i) => buildPolyline(data, key, i, width, height, padding)).join('');
+      const legend = data.metric_keys.map((key, i) => '<span><i class="swatch" style="background:' +
+        CHART_COLORS[i % CHART_COLORS.length] + '"></i>' + data.metric_labels[key] + '</span>').join('');
+      return '<div class="panel"><h2>Metric curves across k</h2><div class="scroll"><svg viewBox="0 0 ' +
+        width + ' ' + height + '" preserveAspectRatio="xMidYMid meet">' + axisY + xLabels + lines +
+        '</svg></div><div class="legend">' + legend + '</div></div>';
+    };
+
+    // Collapsed it shows the count; expanded, every name. data-sort carries the count so the
+    // numeric sort never parses the name text that follows it in the cell.
+    const renderDiffCell = (names, skipped) => {
+      if (skipped) return '<td class="diff"></td>';
+      const list = names || [];
+      if (!list.length) return '<td class="diff empty" data-sort="0">0</td>';
+      const items = list.map((name) => '<div>' + escapeHtml(name) + '</div>').join('');
+      return '<td class="diff" data-sort="' + list.length + '"><details><summary>' + list.length +
+        '</summary><div class="diff-names">' + items + '</div></details></td>';
+    };
+
+    const renderDrill = (data) => {
+      const setKeys = data.set_metric_keys || [];
+      const setLabels = data.set_metric_labels || {};
+      const head = '<th data-col="query">query</th><th data-col="skip">skipped</th>' +
+        '<th data-col="gt">ground truth</th><th data-col="returned">returned</th>' +
+        '<th data-col="missed">missed GT</th><th data-col="unexpected">unexpected</th>' +
+        setKeys.map((key) => '<th data-col="' + key + '">' + setLabels[key] + '</th>').join('') +
+        data.k_values.map((k) => '<th data-col="k' + k + '">hits@' + k + '</th>').join('');
+      const body = data.per_query.map((entry) => {
+        const skipped = !!entry.skip_reason;
+        const hits = data.k_values.map((k) =>
+          '<td>' + (skipped ? '' : entry.hits_by_k[k]) + '</td>').join('');
+        const gt = entry.empty_ground_truth ? '<td class="empty">0</td>' : '<td>' + entry.ground_truth_size + '</td>';
+        const returned = '<td>' + (entry.returned_count == null ? '' : entry.returned_count) + '</td>';
+        const diff = renderDiffCell(entry.missed_ground_truth_names, skipped) +
+          renderDiffCell(entry.unexpected_retrieved_names, skipped);
+        const setCells = setKeys.map((key) => {
+          const value = (entry.set_metrics || {})[key];
+          return '<td>' + (value == null ? '' : value.toFixed(3)) + '</td>';
+        }).join('');
+        const reason = '<td class="empty">' + (entry.skip_reason || '') + '</td>';
+        return '<tr><td>' + entry.query + '</td>' + reason + gt + returned + diff + setCells + hits + '</tr>';
+      }).join('');
+      return '<div class="panel"><h2>Per-query drill-down</h2><div class="scroll"><table class="drill"><thead><tr>' +
+        head + '</tr></thead><tbody>' + body + '</tbody></table></div></div>';
+    };
+
+    const enableSorting = () => {
+      document.querySelectorAll('.drill thead th').forEach((header, columnIndex) => {
+        header.addEventListener('click', () => {
+          const body = header.closest('table').querySelector('tbody');
+          const rows = Array.from(body.querySelectorAll('tr'));
+          const numeric = !header.matches('[data-col="query"], [data-col="skip"]');
+          // data-sort wins where the visible text is not the sort key (the diff cells hold a
+          // count followed by the name list).
+          const sortKey = (cell) => cell.dataset.sort ?? cell.textContent;
+          rows.sort((a, b) => {
+            const left = sortKey(a.children[columnIndex]), right = sortKey(b.children[columnIndex]);
+            return numeric ? (parseFloat(right) - parseFloat(left)) : left.localeCompare(right);
+          });
+          rows.forEach((row) => body.appendChild(row));
+        });
+      });
+    };
+
+    const render = (data) => {
+      document.getElementById('root').innerHTML =
+        renderHeadline(data) + renderMatrix(data) + renderSetMetrics(data) +
+        renderRelevance(data) + renderChart(data) + renderDrill(data);
+      enableSorting();
+    };
+
+    loadData().then(render).catch((error) => {
+      document.getElementById('root').innerHTML =
+        '<div class="panel error">Could not load results: ' + error.message +
+        '. Serve this folder (e.g. <code>python -m http.server</code>) or open results/report.html.</div>';
+    });
+  </script>
+</body>
+</html>

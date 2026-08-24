@@ -1,0 +1,402 @@
+{
+  "properties": {
+    "address_parts": {
+      "dynamic": "false",
+      "properties": {
+        "primary": {
+          "type": "text"
+        },
+        "secondary": {
+          "type": "text"
+        }
+      }
+    },
+    "airtable_last_modified": {
+      "format": "strict_date_optional_time",
+      "ignore_malformed": true,
+      "type": "date"
+    },
+    "branch_address": {
+      "type": "text"
+    },
+    "branch_city": {
+      "type": "text"
+    },
+    "branch_description": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "branch_email_address": {
+      "type": "text"
+    },
+    "branch_geometry": {
+      "ignore_malformed": true,
+      "type": "geo_point"
+    },
+    "branch_id": {
+      "type": "keyword"
+    },
+    "branch_key": {
+      "type": "text"
+    },
+    "branch_location_accurate": {
+      "type": "boolean"
+    },
+    "branch_name": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "branch_operating_unit": {
+      "type": "text"
+    },
+    "branch_orig_address": {
+      "type": "text"
+    },
+    "branch_phone_numbers": {
+      "type": "text"
+    },
+    "branch_urls": {
+      "dynamic": "false",
+      "enabled": false,
+      "type": "object"
+    },
+    "card_id": {
+      "type": "keyword"
+    },
+    "collapse_key": {
+      "type": "keyword"
+    },
+    "coords": {
+      "type": "keyword"
+    },
+    "data_sources": {
+      "type": "text"
+    },
+    "national_service": {
+      "type": "boolean"
+    },
+    "national_service_details": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "organization_branch_count": {
+      "ignore_malformed": true,
+      "type": "long"
+    },
+    "organization_description": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "organization_email_address": {
+      "type": "text"
+    },
+    "organization_id": {
+      "type": "keyword"
+    },
+    "organization_key": {
+      "type": "text"
+    },
+    "organization_kind": {
+      "type": "text"
+    },
+    "organization_name": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "organization_name_parts": {
+      "dynamic": "false",
+      "properties": {
+        "primary": {
+          "type": "text"
+        },
+        "secondary": {
+          "type": "text"
+        }
+      }
+    },
+    "organization_original_name": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "organization_phone_numbers": {
+      "type": "text"
+    },
+    "organization_purpose": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "organization_resolved_name": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "keyword"
+    },
+    "organization_short_name": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "organization_urls": {
+      "dynamic": "false",
+      "enabled": false,
+      "type": "object"
+    },
+    "point_id": {
+      "type": "keyword"
+    },
+    "possible_autocomplete": {
+      "type": "keyword"
+    },
+    "response_categories": {
+      "type": "keyword"
+    },
+    "response_category": {
+      "type": "keyword"
+    },
+    "response_ids": {
+      "type": "keyword"
+    },
+    "response_ids_parents": {
+      "type": "keyword"
+    },
+    "responses": {
+      "dynamic": "false",
+      "properties": {
+        "id": {
+          "type": "keyword"
+        },
+        "name": {
+          "fields": {
+            "hebrew": {
+              "analyzer": "hebrew",
+              "type": "text"
+            }
+          },
+          "type": "text"
+        },
+        "synonyms": {
+          "fields": {
+            "hebrew": {
+              "analyzer": "hebrew",
+              "type": "text"
+            }
+          },
+          "type": "text"
+        }
+      }
+    },
+    "responses_parents": {
+      "dynamic": "false",
+      "properties": {
+        "id": {
+          "type": "keyword"
+        },
+        "name": {
+          "fields": {
+            "hebrew": {
+              "analyzer": "hebrew",
+              "type": "text"
+            }
+          },
+          "type": "text"
+        },
+        "synonyms": {
+          "fields": {
+            "hebrew": {
+              "analyzer": "hebrew",
+              "type": "text"
+            }
+          },
+          "type": "text"
+        }
+      }
+    },
+    "revision": {
+      "type": "keyword"
+    },
+    "rs_score": {
+      "ignore_malformed": true,
+      "scaling_factor": 100.0,
+      "type": "scaled_float"
+    },
+    "score": {
+      "ignore_malformed": true,
+      "scaling_factor": 100.0,
+      "type": "scaled_float"
+    },
+    "service_boost": {
+      "ignore_malformed": true,
+      "scaling_factor": 100.0,
+      "type": "scaled_float"
+    },
+    "service_description": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "service_details": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "service_email_address": {
+      "type": "text"
+    },
+    "service_id": {
+      "type": "keyword"
+    },
+    "service_implements": {
+      "type": "text"
+    },
+    "service_key": {
+      "type": "text"
+    },
+    "service_last_modified": {
+      "format": "yyyy-MM-dd'T'HH:mm:ss",
+      "ignore_malformed": true,
+      "type": "date"
+    },
+    "service_name": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "service_payment_details": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "service_payment_required": {
+      "type": "text"
+    },
+    "service_phone_numbers": {
+      "type": "text"
+    },
+    "service_urls": {
+      "dynamic": "false",
+      "enabled": false,
+      "type": "object"
+    },
+    "situation_ids": {
+      "type": "keyword"
+    },
+    "situation_ids_parents": {
+      "type": "keyword"
+    },
+    "situation_scores": {
+      "ignore_malformed": true,
+      "scaling_factor": 100.0,
+      "type": "scaled_float"
+    },
+    "situations": {
+      "dynamic": "false",
+      "properties": {
+        "id": {
+          "type": "keyword"
+        },
+        "name": {
+          "fields": {
+            "hebrew": {
+              "analyzer": "hebrew",
+              "type": "text"
+            }
+          },
+          "type": "text"
+        },
+        "synonyms": {
+          "fields": {
+            "hebrew": {
+              "analyzer": "hebrew",
+              "type": "text"
+            }
+          },
+          "type": "text"
+        }
+      }
+    },
+    "situations_parents": {
+      "dynamic": "false",
+      "properties": {
+        "id": {
+          "type": "keyword"
+        },
+        "name": {
+          "fields": {
+            "hebrew": {
+              "analyzer": "hebrew",
+              "type": "text"
+            }
+          },
+          "type": "text"
+        },
+        "synonyms": {
+          "fields": {
+            "hebrew": {
+              "analyzer": "hebrew",
+              "type": "text"
+            }
+          },
+          "type": "text"
+        }
+      }
+    }
+  }
+}

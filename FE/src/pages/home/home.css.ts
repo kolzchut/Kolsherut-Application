@@ -22,7 +22,12 @@ export default createUseStyles({
         alignItems: 'center',
         flexDirection: 'column',
         flex: 6,
+        minHeight: 0,
         overflowY: isMobile ? 'none' : 'auto',
         scrollbarWidth: 'none',
-    })
+    }),
+    footerContainer: {
+        width: '100%',
+        marginTop: 'auto',
+    }
 });

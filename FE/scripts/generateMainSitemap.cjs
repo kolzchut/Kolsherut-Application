@@ -6,6 +6,7 @@ const envConfigPath = path.join(__dirname, `../public/configs/${env}.json`);
 const envConfig = JSON.parse(fs.readFileSync(envConfigPath, "utf-8"));
 
 const baseUrl = envConfig.currentURL;
+const defaultLastMod = envConfig.sitemapsDefaultLastModified;
 
 // Ensure the public folder exists
 const publicFolder = path.join(__dirname, "../public");
@@ -14,11 +15,16 @@ if (!fs.existsSync(publicFolder)) {
 }
 
 // List of sitemap files (relative paths)
+// Order matters: the SSG crawler fills its route set in this order and truncates at
+// MAX_PAGES, so the small, always-local sitemaps go first and can never be dropped.
 const sitemaps = [
+    "/sitemap/staticpages.xml",
     "/sitemap/cards.xml",
     "/sitemap/taxonomy.xml",
-    // "/sitemap/mixedtaxonomy.xml", EXCLUDED for now, Eli requested - issue #369
-    "/sitemap/hpsitemap.xml"
+    "/sitemap/mixedtaxonomy.xml",
+    "/sitemap/hpsitemap.xml",
+    "/sitemap/services.xml",
+    "/sitemap/organizations.xml"
 ];
 
 // Helper: join base + path safely (exactly one slash between them)
@@ -35,6 +41,7 @@ const buildSitemapIndexXML = () => {
         xml += `  <sitemap>\n`;
         xml += `    <loc>${joinUrl(baseUrl, relativePath)}</loc>\n`;
         if(relativePath === "/sitemap/cards.xml") xml += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;
+        else xml += `    <lastmod>${defaultLastMod}</lastmod>\n`;
         xml += `  </sitemap>\n`;
     });
 

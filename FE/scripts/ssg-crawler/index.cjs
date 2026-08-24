@@ -1,5 +1,5 @@
 const { ENV, MAX_PAGES } = require('./config.cjs');
-const { ensureDist } = require('./utils/files.cjs');
+const { ensureDist, updateEnvironmentConfig } = require('./utils/files.cjs');
 const { startLocalServer } = require('./components/server.cjs');
 const { getRoutesToCrawl } = require('./components/sitemap.cjs');
 const { runCrawler } = require('./components/crawler.cjs');
@@ -10,6 +10,7 @@ console.log(`🌍 Starting Local SSG for environment: ${ENV}`);
     let server;
     try {
         await ensureDist();
+        await updateEnvironmentConfig();
         server = await startLocalServer();
 
         let routes = await getRoutesToCrawl();

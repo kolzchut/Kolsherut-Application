@@ -1,0 +1,120 @@
+name: Reusable Build Image
+
+on:
+  workflow_call:
+    inputs:
+      service_path:
+        required: true
+        type: string
+        description: "Folder path (be, ETL, retrieval)"
+      image_name:
+        required: true
+        type: string
+        description: "Name of the image in ACR"
+      version:
+        required: true
+        type: string
+        description: "Version tag computed by the orchestrator (dev/stage/production/semver)"
+      lfs:
+        required: false
+        type: boolean
+        default: false
+        description: "Pull Git LFS objects (only retrieval needs its 2.2 GB embedding model)"
+      node_build:
+        required: false
+        type: boolean
+        default: false
+        description: "Run npm install + npm run build before the docker build (be)"
+    secrets:
+      ACR_LOGIN_SERVER:
+        required: true
+      ACR_USERNAME:
+        required: true
+      ACR_PASSWORD:
+        required: true
+      SMTP_PASSWORD:
+        required: false
+      CRONICLE_SECRET_KEY:
+        required: false
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Pull Git LFS objects (the retrieval embedding model) so the Docker
+          # build context contains the real files, not LFS pointer stubs.
+          lfs: ${{ inputs.lfs }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.ACR_LOGIN_SERVER }}/${{ inputs.image_name }}
+          tags: |
+            type=raw,value=dev,enable=${{ github.ref == 'refs/heads/dev' }}
+            type=raw,value=stage,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=production,enable=${{ startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/production' }}
+
+      - name: Inject secrets into config.json
+        if: inputs.service_path == 'ETL'
+        env:
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          CRONICLE_SECRET_KEY: ${{ secrets.CRONICLE_SECRET_KEY }}
+        run: |
+          CONFIG_FILE=""
+          if [ -f "${{ inputs.service_path }}/data/config.json" ]; then
+            CONFIG_FILE="${{ inputs.service_path }}/data/config.json"
+          elif [ -f "data/config.json" ]; then
+            CONFIG_FILE="data/config.json"
+          fi
+          if [ -z "$CONFIG_FILE" ]; then
+            echo "No config.json found - skipping"
+            exit 0
+          fi
+
+      - name: Setup Node.js
+        if: inputs.node_build
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: '${{ inputs.service_path }}/package-lock.json'
+
+      - name: Build Source
+        if: inputs.node_build
+        run: |
+          cd ${{ inputs.service_path }}
+          npm install
+          npm run build
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to ACR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./${{ inputs.service_path }}
+          file: ./${{ inputs.service_path }}/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          build-args: |
+            ENVIRONMENT=${{ inputs.version }}
+          # The AKS node pools are ARM, so amd64 is dead weight in both build
+          # time and ACR storage.
+          platforms: linux/arm64
+          provenance: false

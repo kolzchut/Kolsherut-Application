@@ -1,11 +1,23 @@
 const fs = require('fs-extra');
 const path = require('path');
-const { DIST_DIR } = require('../config.cjs');
+const { DIST_DIR, ENV } = require('../config.cjs');
 
 async function ensureDist() {
     if (!fs.existsSync(DIST_DIR)) {
         console.error('❌ dist/ folder missing.');
         process.exit(1);
+    }
+}
+
+async function updateEnvironmentConfig() {
+    const configSource = path.join(__dirname, `../../../public/configs/${ENV}.json`);
+    const configDest = path.join(DIST_DIR, 'configs/environment.json');
+
+    if (await fs.pathExists(configSource)) {
+        await fs.copy(configSource, configDest);
+        console.log(`📝 Updated dist/configs/environment.json to ${ENV}`);
+    } else {
+        console.warn(`⚠️  Config for ${ENV} not found at ${configSource}`);
     }
 }
 
@@ -29,4 +41,4 @@ async function savePage(route, html) {
     await fs.writeFile(filePath, html);
 }
 
-module.exports = { ensureDist, savePage };
+module.exports = { ensureDist, savePage, updateEnvironmentConfig };

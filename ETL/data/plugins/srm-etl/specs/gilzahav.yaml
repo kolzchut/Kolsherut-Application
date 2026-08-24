@@ -1,0 +1,83 @@
+name: gilzahav
+description: >-
+  מאגר מידע המבוסס על נתוני משרד הבינוי והשיכון, המרכז את כלל הנתונים העסקיים הקשורים
+  לבתי דיור לגיל הזהב.
+
+  הנתונים המופקים כוללים את זהות החברה המנהלת המפעילה כל מוסד, מיקום המוסד ופרטי הקשר
+  שלו. בנוסף, נשאבים נתונים אופרטיביים כגון כמות יחידות הדיור הקיימות בכל בית דיור ומספר
+  האנשים הממתינים בתור לקליטה במוסד.
+
+apis:
+  - name: fetch
+    url: "https://www.gov.il/api/moch/viewlist/Loaddata/ViewList/gil_zahav"
+    format: json
+    headers:
+      Referer: "https://www.gov.il/apps/moch/viewlist/list/gil_zahav"
+
+static_data:
+  services:
+    - id: gilzahav
+      name: בית דיור גיל הזהב
+      description: 'משרד הבינוי והשיכון מנהל כ-120 בתי דיור לגיל הזהב הכוללים כ-12,000 דירות, שמהן בדרך כלל שני שלישים דירות בנות חדר וחצי, ושליש דירות בנות שני חדרים. בכל מבנה יש דירה המיועדת לאם הבית וכן מועדון, חדרי חוגים וגינה מטופחת. את בתי הדיור מוביל צוות תחזוקה שבראשו עומדת אם הבית. רוב בתי הדיור מנוהלים בעבור המשרד על ידי חברות ממשלתיות וחלקם על ידי חברות פרטיות.'
+      details: "- סדר השיבוץ לבית דיור נקבע לפי נוהלי משרד הבינוי והשיכון, ובכלל זאת לפי מועדי קבלת הזכאות והכניסה לתור הממתינים.\n- הנתונים משקפים את המידע הנמצא במערכות משרד הבינוי והשיכון בלבד, והם אינם מתבססים על רשימת הממתינים שמנהל בנפרד משרד הקליטה.\n\n"
+      phone_numbers: null
+      urls: "https://www.gov.il/apps/moch/viewlist/list/gil_zahav"
+      data_sources: 'המידע התקבל מ<a target="_blank" href="https://www.gov.il/apps/moch/viewlist/list/gil_zahav" target="_blank">אתר משרד הבינוי והשיכון</a>'
+      responses:
+        - human_services:housing:residential_housing:long_term_housing
+        - human_services:housing:residential_housing:long_term_housing:old_age_home
+      situations:
+        - human_situations:age_group:seniors
+        - human_situations:benefit_holders:holocaust_survivors
+
+outputs:
+  - name: branch
+    derive_from: fetch
+    table: Branches
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: gilzahav
+    columns:
+      - target: id
+        source: [field9]
+        transforms:
+          - {op: template, template: 'gilzahav:{field9}'}
+      - {target: name, source: field2}
+      - {target: organization, value: ['500100797']}
+      - {target: services, value: [gilzahav]}
+      - target: description
+        source: [field3, field8]
+        transforms:
+          - op: labeled_lines
+            parts:
+              - {label: מספר יחידות דיור, field: field3}
+              - {label: מספר ממתינים, field: field8, skip_values: [null, '-']}
+      - {target: phone_numbers, source: field6}
+      - {target: email_address, source: field7}
+      # City name arrives suffixed with a trailing "-<code>" segment that is stripped
+      - target: city
+        source: field1
+        intermediate: true
+        transforms:
+          - {op: drop_last_segment, separator: '-'}
+      - target: address
+        source: [field5, city]
+        transforms:
+          - {op: template, template: '{field5}, {city}'}
+      - {target: location, source: address}
+      - {target: operating_unit, source: field4}
+
+  - name: service
+    derive_from: static_data.services
+    table: Services
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: gilzahav
+    columns:
+      - {target: id, source: id}
+      - {target: name, source: name}
+      - {target: description, source: description}
+      - {target: details, source: details}
+      - {target: phone_numbers, source: phone_numbers}
+      - {target: urls, source: urls}
+      - {target: data_sources, source: data_sources}
+      - {target: responses, source: responses}
+      - {target: situations, source: situations}

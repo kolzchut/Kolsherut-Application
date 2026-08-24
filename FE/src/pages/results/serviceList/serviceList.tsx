@@ -39,7 +39,7 @@ const ServiceList = () => {
         accessibilityActive
     });
     const conditionToShowResults = filteredResults.length > 0;
-    const conditionToShowLoading = isResultsLoading && !conditionToShowResults;
+    const conditionToShowLoading = isResultsLoading;
     const conditionToShowNoResults = !isResultsLoading && filteredResults.length === 0;
     const finedSearchQuery = searchQuery.trim().replace(/_/g, ' ');
 

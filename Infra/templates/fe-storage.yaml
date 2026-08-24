@@ -1,0 +1,47 @@
+{{- if .Values.frontend.persistence.enabled }}
+# Secret holding the Azure Storage Account credentials for the frontend file share.
+# The account name and key are provided per-environment via secrets files.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "backend.fullname" . }}-fe-storage-secret
+  labels:
+    component: frontend
+    {{- include "backend.labels" . | nindent 4 }}
+type: Opaque
+data:
+  azurestorageaccountname: {{ .Values.frontend.persistence.azureStorageAccountName | b64enc | quote }}
+  azurestorageaccountkey: {{ .Values.frontend.persistence.azureStorageAccountKey | b64enc | quote }}
+---
+# Static PersistentVolume pointing to the pre-created Azure File Share.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "backend.fullname" . }}-fe-config-pv
+  labels:
+    component: frontend
+    {{- include "backend.labels" . | nindent 4 }}
+spec:
+  capacity:
+    storage: {{ .Values.frontend.persistence.size | quote }}
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - uid=0
+    - gid=0
+    - mfsymlinks
+    - cache=strict
+    - nosharesock
+  csi:
+    driver: file.csi.azure.com
+    volumeHandle: {{ include "backend.fullname" . }}-fe-fileshare
+    volumeAttributes:
+      shareName: {{ .Values.frontend.persistence.azureFileShareName | quote }}
+    nodeStageSecretRef:
+      name: {{ include "backend.fullname" . }}-fe-storage-secret
+      namespace: {{ .Release.Namespace }}
+{{- end }}

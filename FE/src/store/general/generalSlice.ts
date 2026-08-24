@@ -23,14 +23,11 @@ export const generalSlice = createSlice({
         },
         setModal(state: GeneralStore, action) {
             state.modal = action.payload;
-            if (action.payload && action.payload.toLowerCase() === "sitemap")
-                state.page = 'sitemap';
+            if (action.payload && action.payload.toLowerCase() === "map")
+                state.page = 'map';
         },
         setShowSidebar(state: GeneralStore, action) {
             state.showSidebar = action.payload;
-        },
-        settingURLParamsToResults(state: GeneralStore, action) {
-            state.searchQuery = action.payload;
         },
         setCardIdAndCardPage(state: GeneralStore, action) {
             state.cardId = action.payload;
@@ -61,7 +58,6 @@ export const {
     setSearchQuery,
     setCardIdAndCardPage,
     setModal,
-    settingURLParamsToResults,
     setShowSidebar,
     setAccessibility,
     setFirstVisitedUrl,

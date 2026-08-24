@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://dev.kolsherut.org.il/sitemap/staticpages.xml</loc>
+    <lastmod>2026-05-23T00:00:00.000Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://dev.kolsherut.org.il/sitemap/cards.xml</loc>
+    <lastmod>2026-08-19T09:36:16.143Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://dev.kolsherut.org.il/sitemap/taxonomy.xml</loc>
+    <lastmod>2026-05-23T00:00:00.000Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://dev.kolsherut.org.il/sitemap/mixedtaxonomy.xml</loc>
+    <lastmod>2026-05-23T00:00:00.000Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://dev.kolsherut.org.il/sitemap/hpsitemap.xml</loc>
+    <lastmod>2026-05-23T00:00:00.000Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://dev.kolsherut.org.il/sitemap/services.xml</loc>
+    <lastmod>2026-05-23T00:00:00.000Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://dev.kolsherut.org.il/sitemap/organizations.xml</loc>
+    <lastmod>2026-05-23T00:00:00.000Z</lastmod>
+  </sitemap>
+</sitemapindex>

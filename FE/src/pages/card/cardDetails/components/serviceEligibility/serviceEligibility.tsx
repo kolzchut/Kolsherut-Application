@@ -13,7 +13,7 @@ const ServiceEligibility = ({serviceDetails, servicePaymentDetails, branchDescri
     const classes = useStyle({accessibilityActive: theme.accessibilityActive});
     return <div>
         {(serviceDetails || servicePaymentDetails || branchDescription) &&
-            <span className={classes.title}>{serviceEligibilityTitle}</span>}
+            <h3 className={classes.title}>{serviceEligibilityTitle}</h3>}
         {serviceDetails && (
             <div
                 className={classes.paragraphText}

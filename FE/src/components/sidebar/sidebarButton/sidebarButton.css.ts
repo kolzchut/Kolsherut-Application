@@ -11,6 +11,10 @@ export default createUseStyles({
         padding: '20px',
         fontSize:'24px',
         borderTop: `1px solid ${primaryBorderColorOne}`,
+        // the button renders as an <a> when it links to a page
+        textDecoration: 'none',
+        color: 'inherit',
+        cursor: 'pointer',
     }
 });
 

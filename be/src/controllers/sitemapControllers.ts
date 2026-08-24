@@ -4,7 +4,11 @@ import recursiveTaxonomyToXML from "../utilities/taxonomy/recursiveTaxonomyToXML
 import getTaxonomy from "../utilities/taxonomy/getTaxonomy";
 import mixedTaxonomyToXML from "../utilities/taxonomy/mixedTaxonomyToXML";
 import {fetchAllCardFields} from "../services/db/es/getAllCardIds";
+import {fetchAllOrganizations} from "../services/db/es/getOrganizations";
+import {fetchAllServices} from "../services/db/es/getServices";
 import transformSiteMapFromJSONToXML from "../utilities/transformSiteMapFromJSONToXML";
+import transformOrganizationsSitemapToXML from "../utilities/transformOrganizationsSitemapToXML";
+import transformServicesSitemapToXML from "../utilities/transformServicesSitemapToXML";
 import getProcessedTaxonomies from "../utilities/taxonomy/getProcessedTaxonomies";
 
 
@@ -17,8 +21,8 @@ export const cardsSitemap = asyncHandler(async (req: Request, res: Response) => 
 
 export const taxonomySitemap = asyncHandler(async (req: Request, res: Response) => {
     const {responses, situations} = await getTaxonomy();
-    const responsesXML = recursiveTaxonomyToXML({taxonomy: responses.items, isResponse: true});
-    const situationsXML = recursiveTaxonomyToXML({taxonomy: situations.items, isResponse: false});
+    const responsesXML = recursiveTaxonomyToXML({taxonomy: responses.items});
+    const situationsXML = recursiveTaxonomyToXML({taxonomy: situations.items});
 
     const fullXML = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -45,3 +49,14 @@ export const mixedTaxonomySitemap = asyncHandler(async (req: Request, res: Respo
     }
 });
 
+export const organizationsSitemap = asyncHandler(async (req: Request, res: Response) => {
+    const organizations = await fetchAllOrganizations();
+    const siteMapXML = transformOrganizationsSitemapToXML(organizations);
+    res.type('application/xml').status(200).send(siteMapXML);
+})
+
+export const servicesSitemap = asyncHandler(async (req: Request, res: Response) => {
+    const services = await fetchAllServices();
+    const siteMapXML = transformServicesSitemapToXML(services);
+    res.type('application/xml').status(200).send(siteMapXML);
+})

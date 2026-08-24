@@ -21,7 +21,7 @@ export function initEmailService() {
             },
         });
         logger.log({ service: "Email Service", message: 'Email service initialized.' });
-        if (env !== "prod") return;
+        if (env !== "production") return;
         const oneWeekMs = 7 * 24 * 60 * 60 * 1000;
         setInterval(() => {
             sendEmail({
@@ -37,13 +37,13 @@ export async function sendEmail({subject, body,additionalRecipientList}:{
     body: string,
     additionalRecipientList?: string[]}
 ): Promise<void> {
-    if (!transporter) return;
-
-    const recipients = additionalRecipientList
-        ? [...additionalRecipientList, vars.email.EMAIL_NOTIFIER_SENDER_EMAIL]
-        : vars.email.EMAIL_NOTIFIER_RECIPIENT_LIST.concat(vars.email.EMAIL_NOTIFIER_SENDER_EMAIL || "");
-
     try {
+        if (!transporter) return;
+
+        const recipients = additionalRecipientList
+            ? [...additionalRecipientList, vars.email.EMAIL_NOTIFIER_SENDER_EMAIL]
+            : vars.email.EMAIL_NOTIFIER_RECIPIENT_LIST.concat(vars.email.EMAIL_NOTIFIER_SENDER_EMAIL || "");
+
         await transporter.sendMail({
             from: vars.email.EMAIL_NOTIFIER_SENDER_EMAIL,
             to: recipients.join(', '),
@@ -52,7 +52,6 @@ export async function sendEmail({subject, body,additionalRecipientList}:{
         });
         logger.log({service:"Email Service", message:`Email sent`,payload: subject});
     } catch (err) {
-        logger.error({service:"Email Service", message:`Failed to send email:` ,payload: err});
-        throw err;
+        logger.error({service:"Email Service", message:`Failed to send email` ,payload: `origin error: ${body} current error: ${err}`});
     }
 }

@@ -18,9 +18,7 @@ function cleanHtmlContent(html) {
 
     return html
         .replace(localRegex, targetNoSlash)
-        .replace(localhostRegex, targetNoSlash)
-        .replace(/src="\/assets/g, `src="${targetNoSlash}/assets`)
-        .replace(/href="\/assets/g, `href="${targetNoSlash}/assets`);
+        .replace(localhostRegex, targetNoSlash);
 }
 
 module.exports = { extractTags, cleanHtmlContent };

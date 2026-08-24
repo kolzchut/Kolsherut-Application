@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  cronicle:
+    build: .
+    container_name: cronicle
+    ports:
+      - "3012:3012"
+    env_file:
+      - ./data/plugins/srm-etl/.env
+    environment:
+      CRONICLE_admin_user: "ariel"
+      CRONICLE_admin_pass: "mypassword"
+      CRONICLE_SERVER_HOSTNAME: "localhost"
+      CRONICLE_SERVER_PORT: 3012
+      TZ: "Asia/Jerusalem"
+      ES_HOST: "kolsherut-elasticsearch"
+      ES_PORT: "9200"
+    volumes:
+      - ./data/data:/opt/cronicle/data:rw 
+      - ./data/logs:/opt/cronicle/logs:rw
+      - ./data/plugins:/opt/cronicle/plugins:rw
+      - ./data/config.json:/opt/cronicle/conf/config.json:rw
+    restart: unless-stopped
+    depends_on:
+      - kolsherut-elasticsearch
+
+  kolsherut-elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.13
+    container_name: kolsherut-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
+volumes:
+  es_data:

@@ -9,9 +9,14 @@ import {
 import {pickTopAutocomplete} from "../utilities/mergeAutocompleteUtilities";
 import ensureAutocompleteFallback from "../utilities/ensureAutocompleteFallback";
 import extractServiceForAutocomplete from "../utilities/extractServiceForAutocomplete";
+import resolveAutocompleteSearchTerm from "../utilities/resolveAutocompleteSearchTerm";
+
+const emptyAutocomplete = {structured: [], unstructured: []};
 
 export default asyncHandler(async (req: Request, res: Response) => {
-    const {search} = req.params
+    const search = resolveAutocompleteSearchTerm(req);
+    if (!search) return res.status(200).json({success: true, data: emptyAutocomplete});
+
     const rawAutoComplete = await autoComplete(search);
     const autocomplete = transformAutocompleteUtilities(rawAutoComplete.autoCompleteResults, true);
     const autoCompleteFromCard = transformAutoCompleteFromCardStructure(rawAutoComplete.autoCompleteFromCardResults);

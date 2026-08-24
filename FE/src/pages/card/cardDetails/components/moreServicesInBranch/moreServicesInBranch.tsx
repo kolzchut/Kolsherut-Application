@@ -17,7 +17,7 @@ const MoreServicesInBranch = ({moreServicesInBranch, scrollRef}: {
     const classes = useStyle({accessibilityActive: theme.accessibilityActive});
     return (
         <div className={classes.mainDiv}>
-            <span className={classes.title}>{moreServicesInBranchTitle}</span>
+            <h3 className={classes.title}>{moreServicesInBranchTitle}</h3>
             {moreServicesInBranch.map((service: ICardForBanner) => {
                 const href = getHrefForCard(service.card_id);
                 const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -31,7 +31,7 @@ const MoreServicesInBranch = ({moreServicesInBranch, scrollRef}: {
                 };
                 return (<a href={href} key={service.card_id}
                            onClick={(e: React.MouseEvent<HTMLAnchorElement>) => onClick(e)} className={classes.aTag}>
-                    <CardBanner key={service.card_id} card={service}/>
+                    <CardBanner key={service.card_id} card={service} headingLevel="h3"/>
                 </a>);
             })}
         </div>

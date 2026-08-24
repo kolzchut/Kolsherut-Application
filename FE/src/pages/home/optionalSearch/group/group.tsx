@@ -24,19 +24,18 @@ const Group = ({group}: { group: IGroup }) => {
             situation_id: group.situation_id,
             response_id: group.response_id,
             title: group.group,
-            query: group.group_link.replace(/ /g, "_")
         }
         homepageAnalytics.clickOnOptionalSearch(group)
         changingPageToResults({value: groupAsLabel, removeOldFilters: true});
     }
-    const href = buildUrlForSearchLabel({response: group.response_id, situation: group.situation_id, searchQuery:group.group_link});
+    const href = buildUrlForSearchLabel({response: group.response_id, situation: group.situation_id});
 
     const handleKeyDown = createKeyboardHandler(onClick);
 
     return <div className={classes.group} key={group.group}>
-        <h3 className={classes.groupTitle}>{group.group}
+        <h2 className={classes.groupTitle}>{group.group}
         {group.icon && <img src={`/icons/${group.icon}`} alt={`dynamic icon ${group.icon}`} className={classes.icon}/>}
-        </h3>
+        </h2>
         <div className={classes.optionalSearchValuesWrapper}>
             {group?.labels?.map((value: ILabel, index: number) => (
                 <SearchLabel key={index} value={value}/>

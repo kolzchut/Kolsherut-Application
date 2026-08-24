@@ -30,15 +30,26 @@ let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sit
 data.forEach(group => {
     if (!group.labels) return;
 
+    // Generate group-level link from group's situation_id / response_id
+    const groupCategories = [];
+    if (group.situation_id) groupCategories.push(group.situation_id.split(':').slice(-1)[0]);
+    if (group.response_id) groupCategories.push(group.response_id.split(':').slice(-1)[0]);
+    if (groupCategories.length > 0) {
+        const groupRawUrl = `${baseUrl.replace(/\/$/, '')}/${groupCategories.join('/')}`;
+        const groupLoc = xmlEscape(groupRawUrl);
+        xml += `  <url>\n`;
+        xml += `    <loc>${groupLoc}</loc>\n`;
+        xml += `  </url>\n`;
+    }
+
     group.labels.forEach(label => {
-        if (!label.query) return;
+        const categories = [];
+        if (label.situation_id) categories.push(label.situation_id.split(':').slice(-1)[0]);
+        if (label.response_id) categories.push(label.response_id.split(':').slice(-1)[0]);
+        if (categories.length === 0) return;
 
-        const params = [`sq/${encodeURI(label.query)}`];
-        if (label.response_id) params.push(`brf/${encodeURI(label.response_id)}`);
-        if (label.situation_id) params.push(`bsf/${encodeURI(label.situation_id)}`);
-
-        const rawUrl = `${baseUrl.replace(/\/$/, '')}/p/results/${params.join('/')}`; // ensure single slash
-        const loc = xmlEscape(rawUrl); // escape special chars for XML
+        const rawUrl = `${baseUrl.replace(/\/$/, '')}/${categories.join('/')}`;
+        const loc = xmlEscape(rawUrl);
 
         xml += `  <url>\n`;
         xml += `    <loc>${loc}</loc>\n`;

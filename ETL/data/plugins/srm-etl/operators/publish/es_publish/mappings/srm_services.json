@@ -1,0 +1,94 @@
+{
+  "properties": {
+    "boost": {
+      "ignore_malformed": true,
+      "scaling_factor": 100.0,
+      "type": "scaled_float"
+    },
+    "branches": {
+      "type": "keyword"
+    },
+    "data_sources": {
+      "type": "text"
+    },
+    "description": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "details": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "email_address": {
+      "type": "text"
+    },
+    "id": {
+      "type": "keyword"
+    },
+    "implements": {
+      "type": "text"
+    },
+    "key": {
+      "type": "text"
+    },
+    "last_modified": {
+      "format": "yyyy-MM-dd'T'HH:mm:ss",
+      "ignore_malformed": true,
+      "type": "date"
+    },
+    "name": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "organizations": {
+      "type": "keyword"
+    },
+    "payment_details": {
+      "fields": {
+        "hebrew": {
+          "analyzer": "hebrew",
+          "type": "text"
+        }
+      },
+      "type": "text"
+    },
+    "payment_required": {
+      "type": "text"
+    },
+    "phone_numbers": {
+      "type": "text"
+    },
+    "response_ids": {
+      "type": "keyword"
+    },
+    "revision": {
+      "type": "keyword"
+    },
+    "situation_ids": {
+      "type": "keyword"
+    },
+    "status": {
+      "type": "keyword"
+    },
+    "urls": {
+      "dynamic": "false",
+      "enabled": false,
+      "type": "object"
+    }
+  }
+}

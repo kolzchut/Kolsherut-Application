@@ -1,0 +1,45 @@
+# כל שירות (Kol Sherut)
+
+> Kol Sherut is Israel's open database and search engine for public social services. It indexes services provided by government ministries, municipalities, NGOs and other organizations, so that a person — or an agent acting for them — can find who can actually help, for any life situation, anywhere in Israel.
+
+Operated by [Kol Zchut](https://www.kolzchut.org.il/) (כל זכות) with support from the Israeli Ministry of Justice and the National Digital Agency. Content is in Hebrew, with a dedicated Arabic-language section. Contact: info@kolsherut.org.il
+
+Services are classified with the [Open Eligibility](https://github.com/kolzchut/openeligibility) taxonomy along two axes: a *response* (what is provided — health, housing, legal, food, money, education, employment, emergency, goods, care, community, culture and sport) and *situations* (who it is for — age group, health condition, income level, household and housing status, language, sector, veteran status, life events). URLs mirror that taxonomy: `/{response}`, or `/{situation}/{response}` for a combination, e.g. `/seniors/housing` and `/low_income/food`. Free-text search is `/?sq={query}`; a single service page is `/p/card/c/{serviceId}`.
+
+Data is aggregated from [GuideStar Israel](https://www.guidestar.org.il/) and other public registries. The platform is in beta: information is largely imported automatically and may be incomplete or out of date. Kol Sherut provides general information only, never individual advice, and is not responsible for the content of the services it lists.
+
+## Main pages
+
+- [Homepage](https://www.kolsherut.org.il/): Free-text service search, the main service categories, and popular topics
+- [Site map](https://www.kolsherut.org.il/map): Full catalog of every response and life situation indexed on the platform — the best starting point for enumerating coverage
+- [About](https://www.kolsherut.org.il/about): The project, its mission and its operators
+- [Partners](https://www.kolsherut.org.il/partners): Government ministries and agencies supporting Kol Sherut
+- [Add a missing service](https://www.kolsherut.org.il/missing): Report a service missing from the database
+- [Contact](https://www.kolsherut.org.il/contact): Reach the team or report incorrect data
+
+## Service categories
+
+- [Rights advocacy — מיצוי זכויות](https://www.kolsherut.org.il/understand_government_programs): Help understanding and claiming government programs, benefits and legal rights
+- [Early childhood — הגיל הרך](https://www.kolsherut.org.il/infants): Services for infants and their parents — parenting guidance, well-baby clinics, daycare and afterschool care
+- [Victims and their families — נפגעים ומשפחותיהם](https://www.kolsherut.org.il/internal_emergency_services): Support for bereaved families, disabled veterans, and people needing emergency mental or financial aid
+- [Housing — דיור](https://www.kolsherut.org.il/housing): Housing for domestic violence survivors, at-risk youth, homeless people and people coping with mental illness
+- [Health services — שירותי בריאות](https://www.kolsherut.org.il/health): Health support — cancer patients, visual impairment, addiction treatment, medical equipment
+- [Mental health — מתמודדי נפש](https://www.kolsherut.org.il/mental_illness): Balancing houses, counselling, supported housing, employment, and PTSD support
+- [Senior citizens — אזרחים ותיקים](https://www.kolsherut.org.il/seniors): Health, recreation and housing services for older adults, and services for Holocaust survivors
+- [Low income and financial hardship — הכנסה נמוכה וקשיים כלכליים](https://www.kolsherut.org.il/low_income): Food assistance, financial aid, essential goods, and rights advocacy
+- [Young adults — צעירים וצעירות](https://www.kolsherut.org.il/young_adults): Mentoring and support programs for young adults, including those at risk
+- [Arabic-speaking community — خدمات للمجتمع العربي](https://www.kolsherut.org.il/arabic_speaking): Services delivered in Arabic — legal aid, emergency services, and mental health support
+- [At-risk teens — נוער בסיכון](https://www.kolsherut.org.il/at_risk_teens): Services for teenagers at risk
+- [Autism spectrum — אוטיזם](https://www.kolsherut.org.il/autistic_spectrum): Services for people on the autism spectrum and their families
+- [Domestic violence survivors — נשים נפגעות אלימות](https://www.kolsherut.org.il/domestic_violence_survivors): Shelters, counselling and support for survivors of domestic violence
+- [Prostitution survivors — שורדות זנות](https://www.kolsherut.org.il/prostition_survivors): Rehabilitation and support services for prostitution survivors
+- [Students — סטודנטים](https://www.kolsherut.org.il/students): Services and benefits for students
+
+## Optional
+
+- [llms-full.txt](https://www.kolsherut.org.il/llms-full.txt): Expanded reference — the full category tree with URLs, the response and situation taxonomies, geographic coverage, partners, and how organizations add services
+- [Sitemap index](https://www.kolsherut.org.il/sitemap.xml): Machine-readable index of every service, taxonomy and organization page
+- [Kol Zchut](https://www.kolzchut.org.il/): The operating organization — Israel's public rights encyclopedia
+- [GuideStar Israel](https://www.guidestar.org.il/): Primary upstream source of NGO service data
+- [Open Eligibility taxonomy](https://github.com/kolzchut/openeligibility): The classification scheme behind responses and situations
+- [Accessibility statement](https://www.kolzchut.org.il/he/%D7%9B%D7%9C_%D7%A9%D7%99%D7%A8%D7%95%D7%AA:%D7%A0%D7%92%D7%99%D7%A9%D7%95%D7%AA): Accessibility policy and features

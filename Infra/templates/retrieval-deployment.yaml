@@ -1,0 +1,79 @@
+{{- if .Values.retrieval.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "backend.fullname" . }}-retrieval
+  labels:
+    component: retrieval
+    {{- include "backend.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.retrieval.replicaCount }}
+  {{- with .Values.retrieval.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      component: retrieval
+      {{- include "backend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        component: retrieval
+        {{- include "backend.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+        - name: wait-for-elasticsearch
+          image: busybox:1.28
+          command:
+            - 'sh'
+            - '-c'
+            - |
+              until nc -z -v -w30 {{ include "backend.fullname" . }}-elasticsearch 9200; do
+                sleep 2
+              done
+      containers:
+        - name: {{ .Chart.Name }}-retrieval
+          image: "{{ .Values.retrieval.image.repository }}:{{ .Values.retrieval.image.tag }}"
+          imagePullPolicy: {{ .Values.retrieval.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.retrieval.service.port }}
+              protocol: TCP
+
+          # Startup gate: /health only answers once the models are warmed, so this
+          # holds traffic (and liveness) off until the heavy model load completes.
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: {{ .Values.retrieval.probes.startup.periodSeconds }}
+            failureThreshold: {{ .Values.retrieval.probes.startup.failureThreshold }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: {{ .Values.retrieval.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.retrieval.probes.liveness.periodSeconds }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: {{ .Values.retrieval.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.retrieval.probes.readiness.periodSeconds }}
+
+          resources:
+            {{- toYaml .Values.retrieval.resources | nindent 12 }}
+          env:
+            - name: ELASTIC_URL
+              value: "http://{{ include "backend.fullname" . }}-elasticsearch:9200"
+          envFrom:
+            - configMapRef:
+                name: {{ include "backend.fullname" . }}-retrieval-config
+            - secretRef:
+                name: {{ include "backend.fullname" . }}-secrets
+{{- end }}

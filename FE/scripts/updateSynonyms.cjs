@@ -20,7 +20,7 @@ const readCSVFiles = (dir) =>
 
 // Parse CSV text into array of objects
 const parseCSV = (data) => {
-    const rows = data.trim().split(NEW_LINE_REGEX);
+    const rows = data.replace(/\r/g, "").trim().split(NEW_LINE_REGEX);
     const headers = rows.shift().split(",");
     return rows.map(row => {
         const values = row.split(",");

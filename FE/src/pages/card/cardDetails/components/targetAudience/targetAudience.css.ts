@@ -14,7 +14,8 @@ export default createUseStyles({
         color: tertiaryTextColorOne,
         fontWeight:600,
         lineHeight: 1.3,
-        fontSize: accessibilityActive ? 20 : 16
+        fontSize: accessibilityActive ? 20 : 16,
+        margin: 0,
     }),
     link:{
         textDecoration:'none'

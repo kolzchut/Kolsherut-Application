@@ -4,9 +4,8 @@ import useStyles from "./inputPlaceHolder.css";
 import {useSelector} from "react-redux";
 import {getBackendByFilter} from "../../../../store/filter/filter.selector";
 import {createKeyboardHandler} from "../../../../services/keyboardHandler";
-
-import {getBackendFiltersNamesByResults} from "../../../../store/shared/utilities/header.selector";
 import {getSearchQuery} from "../../../../store/general/general.selector";
+import {getFilteredResultsByFilter} from "../../../../store/shared/inputPlaceHolderSelector.ts";
 
 interface IPlaceHolderText {
     responseSentence?: string;
@@ -17,7 +16,7 @@ interface IPlaceHolderText {
 const InputPlaceHolder = ({onClick}: { onClick: () => void }) => {
     const theme = useTheme<IDynamicThemeApp>();
     const searchQuery = useSelector(getSearchQuery)
-    const names = useSelector(getBackendFiltersNamesByResults);
+    const names = useSelector(getFilteredResultsByFilter)
     const byFilter = useSelector(getBackendByFilter)
     const handleKeyDown = createKeyboardHandler(onClick);
 
@@ -34,7 +33,7 @@ const InputPlaceHolder = ({onClick}: { onClick: () => void }) => {
 
 
     const classes = useStyles({theme});
-    return <div
+    return <header
         className={classes.mainDiv}
         onClick={onClick}
         tabIndex={0}
@@ -42,12 +41,12 @@ const InputPlaceHolder = ({onClick}: { onClick: () => void }) => {
         role="button"
         aria-label="Search input placeholder"
     >
-        {text.responseSentence && <h2 className={classes.firstSentence}>{text.responseSentence}</h2>}
+        {text.responseSentence && <h1 className={classes.firstSentence}>{text.responseSentence}</h1>}
         <div className={classes.bottomDiv}>
             {text.situationSentence &&
-                <h2 className={classes.secondSentence}>{baseSituationSentence + " " + text.situationSentence}</h2>}
-            {text.bySentence && <h3 className={classes.secondSentence}>{text.bySentence}</h3>}
+                <span className={classes.secondSentence}>{baseSituationSentence + " " + text.situationSentence}</span>}
+            {text.bySentence && <span className={classes.secondSentence}>{text.bySentence}</span>}
         </div>
-    </div>
+    </header>
 }
 export default InputPlaceHolder;

@@ -6,6 +6,7 @@ const buildId = Date.now().toString(36)
 // https://vite.dev/config/
 export default defineConfig({
     plugins: [react()],
+    base: '/',
     build: {
         target: 'esnext',
         manifest: true,

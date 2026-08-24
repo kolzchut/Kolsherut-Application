@@ -1,0 +1,104 @@
+name: soproc
+description: >-
+  מקורות אלו — "מפתח לרכש חברתי" ו"קליק לרווחה" — מרכזים מידע רחב אודות מפעילים חיצוניים
+  המספקים שירותים חברתיים שונים עבור המדינה, ולצידם קטלוג מקיף של השירותים עצמם.
+
+  המידע העסקי מספק פירוט מעמיק על כל שירות, לרבות תיאור השירות, פרטי המימוש שלו,
+  אוכלוסיית היעד אליה הוא מיועד ומשך השירות הניתן. כמו כן, הנתונים מציינים האם השירות
+  כרוך בתשלום, ומשייכים לו את מוקדי הסיוע הארציים הרלוונטיים (כדוגמת מוקד 118 של משרד
+  הרווחה או 5400 של משרד הבריאות).
+
+apis:
+  - name: suppliers
+    url: "https://next.obudget.org/api/query"
+    format: json
+    paginate: budgetkey
+    query: >-
+      with suppliers as (select jsonb_array_elements(suppliers) as supplier from activities
+      where suppliers is not null and suppliers::text != 'null')
+      select supplier->>'entity_id' as entity_id, supplier->>'entity_kind' as entity_kind from suppliers
+
+  - name: activities
+    url: "https://next.obudget.org/api/query"
+    format: json
+    paginate: budgetkey
+    query: select * from activities
+
+  # Locally cached scrape of the Click (רכש חברתי) catalog, used to enrich services
+  - name: click
+    url: "local://click-cache.json"
+    format: click_cache
+    cache_file: click-cache.json
+    backup_file: soproc/click-cache-backup.json
+
+lookups:
+  office_phone_numbers:
+    משרד הרווחה: '118'
+    משרד הבריאות: '*5400'
+
+outputs:
+  - name: organization
+    derive_from: suppliers
+    table: Organizations
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: entities
+    manage_status: false
+    row_transforms:
+      - {op: filter_rows, predicate: not_null, field: entity_id}
+      - {op: dedupe_rows, by: [entity_id]}
+    columns:
+      - {target: id, source: entity_id}
+      - {target: last_tag_date, generate: today}
+
+  # Intermediate resource — service rows from BudgetKey before Click enrichment
+  - name: service_base
+    derive_from: activities
+    columns:
+      - target: id
+        source: [id]
+        transforms:
+          - {op: template, template: 'soproc:{id}'}
+      - {target: catalog_number, source: catalog_number}
+      - {target: description, source: description}
+      - target: organizations
+        source: suppliers
+        transforms:
+          - {op: pluck_where, item_key: entity_id, where_key: active, where_value: 'yes'}
+      - target: phone_numbers
+        source: office
+        transforms:
+          - {op: lookup_map, lookup: office_phone_numbers}
+      - target: data_sources
+        source: [id]
+        transforms:
+          - {op: template, template: '<a href="https://www.socialpro.org.il/i/activities/gov_social_service/{id}" target="_blank">דף השירות ב״מפתח לרכש החברתי״</a>'}
+      - target: soproc-service-tagging
+        source: [id]
+        transforms:
+          - {op: template, template: 'soproc:{id}'}
+      - {target: urls, value: null}
+
+  - name: service
+    derive_from: service_base
+    table: Services
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: social-procurement
+    manage_status: true
+    row_transforms:
+      # A matching Click record overrides these fields (even with empty values),
+      # exactly like the old data.update(extra_data)
+      - op: enrich_from_source
+        source: click
+        key_field: catalog_number
+        fields: [description, details, payment_required, payment_details, urls]
+    columns:
+      - {target: id, source: id}
+      - {target: description, source: description}
+      - {target: details, source: details}
+      - {target: payment_required, source: payment_required}
+      - {target: payment_details, source: payment_details}
+      - {target: urls, source: urls}
+      - {target: phone_numbers, source: phone_numbers}
+      - {target: organizations, source: organizations}
+      - {target: data_sources, source: data_sources}
+      - {target: soproc-service-tagging, source: soproc-service-tagging}

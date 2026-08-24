@@ -24,7 +24,7 @@
     "logs": "/logs",
     "search": "/search",
     "card": "/card/%%cardId%%",
-    "autocomplete": "/autocomplete/%%search%%",
+    "autocomplete": "/autocomplete?search=%%search%%",
     "siteMapForModal": "/siteMapForModal"
   },
   "map": {
@@ -96,5 +96,6 @@
     "lf",
     "sf",
     "rf"
-  ]
+  ],
+  "taxonomyUrl": "https://raw.githubusercontent.com/kolzchut/openeligibility/refs/heads/main/taxonomy.tx.yaml"
 }

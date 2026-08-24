@@ -1,17 +1,16 @@
 import useStyles from "./sidebarButton.css";
-import {store} from "../../../store/store";
-import {setModal, setShowSidebar} from "../../../store/general/generalSlice";
 import arrowLeft from "../../../assets/icon-chevron-left-gray-4.svg"
-const SidebarButton = ({text, modalName,onClick}:{text:string,modalName?:string, onClick?:()=>void}) => {
+import PageLink from "../../links/pageLink";
+import {StaticPageSlug} from "../../../services/url/staticPages";
+
+const SidebarButton = ({text, page, onClick}: { text: string, page?: StaticPageSlug, onClick?: () => void }) => {
     const classes = useStyles();
-    const onSelect = () => {
-        if(!modalName && onClick) return onClick();
-        store.dispatch(setModal(modalName))
-        store.dispatch(setShowSidebar(false))
-    };
-    return <div className={classes.mainDiv} onClick={onSelect}>
-       <span>{text}</span>
+    const content = <>
+        <span>{text}</span>
         <img alt={"arrow left"} src={arrowLeft}/>
-    </div>
+    </>;
+    // PageLink already closes the sidebar when navigating.
+    if (page) return <PageLink page={page} className={classes.mainDiv}>{content}</PageLink>;
+    return <div className={classes.mainDiv} onClick={onClick}>{content}</div>
 };
 export default SidebarButton;

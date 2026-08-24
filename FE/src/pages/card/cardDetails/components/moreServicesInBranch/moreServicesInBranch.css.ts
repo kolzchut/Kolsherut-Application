@@ -10,7 +10,8 @@ export default createUseStyles({
         color: tertiaryTextColorOne,
         fontWeight:600,
         lineHeight: 1.25,
-        fontSize: accessibilityActive ? 20 : 16
+        fontSize: accessibilityActive ? 20 : 16,
+        margin: 0,
     }),
     aTag: {
         textDecoration: "none",

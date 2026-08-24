@@ -17,9 +17,11 @@ function App() {
     const Page = pages[page];
     const modal = useSelector(getModal);
     const [isMobile, setIsMobile] = useState(false);
-
     useEffect(() => {
-        setIsMobile(isMobileScreen());
+        const updateIsMobile = () => setIsMobile(isMobileScreen());
+        updateIsMobile();
+        window.addEventListener('resize', updateIsMobile);
+        return () => window.removeEventListener('resize', updateIsMobile);
     }, []);
 
     const dynamicTheme = {
@@ -29,8 +31,8 @@ function App() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (page === "sitemap") {
-            dispatch(setModal("SiteMap"));
+        if (page === "map") {
+            dispatch(setModal("map"));
         }
     }, [page, dispatch]);
 
@@ -48,6 +50,5 @@ function App() {
         </ThemeProvider>
     </>
 }
-
 
 export default App;

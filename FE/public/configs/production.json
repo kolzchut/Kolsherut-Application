@@ -1,6 +1,7 @@
 {
   "state": "production",
-  "server": "https://api.kolsherut.org.il",
+  "server": "https://be.kolsherut.org.il",
   "analyticsId": "G-SSW46Z8STP",
-  "currentURL": "https://www.kolsherut.org.il"
+  "currentURL": "https://www.kolsherut.org.il",
+  "sitemapsDefaultLastModified": "2026-06-16T00:00:00.000Z"
 }

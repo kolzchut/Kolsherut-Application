@@ -45,7 +45,10 @@ const SearchInput = () => {
     const theme = useTheme<IDynamicThemeApp>();
 
     const moveUp = isSearchInputFocused || searchTerm !== '' || optionalSearchValues.structured.length > 0 || optionalSearchValues.unstructured.length > 0;
-    const classes = useStyles({moveUp, accessibilityActive: theme.accessibilityActive});
+    const classes = useStyles({moveUp});
+    // The accessibility sizes are separate static classes, see searchInput.css.ts.
+    const withA11y = (base: string, a11y: string) => theme.accessibilityActive ? `${base} ${a11y}` : base;
+    const mainTextClass = withA11y(classes.mainText, classes.mainTextA11y);
 
     const { inputChangeEvent } = useSearchAutocomplete({ setSearchTerm, setOptionalSearchValues });
 
@@ -69,9 +72,9 @@ const SearchInput = () => {
 
     return <div className={classes.root}>
         <div className={classes.mainTextDiv}>
-            <span className={classes.mainText}>{window.strings.home.mainTextPartOne}
+            <span className={mainTextClass}>{window.strings.home.mainTextPartOne}
                 <span
-                    className={`${classes.mainText} ${classes.mainTextBold}`}>{window.strings.home.mainTextMiddleBold}</span>
+                    className={`${mainTextClass} ${classes.mainTextBold}`}>{window.strings.home.mainTextMiddleBold}</span>
                 {window.strings.home.mainTextPartTwo}</span>
         </div>
         <div className={classes.searchContainer} ref={ref}>
@@ -81,7 +84,7 @@ const SearchInput = () => {
                 value={searchTerm}
                 onChange={inputChangeEvent}
                 onKeyDown={handleKeyDown}
-                className={classes.searchInput}
+                className={withA11y(classes.searchInput, classes.searchInputA11y)}
                 placeholder={window.strings.search.label}
                 aria-label={inputDescription}
                 autoComplete="off"

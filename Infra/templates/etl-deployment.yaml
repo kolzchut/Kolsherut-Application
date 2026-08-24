@@ -1,0 +1,205 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "backend.fullname" . }}-etl
+  labels:
+    component: etl
+    {{- include "backend.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.etl.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      component: etl
+      {{- include "backend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        component: etl
+        {{- include "backend.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      
+      initContainers:
+        - name: wait-for-elasticsearch
+          image: busybox:1.28
+          command: 
+            - 'sh'
+            - '-c'
+            - |
+              until nc -z -v -w30 {{ include "backend.fullname" . }}-elasticsearch 9200; do
+                sleep 2
+              done
+              
+      containers:
+        - name: etl
+          image: "{{ .Values.etl.image.repository }}:{{ .Values.etl.image.tag }}"
+          imagePullPolicy: {{ .Values.etl.image.pullPolicy }}
+          
+          ports:
+            - name: http
+              containerPort: 3012
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.etl.resources | nindent 12 }}
+          
+          volumeMounts:
+            - name: etl-storage
+              mountPath: /opt/cronicle/data
+
+          env:
+            # -----------------------------------------------------
+            # 1. CRONICLE INTERNAL AUTH
+            # -----------------------------------------------------
+            - name: CRONICLE_admin_user
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: CRONICLE_ADMIN_USER
+            - name: CRONICLE_admin_pass
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: CRONICLE_ADMIN_PASS
+            - name: CRONICLE_mail_options__auth__pass
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: EMAIL_NOTIFIER_PASSWORD
+
+            # -----------------------------------------------------
+            # 2. ELASTICSEARCH CONNECTION
+            # -----------------------------------------------------
+            - name: ELASTIC_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: ELASTIC_USERNAME
+            - name: ELASTIC_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: ELASTIC_PASS
+           
+            - name: ES_HOST
+              value: "{{ include "backend.fullname" . }}-elasticsearch"
+            - name: ES_PORT
+              value: "9200"
+            - name: ES_HTTP_AUTH
+              value: "$(ELASTIC_USERNAME):$(ELASTIC_PASS)"
+
+            # -----------------------------------------------------
+            # 3. APP SECRETS & API KEYS
+            # -----------------------------------------------------
+            - name: ENV_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: ENV_NAME
+            - name: DATAFLOWS_AIRTABLE_APIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: DATAFLOWS_AIRTABLE_APIKEY
+            - name: KZ_GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: KZ_GITHUB_TOKEN
+            - name: KZ_KOLSHERUT_APPLICATION_GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: KZ_KOLSHERUT_APPLICATION_GITHUB_TOKEN
+            
+            # --- Guidestar & External APIs ---
+            - name: ETL_GUIDESTAR_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: ETL_GUIDESTAR_USERNAME
+            - name: ETL_GUIDESTAR_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: ETL_GUIDESTAR_PASSWORD
+            - name: ETL_GOVMAP_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: ETL_GOVMAP_API_KEY
+            - name: ETL_GOOGLE_MAPS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: ETL_GOOGLE_MAPS_API_KEY
+            - name: ETL_GOOGLE_SERVICE_ACCOUNT_JSON_BASE64
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: ETL_GOOGLE_SERVICE_ACCOUNT_JSON_BASE64
+
+            # --- Airtable Bases ---
+            - name: ETL_AIRTABLE_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: ETL_AIRTABLE_BASE
+            - name: ETL_AIRTABLE_STAGING_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: ETL_AIRTABLE_STAGING_BASE
+            - name: ETL_AIRTABLE_ALTERNATE_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: ETL_AIRTABLE_ALTERNATE_BASE
+            - name: ETL_AIRTABLE_DATAENTRY_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: ETL_AIRTABLE_DATAENTRY_BASE
+            - name: ETL_AIRTABLE_DATA_IMPORT_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: ETL_AIRTABLE_DATA_IMPORT_BASE
+
+            # --- Email Config ---
+            - name: EMAIL_NOTIFIER_SENDER_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: EMAIL_NOTIFIER_SENDER_EMAIL
+            - name: EMAIL_NOTIFIER_RECIPIENT_LIST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: EMAIL_NOTIFIER_RECIPIENT_LIST
+            - name: EMAIL_NOTIFIER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: EMAIL_NOTIFIER_PASSWORD
+
+            # -----------------------------------------------------
+            # 4. STATIC ENV VARS
+            # -----------------------------------------------------
+            {{- range $key, $value := .Values.etl.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            
+      volumes:
+        - name: etl-storage
+        {{- if .Values.etl.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "backend.fullname" . }}-etl-data
+        {{- else }}
+          emptyDir: {}
+        {{- end }}

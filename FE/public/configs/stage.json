@@ -1,6 +1,7 @@
 {
   "state": "stage",
-  "server": "https://srm-staging-api.whiletrue.industries",
+  "server": "https://be-staging.kolsherut.org.il",
   "analyticsId": "G-GYV3YZ00Z8",
-  "currentURL": "https://srm-staging.whiletrue.industries"
+  "currentURL": "https://staging.kolsherut.org.il",
+  "sitemapsDefaultLastModified": "2026-05-23T00:00:00.000Z"
 }

@@ -1,0 +1,17 @@
+{{- if .Values.frontend.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "backend.fullname" . }}-fe-config
+  labels:
+    component: frontend
+    {{- include "backend.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  volumeName: {{ include "backend.fullname" . }}-fe-config-pv
+  resources:
+    requests:
+      storage: {{ .Values.frontend.persistence.size | quote }}
+{{- end }}
