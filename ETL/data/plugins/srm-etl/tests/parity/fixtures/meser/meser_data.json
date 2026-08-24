@@ -1,0 +1,127 @@
+{
+  "datagovil_records": [
+    {
+      "Name": "מרכז יום לקשיש חיפה",
+      "Type_Descr": "מרכז יום",
+      "Misgeret_Id": "1001",
+      "ORGANIZATIONS_BUSINES_NUM": "580011111",
+      "Registered_Business_Id": null,
+      "Adrees": "הרצל 5 999",
+      "City_Name": "חיפה",
+      "Telephone": "48123456",
+      "Target_Population_Descr": "קשישים",
+      "Second_Classific": "NULL",
+      "Gender_Descr": "רב תכליתי",
+      "Head_Department": "זקנה",
+      "GisX": 34.9,
+      "GisY": 32.8,
+      "Owner_Code_Descr": "עמותה",
+      "Actual_Capacity": 30,
+      "From_Age": 65,
+      "To_Age": 120,
+      "STARTD": "01/02/2015"
+    },
+    {
+      "Name": "מרכז יום לקשיש חיפה",
+      "Type_Descr": "מרכז יום",
+      "Misgeret_Id": "1001",
+      "ORGANIZATIONS_BUSINES_NUM": "580011111",
+      "Registered_Business_Id": null,
+      "Adrees": "הרצל 5 999",
+      "City_Name": "חיפה",
+      "Telephone": "48123456",
+      "Target_Population_Descr": "ניצולי שואה",
+      "Second_Classific": "מועדון חברתי",
+      "Gender_Descr": "לא ידוע",
+      "Head_Department": "זקנה",
+      "GisX": 34.9,
+      "GisY": 32.8,
+      "Owner_Code_Descr": "עמותה",
+      "Actual_Capacity": 25,
+      "From_Age": 65,
+      "To_Age": 120,
+      "STARTD": "03/04/2016"
+    },
+    {
+      "Name": "מועדונית לילדים",
+      "Type_Descr": "מועדונית",
+      "Misgeret_Id": "2002",
+      "ORGANIZATIONS_BUSINES_NUM": null,
+      "Registered_Business_Id": null,
+      "Adrees": "סנסנה",
+      "City_Name": "סנסנה",
+      "Telephone": "0",
+      "Target_Population_Descr": "ילדים",
+      "Second_Classific": null,
+      "Gender_Descr": null,
+      "Head_Department": "ילד ונוער",
+      "GisX": null,
+      "GisY": null,
+      "Owner_Code_Descr": "רשות מקומית",
+      "Actual_Capacity": 15,
+      "From_Age": 6,
+      "To_Age": 12,
+      "STARTD": "05/06/2018"
+    },
+    {
+      "Name": "מועדונית נוער",
+      "Type_Descr": "מועדונית",
+      "Misgeret_Id": "3003",
+      "ORGANIZATIONS_BUSINES_NUM": null,
+      "Registered_Business_Id": null,
+      "Adrees": "רחוב הדקל 2",
+      "City_Name": "עיר לא קיימת",
+      "Telephone": "39876543",
+      "Target_Population_Descr": "נוער",
+      "Second_Classific": null,
+      "Gender_Descr": null,
+      "Head_Department": "ילד ונוער",
+      "GisX": null,
+      "GisY": null,
+      "Owner_Code_Descr": "רשות מקומית",
+      "Actual_Capacity": 20,
+      "From_Age": 12,
+      "To_Age": 18,
+      "STARTD": null
+    }
+  ],
+  "tags": [
+    {"tag": "קשישים", "response_ids": ["human_services:care:daytime_care"], "situation_ids": ["human_situations:age_group:seniors"]},
+    {"tag": "ילדים", "response_ids": ["human_services:care"], "situation_ids": ["human_situations:age_group:children"]},
+    {"tag": "מרכזי יום", "response_ids": ["human_services:place:daytime_center"], "situation_ids": []},
+    {"tag": "dummy", "response_ids": ["should-not-appear"], "situation_ids": []}
+  ],
+  "program_texts": [
+    {
+      "ServiceTypeNum": 10,
+      "ServiceTypeName": "מרכזי יום",
+      "ServiceTypePublicName": "תכנית מרכזי יום",
+      "ServiceTypePublicDetails": "פרטים על התכנית",
+      "Implementation_process": "פנייה למחלקה לשירותים חברתיים",
+      "marked_as_false_by_revaha": null
+    },
+    {
+      "ServiceTypeNum": 20,
+      "ServiceTypeName": "תכנית שגויה",
+      "ServiceTypePublicName": "לא אמור להופיע",
+      "ServiceTypePublicDetails": null,
+      "Implementation_process": null,
+      "marked_as_false_by_revaha": "X"
+    }
+  ],
+  "program_ids": [
+    {"ServiceTypeNum": 10, "Misgeret_Id": 1001}
+  ],
+  "tables": {
+    "Organizations": [
+      {"id": "recOrgA", "fields": {"id": "580011111"}},
+      {"id": "recOrgDef", "fields": {"id": "500106406"}},
+      {"id": "recCouncil", "fields": {"id": "500277785"}}
+    ],
+    "Branches": [
+      {"id": "recBr1", "fields": {"id": "meser-b-1001"}},
+      {"id": "recBr2", "fields": {"id": "meser-b-2002"}}
+    ],
+    "Services": []
+  }
+}

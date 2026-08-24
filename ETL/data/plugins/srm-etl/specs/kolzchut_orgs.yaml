@@ -1,0 +1,24 @@
+name: kolzchut_orgs
+description: null   # TODO: fill in manually — business description of this data source
+
+apis:
+  - name: fetch
+    url: "https://www.kolzchut.org.il/w/he/index.php?title=מיוחד:CargoExport&tables=organization&fields=organization_number&where=organization_number+is+not+null&format=json&limit=1000"
+    format: json
+
+outputs:
+  - name: organization
+    derive_from: fetch
+    table: AIRTABLE_ORGANIZATION_TABLE
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: entities
+    manage_status: false
+    row_transforms:
+      - op: dedupe_rows
+        by: [organization number]
+    columns:
+      - target: id
+        source: organization number
+        transforms:
+          - {op: cast, to: string}
+      - {target: last_tag_date, generate: today}

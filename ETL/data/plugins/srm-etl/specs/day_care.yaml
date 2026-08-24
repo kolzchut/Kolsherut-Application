@@ -1,0 +1,163 @@
+name: day_care
+description: null   # TODO: fill in manually — business description of this data source
+
+apis:
+  - name: fetch
+    url: "settings:DAYCARE_API_URL"
+    format: json
+    paginate: link_next   # NOTE: the old code fetched only the first datastore page
+
+lookups:
+  service_matcher:
+    משפחתון: mol_daycare-1
+    צהרון: mol_daycare-2
+
+static_data:
+  services:
+    - id: mol_daycare-1
+      source: mol_daycare
+      data_sources: 'מידע נוסף אפשר למצוא ב<a target="_blank" href="https://daycareclasssearch.labor.gov.il/">אתר משרד העבודה, פורטל איתור מסגרות מוכרות</a>'
+      name: משפחתון בפיקוח משרד העבודה
+      description: 'מסגרת חינוכית-טיפולית לקבוצה של עד 5 פעוטות מגיל לידה ועד שלוש שנים. המשפחתונים מנוהלים בבית פרטי על-ידי מטפלות עצמאיות, ומפוקחים על-ידי משרד העבודה. ניתן לקבל סבסוד של שכר הלימוד ממשרד העבודה.'
+      details: 'שכר הלימוד במשפחתונים נמצא תחת פיקוח. מידע נוסף ועדכני לגבי גובה שכר הלימוד ניתן למצוא ב<a target="_blank" href="https://www.gov.il/he/pages/tuition-daycare-and-supervised-nurseries>אתר משרד העבודה</a>'
+      situations: [human_situations:age_group:infants]
+      responses: [human_services:care:daytime_care]
+      payment_required: 'yes'
+      status: ACTIVE
+    - id: mol_daycare-2
+      source: mol_daycare
+      data_sources: 'מידע נוסף אפשר למצוא ב<a target="_blank" href="https://daycareclasssearch.labor.gov.il/">אתר משרד העבודה, פורטל איתור מסגרות מוכרות</a>'
+      name: צהרון לילדי גן
+      description: 'מסגרת הפועלת במהלך בשעות אחר הצהריים, בהמשך ליום הלימודים בגני הילדים. במסגרת הצהרון מקבלים הילדים ארוחה חמה ומתקיימת פעילות העשרה. הצהרונים פועלים באישור משרד החינוך, וניתן לקבל סבסוד ממשרד העבודה'
+      details: ''
+      situations: [human_situations:age_group:children]
+      responses: [human_services:education:afterschool_care]
+      payment_required: 'yes'
+      status: ACTIVE
+
+outputs:
+  # Intermediate resource — the cleaned, organization-matched daycare rows
+  - name: daycare_records
+    derive_from: fetch
+    row_transforms:
+      - {op: filter_rows, predicate: in_list, field: תיאור סוג מעון, values: [משפחתון, צהרון]}
+      - {op: transform_column, column: מספר טלפון, column_op: regex_replace, pattern: '\D', replacement: ''}
+      - {op: filter_rows, predicate: str_len_between, field: מספר טלפון, min: 8, max: 11}
+      - {op: transform_column, column: מספר טלפון, column_op: ensure_prefix, prefix: '0'}
+      # org ids sometimes arrive padded as 11<id>xx — strip the padding
+      - {op: transform_column, column: ח.פ. ארגון, column_op: strip_padded_id, padding_prefix: '11', min_len: 13, cut: 2}
+      - op: transform_column
+        column: שם ארגון
+        column_op: replace_by_prefix_rules
+        rules:
+          - prefixes: [מ. אזורית, מ.א., מ.א]
+            replacements: {מ. אזורית: מועצה אזורית, מ.א.: מועצה אזורית, מ.א: מועצה אזורית}
+          - prefixes: [מ. מקומית, מ.מקומית, מ.מ.]
+            replacements: {מ. מקומית: מועצה מקומית, מ.מקומית: מועצה מקומית, מ.מ.: מועצה מקומית}
+      # fuzzy-match org names against the curated Airtable org names and
+      # override the business id with the matched organization's id
+      - op: airtable_lookup_match
+        match_field: שם ארגון
+        lookup_table: AIRTABLE_ORGANIZATION_TABLE
+        lookup_base: AIRTABLE_DATA_IMPORT_BASE
+        lookup_field: x_final_org_name
+        override_field: ח.פ. ארגון
+        prefixes: [מועצה מקומית, מועצה אזורית, עיריית]
+        normalizations: {'עירית ': 'עיריית '}
+    columns:
+      - {target: תיאור סוג מעון, source: תיאור סוג מעון}
+      - {target: מספר טלפון, source: מספר טלפון}
+      - {target: ח.פ. ארגון, source: ח.פ. ארגון}
+      - {target: שם ארגון, source: שם ארגון}
+      - {target: שם מעון, source: שם מעון}
+      - {target: סמל מעון, source: סמל מעון}
+      - {target: שם עיר, source: שם עיר}
+      - {target: שם רחוב, source: שם רחוב}
+      - {target: מספר בית, source: מספר בית}
+      - {target: שם מנהל, source: שם מנהל}
+
+  - name: service
+    derive_from: static_data.services
+    table: AIRTABLE_SERVICE_TABLE
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: mol_daycare
+    manage_status: true
+    columns:
+      - {target: id, source: id}
+      - {target: data_sources, source: data_sources}
+      - {target: name, source: name}
+      - {target: description, source: description}
+      - {target: details, source: details}
+      - {target: situations, source: situations}
+      - {target: responses, source: responses}
+      - {target: payment_required, source: payment_required}
+
+  - name: organization
+    derive_from: daycare_records
+    table: AIRTABLE_ORGANIZATION_TABLE
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: mol_daycare
+    manage_status: true
+    fields_to_update: [id, source, status]
+    row_transforms:
+      - {op: filter_rows, predicate: str_len_between, field: ח.פ. ארגון, min: 5}
+    columns:
+      - {target: id, source: ח.פ. ארגון}
+      - {target: name, source: שם ארגון}
+      # NOTE: the old operator renamed שם ארגון away before deriving kind,
+      # so kind was always 'חברה פרטית'; preserved as a constant
+      - {target: kind, value: חברה פרטית}
+
+  # Intermediate resource — branch rows before Airtable foreign-key resolution
+  - name: branch_base
+    derive_from: daycare_records
+    columns:
+      - target: id
+        source: [סמל מעון, ח.פ. ארגון]
+        transforms:
+          - {op: hash_fields, prefix: 'mol_daycare-', separator: ''}
+      - {target: name, source: שם מעון}
+      - {target: phone_numbers, source: מספר טלפון}
+      - target: address
+        source: [שם עיר, שם רחוב, מספר בית]
+        transforms:
+          - {op: join_present_fields, separator: ' '}
+      - {target: location, source: address}
+      - target: description
+        source: [שם מנהל, סמל מעון]
+        transforms:
+          - {op: template, template: "{שם מנהל} \n {סמל מעון}", empty_missing: true}
+      - {target: org_business_id, source: ח.פ. ארגון}
+      - target: service_id_matcher
+        source: תיאור סוג מעון
+        transforms:
+          - {op: lookup_map, lookup: service_matcher, default: mol_daycare-0}
+
+  - name: branch
+    derive_from: branch_base
+    table: AIRTABLE_BRANCH_TABLE
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: mol_daycare
+    manage_status: true
+    row_transforms:
+      - op: resolve_foreign_key
+        source_table: AIRTABLE_ORGANIZATION_TABLE
+        current_table: AIRTABLE_BRANCH_TABLE
+        base: AIRTABLE_DATA_IMPORT_BASE
+        base_field: org_business_id
+        target_field: organization
+      - op: resolve_foreign_key
+        source_table: AIRTABLE_SERVICE_TABLE
+        current_table: AIRTABLE_BRANCH_TABLE
+        base: AIRTABLE_DATA_IMPORT_BASE
+        base_field: service_id_matcher
+        target_field: services
+    columns:
+      - {target: id, source: id}
+      - {target: name, source: name}
+      - {target: phone_numbers, source: phone_numbers}
+      - {target: address, source: address}
+      - {target: location, source: location}
+      - {target: description, source: description}
+      - {target: organization, source: organization}
+      - {target: services, source: services}

@@ -1,0 +1,93 @@
+name: shil
+description: null   # TODO: fill in manually — business description of this data source
+
+apis:
+  - name: fetch
+    url: "settings:SHIL_API"
+    format: json
+    paginate: gov_batch
+
+static_data:
+  services:
+    - id: shil-1
+      name: שירות ייעוץ לאזרח
+      source: shil
+      description: "שי״ל הוא שירות הפועל למתן הכוונה וייעוץ לפונים בנושאי זכויות, חובות, ושירותים העומדים לרשות האזרח.\nהשירות ניתן בחינם ובסודיות לכל פונה, על ידי צוות עובדים ומתנדבים בתחנות שי״ל הפזורות בארץ.\nהשירות פועל במסגרת תחום מיצוי זכויות באגף למשאבי קהילה ועבודה קהילתית במשרד הרווחה והביטחון החברתי ומופעל בשיתוף הרשויות המקומיות."
+      payment_required: 'no'
+      urls: ''
+      organizations: []
+      data_sources: 'המידע התקבל מ<a target="_blank" href="https://www.gov.il/he/Departments/Guides/molsa-shill-guide" target="_blank">האתר של שי״ל</a>'
+      responses:
+        - human_services:legal:advocacy_legal_aid
+        - human_services:legal:advocacy_legal_aid:understand_government_programs
+        - human_services:internal_emergency_services
+      situations: []
+
+outputs:
+  - name: branch
+    derive_from: fetch
+    table: AIRTABLE_BRANCH_TABLE
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: shil
+    row_transforms:
+      # The gov.il payload nests the address in an object column — flatten it first
+      - op: flatten_nested_field
+        fields:
+          address_city: [Address, CityDesc, 0]
+          address_street: [Address, Street]
+          address_number: [Address, HouseNumber]
+          address_x: [Address, mapiXCordinata]
+          address_y: [Address, mapiYCordinata]
+    columns:
+      - target: id
+        source: [ItemId]
+        transforms:
+          - {op: template, template: 'shil:{ItemId}'}
+      - {target: name, source: Title}
+      - target: phone_numbers
+        source: [PhoneNumber, PhoneNumber2]
+        transforms:
+          - {op: join_nonempty, separator: "\n"}
+      - {target: email_address, source: Email}
+      - {target: address_details, source: Location}
+      - target: description
+        source: Description
+        transforms:
+          - {op: strip_html}
+      - target: urls
+        source: [UrlName, Title]
+        transforms:
+          - {op: template, template: 'https://www.gov.il/he/departments/bureaus/{UrlName}#{Title}'}
+      - target: address
+        source: [address_street, address_number, address_city]
+        transforms:
+          - op: address_cascade
+            fields: {street: address_street, number: address_number, city: address_city}
+            cases:
+              - {require: [city, number], format: '{street} {number}, {city}'}
+              - {require: [city], format: '{street}, {city}'}
+              - {require: [], format: '{street}'}
+      - target: location
+        source: [address_y, address_x, address]
+        transforms:
+          - {op: pluscode_location, lat_field: address_y, lon_field: address_x, fallback_field: address, from_crs: 'EPSG:2039'}
+      - {target: organization, value: ['500106406']}
+      - {target: operating_unit, value: תחנת שירות ייעוץ לאזרח - שי״ל}
+      - {target: services, value: [shil-1]}
+
+  - name: service
+    derive_from: static_data.services
+    table: AIRTABLE_SERVICE_TABLE
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: shil
+    columns:
+      - {target: id, source: id}
+      - {target: name, source: name}
+      - {target: source, source: source}
+      - {target: description, source: description}
+      - {target: payment_required, source: payment_required}
+      - {target: urls, source: urls}
+      - {target: organizations, source: organizations}
+      - {target: data_sources, source: data_sources}
+      - {target: responses, source: responses}
+      - {target: situations, source: situations}

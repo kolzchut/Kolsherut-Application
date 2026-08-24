@@ -1,0 +1,199 @@
+name: mental_health_clinics
+description: >-
+  תהליך שבועי (רץ על staging מול בסיס Data Import) שמייבא את רשימת מרפאות בריאות הנפש
+  הציבוריות מתוך אתר משרד הבריאות ב-gov.il. כל מרפאה נטענת כסניף: עם כתובת (או שם העיר
+  כשאין כתובת מלאה), מספרי הטלפון שחולצו מהרשומה, ותיאור המאחד את סוגי ההתערבות, מומחיות
+  המרפאה וזמן ההמתנה הממוצע לאינטק. כל סניף מקושר לארגון של קופת החולים שלו — לאומית,
+  מכבי, כללית, מאוחדת, או ארגון כללי של משרד הבריאות כשאין שיוך לקופה — כשלכל ארגון
+  הוגדרו מראש מוקד טלפוני וכתובת אינטרנט רלוונטיים באתר הקופה/משרד הבריאות. רשומות
+  המסומנות כ"קליניקה" מדולגות, וערכים חסרי משמעות ("אין נתונים", "לא קיים" וכד')
+  מנוקים. בנוסף נבנים שירותים לפי קהל היעד של המרפאה ("מבוגרים או ילדים"): שם השירות
+  הוא "מרפאת בריאות נפש" בצירוף קהל היעד, אליו מקושרים כל סניפי המרפאות המתאימות,
+  המצבים "מתמודדי נפש" יחד עם קבוצות הגיל הרלוונטיות, והמענה "שירותי בריאות הנפש".
+
+apis:
+  - name: resolve
+    url: "settings:DATAGOVIL_PACKAGE_SEARCH_API"
+    format: json
+    params:
+      q: '"mentalhealthclinics"'
+    provides:
+      name: resource_id
+      extract:
+        op: datagovil_resource_id
+        dataset: mentalhealthclinics
+        resource: "מרפאות בריאות הנפש - משרד הבריאות"
+
+  - name: fetch
+    url: "settings:DATAGOVIL_DATASTORE_SEARCH_API"
+    format: json
+    params:
+      resource_id: "${resolve.resource_id}"
+    paginate: link_next
+
+lookups:
+  hmo_names:
+    1: לאומית
+    2: מכבי
+    3: כללית
+    4: מאוחדת
+    5: כל הקופות
+  missing_values:
+    - אין מומחיות מיוחדת
+    - לא קיים
+    - אין נתונים
+    - לא
+    - אין
+    - כל הקופות
+    - כל סוגי הטיפולים
+  situations_by_age_group:
+    מבוגרים: [human_situations:age_group:adults, human_situations:age_group:young_adults, human_situations:age_group:seniors]
+    "טיפול יום-מבוגרים": [human_situations:age_group:adults, human_situations:age_group:young_adults, human_situations:age_group:seniors]
+    "מבוגרים-יועץ במרפאה ראשונית(ליאזון)": [human_situations:age_group:adults, human_situations:age_group:young_adults, human_situations:age_group:seniors]
+    "ילדים ונוער": [human_situations:age_group:children, human_situations:age_group:teens]
+    "ילדים ונוער-יועץ במרפאה ראשונית(ליאזון)": [human_situations:age_group:children, human_situations:age_group:teens]
+    "טיפול יום-נוער": [human_situations:age_group:teens]
+    נוער: [human_situations:age_group:teens]
+
+static_data:
+  # Always-present organization records — one per HMO plus a fallback ("default").
+  # Doubles as the lookup source for the branch output's organization/urls columns.
+  organizations:
+    לאומית: {id: srm0010, name: קופת חולים לאומית, short_name: לאומית, phone_numbers: "1-700-507-507", urls: "https://www.leumit.co.il/heb/Rights/mentalhealth/"}
+    מכבי: {id: srm0011, name: מכבי שירותי בריאות, short_name: מכבי, phone_numbers: "*3555", urls: "https://www.maccabi4u.co.il/New/eligibilites/2062/"}
+    כללית: {id: srm0012, name: שירותי בריאות כללית, short_name: כללית, phone_numbers: "*2700", urls: "https://www.clalit.co.il/he/your_health/family/mental_health/Pages/clalit_mental_health_clinics.aspx"}
+    מאוחדת: {id: srm0013, name: קופת חולים מאוחדת, short_name: מאוחדת, phone_numbers: "*3833", urls: "https://www.meuhedet.co.il/%D7%9E%D7%90%D7%95%D7%97%D7%93%D7%AA-%D7%9C%D7%A0%D7%A4%D7%A9/"}
+    default: {id: srm0019, name: מרפאות בריאות נפש, short_name: משרד הבריאות, phone_numbers: "*5400", urls: "https://www.health.gov.il/Subjects/mental_health/treatment/clinics/Pages/default.aspx"}
+
+outputs:
+  # Intermediate resource — cleaned per-row clinic data, not loaded to Airtable directly.
+  # `source:` names are the raw API columns; `target:` names are what downstream outputs see.
+  - name: clinics
+    derive_from: fetch
+    row_transforms:
+      - op: nullify_missing_values
+        values: lookups.missing_values
+      - op: filter_rows
+        predicate: not_contains
+        field: audience              # raw API column (becomes age_group below)
+        value: קליניקה
+      - op: filter_rows
+        predicate: not_null
+        field: street                # raw API column (feeds address below)
+    columns:
+      - target: name
+        source: clinic_name
+      - target: age_group
+        source: audience
+      - target: hmo
+        source: HMO_code
+        transforms:
+          - {op: lookup_map, lookup: hmo_names}
+          - {op: nullify_values, values: lookups.missing_values}
+      - target: phone_numbers
+        source: phone
+        transforms:
+          - {op: regex_extract_join, pattern: '[0-9-]{7,}', separator: "\n"}
+      - target: intake_wait
+        source: intake_wait
+        transforms:
+          - {op: cast, to: string}
+      - target: interventions
+        source: intervention_type
+      - target: expertise
+        source: specialization
+      - target: address
+        source: [street, city]
+        transforms:
+          - {op: join_address, skip_city_if_contained: true}
+      - target: location
+        source: address              # references the target column built just above
+        transforms:
+          - {op: strip}
+      - target: id
+        source: [name, phone_numbers, address, hmo]
+        transforms:
+          - {op: hash_fields, prefix: "mhclinic-"}
+
+  - name: branch
+    derive_from: clinics
+    table: AIRTABLE_BRANCH_TABLE
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: mental-health-clinics
+    row_transforms:
+      - op: groupby_aggregate
+        by: [id]
+        aggregate:
+          name: first
+          address: first
+          location: first
+          hmo: first
+          phone_numbers: unique_join
+          interventions: unique_list
+          expertise: unique_list
+          intake_wait: unique_list
+    columns:
+      - {target: id, source: id}
+      - {target: name, source: name}
+      - {target: address, source: address}
+      - {target: location, source: location}
+      - {target: phone_numbers, source: phone_numbers}
+      - target: description
+        source: [interventions, expertise, intake_wait]
+        transforms:
+          - op: labeled_concat
+            parts:
+              - {field: interventions, label: "סוגי התערבויות", min_len: 2}
+              - {field: expertise, label: "מומחיות המרפאה", min_len: 2}
+              - {field: intake_wait, label: "המתנה ממוצעת לאינטק (שבועות)", min_len: 0}
+      - target: organization
+        source: hmo
+        transforms:
+          - {op: lookup_field, lookup: static_data.organizations, default_key: default, path: id}
+      - target: urls
+        source: hmo
+        transforms:
+          - {op: lookup_field, lookup: static_data.organizations, default_key: default, path: urls}
+
+  - name: service
+    derive_from: clinics
+    table: AIRTABLE_SERVICE_TABLE
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: mental-health-clinics
+    row_transforms:
+      # derive the groupby key before aggregating — service rows are grouped by generated name
+      - op: template_field
+        target: name
+        template: "מרפאת בריאות נפש {age_group}"
+      - op: groupby_aggregate
+        by: [name]
+        aggregate:
+          branches: {source_field: id, op: unique_list}
+          age_group: unique_list
+    columns:
+      - {target: name, source: name}
+      - {target: branches, source: branches}
+      - target: situations
+        source: age_group
+        transforms:
+          - {op: lookup_union, lookup: situations_by_age_group, prepend: [human_situations:disability:mental_illness]}
+      - target: responses
+        value: [human_services:health:mental_health_care, human_services:place:health:clinic:mental_health_clinic]
+      - target: data_sources
+        value: 'המידע התקבל מ<a target="_blank" href="https://www.health.gov.il/Subjects/mental_health/treatment/clinics/Pages/mental-clinics.aspx">משרד הבריאות</a>'
+      - target: id
+        source: name
+        transforms:
+          - {op: slugify_with_prefix, prefix: "mhclinic-"}
+
+  # Always-loaded static records — not derived from the fetched api calls at all
+  - name: organization
+    derive_from: static_data.organizations
+    table: AIRTABLE_ORGANIZATION_TABLE
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: mental-health-clinics
+    columns:
+      - {target: id, source: id}
+      - {target: name, source: name}
+      - {target: short_name, source: short_name}
+      - {target: phone_numbers, source: phone_numbers}

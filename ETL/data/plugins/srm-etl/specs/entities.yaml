@@ -1,0 +1,139 @@
+name: entities
+description: null   # TODO: fill in manually — business description of this data source
+
+apis:
+  # All organizations known to Guidestar (drives the last_tag_date registration)
+  - name: guidestar_orgs
+    url: "guidestar://organizations"
+    format: guidestar_orgs
+
+  # The organizations table itself drives enrichment, branches and services
+  - name: airtable_orgs
+    url: "airtable://Organizations"
+    format: airtable
+    table: Organizations
+    base: AIRTABLE_DATA_IMPORT_BASE
+
+  - name: taxonomy_guidestar
+    url: "airtable://Guidestar Service Taxonomy Mapping"
+    format: airtable
+    table: Guidestar Service Taxonomy Mapping
+    base: AIRTABLE_STAGING_BASE
+
+  - name: taxonomy_soproc
+    url: "airtable://soproc-service-tagging"
+    format: airtable
+    table: soproc-service-tagging
+    base: AIRTABLE_DATA_IMPORT_BASE
+
+outputs:
+  # Register every Guidestar organization with a fresh last_tag_date
+  - name: organization_tags
+    derive_from: guidestar_orgs
+    table: AIRTABLE_ORGANIZATION_TABLE
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: entities
+    manage_status: false
+    columns:
+      - {target: id, source: id}
+      - {target: last_tag_date, generate: today}
+
+  # Intermediate resource — 'entities' organizations from Airtable
+  - name: entities_orgs
+    derive_from: airtable_orgs
+    row_transforms:
+      - {op: filter_rows, predicate: equals, field: source, value: entities}
+    columns:
+      - {target: id, source: id}
+      - {target: kind, source: kind}
+
+  # Enrich organization details from Guidestar (BudgetKey as fallback)
+  - name: organization_details
+    derive_from: entities_orgs
+    table: AIRTABLE_ORGANIZATION_TABLE
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: entities
+    set_source: false
+    set_status: false
+    manage_status: false
+    row_transforms:
+      - {op: guidestar_org_enrichment}
+    columns:
+      - {target: id, source: id}
+      - {target: name, source: name, optional: true}
+      - {target: short_name, source: short_name, optional: true}
+      - {target: kind, source: kind}
+      - {target: description, source: description, optional: true}
+      - {target: purpose, source: purpose, optional: true}
+      - {target: urls, source: urls, optional: true}
+      - {target: phone_numbers, source: phone_numbers, optional: true}
+      - {target: email_address, source: email_address, optional: true}
+
+  # Intermediate resource — ACTIVE 'entities' organizations
+  - name: entities_active_orgs
+    derive_from: airtable_orgs
+    row_transforms:
+      - {op: filter_rows, predicate: equals, field: source, value: entities}
+      - {op: filter_rows, predicate: equals, field: status, value: ACTIVE}
+    columns:
+      - {target: id, source: id}
+      - {target: name, source: name}
+      - {target: short_name, source: short_name}
+      - {target: kind, source: kind}
+
+  - name: branch
+    derive_from: entities_active_orgs
+    table: AIRTABLE_BRANCH_TABLE
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: entities
+    manage_status: false
+    row_transforms:
+      - {op: guidestar_unwind_branches}
+    columns:
+      - {target: id, source: id}
+      - {target: name, source: name}
+      - {target: organization, source: organization}
+      - {target: address, source: address}
+      - {target: address_details, source: address_details, optional: true}
+      - {target: location, source: location}
+      - {target: description, source: description, optional: true}
+      - {target: phone_numbers, source: phone_numbers, optional: true}
+      - {target: urls, source: urls, optional: true}
+      - {target: situations, source: situations, optional: true}
+
+  # Intermediate resource — ALL active organizations (any source) drive services
+  - name: active_orgs
+    derive_from: airtable_orgs
+    row_transforms:
+      - {op: filter_rows, predicate: equals, field: status, value: ACTIVE}
+    columns:
+      - {target: id, source: id}
+      - {target: name, source: name}
+      - {target: source, source: source}
+
+  - name: service
+    derive_from: active_orgs
+    table: AIRTABLE_SERVICE_TABLE
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: guidestar
+    manage_status: true
+    row_transforms:
+      - op: guidestar_unwind_services
+        guidestar_taxonomy_source: taxonomy_guidestar
+        soproc_taxonomy_source: taxonomy_soproc
+    columns:
+      - {target: id, source: id}
+      - {target: name, source: name}
+      - {target: description, source: description}
+      - {target: details, source: details}
+      - {target: payment_required, source: payment_required}
+      - {target: payment_details, source: payment_details}
+      - {target: urls, source: urls, optional: true}
+      - {target: situations, source: situations}
+      - {target: responses, source: responses}
+      - {target: organizations, source: organizations}
+      - {target: branches, source: branches}
+      - {target: data_sources, source: data_sources}
+      - {target: implements, source: implements, optional: true}
+      - {target: phone_numbers, source: phone_numbers, optional: true}
+      - {target: email_address, source: email_address, optional: true}

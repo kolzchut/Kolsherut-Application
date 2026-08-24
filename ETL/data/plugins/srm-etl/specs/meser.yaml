@@ -1,0 +1,178 @@
+name: meser
+description: null   # TODO: fill in manually — business description of this data source
+
+apis:
+  - name: resolve
+    url: "settings:DATAGOVIL_PACKAGE_SEARCH_API"
+    format: json
+    params:
+      q: welfare-frames
+    provides:
+      name: resource_id
+      extract:
+        op: datagovil_resource_id
+        dataset: welfare-frames
+        resource: "מסגרות רווחה"
+        fallback_first_resource: true
+
+  - name: fetch
+    url: "settings:DATAGOVIL_DATASTORE_SEARCH_API"
+    format: json
+    params:
+      resource_id: "${resolve.resource_id}"
+    paginate: link_next   # NOTE: the old code fetched only the first datastore page
+
+  # Manually curated tag -> responses/situations mapping
+  - name: tags
+    url: "airtable://meser-tagging"
+    format: airtable
+    table: meser-tagging
+    base: AIRTABLE_DATA_IMPORT_BASE
+
+  # Program tables maintained by the ministry on Google Drive
+  - name: program_texts
+    url: "google-drive://טקסטים מתר.xlsx"
+    format: google_drive_xlsx
+    folder_id: 1IeaThZDms_DAognHIYYUx_IkxjiZSffx
+    file_name: טקסטים מתר.xlsx
+
+  - name: program_ids
+    url: "google-drive://מסגרות ותכניות - מזהים.xlsx"
+    format: google_drive_xlsx
+    folder_id: 1IeaThZDms_DAognHIYYUx_IkxjiZSffx
+    file_name: מסגרות ותכניות - מזהים.xlsx
+
+lookups:
+  city_council_map: {file: meser/map_cities_with_local_authorities.csv, dtype: str}
+
+static_data:
+  local_authorities: {file: meser/local_authorities.csv, dtype: str}
+
+outputs:
+  # Program texts with rows marked as false by Revaha removed
+  - name: program_texts_clean
+    derive_from: program_texts
+    row_transforms:
+      - {op: filter_rows, predicate: not_equals, field: marked_as_false_by_revaha, value: X}
+    columns:
+      - {target: ServiceTypeNum, source: ServiceTypeNum}
+      - {target: ServiceTypeName, source: ServiceTypeName}
+      - {target: ServiceTypePublicName, source: ServiceTypePublicName}
+      - {target: ServiceTypePublicDetails, source: ServiceTypePublicDetails}
+      - {target: Implementation_process, source: Implementation_process}
+
+  # The local-authority organizations themselves, loaded as-is from the curated CSV
+  - name: local_authority_organizations
+    derive_from: static_data.local_authorities
+    table: AIRTABLE_ORGANIZATION_TABLE
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: meser
+    set_source: false
+    set_status: false
+    columns:
+      - {target: id, source: id}
+      - {target: name, source: name}
+      - {target: status, source: status}
+      - {target: kind, source: kind}
+      - {target: urls, source: urls}
+      - {target: phone_numbers, source: phone_numbers}
+
+  # Intermediate resource — sanitized, grouped, enriched welfare-frame rows
+  - name: meser_records
+    derive_from: fetch
+    row_transforms:
+      - op: sanitize_columns
+        numeric_fields: [Actual_Capacity, From_Age, To_Age, GisX, GisY]
+        date_fields: [STARTD]
+        missing_values: [NULL, '-1', לא ידוע, לא משויך, רב תכליתי]
+      - {op: meser_core_transform, tags_source: tags}
+      - op: meser_program_enrichment
+        tags_source: tags
+        texts_source: program_texts_clean
+        ids_source: program_ids
+      - {op: meser_local_authority_override, city_council_map: lookups.city_council_map}
+    columns:
+      - {target: service_name, source: service_name}
+      - {target: phone_numbers, source: phone_numbers}
+      - {target: address, source: address}
+      - {target: organization_id, source: organization_id}
+      - {target: service_id, source: service_id}
+      - {target: branch_id, source: branch_id}
+      - {target: meser_id, source: meser_id}
+      - {target: tagging, source: tagging}
+      - {target: responses, source: responses}
+      - {target: situations, source: situations}
+      - {target: description, source: description}
+      - {target: details, source: details}
+
+  - name: organization
+    derive_from: meser_records
+    table: AIRTABLE_ORGANIZATION_TABLE
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: meser
+    manage_status: true
+    columns:
+      - {target: id, source: organization_id}
+
+  - name: branch
+    derive_from: meser_records
+    table: AIRTABLE_BRANCH_TABLE
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: meser
+    manage_status: true
+    row_transforms:
+      - op: resolve_foreign_key
+        source_table: AIRTABLE_ORGANIZATION_TABLE
+        current_table: AIRTABLE_BRANCH_TABLE
+        base: AIRTABLE_DATA_IMPORT_BASE
+        base_field: organization_id
+        target_field: organization
+      - op: groupby_aggregate
+        by: [branch_id]
+        aggregate:
+          organization: flatten_unique
+          address: first
+          phone_numbers: join_comma_nonzero
+    columns:
+      - {target: id, source: branch_id}
+      - {target: organization, source: organization}
+      - {target: address, source: address}
+      - {target: location, source: address}
+      - {target: phone_numbers, source: phone_numbers}
+
+  # Intermediate resource — service rows before branch foreign-key resolution
+  - name: service_base
+    derive_from: meser_records
+    columns:
+      - {target: id, source: service_id}
+      - {target: name, source: service_name}
+      - {target: id_in_source, source: meser_id}
+      - {target: branch_id, source: branch_id}
+      - {target: situations, source: situations}
+      - {target: responses, source: responses}
+      - {target: description, source: description}
+      - {target: details, source: details}
+
+  - name: service
+    derive_from: service_base
+    table: AIRTABLE_SERVICE_TABLE
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: meser
+    manage_status: true
+    row_transforms:
+      - op: resolve_foreign_key
+        source_table: AIRTABLE_BRANCH_TABLE
+        current_table: AIRTABLE_SERVICE_TABLE
+        base: AIRTABLE_DATA_IMPORT_BASE
+        base_field: branch_id
+        target_field: branches
+    columns:
+      - {target: id, source: id}
+      - {target: name, source: name}
+      - {target: data_sources, value: מידע על מסגרות רווחה התקבל ממשרד הרווחה והשירותים החברתיים}
+      - {target: situations, source: situations}
+      - {target: responses, source: responses}
+      - {target: branches, source: branches}
+      - {target: id_in_source, source: id_in_source}
+      - {target: description, source: description}
+      - {target: details, source: details}

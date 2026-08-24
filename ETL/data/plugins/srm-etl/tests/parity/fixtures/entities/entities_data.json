@@ -1,0 +1,125 @@
+{
+  "guidestar_org_cache": {
+    "580011111": {
+      "name": "עמותת חסד (ע\"ר)",
+      "abbreviatedOrgName": "חסד",
+      "malkarType": "עמותה",
+      "orgGoal": "עזרה לנזקקים",
+      "website": "hesed.org.il",
+      "tel1": "03-1111111",
+      "tel2": null,
+      "email": "info@hesed.org.il",
+      "fullAddress": null
+    },
+    "512345678": {
+      "name": "חברת שירותים",
+      "abbreviatedOrgName": null,
+      "malkarType": "חברה",
+      "orgGoal": "מתן שירותים",
+      "website": null,
+      "tel1": null,
+      "tel2": null,
+      "email": null,
+      "fullAddress": "הרצל 1, תל אביב"
+    }
+  },
+  "guidestar_branches": {
+    "580011111": [
+      {
+        "branchId": "B1",
+        "placeNickname": "סניף מרכז",
+        "cityName": "תל אביב",
+        "streetName": "הרצל",
+        "houseNum": "10",
+        "alternateAddress": null,
+        "drivingInstructions": "קומה 2",
+        "phone": "03-2222222",
+        "language": "1;2",
+        "latitude": 32.06,
+        "longitude": 34.77
+      },
+      {
+        "branchId": "B2",
+        "placeNickname": null,
+        "cityName": "חיפה",
+        "streetName": null,
+        "houseNum": null,
+        "alternateAddress": "ללא כתובת",
+        "drivingInstructions": null,
+        "phone": null,
+        "language": null,
+        "latitude": null,
+        "longitude": null
+      }
+    ]
+  },
+  "guidestar_services": {
+    "580011111": [
+      {
+        "serviceId": "S1",
+        "recordType": "GreenInfo",
+        "serviceName": "ייעוץ משפחתי",
+        "serviceGovName": null,
+        "voluntaryDescription": "ייעוץ וליווי למשפחות",
+        "description": null,
+        "branches": [{"branchId": "B1"}, {"branchId": "BX"}],
+        "relatedMalkarService": null,
+        "serviceTypeName": "ייעוץ",
+        "serviceTargetAudience": "משפחות;קשישים",
+        "paymentMethod": "Free service",
+        "serviceTerms": null,
+        "area": "In Branches;Country wide",
+        "whenServiceActive": "All Year",
+        "remoteServiceDelivery": "Phone",
+        "RemoteServiceDelivery_Other": null,
+        "startDate": null,
+        "endDate": null,
+        "url": "hesed.org.il/help",
+        "phone": "03-3333333",
+        "email": null,
+        "language": null,
+        "isForCoronaVirus": null,
+        "lastModifiedDate": "0",
+        "isForBranch": null
+      },
+      {
+        "serviceId": "S2",
+        "recordType": "GreenInfo",
+        "serviceName": "שירות נדחה",
+        "serviceGovName": null,
+        "voluntaryDescription": null,
+        "description": "שירות שלא אמור להיטען",
+        "branches": [],
+        "relatedMalkarService": null,
+        "serviceTypeName": "נדחה",
+        "serviceTargetAudience": "",
+        "isForCoronaVirus": null,
+        "lastModifiedDate": "0",
+        "isForBranch": null
+      }
+    ]
+  },
+  "budgetkey_entities": {
+    "500100904": {
+      "id": "500100904",
+      "name": "משרד הבריאות/יחידת בריאות הנפש",
+      "kind_he": "משרד ממשלתי",
+      "details": {"goal": null}
+    }
+  },
+  "airtable_organizations": [
+    {"__airtable_id": "recE1", "id": "580011111", "kind": null, "source": "entities", "status": "ACTIVE", "name": "עמותת חסד", "short_name": "חסד"},
+    {"__airtable_id": "recE2", "id": "512345678", "kind": "חברה פרטית", "source": "entities", "status": "ACTIVE", "name": "חברת שירותים", "short_name": null},
+    {"__airtable_id": "recE3", "id": "500100904", "kind": null, "source": "entities", "status": "INACTIVE", "name": "משרד הבריאות", "short_name": null},
+    {"__airtable_id": "recE4", "id": "srm0010", "kind": null, "source": "entities", "status": "ACTIVE", "name": "קופת חולים לאומית", "short_name": "לאומית"},
+    {"__airtable_id": "recM1", "id": "1001-org", "kind": null, "source": "meser", "status": "ACTIVE", "name": "ארגון מסר", "short_name": null}
+  ],
+  "taxonomy_guidestar": [
+    {"name": "ייעוץ", "Status": null, "situation_ids": null, "response_ids": ["human_services:care:counseling"]},
+    {"name": "משפחות", "Status": null, "situation_ids": ["human_situations:household:families"], "response_ids": null},
+    {"name": "נדחה", "Status": "REJECTED", "situation_ids": null, "response_ids": null}
+  ],
+  "taxonomy_soproc": [
+    {"id": "soproc:143", "situation_ids": [], "response_ids": []}
+  ]
+}

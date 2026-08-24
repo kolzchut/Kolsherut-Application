@@ -1,0 +1,38 @@
+{
+  "suppliers": [
+    {"entity_id": "580011111", "entity_kind": "association"},
+    {"entity_id": "580022222", "entity_kind": "company"},
+    {"entity_id": "580011111", "entity_kind": "association"},
+    {"entity_id": null, "entity_kind": "municipality"},
+    {"entity_id": "512345678", "entity_kind": "company"}
+  ],
+  "activities": [
+    {
+      "id": "act1",
+      "name": "שירות רווחה קהילתי",
+      "description": "תיאור בסיסי מרכש חברתי",
+      "catalog_number": 143,
+      "suppliers": [
+        {"entity_id": "580011111", "active": "yes"},
+        {"entity_id": "512345678", "active": "no"}
+      ],
+      "office": "משרד הרווחה"
+    },
+    {
+      "id": "act2",
+      "name": "שירות בריאות",
+      "description": "תיאור שירות בריאות",
+      "catalog_number": null,
+      "suppliers": null,
+      "office": "משרד הבריאות"
+    },
+    {
+      "id": "act3",
+      "name": "שירות חינוך",
+      "description": "תיאור שירות חינוך",
+      "catalog_number": 999999999,
+      "suppliers": [],
+      "office": "משרד החינוך"
+    }
+  ]
+}
