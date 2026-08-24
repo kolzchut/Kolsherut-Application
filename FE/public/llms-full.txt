@@ -1,0 +1,162 @@
+# כל שירות (Kol Sherut) — full reference
+
+> Expanded companion to https://www.kolsherut.org.il/llms.txt. Kol Sherut is Israel's open database and search engine for public social services, operated by Kol Zchut (כל זכות) with support from the Israeli Ministry of Justice and the National Digital Agency.
+
+Site: https://www.kolsherut.org.il/
+Contact: info@kolsherut.org.il
+Language: Hebrew (עברית), with a dedicated Arabic section (العربية)
+Status: beta — data is largely imported automatically and may be incomplete or out of date
+
+## What the platform does
+
+Kol Sherut aggregates and indexes thousands of social services across Israel — services provided by government ministries, municipalities, NGOs, health funds and other organizations. Users can search by free text, filter by life situation, response type, target audience and location, and view results on an interactive nationwide map or as a list. Each service has a card page with description, target audience, eligibility, contact details, branches and locations.
+
+## URL scheme
+
+Every path below is relative to https://www.kolsherut.org.il
+
+- `/` — homepage: free-text search, main categories, popular topics
+- `/?sq={query}` — free-text search results for `{query}` (URL-encoded, Hebrew or Arabic)
+- `/{response}` — all services of one response type, e.g. `/housing`, `/health`
+- `/{situation}/{response}` — a situation and response combination, e.g. `/seniors/housing`, `/low_income/food`
+- `/{situation}` — all services for one life situation, e.g. `/infants`, `/mental_illness`
+- `/by-{audience}` — filter by target audience segment
+- `/bsnf-{situation}` — filter by an additional situation
+- `/p/card/c/{serviceId}` — a single service card
+- `/map` — site map: the full catalog of indexed responses and life situations
+- `/sitemap.xml` — sitemap index covering static pages, service cards, taxonomy pages, homepage topics, services and organizations
+
+Further filters are applied as query parameters: `lf` (location), `rf` (response), `sf` (situation), `by` (audience), `bsnf` (secondary situation).
+
+## Full category tree
+
+Each entry links to a real, indexed page.
+
+### Rights advocacy — מיצוי זכויות
+
+- [All rights advocacy services](https://www.kolsherut.org.il/understand_government_programs)
+- [For people with health conditions — חולים](https://www.kolsherut.org.il/health/understand_government_programs)
+- [For people with low income — הכנסה נמוכה וקשיים כלכליים](https://www.kolsherut.org.il/low_income/understand_government_programs)
+- [Legal aid — סיוע משפטי](https://www.kolsherut.org.il/advocacy_legal_aid)
+
+### Early childhood — הגיל הרך
+
+- [All early childhood services](https://www.kolsherut.org.il/infants)
+- [Parenting guidance — הדרכת הורים](https://www.kolsherut.org.il/infants/parenting_education)
+- [Well-baby clinics — טיפת חלב](https://www.kolsherut.org.il/well_baby_clinic)
+- [Afterschool care — צהרונים](https://www.kolsherut.org.il/afterschool_care)
+- [Family daycare — משפחתונים](https://www.kolsherut.org.il/infants/daytime_care)
+
+### Victims and their families — נפגעים ומשפחותיהם
+
+- [All services for victims and their families](https://www.kolsherut.org.il/internal_emergency_services)
+- [Bereaved families — משפחות שכולות](https://www.kolsherut.org.il/bereaved_families/internal_emergency_services)
+- [Disabled IDF veterans — נכי צה״ל](https://www.kolsherut.org.il/injured_while_on_duty)
+- [Immediate mental health support — סיוע נפשי](https://www.kolsherut.org.il/emergency_mental_assistance)
+- [Emergency financial aid — סיוע כלכלי](https://www.kolsherut.org.il/financial_aid_in_emergencies)
+
+### Housing — דיור
+
+- [All housing services](https://www.kolsherut.org.il/housing)
+- [Domestic violence survivors — נשים נפגעות אלימות](https://www.kolsherut.org.il/domestic_violence_survivors/housing)
+- [At-risk young adults — צעירים בסיכון](https://www.kolsherut.org.il/at_risk_youth/housing)
+- [Homeless people — דרי רחוב](https://www.kolsherut.org.il/homeless/housing)
+- [People coping with mental illness — מתמודדי נפש](https://www.kolsherut.org.il/mental_illness/housing)
+
+### Health services — שירותי בריאות
+
+- [All health services](https://www.kolsherut.org.il/health)
+- [Cancer patients — חולי סרטן](https://www.kolsherut.org.il/neoplasm)
+- [Visual impairment — בעלי ליקוי ראיה](https://www.kolsherut.org.il/visual_impairment/health)
+- [Addiction — התמכרויות](https://www.kolsherut.org.il/substance_dependency/health)
+- [Medical equipment — ציוד רפואי](https://www.kolsherut.org.il/medical_supplies)
+
+### Mental health — מתמודדי נפש
+
+- [All mental health services](https://www.kolsherut.org.il/mental_illness)
+- [Balancing houses — בתים מאזנים](https://www.kolsherut.org.il/mental_illness/balancing_house)
+- [Counselling and accompaniment — ייעוץ הדרכה וליווי](https://www.kolsherut.org.il/mental_illness/guidance)
+- [Supported housing — דיור](https://www.kolsherut.org.il/mental_illness/housing)
+- [Employment — תעסוקה](https://www.kolsherut.org.il/mental_illness/work)
+- [PTSD — פוסט טראומה](https://www.kolsherut.org.il/ptsd)
+
+### Senior citizens — אזרחים ותיקים
+
+- [All services for seniors](https://www.kolsherut.org.il/seniors)
+- [Health services — שירותי בריאות](https://www.kolsherut.org.il/seniors/health)
+- [Clubs and leisure — מועדון ופנאי](https://www.kolsherut.org.il/seniors/recreation)
+- [Senior housing — דיור](https://www.kolsherut.org.il/seniors/housing)
+- [Holocaust survivors — ניצולי שואה](https://www.kolsherut.org.il/holocaust_survivors)
+
+### Low income and financial hardship — הכנסה נמוכה וקשיים כלכליים
+
+- [All services for low income and financial hardship](https://www.kolsherut.org.il/low_income)
+- [Food — מזון](https://www.kolsherut.org.il/low_income/food)
+- [Rights advocacy — מיצוי זכויות](https://www.kolsherut.org.il/low_income/understand_government_programs)
+- [Financial aid — סיוע כספי](https://www.kolsherut.org.il/low_income/money)
+- [Clothing and footwear — ביגוד והנעלה](https://www.kolsherut.org.il/low_income/goods)
+
+### Young adults — צעירים וצעירות
+
+- [All services for young adults](https://www.kolsherut.org.il/young_adults)
+- [Mentoring — מנטורינג](https://www.kolsherut.org.il/young_adults/mentoring)
+- [At-risk young adults — צעירים וצעירות בסיכון](https://www.kolsherut.org.il/at_risk_youth)
+
+### Arabic-speaking community — خدمات للمجتمع العربي
+
+- [All services for the Arabic-speaking community](https://www.kolsherut.org.il/arabic_speaking)
+- [Legal assistance — مساعدة قانونية](https://www.kolsherut.org.il/arabic_speaking/legal)
+- [Emergency services — خدمات طوارئ](https://www.kolsherut.org.il/arabic_speaking/emergency)
+- [Mental health support in emergencies — مساعدة نفسية خلال الطوارئ](https://www.kolsherut.org.il/arabic_speaking/emergency_mental_assistance)
+
+### Additional populations — אוכלוסיות נוספות
+
+- [Prostitution survivors — שורדות זנות](https://www.kolsherut.org.il/prostition_survivors)
+- [At-risk teens — נוער בסיכון](https://www.kolsherut.org.il/at_risk_teens)
+- [Autism spectrum — אוטיזם](https://www.kolsherut.org.il/autistic_spectrum)
+- [Domestic violence survivors — נשים נפגעות אלימות](https://www.kolsherut.org.il/domestic_violence_survivors)
+- [Students — סטודנטים](https://www.kolsherut.org.il/students)
+
+## Response taxonomy — what a service provides
+
+Human services (שירותים אנושיים), health (בריאות), care (טיפול), education (חינוך), legal (משפטי), employment (עבודה), housing (דיור), community services (שירותים קהילתיים), goods (מוצרים), financial assistance (כסף), emergency services (חירום), culture and sport (תרבות וספורט), food (מזון).
+
+## Situation taxonomy — who a service is for
+
+- Target audiences: military and veteran status, citizenship, criminal history, deprivation, education, household status, housing status, income level, sector, sexual orientation, survivor status
+- Health: mental health conditions, substance dependency, disabilities, physical health conditions
+- Age groups: infants, children, teens, young adults, adults, seniors
+- Languages: Arabic, Russian, Amharic, Tigrinya, French, English and more
+- Also: employment status, gender, community, life events, government-recognized statuses
+
+## Geographic coverage
+
+Services are indexed across all of Israel, including Gush Dan (Greater Tel Aviv), the Jerusalem area, northern Israel, southern Israel, and nationwide services (שירות ארצי). Users can search by city, by region, or from their current GPS location.
+
+## Data sources
+
+- [GuideStar Israel](https://www.guidestar.org.il/) — the national NGO and nonprofit registry, and the main upstream source
+- Government ministries and agencies
+- [Open Eligibility](https://github.com/kolzchut/openeligibility) — the taxonomy used to classify responses and situations
+
+## Partners
+
+- [Kol Zchut](https://www.kolzchut.org.il/) (כל זכות) — the operating organization
+- [Ministry of Justice](https://www.gov.il/he/departments/ministry_of_justice/govil-landing-page)
+- [National Digital Agency](https://www.gov.il/he/departments/national-digital-agency/govil-landing-page)
+- Prime Minister's Office — Government and Society Division
+- Government ICT Authority — Ready Government unit
+- Corporate Authority and GuideStar
+- Ministry of Welfare and Social Security
+- Ministry of Health
+- Ministry of Education
+
+## How organizations add services
+
+- NGOs and nonprofits: enter the service data on [GuideStar Israel](https://www.guidestar.org.il/) — it is imported into Kol Sherut automatically
+- Other organizations: email info@kolsherut.org.il with the organization name, the services provided, and contact details
+- Anyone can report a missing or incorrect service from the site itself
+
+## Disclaimer
+
+Kol Sherut provides general information only and does not give individual advice. Kol Zchut Ltd. (a public benefit company) is not responsible for the content displayed on the site. The information is general, largely sourced automatically from various databases, and may not be complete, accurate or up to date. Use of the site is at the user's sole responsibility. Government support does not imply governmental responsibility for the site's operation or content. The site is intended for all genders.

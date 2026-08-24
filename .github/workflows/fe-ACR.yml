@@ -162,6 +162,8 @@ jobs:
 
       # ── Phase 2: Build SSG and Re-push ────────────────────────────
       - name: Build SSG
+        env:
+          SSG_USER_AGENT: ${{ secrets.SSG_USER_AGENT }}
         run: |
           cd FE
           npm run build:${{ steps.get_version.outputs.TARGET_ENV }}:ssg

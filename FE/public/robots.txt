@@ -2,3 +2,4 @@ User-agent: *
 Disallow: /configs/
 Sitemap: https://www.kolsherut.org.il/sitemap.xml
 # For AI agents, see https://www.kolsherut.org.il/llms.txt
+# Expanded reference: https://www.kolsherut.org.il/llms-full.txt

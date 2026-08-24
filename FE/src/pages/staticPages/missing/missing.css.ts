@@ -2,27 +2,27 @@ import {createUseStyles} from 'react-jss';
 import {
     primaryTextColorTwo,
     primaryBackgroundColorOne
-} from "../../../../services/theme";
-import {
-    getModalRootStyle,
-    modalCloseIconStyle,
-    modalTitleStyle,
-    modalSubtitleStyle
-} from "../../utils/commonModalStyles";
+} from "../../../services/theme";
+import {pageRootStyle, pageSubtitleStyle, pageTitleStyle} from "../utils/staticPageStyles";
 
 export default createUseStyles({
-    root: ({isMobile}: { isMobile: boolean, accessibilityActive: boolean }) => getModalRootStyle({isMobile}),
-    closeIcon: modalCloseIconStyle,
+    root: pageRootStyle,
     header: {
         marginBottom: 20
     },
-    title: modalTitleStyle,
-    subtitle: modalSubtitleStyle,
-    button: ({ accessibilityActive }: { accessibilityActive: boolean }) => ({
+    title: pageTitleStyle,
+    subtitle: pageSubtitleStyle,
+    sectionWrapper: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 10,
+    },
+    button: ({accessibilityActive}: { accessibilityActive: boolean }) => ({
         width: '100%',
         fontSize: accessibilityActive ? '20px' : '16px',
         height: '40px',
         borderRadius: '20px',
+        border: 'none',
         background: primaryTextColorTwo,
         color: primaryBackgroundColorOne,
         '&:hover': {

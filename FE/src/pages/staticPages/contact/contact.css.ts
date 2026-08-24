@@ -1,14 +1,13 @@
 import {createUseStyles} from 'react-jss';
-import {getModalRootStyle, modalCloseIconStyle} from "../../utils/commonModalStyles";
+import {pageRootStyle, pageTitleStyle} from "../utils/staticPageStyles";
 
 interface IProps {
-    isMobile: boolean,
     accessibilityActive: boolean
 }
 
 export default createUseStyles({
-    root: ({isMobile}: IProps) => getModalRootStyle({isMobile}),
-    closeIcon: modalCloseIconStyle,
+    root: pageRootStyle,
+    title: pageTitleStyle,
     text: ({accessibilityActive}: IProps) => ({
         fontSize: accessibilityActive ? 22 : 18,
         fontWeight: 300
