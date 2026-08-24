@@ -3,6 +3,9 @@ name: Graphify Knowledge Graph
 on:
   push:
     branches: ['main', 'dev']
+    # Badge-status commits from the Deploy workflow carry no code changes.
+    paths-ignore:
+      - '.badges/**'
   workflow_dispatch:
 
 permissions:
