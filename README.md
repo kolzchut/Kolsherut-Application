@@ -9,25 +9,20 @@
 
 ## Front End
 
-​	Configs
-
-​	SSG
-
-​	General
+- **Configs**
+- **SSG**
+- **General**
 
 ## BackEnd
 
-​	Arcitecture
-
-​	Config
-
-​	General
+- **Arcitecture**
+- **Config**
+- **General**
 
 ## ETL
 
-​	Data
-
-​	Cronical
+- **[Data](ETL/data.md)**
+- **Cronical**
 
 ## CI CD
 
@@ -37,7 +32,7 @@
 
 ## AI
 
-​	Retreval
+- **Retreval**
 
 
 
@@ -45,14 +40,11 @@
 
 ## Developers
 
-​	Running localy
-
-​	updating servers
-​	running dev
-
-​	running new ENV
-
-​	updating manually
+- **Running localy**
+- **updating servers**
+- **running dev**
+- **running new ENV**
+- **updating manually**
 
 
 
