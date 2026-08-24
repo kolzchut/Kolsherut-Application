@@ -186,6 +186,12 @@ ES/kibana/.env
 # One-shot migration verification reports (see ETL/data/plugins/srm-etl/verification)
 ETL/data/plugins/srm-etl/verification/reports/
 
+# Scratch artifacts the old dataflows pipelines (and their parity tests) write
+ETL/data/plugins/srm-etl/temp/
+ETL/data/plugins/srm-etl/.checkpoints/
+ETL/data/plugins/srm-etl/data/
+ETL/data/plugins/srm-etl/gacache/
+ETL/data/plugins/srm-etl/tests/parity/results
 .claude
 test-scripts/
 

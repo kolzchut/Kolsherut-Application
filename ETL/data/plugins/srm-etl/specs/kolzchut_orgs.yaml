@@ -1,0 +1,29 @@
+name: kolzchut_orgs
+description: >-
+  מקור מידע זה שואב מאתר כל זכות את רשימת מספרי הארגון (עמותות, חברות ורשויות)
+  המתועדים במאמרי הארגונים באתר.
+
+  המידע משמש להשלמת זיהוי הארגונים הרשומים במערכת ולעדכון תאריך התיוג האחרון שלהם,
+  ואינו מוסיף בעצמו מידע עסקי חדש על השירותים או הארגונים.
+
+apis:
+  - name: fetch
+    url: "https://www.kolzchut.org.il/w/he/index.php?title=מיוחד:CargoExport&tables=organization&fields=organization_number&where=organization_number+is+not+null&format=json&limit=1000"
+    format: json
+
+outputs:
+  - name: organization
+    derive_from: fetch
+    table: Organizations
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: entities
+    manage_status: false
+    row_transforms:
+      - op: dedupe_rows
+        by: [organization number]
+    columns:
+      - target: id
+        source: organization number
+        transforms:
+          - {op: cast, to: string}
+      - {target: last_tag_date, generate: today}

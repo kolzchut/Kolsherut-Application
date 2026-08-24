@@ -173,6 +173,22 @@ jobs:
              echo "TARGET_ENV=stage" >> $GITHUB_ENV
           fi
 
+      - name: Check Cluster Power State
+        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main'
+        run: |
+          POWER_STATE=$(az aks show --resource-group "$RG" --name "$CLUSTER" --query powerState.code -o tsv)
+          echo "Cluster power state: $POWER_STATE"
+          if [[ "$POWER_STATE" == "Stopped" ]]; then
+            echo "CLUSTER_WAS_STOPPED=true" >> $GITHUB_ENV
+          else
+            echo "CLUSTER_WAS_STOPPED=false" >> $GITHUB_ENV
+          fi
+
+      - name: Start Stopped Cluster
+        if: (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main') && env.CLUSTER_WAS_STOPPED == 'true'
+        timeout-minutes: 15
+        run: az aks start --resource-group "$RG" --name "$CLUSTER"
+
       - name: Set up kubelogin
         if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main'
         uses: azure/use-kubelogin@v1
@@ -191,10 +207,17 @@ jobs:
 
       - name: Deploy to Non-Prod
         if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main'
+        timeout-minutes: 15
         run: |
           kubectl set env deployment/${{ env.DEPLOYMENT }} ENVIRONMENT=${{ env.TARGET_ENV }} -n default
           kubectl rollout restart deployment/${{ env.DEPLOYMENT }} -n default
           kubectl rollout status deployment/${{ env.DEPLOYMENT }} -n default --timeout=${{ inputs.rollout_timeout }}
+
+      # The cluster was off before this run started it, so return it to off —
+      # even when the deploy failed (always()), to avoid leaving it running.
+      - name: Stop Cluster If Started By Workflow
+        if: always() && (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main') && env.CLUSTER_WAS_STOPPED == 'true'
+        run: az aks stop --resource-group "$RG" --name "$CLUSTER" --no-wait
 
   deploy-production:
     needs: build-and-push

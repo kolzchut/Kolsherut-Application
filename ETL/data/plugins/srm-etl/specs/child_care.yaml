@@ -1,0 +1,67 @@
+name: child_care
+description: >-
+  מקור מידע זה שואב מפורטל ההורים של משרד החינוך את רשימת מעונות היום המסובסדים
+  לפעוטות בגילאי לידה עד שלוש שנים, המחזיקים ב"סמל מעון" רשמי מהמדינה.
+
+  המידע העסקי הנאסף מאפשר לאתר על פי סמל המעון את קהל היעד הספציפי לו הוא פונה, בהתאם
+  למגזר האוכלוסייה (יהודי, ערבי, בדואי, דרוזי או צרקסי), ולהציג את פרטי הזכאות לסבסוד
+  שכר הלימוד.
+
+apis:
+  - name: fetch
+    url: "https://parents.education.gov.il/prhnet/Api/MeonotController/GetExcel?0=%%CURRENT_YEAR%%&1=0&2=0&3=0&4=0&5=0&csrt=6690085414305040436"
+    format: html_table
+    flavor: lxml
+    promote_first_row_header: true
+    url_macros:
+      '%%CURRENT_YEAR%%': current_year_plus_one
+
+lookups:
+  sector_situations:
+    צרקסי:
+      - human_situations:sectors:circassians
+      - human_situations:age_group:infants
+    ערבי:
+      - human_situations:sectors:arabs
+      - human_situations:language:arabic_speaking
+      - human_situations:age_group:infants
+    בדואי:
+      - human_situations:sectors:bedouin
+      - human_situations:language:arabic_speaking
+      - human_situations:age_group:infants
+    דרוזי:
+      - human_situations:sectors:druze
+      - human_situations:language:arabic_speaking
+      - human_situations:age_group:infants
+    יהודי:
+      - human_situations:age_group:infants
+
+outputs:
+  - name: service
+    derive_from: fetch
+    table: Services
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: meonot
+    manage_status: true
+    columns:
+      - target: id
+        source: שם וסמל מעון
+        transforms:
+          - {op: hash_slice, prefix: 'meonot-', last_chars: 5}
+      - target: data_sources
+        value: 'מידע נוסף אפשר למצוא ב<a target="_blank" href="https://parents.education.gov.il/prhnet/gov-education/kindergarten/search-daycare">פורטל ההורים באתר משרד החינוך</a>'
+      - {target: name, value: מעון יום מסובסד לפעוטות בפיקוח משרד החינוך}
+      - target: description
+        value: 'מסגרת טיפולית חינוכית עבור פעוטות בגילים 0-3 המופעלת על ידי עמותות וגופים שקיבלו "סמל מעון" מהמדינה. המעון פועל במתכונת יום ארוך ומחויב להעניק סל שירותים הכולל סדר יום המכוון לקידום ההתפתחות הגופנית, השכלית והרגשית של הפעוט.'
+      - target: details
+        source: מגזר
+        transforms:
+          - {op: conditional_template, when_equals: יהודי, then_value: '', else_template: 'המעון מיועד עבור החברה ה{value}'}
+      - target: situations
+        source: מגזר
+        transforms:
+          - {op: lookup_map, lookup: sector_situations}
+      - {target: responses, value: [human_services:care:daytime_care]}
+      - {target: payment_required, value: 'yes'}
+      - target: payment_details
+        value: 'שכר הלימוד במעונות היום נמצא תחת פיקוח, והוא נקבע לפי גיל הפעוט וסוג המסגרת. מידע נוסף ועדכני לגבי גובה שכר הלימוד ניתן למצוא ב<a target="_blank" href="https://www.gov.il/he/pages/tuition-daycare-and-supervised-nurseries>  אתר משרד העבודה</a>'

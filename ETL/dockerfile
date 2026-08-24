@@ -22,6 +22,9 @@ RUN apk add --no-cache --virtual .build-deps build-base \
 
 # 5. Copy your source code
 COPY data/plugins/srm-etl/operators/ ./operators/
+COPY data/plugins/srm-etl/engine/ ./engine/
+COPY data/plugins/srm-etl/specs/ ./specs/
+COPY data/plugins/srm-etl/transformers/ ./transformers/
 COPY data/plugins/srm-etl/srm_tools/ ./srm_tools/
 COPY data/plugins/srm-etl/utilities/ ./utilities/
 COPY data/plugins/srm-etl/transform/ ./transform/

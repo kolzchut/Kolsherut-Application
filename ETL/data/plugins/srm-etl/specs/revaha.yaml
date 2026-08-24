@@ -1,0 +1,178 @@
+name: revaha
+description: >-
+  מקור מידע זה מרכז נתונים אודות מחלקות השירותים החברתיים הפועלות ברשויות המקומיות. המידע
+  העסקי הנאסף כולל פירוט של השירותים הניתנים לאזרחים, כגון סיוע לאזרחים ותיקים, שירותים
+  לאנשים עם מוגבלויות, ותמיכה וייעוץ ליחידים ולמשפחות.
+
+  בנוסף, מאגר זה שואב מידע הנוגע לתוכניות רווחה ספציפיות כמו "נושמים לרווחה" ו"מרכזי עוצמה".
+  הנתונים כוללים את פרטי ההתקשרות של המחלקות השונות (מספרי טלפון, דואר אלקטרוני ואתרי
+  אינטרנט), וכן את כתובותיהן הפיזיות של מחלקות הרווחה.
+
+apis:
+  - name: resolve
+    url: "https://data.gov.il/api/action/package_search"
+    format: json
+    params:
+      q: '"social-departments"'
+    provides:
+      name: resource_id
+      extract:
+        op: datagovil_resource_id
+        dataset: social-departments
+        resource: "המחלקות לשירותים חברתיים"
+
+  - name: fetch
+    url: "https://data.gov.il/api/3/action/datastore_search"
+    format: json
+    params:
+      resource_id: "${resolve.resource_id}"
+    paginate: link_next
+
+lookups:
+  # Which extra services (noshmim/otzma flags) each welfare department offers
+  extra_services_by_department: {file: revaha/otzma-noshmim.csv, key: semel_machlaka}
+  # Manually collected municipal website per branch (keyed by legacy branch id)
+  branch_urls: {file: revaha/branch-urls.csv, key: code}
+
+static_data:
+  services:
+    - id: revaha-aid
+      name: תמיכה וייעוץ ליחידים ומשפחות מטעם המחלקה לשירותים חברתיים
+      source: revaha
+      description: "השירות מסייע לילדים, בני נוער, משפחות, יחידים, מוגבלים, זקנים, עולים חדשים ולכל פרט/קבוצה החפצים בקבלת סיוע. המחלקות לשירותים חברתיים  מעניקות מידע, יעוץ, טיפול, שירותים סוציאליים, הכוונה, תיווך לקבלת שירות, שילוב במסגרות ושירותי עזר בבית - בהתאם לכללי נזקקות וזכאות ולאפשרויות התקציביות.\n\nבזמן המלחמה המחלקה לשירותים חברתיים מעניקה סיוע, ייעוץ והכוונה גם למי שפונה ונמצא באזור המגורים בה פועלת המחלקה."
+      payment_required: 'no'
+      urls: "https://www.gov.il/he/departments/dynamiccollectors/molsa-social-departmentsd-list?skip=0#מחלקה לשירותים חברתיים"
+      organizations: []
+      payment_details: נדרש תיאום מראש
+      data_sources: 'המידע מ<a target="_blank" href="https://www.gov.il/he/departments/dynamiccollectors/molsa-social-departmentsd-list?skip=0" target="_blank">אתר משרד הרווחה</a>'
+      responses:
+        - human_services:place:welfare_bureau
+        - human_services:food
+        - human_services:care
+        - human_services:legal:advocacy_legal_aid:understand_government_programs
+        - human_services:internal_emergency_services
+      situations: []
+    - id: revaha-seniors
+      name: סיוע לאזרחים ותיקים מטעם המחלקה לשירותים חברתיים
+      source: revaha
+      description: "השירות לאוכלוסיית התושבים הוותיקים ובני משפחותיהם ניתן במחלקות לשירותים חברתיים וכולל מיצוי זכויות, מידע על מסגרות יומיות ,שירותי סעד, עובדים זרים, דיור מוגן ומסגרות מוסדיות זמניות וקבועות.\n\nבזמן המלחמה המחלקה לשירותים חברתיים מעניקה סיוע, ייעוץ והכוונה גם למי שפונה ונמצא באזור המגורים בה פועלת המחלקה."
+      payment_required: 'no'
+      urls: "https://www.gov.il/he/departments/dynamiccollectors/molsa-social-departmentsd-list?skip=0#מחלקה לשירותים חברתיים"
+      organizations: []
+      payment_details: נדרש תיאום מראש
+      data_sources: 'המידע מ<a target="_blank" href="https://www.gov.il/he/departments/dynamiccollectors/molsa-social-departmentsd-list?skip=0" target="_blank">אתר משרד הרווחה</a>'
+      responses:
+        - human_services:place:welfare_bureau
+        - human_services:care
+        - human_services:internal_emergency_services
+      situations:
+        - human_situations:age_group:seniors
+    - id: revaha-disabilities
+      name: סיוע לאנשים עם מוגבלות מטעם המחלקה לשירותים חברתיים
+      source: revaha
+      description: "השירות לאנשים  עם מוגבלות ובני משפחותיהם ניתן במחלקות לשירותים חברתיים ומיועד לאנשים עם פיגור שכלי, אוטיזם, מוגבלויות פיזיות וחושיות (עיוורון וחירשות) ולבני משפחותיהם. למימוש הזכאות לשירותים יש צורך בהכרה של משרד הרווחה והשירותים החברתיים.\n\nבזמן המלחמה המחלקה לשירותים חברתיים מעניקה סיוע, ייעוץ והכוונה גם למי שפונה ונמצא באזור המגורים בה פועלת המחלקה."
+      payment_required: 'no'
+      urls: "https://www.gov.il/he/departments/dynamiccollectors/molsa-social-departmentsd-list?skip=0#מחלקה לשירותים חברתיים"
+      organizations: []
+      payment_details: נדרש תיאום מראש
+      data_sources: 'המידע מ<a target="_blank" href="https://www.gov.il/he/departments/dynamiccollectors/molsa-social-departmentsd-list?skip=0" target="_blank">אתר משרד הרווחה</a>'
+      responses:
+        - human_services:place:welfare_bureau
+        - human_services:care
+        - human_services:internal_emergency_services
+      situations:
+        - human_situations:disability
+        - human_situations:benefit_holders:social_security
+    - id: revaha-noshmim
+      name: נושמים לרווחה
+      source: revaha
+      description: "מטרות תוכנית 'נושמים לרווחה' הן:\n\n-  שיפור המצב הכלכלי של משפחות החיות בעוני ובהדרה (הרחקה חברתית) והעלאת העצמאות ביכולת לספק את הצרכים הבסיסיים\n- הגדלת ההזדמנויות של המשפחה להגיע למגוון שירותים, מצבים ופעולות בחברה שעשויים לקדם א מצבם החברתי-כלכלי (לדוגמה רמת בתי ספר נמוכה בישוב או העדר מסגרות להכשרה מקצועית, קושי לקבל משכנתא או הלוואה בריבית נמוכה, העדר תחבורה ציבורית ועוד)\n- העשרת הידע והמוניטין המגדירים את מעמד המשפחה (\"הון סימבולי\")\n- יצירת תחושת רווחה אישית ומשפחתית.\n\nהתוכנית מיועדת ליחידים ולמשפחות שמתמודדות עם מכשולים רבים, מיעוט הזדמנויות לשנות את מצבם וקושי במיצוי זכויות ובשימוש במשאבי הקהילה והממסד.\n"
+      payment_required: 'no'
+      organizations: []
+      payment_details: יש לפנות לעובד/ת הסוציאלית של המשפחה
+      data_sources: 'המידע מ<a target="_blank" href="https://www.gov.il/he/departments/dynamiccollectors/molsa-social-departmentsd-list?skip=0" target="_blank">אתר משרד הרווחה</a>'
+      responses:
+        - human_services:place:welfare_bureau
+        - human_services:legal:advocacy_legal_aid:understand_government_programs
+        - human_services:money:financial_assistance
+        - human_services:education:more_education:financial_education
+        - human_services:care:guidance
+      situations:
+        - human_situations:household:families
+        - human_situations:deprivation:low_income
+    - id: revaha-otzma
+      name: מרכז עוצמה
+      source: revaha
+      description: "מטרת השירות היא הנגשת סיוע ליחידים ולמשפחות החיים בעוני, בדרכים הבאות:\n\n- שיפור באיכות החיים\n- הפחתת רמת המחסור החומרי-כלכלי\n- העלאת רמת התעסוקה, הכשרה או השכלה ומיצוי זכויות\n- הגדלת ההון הסימבולי - המתבטא בשילוב מיטבי בקהילה\n- הגברת העצמאות, הבאה לידי ביטוי ביכולת לספק צרכים בסיסיים.\n\nהשירות מיועד ליחידים ולמשפחות, המוכרים למחלקות לשירותים חברתיים, המתמודדים עם מציאות חיים של עוני והדרה.\n"
+      payment_required: 'no'
+      organizations: []
+      payment_details: יש לפנות למחלקה לשירותים חברתיים הסמוכה למקום המגורים
+      data_sources: 'המידע מ<a target="_blank" href="https://www.gov.il/he/departments/dynamiccollectors/molsa-social-departmentsd-list?skip=0" target="_blank">אתר משרד הרווחה</a>'
+      responses:
+        - human_services:place:welfare_bureau
+        - human_services:care:guidance
+        - human_services:legal:advocacy_legal_aid:understand_government_programs
+      situations:
+        - human_situations:household:families
+        - human_situations:deprivation:low_income
+
+outputs:
+  - name: branch
+    derive_from: fetch
+    table: Branches
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: revaha
+    columns:
+      - target: id
+        source: [semel_machlaka]
+        transforms:
+          - {op: template, template: 'revaha:{semel_machlaka}'}
+      - {target: name, value: null}
+      - target: phone_numbers
+        source: [authority_phone, machlaka_phone]
+        transforms:
+          - {op: split_concat_fields, split_on: ',', join_with: "\n", remove: ' '}
+      - target: urls_default
+        value: "https://www.gov.il/he/departments/dynamiccollectors/molsa-social-departmentsd-list?skip=0#מחלקה לשירותים חברתיים"
+        intermediate: true
+      - target: urls
+        source: [id, urls_default]
+        transforms:
+          - {op: lookup_override, key_field: id, value_field: urls_default, lookup: branch_urls, path: urls}
+      - target: email_address
+        source: email
+        transforms:
+          - {op: regex_search_first, pattern: '[\w.+-]+@[\w-]+\.[\w.-]+'}
+      - {target: address, source: adress}
+      - {target: location, source: address}
+      - {target: organization, value: ['500106406']}
+      - {target: operating_unit, value: מחלקת רווחה}
+      # NOTE: the old operator mutated its SERVICES list before building branches,
+      # so in practice EVERY branch got all 5 service ids and the per-department
+      # noshmim/otzma flags had no effect. always_include preserves that behavior;
+      # to honor the flags for real, shrink it to the 3 base services.
+      - target: services
+        source: semel_machlaka
+        transforms:
+          - op: lookup_flag_union
+            lookup: extra_services_by_department
+            flag_map: {noshmim: revaha-noshmim, otzma: revaha-otzma}
+            always_include: [revaha-aid, revaha-seniors, revaha-disabilities, revaha-noshmim, revaha-otzma]
+
+  - name: service
+    derive_from: static_data.services
+    table: Services
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: revaha
+    columns:
+      - {target: id, source: id}
+      - {target: name, source: name}
+      - {target: source, source: source}
+      - {target: description, source: description}
+      - {target: payment_required, source: payment_required}
+      - {target: urls, source: urls}
+      - {target: organizations, source: organizations}
+      - {target: payment_details, source: payment_details}
+      - {target: data_sources, source: data_sources}
+      - {target: responses, source: responses}
+      - {target: situations, source: situations}

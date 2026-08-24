@@ -1,4 +1,66 @@
-# kolSherut
+# KolSherut - כל שירות 
+
+[![FE Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/fe-ACR.yml/badge.svg?branch=main)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/fe-ACR.yml)
+[![BE Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/be-ACR.yml/badge.svg?branch=main)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/be-ACR.yml)
+[![ETL Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/etl-ACR.yml/badge.svg?branch=main)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/etl-ACR.yml)
+[![Retrieval Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/retrieval-ACR.yml/badge.svg?branch=main)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/retrieval-ACR.yml)
+
+### [Repo][GitHub]
+### [Board][Board]
+### [Version Changes][Releases]
+
+[GitHub]: https://github.com/kolzchut/Kolsherut-Application
+[Board]: https://github.com/orgs/kolzchut/projects/8
+[Releases]: https://github.com/kolzchut/Kolsherut-Application/releases
+
+
+
+## Front End
+
+- **Configs**
+- **SSG**
+- **General**
+
+## BackEnd
+
+- **Arcitecture**
+- **Config**
+- **General**
+
+## ETL
+
+- **[Data](ETL/data.md)**
+- **Cronical**
+
+## CI CD
+
+
+
+
+
+## AI
+
+- **Retreval**
+
+
+
+
+
+## Developers
+
+- **Running localy**
+- **updating servers**
+- **running dev**
+- **running new ENV**
+- **updating manually**
+
+
+
+
+
+
+
+
 
 ### FE
 
@@ -29,7 +91,7 @@ npm run tar:{enviornment}
 ```
 
 ---
-   
+
 #### Configuration Files
 
 All configuration files are located in the `config` folder inside the `public` folder of the **FE**.
@@ -284,8 +346,8 @@ Maintain stable CSV filenames and headers. The build transforms CSV synonym data
 
 #### After Chnhaing cloud the folowing changes need to be made
 1. move confings to seperate vpulems (dev, stage, prod) and have the relevant one mounted to the FE container.
-1. site map have to be generated as part of ETL and mounted to all Environments.
-1. upload from dev to stage and from stage to prod should be copying the previus level bucket.
+2. site map have to be generated as part of ETL and mounted to all Environments.
+3. upload from dev to stage and from stage to prod should be copying the previus level bucket.
 
 
 ### BE
@@ -295,19 +357,19 @@ requests from the frontend, process data, and interact with the database.
 
 #### Environment Variables of BE:
 
-| Variable                  | Description                                                               | Default               |
-|---------------------------|---------------------------------------------------------------------------|-----------------------|
-| ORIGIN                    | the front end origin for cors (Need to change default)                    | *                     |
-| ENV                       | the environment you working on  (prod/stage/local)                        | local                 |
-| PORT                      | the port for the back end                                                 | 5000                  |
-| ELASTIC_URL               | the elastic search URL (Need to change default)                           | http://localhost:9200 |
-| ELASTIC_USERNAME          | the elastic search username (Need to change default)                      | elastic               |
-| ELASTIC_PASS              | the elastic search password (Need to change default)                      | your-password         |
-| ELASTIC_RECONNECT_TIMEOUT | the time to wait before reconnecting to elastic search (seconds)          | 5                     |
-| VERBOSE                   | Default to false, if true will log more information to the console        | false                 |
-| LOG_TO_FILE               | Default to false, if true will log to file                                | false                 |
-| LOG_DURATION              | The duration content of each file. (minutes)                              | 10                    |
-| SEARCHCARDS_FIRST_LENGTH  | The amount of services it will pull initially from server in searchCards  | 50                    |
+| Variable                  | Description                              | Default               |
+| ------------------------- | ---------------------------------------- | --------------------- |
+| ORIGIN                    | the front end origin for cors (Need to change default) | *                     |
+| ENV                       | the environment you working on  (prod/stage/local) | local                 |
+| PORT                      | the port for the back end                | 5000                  |
+| ELASTIC_URL               | the elastic search URL (Need to change default) | http://localhost:9200 |
+| ELASTIC_USERNAME          | the elastic search username (Need to change default) | elastic               |
+| ELASTIC_PASS              | the elastic search password (Need to change default) | your-password         |
+| ELASTIC_RECONNECT_TIMEOUT | the time to wait before reconnecting to elastic search (seconds) | 5                     |
+| VERBOSE                   | Default to false, if true will log more information to the console | false                 |
+| LOG_TO_FILE               | Default to false, if true will log to file | false                 |
+| LOG_DURATION              | The duration content of each file. (minutes) | 10                    |
+| SEARCHCARDS_FIRST_LENGTH  | The amount of services it will pull initially from server in searchCards | 50                    |
 | AUTOCOMPLETE_MIN_SCORE    | Minimum final score required for autocomplete results (higher = stricter) | 5000                  |
 
 ### CI CD
@@ -392,8 +454,8 @@ Steps:
    - `BE Release (production)` (if `be/` changed)
 9. Monitor under “Actions” like staging. Wait for green check.
 10. Production images produced:
-    - FE: `ghcr.io/kolzchut/kol-sherut-fe:<commit-sha>` and `:<tag>-<commit-sha>`
-    - BE: `ghcr.io/kolzchut/kol-sherut-be:<commit-sha>` and `:<tag>-<commit-sha>`
+   - FE: `ghcr.io/kolzchut/kol-sherut-fe:<commit-sha>` and `:<tag>-<commit-sha>`
+   - BE: `ghcr.io/kolzchut/kol-sherut-be:<commit-sha>` and `:<tag>-<commit-sha>`
 11. Helm production values file (`values.auto-updated.production.yaml`) in `srm-devops` repo auto-updated to point to the `<tag>-<sha>` image.
 12. Validate production: open site, run smoke checks (search, open card, any critical flows).
 
@@ -402,12 +464,12 @@ Rollback (simple):
 - OR (DevOps only) manually adjust image in production Helm values repo and deploy.
 
 ### 3. Quick Trigger Reference
-| Action | Folder Changed? | Workflow | Environment | History Tag Examples |
-|--------|-----------------|----------|-------------|------------------|
-| Push to main | FE/ changed | FE CI (staging) | Staging | latest + <sha> |
-| Push to main | be/ changed | BE CI (staging) | Staging | latest + <sha> |
-| Tag (e.g. v1.2.0) | FE/ changed | FE Release (production) | Production | <sha>v1.2.0<sha> |
-| Tag (e.g. v1.2.0) | be/ changed | BE Release (production) | Production | <sha>v1.2.0<sha> |
+| Action            | Folder Changed? | Workflow                | Environment | History Tag Examples |
+| ----------------- | --------------- | ----------------------- | ----------- | -------------------- |
+| Push to main      | FE/ changed     | FE CI (staging)         | Staging     | latest + <sha>       |
+| Push to main      | be/ changed     | BE CI (staging)         | Staging     | latest + <sha>       |
+| Tag (e.g. v1.2.0) | FE/ changed     | FE Release (production) | Production  | <sha>v1.2.0<sha>     |
+| Tag (e.g. v1.2.0) | be/ changed     | BE Release (production) | Production  | <sha>v1.2.0<sha>     |
 
 ### 4. Versioning Rules
 - Use `vMAJOR.MINOR.PATCH` (e.g. `v1.4.2`).
