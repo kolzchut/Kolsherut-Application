@@ -40,7 +40,8 @@ export default createUseStyles({
     },
     kolsherutLogo: ({accessibilityActive}: IProps) => ({
         height: accessibilityActive ? '50px' : '45px',
-        width: accessibilityActive ? '78px' : '70px'
+        width: accessibilityActive ? '78px' : '70px',
+        cursor: 'pointer'
     }),
     aboveDivText: ({accessibilityActive}: IProps) => ({
         color: primaryBackgroundColorOne,
