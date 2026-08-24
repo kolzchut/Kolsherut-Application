@@ -1,0 +1,630 @@
+name: Deploy
+
+# Single orchestrator for all services. Builds changed services in parallel,
+# then deploys them in ONE job so the non-prod cluster is started and stopped
+# exactly once per run — parallel per-service workflows used to race: the
+# first one to finish stopped the cluster under the others' deploys.
+on:
+  push:
+    branches: ['main', 'dev', 'production']
+    paths:
+      - 'FE/**'
+      - 'be/**'
+      - 'ETL/**'
+      - 'retrieval/**'
+      - '.github/workflows/deploy.yml'
+      - '.github/workflows/reusable-build-image.yml'
+  release:
+    types: [published]
+  workflow_dispatch:
+
+# One group per ref so runs serialize their cluster start/stop window.
+# cancel-in-progress must stay false: a cancelled run's async `az aks stop
+# --no-wait` could shut the cluster down under the replacement run's deploy.
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      fe: ${{ steps.compute.outputs.fe }}
+      be: ${{ steps.compute.outputs.be }}
+      etl: ${{ steps.compute.outputs.etl }}
+      retrieval: ${{ steps.compute.outputs.retrieval }}
+      version: ${{ steps.compute.outputs.version }}
+      fe_env: ${{ steps.compute.outputs.fe_env }}
+      env_tag: ${{ steps.compute.outputs.env_tag }}
+      is_nonprod: ${{ steps.compute.outputs.is_nonprod }}
+      is_prod: ${{ steps.compute.outputs.is_prod }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect Changed Services
+        id: filter
+        if: github.event_name == 'push'
+        uses: dorny/paths-filter@v3
+        with:
+          # Compare against the commit before this push. Without this, the
+          # action diffs against the repo default branch (main), which on dev
+          # marks every service as changed.
+          base: ${{ github.ref }}
+          filters: |
+            fe:
+              - 'FE/**'
+            be:
+              - 'be/**'
+            etl:
+              - 'ETL/**'
+            retrieval:
+              - 'retrieval/**'
+            workflows:
+              - '.github/workflows/deploy.yml'
+              - '.github/workflows/reusable-build-image.yml'
+
+      - name: Compute Outputs
+        id: compute
+        run: |
+          REF="${{ github.ref }}"
+          EVENT="${{ github.event_name }}"
+
+          DEPLOY_ALL=false
+          if [[ "$EVENT" == "release" || "$EVENT" == "workflow_dispatch" ]]; then
+            DEPLOY_ALL=true
+          fi
+          if [[ "$REF" == refs/tags/v* ]]; then
+            DEPLOY_ALL=true
+          fi
+          if [[ "${{ steps.filter.outputs.workflows }}" == "true" ]]; then
+            DEPLOY_ALL=true
+          fi
+
+          for SVC in fe be etl retrieval; do
+            case "$SVC" in
+              fe)        CHANGED="${{ steps.filter.outputs.fe }}" ;;
+              be)        CHANGED="${{ steps.filter.outputs.be }}" ;;
+              etl)       CHANGED="${{ steps.filter.outputs.etl }}" ;;
+              retrieval) CHANGED="${{ steps.filter.outputs.retrieval }}" ;;
+            esac
+            if [[ "$DEPLOY_ALL" == "true" || "$CHANGED" == "true" ]]; then
+              echo "$SVC=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "$SVC=false" >> "$GITHUB_OUTPUT"
+            fi
+          done
+
+          if [[ "$REF" == refs/tags/v* ]]; then
+            echo "version=${REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+            echo "fe_env=production" >> "$GITHUB_OUTPUT"
+          elif [[ "$REF" == "refs/heads/production" ]]; then
+            echo "version=production" >> "$GITHUB_OUTPUT"
+            echo "fe_env=production" >> "$GITHUB_OUTPUT"
+          elif [[ "$REF" == "refs/heads/main" ]]; then
+            echo "version=stage" >> "$GITHUB_OUTPUT"
+            echo "fe_env=stage" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=dev" >> "$GITHUB_OUTPUT"
+            echo "fe_env=development" >> "$GITHUB_OUTPUT"
+          fi
+
+          if [[ "$REF" == "refs/heads/main" ]]; then
+            echo "env_tag=stage" >> "$GITHUB_OUTPUT"
+          else
+            echo "env_tag=dev" >> "$GITHUB_OUTPUT"
+          fi
+
+          if [[ "$REF" == "refs/heads/dev" || "$REF" == "refs/heads/main" ]]; then
+            echo "is_nonprod=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_nonprod=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          if [[ "$REF" == refs/tags/v* || "$REF" == "refs/heads/production" ]]; then
+            echo "is_prod=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_prod=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  build-be:
+    needs: detect
+    if: needs.detect.outputs.be == 'true'
+    uses: ./.github/workflows/reusable-build-image.yml
+    secrets: inherit
+    with:
+      service_path: 'be'
+      image_name: 'kolsherut-be'
+      version: ${{ needs.detect.outputs.version }}
+      node_build: true
+
+  build-etl:
+    needs: detect
+    if: needs.detect.outputs.etl == 'true'
+    uses: ./.github/workflows/reusable-build-image.yml
+    secrets: inherit
+    with:
+      service_path: 'ETL'
+      image_name: 'kolsherut-etl'
+      version: ${{ needs.detect.outputs.version }}
+
+  build-retrieval:
+    needs: detect
+    if: needs.detect.outputs.retrieval == 'true'
+    uses: ./.github/workflows/reusable-build-image.yml
+    secrets: inherit
+    with:
+      service_path: 'retrieval'
+      image_name: 'kolsherut-retrieval'
+      version: ${{ needs.detect.outputs.version }}
+      lfs: true
+
+  build-fe:
+    needs: detect
+    if: needs.detect.outputs.fe == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.ACR_LOGIN_SERVER }}/kolsherut-fe
+          tags: |
+            type=raw,value=dev,enable=${{ github.ref == 'refs/heads/dev' }}
+            type=raw,value=stage,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=production,enable=${{ startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/production' }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'FE/package-lock.json'
+
+      - name: Install and Build Base (No SSG)
+        run: |
+          cd FE
+          npm install
+          npm run build:${{ needs.detect.outputs.fe_env }}:base
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to ACR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and Push Base Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./FE
+          file: ./FE/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          build-args: |
+            environment=${{ needs.detect.outputs.fe_env }}
+          # The AKS node pools are ARM, so amd64 is dead weight in both build
+          # time and ACR storage.
+          platforms: linux/arm64
+          provenance: false
+
+      # Non-prod SSG runs in deploy-nonprod (it crawls against the backend on
+      # the cluster, which is only up during the deploy window) and re-images
+      # from this exact dist.
+      - name: Upload dist For SSG Phase
+        if: needs.detect.outputs.is_nonprod == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: fe-dist
+          path: FE/dist
+          retention-days: 1
+
+      # Prod SSG stays here: the production backend is always up.
+      - name: Build SSG (Production)
+        if: needs.detect.outputs.is_prod == 'true'
+        env:
+          SSG_USER_AGENT: ${{ secrets.SSG_USER_AGENT }}
+        run: |
+          cd FE
+          npm run build:${{ needs.detect.outputs.fe_env }}:ssg
+
+      - name: Build and Push Image with SSG (Production)
+        if: needs.detect.outputs.is_prod == 'true'
+        uses: docker/build-push-action@v5
+        with:
+          context: ./FE
+          file: ./FE/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          build-args: |
+            environment=${{ needs.detect.outputs.fe_env }}
+          platforms: linux/arm64
+          provenance: false
+
+  deploy-nonprod:
+    needs: [detect, build-fe, build-be, build-etl, build-retrieval]
+    # !cancelled(): run even when some builds were skipped or failed (but not
+    # when the run was cancelled) — each deploy
+    # step below checks its own build's result, so one broken service never
+    # blocks the others or the cluster stop.
+    if: >
+      !cancelled() &&
+      needs.detect.result == 'success' &&
+      needs.detect.outputs.is_nonprod == 'true' &&
+      (needs.build-fe.result == 'success' ||
+       needs.build-be.result == 'success' ||
+       needs.build-etl.result == 'success' ||
+       needs.build-retrieval.result == 'success')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    # Per-service deploy outcomes for the report-status badge job.
+    outputs:
+      fe: ${{ steps.deploy_fe_ssg.outcome }}
+      be: ${{ steps.deploy_be.outcome }}
+      etl: ${{ steps.deploy_etl.outcome }}
+      retrieval: ${{ steps.deploy_retrieval.outcome }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set Cluster Variables
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+            echo "CLUSTER_NAME=${{ secrets.DEV_CLUSTER_NAME }}" >> $GITHUB_ENV
+            echo "CLUSTER_RG=${{ secrets.DEV_RESOURCE_GROUP }}" >> $GITHUB_ENV
+          else
+            echo "CLUSTER_NAME=${{ secrets.STAGE_CLUSTER_NAME }}" >> $GITHUB_ENV
+            echo "CLUSTER_RG=${{ secrets.STAGE_RESOURCE_GROUP }}" >> $GITHUB_ENV
+          fi
+          echo "ENV_TAG=${{ needs.detect.outputs.env_tag }}" >> $GITHUB_ENV
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Waits out transitional states (e.g. a previous run's `az aks stop
+      # --no-wait` still settling) instead of racing them.
+      - name: Ensure Cluster Running
+        id: start_cluster
+        timeout-minutes: 20
+        run: |
+          WAS_STOPPED=false
+          for i in $(seq 1 40); do
+            POWER=$(az aks show --resource-group "$CLUSTER_RG" --name "$CLUSTER_NAME" --query powerState.code -o tsv)
+            PROV=$(az aks show --resource-group "$CLUSTER_RG" --name "$CLUSTER_NAME" --query provisioningState -o tsv)
+            echo "powerState=$POWER provisioningState=$PROV"
+            if [[ "$PROV" == "Stopping" || "$PROV" == "Starting" ]]; then
+              sleep 30
+            elif [[ "$POWER" == "Stopped" ]]; then
+              echo "CLUSTER_WAS_STOPPED=true" >> "$GITHUB_ENV"
+              WAS_STOPPED=true
+              az aks start --resource-group "$CLUSTER_RG" --name "$CLUSTER_NAME"
+            elif [[ "$POWER" == "Running" ]]; then
+              echo "CLUSTER_WAS_STOPPED=$WAS_STOPPED" >> "$GITHUB_ENV"
+              exit 0
+            else
+              sleep 30
+            fi
+          done
+          echo "Cluster never reached Running state"
+          exit 1
+
+      - name: Set up kubelogin
+        uses: azure/use-kubelogin@v1
+        with:
+          version: 'v0.0.24'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set AKS Context
+        id: ctx
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: ${{ env.CLUSTER_RG }}
+          cluster-name: ${{ env.CLUSTER_NAME }}
+          use-kubelogin: 'true'
+
+      # BE deploys first so the FE SSG crawl below hits the fresh backend.
+      - name: Deploy BE
+        id: deploy_be
+        if: ${{ !cancelled() && steps.ctx.outcome == 'success' && needs.build-be.result == 'success' }}
+        timeout-minutes: 5
+        run: |
+          kubectl set env deployment/kolsherut-be ENVIRONMENT=${{ env.ENV_TAG }} -n default
+          kubectl rollout restart deployment/kolsherut-be -n default
+          kubectl rollout status deployment/kolsherut-be -n default --timeout=2m
+
+      - name: Deploy ETL
+        id: deploy_etl
+        if: ${{ !cancelled() && steps.ctx.outcome == 'success' && needs.build-etl.result == 'success' }}
+        timeout-minutes: 5
+        run: |
+          kubectl set env deployment/kolsherut-etl ENVIRONMENT=${{ env.ENV_TAG }} -n default
+          kubectl rollout restart deployment/kolsherut-etl -n default
+          kubectl rollout status deployment/kolsherut-etl -n default --timeout=2m
+
+      # Retrieval warms the embedding model before it reports Ready, so give
+      # the rollout longer than the 2m used by be/etl.
+      - name: Deploy Retrieval
+        id: deploy_retrieval
+        if: ${{ !cancelled() && steps.ctx.outcome == 'success' && needs.build-retrieval.result == 'success' }}
+        timeout-minutes: 15
+        run: |
+          kubectl set env deployment/kolsherut-retrieval ENVIRONMENT=${{ env.ENV_TAG }} -n default
+          kubectl rollout restart deployment/kolsherut-retrieval -n default
+          kubectl rollout status deployment/kolsherut-retrieval -n default --timeout=12m
+
+      - name: Deploy FE Base
+        id: deploy_fe_base
+        if: ${{ !cancelled() && steps.ctx.outcome == 'success' && needs.build-fe.result == 'success' }}
+        timeout-minutes: 15
+        run: |
+          kubectl set env deployment/kolsherut-fe ENVIRONMENT=${{ env.ENV_TAG }} -n default
+          kubectl rollout restart deployment/kolsherut-fe -n default
+          kubectl rollout status deployment/kolsherut-fe -n default --timeout=14m
+
+      # ── FE SSG phase: crawl the deployed app while the cluster is up ──
+      - name: Setup Node.js (SSG)
+        if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'FE/package-lock.json'
+
+      - name: Download FE dist
+        if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: fe-dist
+          path: FE/dist
+
+      - name: Build SSG
+        if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' }}
+        timeout-minutes: 90
+        env:
+          SSG_USER_AGENT: ${{ secrets.SSG_USER_AGENT }}
+        run: |
+          cd FE
+          npm install
+          npm run build:${{ needs.detect.outputs.fe_env }}:ssg
+
+      - name: Set up QEMU
+        if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' }}
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' }}
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to ACR
+        if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' }}
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and Push Image with SSG
+        if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' }}
+        uses: docker/build-push-action@v5
+        with:
+          context: ./FE
+          file: ./FE/Dockerfile
+          push: true
+          tags: ${{ secrets.ACR_LOGIN_SERVER }}/kolsherut-fe:${{ env.ENV_TAG }}
+          build-args: |
+            environment=${{ needs.detect.outputs.fe_env }}
+          platforms: linux/arm64
+          provenance: false
+
+      - name: Deploy FE with SSG
+        id: deploy_fe_ssg
+        if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' }}
+        timeout-minutes: 15
+        run: |
+          kubectl rollout restart deployment/kolsherut-fe -n default
+          kubectl rollout status deployment/kolsherut-fe -n default --timeout=14m
+
+      # The cluster was off before this run started it, so return it to off —
+      # even when a deploy failed or the run was cancelled (always()). A
+      # human-started cluster (CLUSTER_WAS_STOPPED=false) is never stopped.
+      - name: Stop Cluster If Started By Workflow
+        if: always() && env.CLUSTER_WAS_STOPPED == 'true'
+        run: az aks stop --resource-group "$CLUSTER_RG" --name "$CLUSTER_NAME" --no-wait
+
+      - name: Fail If Any Build Failed
+        if: >
+          !cancelled() &&
+          (needs.build-fe.result == 'failure' ||
+           needs.build-be.result == 'failure' ||
+           needs.build-etl.result == 'failure' ||
+           needs.build-retrieval.result == 'failure')
+        run: |
+          echo "At least one build job failed"
+          exit 1
+
+  # Publishes per-service pass/fail + timestamp to .badges/ on the dev branch,
+  # which feeds the shields.io status matrix in the root README. Services
+  # skipped in this run keep their previous badge (last known status per
+  # environment). The badge commit carries [skip ci] so it triggers nothing.
+  report-status:
+    needs: [detect, build-fe, build-be, build-etl, build-retrieval, deploy-nonprod, deploy-production]
+    if: >
+      !cancelled() &&
+      needs.detect.result == 'success' &&
+      (needs.detect.outputs.is_nonprod == 'true' || needs.detect.outputs.is_prod == 'true')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Badges Location
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+
+      - name: Update Badge Files
+        env:
+          IS_PROD: ${{ needs.detect.outputs.is_prod }}
+          ENV_TAG: ${{ needs.detect.outputs.env_tag }}
+          BUILD_FE: ${{ needs.build-fe.result }}
+          BUILD_BE: ${{ needs.build-be.result }}
+          BUILD_ETL: ${{ needs.build-etl.result }}
+          BUILD_RETRIEVAL: ${{ needs.build-retrieval.result }}
+          NONPROD_FE: ${{ needs.deploy-nonprod.outputs.fe }}
+          NONPROD_BE: ${{ needs.deploy-nonprod.outputs.be }}
+          NONPROD_ETL: ${{ needs.deploy-nonprod.outputs.etl }}
+          NONPROD_RETRIEVAL: ${{ needs.deploy-nonprod.outputs.retrieval }}
+          PROD_FE: ${{ needs.deploy-production.outputs.fe }}
+          PROD_BE: ${{ needs.deploy-production.outputs.be }}
+          PROD_ETL: ${{ needs.deploy-production.outputs.etl }}
+          PROD_RETRIEVAL: ${{ needs.deploy-production.outputs.retrieval }}
+        run: |
+          if [[ "$IS_PROD" == "true" ]]; then
+            ENV_NAME=production
+            DEPLOY_FE="$PROD_FE"; DEPLOY_BE="$PROD_BE"
+            DEPLOY_ETL="$PROD_ETL"; DEPLOY_RETRIEVAL="$PROD_RETRIEVAL"
+          else
+            ENV_NAME="$ENV_TAG"
+            DEPLOY_FE="$NONPROD_FE"; DEPLOY_BE="$NONPROD_BE"
+            DEPLOY_ETL="$NONPROD_ETL"; DEPLOY_RETRIEVAL="$NONPROD_RETRIEVAL"
+          fi
+          TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M UTC')
+
+          update_badge () {
+            SVC="$1"; LABEL="$2"; BUILD="$3"; DEPLOY="$4"
+            if [[ "$BUILD" == "skipped" ]]; then
+              echo "$LABEL: skipped this run, badge unchanged"
+              return
+            fi
+            if [[ "$BUILD" == "success" && "$DEPLOY" == "success" ]]; then
+              STATUS=passing; COLOR=brightgreen
+            else
+              STATUS=failing; COLOR=red
+            fi
+            printf '{"schemaVersion":1,"label":"%s","message":"%s · %s","color":"%s"}\n' \
+              "$LABEL" "$STATUS" "$TIMESTAMP" "$COLOR" > ".badges/${ENV_NAME}-${SVC}.json"
+            echo "$LABEL ($ENV_NAME): $STATUS"
+          }
+
+          update_badge fe FE "$BUILD_FE" "$DEPLOY_FE"
+          update_badge be BE "$BUILD_BE" "$DEPLOY_BE"
+          update_badge etl ETL "$BUILD_ETL" "$DEPLOY_ETL"
+          update_badge retrieval Retrieval "$BUILD_RETRIEVAL" "$DEPLOY_RETRIEVAL"
+
+      - name: Commit and Push Badges
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet .badges; then
+            echo "No badge changes to publish"
+            exit 0
+          fi
+          git add .badges
+          git commit -m "Update deploy status badges [skip ci]"
+          for i in 1 2 3 4 5; do
+            if git push origin HEAD:dev; then
+              exit 0
+            fi
+            git pull --rebase origin dev
+          done
+          exit 1
+
+  deploy-production:
+    needs: [detect, build-fe, build-be, build-etl, build-retrieval]
+    if: >
+      !cancelled() &&
+      needs.detect.result == 'success' &&
+      needs.detect.outputs.is_prod == 'true' &&
+      (needs.build-fe.result == 'success' ||
+       needs.build-be.result == 'success' ||
+       needs.build-etl.result == 'success' ||
+       needs.build-retrieval.result == 'success')
+    runs-on: ubuntu-latest
+    # Per-service deploy outcomes for the report-status badge job.
+    outputs:
+      fe: ${{ steps.deploy_fe.outcome }}
+      be: ${{ steps.deploy_be.outcome }}
+      etl: ${{ steps.deploy_etl.outcome }}
+      retrieval: ${{ steps.deploy_retrieval.outcome }}
+    steps:
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set up kubelogin
+        uses: azure/use-kubelogin@v1
+        with:
+          version: 'v0.0.24'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set AKS Context (Production)
+        id: ctx
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: ${{ secrets.PROD_RESOURCE_GROUP }}
+          cluster-name: ${{ secrets.PROD_CLUSTER_NAME }}
+          use-kubelogin: 'true'
+
+      - name: Deploy BE to Production
+        id: deploy_be
+        if: ${{ !cancelled() && steps.ctx.outcome == 'success' && needs.build-be.result == 'success' }}
+        run: |
+          kubectl set image deployment/kolsherut-be kolsherut-be=${{ secrets.ACR_LOGIN_SERVER }}/kolsherut-be:production -n default
+          kubectl set env deployment/kolsherut-be CODE_VERSION=${{ needs.detect.outputs.version }} -n default
+          kubectl rollout restart deployment/kolsherut-be -n default
+          kubectl rollout status deployment/kolsherut-be -n default --timeout=3m
+
+      - name: Deploy ETL to Production
+        id: deploy_etl
+        if: ${{ !cancelled() && steps.ctx.outcome == 'success' && needs.build-etl.result == 'success' }}
+        run: |
+          kubectl set image deployment/kolsherut-etl etl=${{ secrets.ACR_LOGIN_SERVER }}/kolsherut-etl:production -n default
+          kubectl set env deployment/kolsherut-etl CODE_VERSION=${{ needs.detect.outputs.version }} -n default
+          kubectl rollout restart deployment/kolsherut-etl -n default
+          kubectl rollout status deployment/kolsherut-etl -n default --timeout=3m
+
+      - name: Deploy Retrieval to Production
+        id: deploy_retrieval
+        if: ${{ !cancelled() && steps.ctx.outcome == 'success' && needs.build-retrieval.result == 'success' }}
+        run: |
+          kubectl set image deployment/kolsherut-retrieval kolsherut-retrieval=${{ secrets.ACR_LOGIN_SERVER }}/kolsherut-retrieval:production -n default
+          kubectl set env deployment/kolsherut-retrieval CODE_VERSION=${{ needs.detect.outputs.version }} -n default
+          kubectl rollout restart deployment/kolsherut-retrieval -n default
+          kubectl rollout status deployment/kolsherut-retrieval -n default --timeout=3m
+
+      - name: Deploy FE to Production
+        id: deploy_fe
+        if: ${{ !cancelled() && steps.ctx.outcome == 'success' && needs.build-fe.result == 'success' }}
+        run: |
+          kubectl set image deployment/kolsherut-fe kolsherut-fe=${{ secrets.ACR_LOGIN_SERVER }}/kolsherut-fe:production -n default
+          kubectl set env deployment/kolsherut-fe CODE_VERSION=${{ needs.detect.outputs.version }} -n default
+          kubectl rollout restart deployment/kolsherut-fe -n default
+          kubectl rollout status deployment/kolsherut-fe -n default --timeout=14m
+
+      - name: Fail If Any Build Failed
+        if: >
+          !cancelled() &&
+          (needs.build-fe.result == 'failure' ||
+           needs.build-be.result == 'failure' ||
+           needs.build-etl.result == 'failure' ||
+           needs.build-retrieval.result == 'failure')
+        run: |
+          echo "At least one build job failed"
+          exit 1

@@ -1,25 +1,14 @@
 # KolSherut - כל שירות 
 
-### Production
+### Deploy Status
 
-[![FE Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/fe-ACR.yml/badge.svg?event=release)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/fe-ACR.yml)
-[![BE Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/be-ACR.yml/badge.svg?event=release)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/be-ACR.yml)
-[![ETL Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/etl-ACR.yml/badge.svg?event=release)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/etl-ACR.yml)
-[![Retrieval Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/retrieval-ACR.yml/badge.svg?event=release)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/retrieval-ACR.yml)
+Last known result per service and environment (updated by the `Deploy` workflow after every run; a service untouched by a run keeps its previous status).
 
-### Stage
-
-[![FE Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/fe-ACR.yml/badge.svg?branch=main)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/fe-ACR.yml)
-[![BE Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/be-ACR.yml/badge.svg?branch=main)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/be-ACR.yml)
-[![ETL Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/etl-ACR.yml/badge.svg?branch=main)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/etl-ACR.yml)
-[![Retrieval Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/retrieval-ACR.yml/badge.svg?branch=main)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/retrieval-ACR.yml)
-
-### Dev
-
-[![FE Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/fe-ACR.yml/badge.svg?branch=dev)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/fe-ACR.yml)
-[![BE Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/be-ACR.yml/badge.svg?branch=dev)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/be-ACR.yml)
-[![ETL Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/etl-ACR.yml/badge.svg?branch=dev)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/etl-ACR.yml)
-[![Retrieval Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/retrieval-ACR.yml/badge.svg?branch=dev)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/retrieval-ACR.yml)
+| Environment | FE | BE | ETL | Retrieval |
+| --- | --- | --- | --- | --- |
+| **Production** | [![FE production](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fdev%2F.badges%2Fproduction-fe.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) | [![BE production](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fdev%2F.badges%2Fproduction-be.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) | [![ETL production](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fdev%2F.badges%2Fproduction-etl.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) | [![Retrieval production](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fdev%2F.badges%2Fproduction-retrieval.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) |
+| **Stage** | [![FE stage](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fdev%2F.badges%2Fstage-fe.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) | [![BE stage](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fdev%2F.badges%2Fstage-be.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) | [![ETL stage](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fdev%2F.badges%2Fstage-etl.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) | [![Retrieval stage](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fdev%2F.badges%2Fstage-retrieval.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) |
+| **Dev** | [![FE dev](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fdev%2F.badges%2Fdev-fe.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) | [![BE dev](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fdev%2F.badges%2Fdev-be.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) | [![ETL dev](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fdev%2F.badges%2Fdev-etl.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) | [![Retrieval dev](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fdev%2F.badges%2Fdev-retrieval.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) |
 
 ### [Repo][GitHub]
 ### [Board][Board]
@@ -33,346 +22,11 @@
 
 ## Front End
 
-- **Configs**
-- **SSG**
-- **General**
+Fully documented in **[FE/README.md](FE/README.md)** — architecture, the CSR / SSG / SSR rendering strategy, all configuration files, synonyms & meta tags, sitemaps, build pipeline, Docker/nginx, CI/CD, and local development.
 
 ## BackEnd
 
-- **Arcitecture**
-- **Config**
-- **General**
-
-## ETL
-
-- **[Data](ETL/data.md)**
-- **Cronical**
-
-## CI CD
-
-
-
-
-
-## AI
-
-- **Retreval**
-
-
-
-
-
-## Developers
-
-- **Running localy**
-- **updating servers**
-- **running dev**
-- **running new ENV**
-- **updating manually**
-
-
-
-
-
-
-
-
-
-### FE
-
-#### Installation and Setup For Local use.
-1. Incase you got .tars for **FE** and **BE** load them using `docker load -i {fileName}` and then you can skip to step 4.
-2. Make sure docker is installed and running on your machine.
-3. In both **FE** and **BE** folders run:
-    ```bash
-    npm run docker:build
-    ```
-4. Make sure all the environment variables in the `docker-compose.yml` file are set correctly
-5. Make sure all the configuration files are set correctly.
-6. Run in the main folder:
-    ```bash
-    docker compose up -d
-    ```
-* Be aware, frontend running on port 4000 and backend on port 5000 (BE port can be set via environment variable PORT).
-
-#### Building tar files for FE and BE:
-1. Make sure docker is installed and running on your machine.
-2. In **BE** folder run:
-```bash
-npm run tar
-```
-3. In **FE** folder, you need to decide which environment you want to build for, and then run one of the following commands:
-```bash
-npm run tar:{enviornment}
-```
-
----
-
-
-#### Configuration Files
-
-All configuration files are located in the `config` folder inside the `public` folder of the **FE**.
-
-These files control app behavior, appearance, and content.
-
-
-##### 1. `config.json`
-**Purpose:** Global settings like redirects, routes, maps, and search configuration.  
-**Structure:** JSON object with clearly named keys.
-
-**How to maintain:**
-- Use existing key patterns for new routes/settings.
-- For values that should be replaced dynamically, use `%%MACRO%%`.
-
-
-##### 2. `strings.json`
-**Purpose:** Central source for UI text (labels, placeholders, messages, tooltips, etc.).  
-**Structure:** Flat JSON with `key → value` pairs.
-
-**How to maintain:**
-- Add new strings as new key-value pairs.
-- Use descriptive, consistent keys.
-- Avoid hardcoding strings directly in the UI.
-
-
-##### 3. `responseColors.json`
-**Purpose:** Configures response colors used for tags and map points.  
-**Structure:** Contains two properties:
-- `responses` → maps `responseId → colorName`.
-- `colors` → maps `colorName → { background, font }`.
-
-**How to maintain:**
-- Add new response IDs under `responses`.
-- Ensure each referenced `colorName` has a matching entry in `colors`.
-
-
-##### 4. `filters.json`
-**Purpose:** Defines all filters used in the app.  
-**Structure:**
-- **Responses:** simple `key = response ID`, `value = display string`.
-- **Situations:** structured inside `situationMap`.
-    - Key = group identifier.
-    - Value = array of situations belonging to that group.
-    - Each group also has a title with both its identifier and display name.
-
-**How to maintain:**
-- Add new filters to the appropriate group.
-- Keep identifiers unique and consistent.
-
-
-##### 5. `homepage.json`
-**Purpose:** Controls homepage search options.  
-**Structure:** Divided into groups. Each group includes:
-- `group` (identifier)
-- `situation_id`
-- `group_link` (for navigation)
-- `labels` (array of display options)
-  - `response_id` : response backend filter
-  - `situation_id` : situation backend filter
-  - `title` : text displayed
-  - `query` : search query string, make sure you write with underscore
-
-**How to maintain:**
-- Add a new group for new homepage sections.
-- Make sure `labels` point to valid `situation_id` and `response_id` values.
-
-
-##### 6. `linksBelow.json`
-**Purpose:** Defines footer links.  
-**Structure:** Array of objects with:
-- `title` (text displayed)
-- Either `modal` (if opens a modal) or `url` (if links externally).
-
-**How to maintain:**
-- Add/remove entries by appending objects.
-- Only use one of `modal` or `url` in each entry.
-
-
-##### 7. `metaTags.json`
-**Purpose:** Controls page-specific meta tags for SEO and sharing.  
-**Structure:** Object per page, each containing meta fields (e.g. `title`, `description`, `og:image`).  
-**Special feature:** Supports dynamic macros like `%%serviceDescription%%`.
-
-**How to maintain:**
-- Add a new object for new pages.
-- Use macros when fields should be dynamically replaced.
-
-
-##### 8. `modules.json`
-**Purpose:** Defines the modules used in the **AddService modal**.  
-**Structure:** Array of objects (each representing a module).
-
-**How to maintain:**
-- Add a new module as a new object with fields like `title`, `description`, and optional `links`.
-
-#### 9. `presets.json`
-**Purpose:** Defines the default search options (shown before the user types).  
-**Structure:** Array of preset objects. Each object becomes a selectable SearchOption.
-
-Required fields per preset:
-- `label` (string, displayed text in the list)
-- `query` (string, the search query executed when selected)
-
-Optional fields:
-- `responseId` (string) : Pre-filters results by a specific response taxonomy.
-- `situationId` (string) : Pre-filters results by a situation taxonomy.
-- `cityName` (string) : Used for location‑scoped context / display.
-- `bounds` (array of 4 numbers) : Geographic bounding box `[minLon, minLat, maxLon, maxLat]`.
-- `by` (string) : Narrows search by provider/organization name.
-- `labelHighlighted` (string) : Highlights what not marked with `<em>` in the label. for instance: if label is "Medical services in Jerusalem" and you want to highlight "Jerusalem" you can set labelHighlighted to "Medical services in" and the FE will render it as "<em>Medical services in</em> Jerusalem".
-
-How the FE uses it:
-- A preset is treated as "structured" if it has any of: `responseId`, `situationId`, `cityName`, `bounds`, `by`.
-- The `query` value must be unique; it's used as the React list key. Avoid duplicates.
-
-Editing guidelines:
-1. Keep the array valid JSON (no trailing commas, use `null` instead of omitting only if you intentionally want an explicit null).
-2. Prefer omitting optional keys rather than setting them to `null` unless downstream logic depends on key existence (current code is fine with both).
-3. If adding geographic bounds, confirm the order: lon/lat pairs, not lat/lon.
-4. Large coordinate precision is fine; keep 6–7 decimals max for readability.
-5. Avoid bounds that are too broad or too narrow—they reduce result relevance.
-6. If both `responseId` and `situationId` are present, the search will be filtered by both (intended narrowing). Only include both when meaningful.
-7. Use `by` for organization / provider scoped presets (e.g. a known NGO name) when you want free text plus a supplier constraint.
-8. Remove an entry to hide it; commenting is not allowed in JSON.
-9. Order matters: the array order is the display order.
-
-Testing a change locally:
-- Edit `public/configs/presets.json`.
-- Reload the page (hard refresh if needed). Because of the `cacheBuster`, no additional cache clearing is required.
-- Verify new preset appears and clicking it triggers the expected structured search.
-
-Example preset object:
-```json
-{
-  "bounds": [35.0852011, 31.7096214, 35.2650458, 31.8826655],
-  "cityName": "ירושלים",
-  "label": "ציוד רפואי בירושלים",
-  "labelHighlighted": null,
-  "query": "ציוד רפואי בירושלים",
-  "responseId": "human_services:health:medical_supplies",
-  "situationId": null,
-  "by": null
-}
-```
-
-Common pitfalls:
-- Using lat/lon instead of lon/lat (will shift map area).
-- Duplicate `query` causing React key collisions (only last one effectively renders).
-- Forgetting to remove a trailing comma after deleting the last item.
-
-##### 10. `stage.json`, `production.json`, `local.json`
-**Purpose:** Environment-specific configuration files.  
-**Structure:** Identical across environments — only values differ.
-
-**How to maintain:**
-- Ensure all three contain the same keys.
-- Never commit sensitive secrets.
-
-
-##### 11. `environment.json`
-**Purpose:** Determines which environment the app is currently running on.  
-**Structure:** Simple object pointing to `stage`, `production`, or `local`.
-
-**How to maintain:**
-- Keep in sync with environment files.
-- This is the single source of truth the frontend actually uses.
-
-
-##### Best Practices for All Configs
-- Always validate JSON before committing.
-- Follow existing naming conventions.
-- Test changes locally (`local.json`) before moving to staging or production.
-- Use macros (`%%MACRO%%`) instead of hardcoding values when possible.
-
-### Synonyms & Meta Tags Integration
-
-The project enriches search results meta tags using synonym data for situations and responses. This allows dynamic, SEO-friendly descriptions and Open Graph tags that reflect the user's query context.
-
-#### How the `synonyms:update` Script Works
-
-Script location: `FE/scripts/updateSynonyms.cjs`
-
-What it does:
-1. Reads all `.csv` files from `FE/public/synonyms/`.
-2. Parses each CSV (expects at least the columns: `id`, `synonyms`, `name`).
-3. Keeps only rows that have both `id` and `synonyms`.
-4. Cleans the `synonyms` field (trims surrounding quotes, normalizes embedded quotes).
-5. Writes a JSON file for each CSV into `FE/src/assets/synonyms/` with the same base filename (e.g. `Situations-synonyms.csv` -> `Situations-synonyms.json`).
-
-Automatic execution:
-- Runs automatically before every FE build via the `prebuild` npm script (`"prebuild": "npm run synonyms:update"`).
-
-Manual execution:
-- From `FE/` run: `npm run synonyms:update`.
-
-#### Files Involved
-
-Imported in code (e.g. `FE/src/pages/results/getResultsMetaTags.ts`):
-- `FE/src/assets/synonyms/Situations-synonyms.json`
-- `FE/src/assets/synonyms/Responses-synonyms.json`
-
-Source CSVs located at:
-- `FE/public/synonyms/Situations-synonyms.csv`
-- `FE/public/synonyms/Responses-synonyms.csv`
-
-IMPORTANT: Keep CSV filenames EXACT. Renaming them changes the generated JSON names and breaks static imports unless you update the import paths accordingly. Adding new synonym CSVs requires adding corresponding imports/usages.
-
-#### Editing / Adding Synonym Data
-
-To modify:
-1. Edit the CSV under `FE/public/synonyms/`.
-2. Ensure headers `id`, `name`, `synonyms` exist (order unimportant).
-3. Each row: unique `id`, readable `name`.
-4. `synonyms` can be comma-separated phrases; script normalizes quotes.
-5. Save file and run `npm run synonyms:update` (or any build).
-
-To add new set:
-1. Create `FE/public/synonyms/MyNewType-synonyms.csv` with required headers.
-2. Run update script.
-3. Import `FE/src/assets/synonyms/MyNewType-synonyms.json` where needed (e.g. extend meta tag logic).
-
-#### How Meta Tags Use Synonyms
-
-- Definitions live in `FE/public/configs/metaTags.json` using macros like `%%search%%`, `%%situations%%`, `%%responses%%`, `%%location%%`.
-- `getResultsMetaTags.ts` imports the generated JSON, matches active backend filters (`situation`, `response`, `by`), and builds replacement strings for macros.
-- The `MetaTags` component consumes `{ metaTags, macrosAndReplacements }` to inject `<title>` and `<meta>` tags.
-
-#### Adding / Changing Meta Tag Macros
-1. Add logic in `getResultsMetaTags.ts` to create a new macro (e.g. `%%myMacro%%`).
-2. Insert placeholder in `metaTags.json` for relevant pages.
-3. Ensure returned `macrosAndReplacements` object includes a mapping for the macro.
-
-#### Validation Checklist
-- Run `npm run synonyms:update`; confirm new/updated JSON in `FE/src/assets/synonyms/`.
-- Start dev server (`npm run dev`).
-- Visit results page; inspect `<head>` for expanded meta tags (no raw `%%macro%%`).
-- Check browser network panel: JSON synonym files load (no 404).
-
-#### Common Pitfalls
-- Renaming CSV without updating imports → build/runtime import error.
-- Missing `id` or `synonyms` column → row omitted.
-- Trailing spaces in `id` → filter mismatch.
-- Forgetting to run update script before local test.
-
-#### Summary
-Maintain stable CSV filenames and headers. The build transforms CSV synonym data into JSON used to enrich dynamic meta tags, improving SEO/contextual relevance of search result pages.
-
----
-#### while using the Hasadna cloud we do not have the possibility to mount volumes and update the mounted files.
-- using BE to emulate files and rerouting nginx.conf to use BE as a file server.
-
-#### After Chnhaing cloud the folowing changes need to be made
-1. move confings to seperate vpulems (dev, stage, prod) and have the relevant one mounted to the FE container.
-2. site map have to be generated as part of ETL and mounted to all Environments.
-3. upload from dev to stage and from stage to prod should be copying the previus level bucket.
-2. site map have to be generated as part of ETL and mounted to all Environments.
-3. upload from dev to stage and from stage to prod should be copying the previus level bucket.
-
-
-### BE
-
-The BE of this project is built with Typescript and Node.js, using the Express framework. It is designed to handle
-requests from the frontend, process data, and interact with the database.
+The BE is built with TypeScript and Node.js, using the Express framework. It handles requests from the frontend, processes data, interacts with Elasticsearch, and provides the on-demand SSR endpoint (`/ssr`) and live sitemap endpoints that the FE's nginx proxies to.
 
 #### Environment Variables of BE:
 
@@ -389,26 +43,30 @@ requests from the frontend, process data, and interact with the database.
 | LOG_TO_FILE               | Default to false, if true will log to file | false                 |
 | LOG_DURATION              | The duration content of each file. (minutes) | 10                    |
 | SEARCHCARDS_FIRST_LENGTH  | The amount of services it will pull initially from server in searchCards | 50                    |
-| Variable                  | Description                              | Default               |
-| ------------------------- | ---------------------------------------- | --------------------- |
-| ORIGIN                    | the front end origin for cors (Need to change default) | *                     |
-| ENV                       | the environment you working on  (prod/stage/local) | local                 |
-| PORT                      | the port for the back end                | 5000                  |
-| ELASTIC_URL               | the elastic search URL (Need to change default) | http://localhost:9200 |
-| ELASTIC_USERNAME          | the elastic search username (Need to change default) | elastic               |
-| ELASTIC_PASS              | the elastic search password (Need to change default) | your-password         |
-| ELASTIC_RECONNECT_TIMEOUT | the time to wait before reconnecting to elastic search (seconds) | 5                     |
-| VERBOSE                   | Default to false, if true will log more information to the console | false                 |
-| LOG_TO_FILE               | Default to false, if true will log to file | false                 |
-| LOG_DURATION              | The duration content of each file. (minutes) | 10                    |
-| SEARCHCARDS_FIRST_LENGTH  | The amount of services it will pull initially from server in searchCards | 50                    |
 | AUTOCOMPLETE_MIN_SCORE    | Minimum final score required for autocomplete results (higher = stricter) | 5000                  |
 
-### CI CD
+## ETL
+
+- **[Data](ETL/data.md)**
+- **[Cronicle](ETL/CRONICLE.md)**
+
+## AI
+
+- **Retrieval** — see `retrieval/`
+
+## CI CD
+
+All four services (FE, BE, ETL, Retrieval) are handled by a single orchestrator workflow, [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) ("Deploy"). It detects which service folders changed, builds the changed images **in parallel** (be/ETL/retrieval via [`.github/workflows/reusable-build-image.yml`](.github/workflows/reusable-build-image.yml)), and then deploys them all in **one job**. Images are pushed to **Azure Container Registry** and deployed to **AKS** clusters via `kubectl` (built for `linux/arm64` — the AKS node pools are ARM).
 
 Current automated behavior:
-- Push to `main` updates **staging** (FE + BE independently, only if their folders changed).
-- Creating a Git tag (and publishing a GitHub Release) triggers **production** build & deploy (again only for changed component paths).
+- Push to `dev` → builds and deploys changed services to the **development** environment (`:dev` image tag).
+- Push to `main` → builds and deploys changed services to **staging** (`:stage` image tag).
+- Push to the `production` branch → builds and deploys changed services to **production** (`:production` image tag).
+- Publishing a GitHub Release (tag `v*`) → builds and deploys **all** services to production.
+
+Dev and stage clusters may be powered off; the deploy job detects a stopped cluster, starts it **once**, deploys every changed service inside that window, and stops it again afterwards. (Before the merge into one workflow, parallel per-service runs could stop the cluster under each other's deploys.) A cluster that was already running — e.g. started manually — is never stopped by the workflow.
+
+The FE deploy additionally runs a two-phase flow (fast base deploy, then a full SSG crawl and redeploy inside the same cluster window) — detailed in [FE/README.md](FE/README.md#cicd).
 
 ### Codebase Knowledge Graph
 
@@ -449,6 +107,34 @@ an AI assistant that has the graphify skill installed — that path uses the ass
 model, so it needs no API key.
 
 ---
+## Developers
+
+### Running locally
+
+1. In case you got `.tar`s for **FE** and **BE**, load them using `docker load -i {fileName}` and skip to step 4.
+2. Make sure Docker is installed and running on your machine.
+3. In the **FE** folder run `npm run docker:build:local`, and in the **BE** folder run `npm run docker:build`.
+4. Make sure all the environment variables in the `docker-compose.yml` file are set correctly.
+5. Make sure all the configuration files are set correctly (FE configs: see [FE/README.md](FE/README.md#configuration-files)).
+6. Run in the main folder:
+    ```bash
+    docker compose up -d
+    ```
+* Be aware, frontend runs on port 4000 and backend on port 5000 (BE port can be set via environment variable PORT).
+
+### Building tar files for FE and BE
+
+1. Make sure Docker is installed and running on your machine.
+2. In the **BE** folder run:
+```bash
+npm run tar
+```
+3. In the **FE** folder, decide which environment you want to build for, and run:
+```bash
+npm run tar:{environment}
+```
+
+---
 ## Deployment & Release Guide (For All Team Members)
 Simple steps for staging (test) and production (live). No local build needed.
 
@@ -456,18 +142,12 @@ Simple steps for staging (test) and production (live). No local build needed.
 Use when: You want updated code on the staging environment.
 Steps:
 1. Ensure your feature branch was merged into `main` via a Pull Request (PR).
-2. After merge, go to GitHub → Repository → “Actions” tab.
-3. Look for workflows:
-   - `FE CI (staging)` (runs if `FE/` changed)
-   - `BE CI (staging)` (runs if `be/` changed)
+2. After merge, go to GitHub → Repository → "Actions" tab.
+3. Look for the `Deploy` workflow run (it runs when any of `FE/`, `be/`, `ETL/`, `retrieval/` changed; inside the run, only the changed components are built and deployed — the rest show as skipped).
 4. Open the workflow run (top of the list) and watch the steps. A green check means success.
-5. When finished, images are pushed to GHCR:
-   - FE: `ghcr.io/kolzchut/kol-sherut-fe:latest` and `:<commit-sha>`
-   - BE: `ghcr.io/kolzchut/kol-sherut-be:latest` and `:<commit-sha>`
-6. Helm values in `srm-devops` repo are auto-updated for staging (values.auto-updated.yaml / etl/api & site).
-7. Validate staging:
-   - Open staging URL (internal) & sanity-check: homepage, search, card page.
-   - Optional: Open browser dev tools → Network → confirm new commit SHA in `config.json` request (if exposed) or inspect page footer/build indicator if present.
+5. When finished, the `:stage` image is pushed to ACR and the staging AKS deployment is restarted automatically.
+6. Validate staging:
+   - Open the staging URL & sanity-check: homepage, search, card page.
 
 If something is wrong: Fix code → new PR → merge → staging redeploys automatically.
 
@@ -476,40 +156,25 @@ Use when: You approve staging and want to publish to production.
 Steps:
 1. Confirm staging is healthy (basic flows OK, no blocking bugs).
 2. Decide a new semantic version (e.g. `v1.3.0`). Do not reuse an existing tag.
-3. GitHub → “Releases” → “Draft a new release”.
-4. In “Tag version”: type the new tag (e.g. `v1.3.0`) and target branch = `main`.
+3. GitHub → "Releases" → "Draft a new release".
+4. In "Tag version": type the new tag (e.g. `v1.3.0`) and target branch = `main`.
 5. Title: e.g. `Release v1.3.0`.
 6. Description: bullet list of notable changes (copy from merged PR titles if needed).
-7. Click “Publish release”.
-8. This triggers:
-   - `FE Release (production)` (if `FE/` changed at/just before the tag)
-   - `BE Release (production)` (if `be/` changed)
-9. Monitor under “Actions” like staging. Wait for green check.
-10. Production images produced:
-   - FE: `ghcr.io/kolzchut/kol-sherut-fe:<commit-sha>` and `:<tag>-<commit-sha>`
-   - BE: `ghcr.io/kolzchut/kol-sherut-be:<commit-sha>` and `:<tag>-<commit-sha>`
-   - FE: `ghcr.io/kolzchut/kol-sherut-fe:<commit-sha>` and `:<tag>-<commit-sha>`
-   - BE: `ghcr.io/kolzchut/kol-sherut-be:<commit-sha>` and `:<tag>-<commit-sha>`
-11. Helm production values file (`values.auto-updated.production.yaml`) in `srm-devops` repo auto-updated to point to the `<tag>-<sha>` image.
-12. Validate production: open site, run smoke checks (search, open card, any critical flows).
+7. Click "Publish release".
+8. This triggers the `Deploy` workflow's production path for **all** components: `:production` images are built, pushed to ACR, and rolled out to the production AKS cluster with `CODE_VERSION=<tag>`.
+9. Monitor under "Actions" like staging. Wait for green check.
+10. Validate production: open site, run smoke checks (search, open card, any critical flows).
 
 Rollback (simple):
-- Create a new release with an older known-good tag name incremented (e.g. if `v1.3.0` bad, re-release code from earlier commit as `v1.3.1` pointing to stable commit). The workflow will publish new images and update Helm.
-- OR (DevOps only) manually adjust image in production Helm values repo and deploy.
+- Create a new release from a known-good commit with a new incremented tag (e.g. if `v1.3.0` is bad, re-release the stable commit as `v1.3.1`). The workflow publishes new images and redeploys.
+- OR (DevOps only) manually point the AKS deployment at a previous image.
 
 ### 3. Quick Trigger Reference
-| Action            | Folder Changed? | Workflow                | Environment | History Tag Examples |
-| ----------------- | --------------- | ----------------------- | ----------- | -------------------- |
-| Push to main      | FE/ changed     | FE CI (staging)         | Staging     | latest + <sha>       |
-| Push to main      | be/ changed     | BE CI (staging)         | Staging     | latest + <sha>       |
-| Tag (e.g. v1.2.0) | FE/ changed     | FE Release (production) | Production  | <sha>v1.2.0<sha>     |
-| Tag (e.g. v1.2.0) | be/ changed     | BE Release (production) | Production  | <sha>v1.2.0<sha>     |
-| Action            | Folder Changed? | Workflow                | Environment | History Tag Examples |
-| ----------------- | --------------- | ----------------------- | ----------- | -------------------- |
-| Push to main      | FE/ changed     | FE CI (staging)         | Staging     | latest + <sha>       |
-| Push to main      | be/ changed     | BE CI (staging)         | Staging     | latest + <sha>       |
-| Tag (e.g. v1.2.0) | FE/ changed     | FE Release (production) | Production  | <sha>v1.2.0<sha>     |
-| Tag (e.g. v1.2.0) | be/ changed     | BE Release (production) | Production  | <sha>v1.2.0<sha>     |
+| Action              | What deploys     | Environment | Image Tag     |
+| ------------------- | ---------------- | ----------- | ------------- |
+| Push to `dev`       | changed components| Development | `:dev`        |
+| Push to `main`      | changed components| Staging     | `:stage`      |
+| Release / tag `v*`  | all components   | Production  | `:production` |
 
 ### 4. Versioning Rules
 - Use `vMAJOR.MINOR.PATCH` (e.g. `v1.4.2`).
@@ -520,24 +185,24 @@ Rollback (simple):
 - Never reuse or delete tags.
 
 ### 5. What Gets Deployed
-- Only components whose folders changed since last commit/tag run build & publish.
-- Sitemaps are generated during FE workflows (stage vs production use environment variable `ENVIRONMENT`).
+- On branch pushes, only components whose folders changed are built & deployed (the rest are skipped inside the single `Deploy` run). A release deploys all components.
+- FE sitemaps and SSG pages are generated during the deploy (per-environment) — see [FE/README.md](FE/README.md#cicd).
 
 ### 6. Common Questions
-Q: I pushed to main, but no FE workflow?  
-A: No changes under `FE/` → workflow won’t run. Same for `be/`.
+Q: I pushed to main, but FE didn't deploy?  
+A: No changes under `FE/` → the `Deploy` run skips the FE jobs. Same rule per component folder. If nothing under any service folder changed, no `Deploy` run is triggered at all.
 
-Q: Release created but FE didn’t deploy?  
-A: Tag commit had no FE changes relative to previous; only BE (or neither) deployed.
+Q: Release created but FE didn't deploy?  
+A: Releases deploy all four components — check the `Deploy` run of the release under Actions for the failing job.
 
 Q: Can I edit a release note after publishing?  
-A: Yes. Editing text doesn’t redeploy. To redeploy you must create a new tag.
+A: Yes. Editing text doesn't redeploy. To redeploy you must create a new tag.
 
 Q: How do I know which image is live?  
-A: Check the updated `values.auto-updated*.yaml` in `srm-devops` repo (image field) or visiting argoCD.
+A: Check the deployment's image tag in AKS / ArgoCD, or the `CODE_VERSION` env on the production deployment.
 
 Q: I can't find the correct json config file, where is it?  
-A: The config files are located in the `public/configs` folder of the FE project, but some of them, that are not frequently changed, are located in the `src/assets` folder of the FE project.
+A: FE config files are in `FE/public/configs/`; some rarely-changed data lives in `FE/src/assets/`. Full list in [FE/README.md](FE/README.md#configuration-files).
 
 ### 7. Pre-Production Checklist
 - [ ] All intended PRs merged to main
