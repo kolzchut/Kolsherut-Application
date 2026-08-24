@@ -1,16 +1,14 @@
 # KolSherut - כל שירות 
 
-### Production
+### Deploy Status
 
-[![Deploy Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml/badge.svg?event=release)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml)
+Last known result per service and environment (updated by the `Deploy` workflow after every run; a service untouched by a run keeps its previous status).
 
-### Stage
-
-[![Deploy Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml)
-
-### Dev
-
-[![Deploy Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml/badge.svg?branch=dev)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml)
+| Environment | FE | BE | ETL | Retrieval |
+| --- | --- | --- | --- | --- |
+| **Production** | [![FE production](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fbadges%2Fproduction-fe.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) | [![BE production](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fbadges%2Fproduction-be.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) | [![ETL production](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fbadges%2Fproduction-etl.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) | [![Retrieval production](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fbadges%2Fproduction-retrieval.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) |
+| **Stage** | [![FE stage](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fbadges%2Fstage-fe.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) | [![BE stage](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fbadges%2Fstage-be.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) | [![ETL stage](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fbadges%2Fstage-etl.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) | [![Retrieval stage](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fbadges%2Fstage-retrieval.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) |
+| **Dev** | [![FE dev](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fbadges%2Fdev-fe.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) | [![BE dev](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fbadges%2Fdev-be.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) | [![ETL dev](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fbadges%2Fdev-etl.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) | [![Retrieval dev](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkolzchut%2FKolsherut-Application%2Fbadges%2Fdev-retrieval.json)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/deploy.yml) |
 
 ### [Repo][GitHub]
 ### [Board][Board]

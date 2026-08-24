@@ -265,6 +265,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    # Per-service deploy outcomes for the report-status badge job.
+    outputs:
+      fe: ${{ steps.deploy_fe_ssg.outcome }}
+      be: ${{ steps.deploy_be.outcome }}
+      etl: ${{ steps.deploy_etl.outcome }}
+      retrieval: ${{ steps.deploy_retrieval.outcome }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -418,6 +424,7 @@ jobs:
           provenance: false
 
       - name: Deploy FE with SSG
+        id: deploy_fe_ssg
         if: always() && steps.deploy_fe_base.outcome == 'success'
         timeout-minutes: 15
         run: |
@@ -442,6 +449,91 @@ jobs:
           echo "At least one build job failed"
           exit 1
 
+  # Publishes per-service pass/fail + timestamp to the 'badges' branch, which
+  # feeds the shields.io status matrix in the root README. Services skipped in
+  # this run keep their previous badge (last known status per environment).
+  report-status:
+    needs: [detect, build-fe, build-be, build-etl, build-retrieval, deploy-nonprod, deploy-production]
+    if: >
+      always() &&
+      needs.detect.result == 'success' &&
+      (needs.detect.outputs.is_nonprod == 'true' || needs.detect.outputs.is_prod == 'true')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Badges Branch
+        uses: actions/checkout@v4
+        with:
+          ref: badges
+
+      - name: Update Badge Files
+        env:
+          IS_PROD: ${{ needs.detect.outputs.is_prod }}
+          ENV_TAG: ${{ needs.detect.outputs.env_tag }}
+          BUILD_FE: ${{ needs.build-fe.result }}
+          BUILD_BE: ${{ needs.build-be.result }}
+          BUILD_ETL: ${{ needs.build-etl.result }}
+          BUILD_RETRIEVAL: ${{ needs.build-retrieval.result }}
+          NONPROD_FE: ${{ needs.deploy-nonprod.outputs.fe }}
+          NONPROD_BE: ${{ needs.deploy-nonprod.outputs.be }}
+          NONPROD_ETL: ${{ needs.deploy-nonprod.outputs.etl }}
+          NONPROD_RETRIEVAL: ${{ needs.deploy-nonprod.outputs.retrieval }}
+          PROD_FE: ${{ needs.deploy-production.outputs.fe }}
+          PROD_BE: ${{ needs.deploy-production.outputs.be }}
+          PROD_ETL: ${{ needs.deploy-production.outputs.etl }}
+          PROD_RETRIEVAL: ${{ needs.deploy-production.outputs.retrieval }}
+        run: |
+          if [[ "$IS_PROD" == "true" ]]; then
+            ENV_NAME=production
+            DEPLOY_FE="$PROD_FE"; DEPLOY_BE="$PROD_BE"
+            DEPLOY_ETL="$PROD_ETL"; DEPLOY_RETRIEVAL="$PROD_RETRIEVAL"
+          else
+            ENV_NAME="$ENV_TAG"
+            DEPLOY_FE="$NONPROD_FE"; DEPLOY_BE="$NONPROD_BE"
+            DEPLOY_ETL="$NONPROD_ETL"; DEPLOY_RETRIEVAL="$NONPROD_RETRIEVAL"
+          fi
+          TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M UTC')
+
+          update_badge () {
+            SVC="$1"; LABEL="$2"; BUILD="$3"; DEPLOY="$4"
+            if [[ "$BUILD" == "skipped" ]]; then
+              echo "$LABEL: skipped this run, badge unchanged"
+              return
+            fi
+            if [[ "$BUILD" == "success" && "$DEPLOY" == "success" ]]; then
+              STATUS=passing; COLOR=brightgreen
+            else
+              STATUS=failing; COLOR=red
+            fi
+            printf '{"schemaVersion":1,"label":"%s","message":"%s · %s","color":"%s"}\n' \
+              "$LABEL" "$STATUS" "$TIMESTAMP" "$COLOR" > "${ENV_NAME}-${SVC}.json"
+            echo "$LABEL ($ENV_NAME): $STATUS"
+          }
+
+          update_badge fe FE "$BUILD_FE" "$DEPLOY_FE"
+          update_badge be BE "$BUILD_BE" "$DEPLOY_BE"
+          update_badge etl ETL "$BUILD_ETL" "$DEPLOY_ETL"
+          update_badge retrieval Retrieval "$BUILD_RETRIEVAL" "$DEPLOY_RETRIEVAL"
+
+      - name: Commit and Push Badges
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet; then
+            echo "No badge changes to publish"
+            exit 0
+          fi
+          git add .
+          git commit -m "Update deploy status badges"
+          for i in 1 2 3 4 5; do
+            if git push origin badges; then
+              exit 0
+            fi
+            git pull --rebase origin badges
+          done
+          exit 1
+
   deploy-production:
     needs: [detect, build-fe, build-be, build-etl, build-retrieval]
     if: >
@@ -453,6 +545,12 @@ jobs:
        needs.build-etl.result == 'success' ||
        needs.build-retrieval.result == 'success')
     runs-on: ubuntu-latest
+    # Per-service deploy outcomes for the report-status badge job.
+    outputs:
+      fe: ${{ steps.deploy_fe.outcome }}
+      be: ${{ steps.deploy_be.outcome }}
+      etl: ${{ steps.deploy_etl.outcome }}
+      retrieval: ${{ steps.deploy_retrieval.outcome }}
     steps:
       - name: Azure Login
         uses: azure/login@v2
@@ -475,6 +573,7 @@ jobs:
           use-kubelogin: 'true'
 
       - name: Deploy BE to Production
+        id: deploy_be
         if: always() && steps.ctx.outcome == 'success' && needs.build-be.result == 'success'
         run: |
           kubectl set image deployment/kolsherut-be kolsherut-be=${{ secrets.ACR_LOGIN_SERVER }}/kolsherut-be:production -n default
@@ -483,6 +582,7 @@ jobs:
           kubectl rollout status deployment/kolsherut-be -n default --timeout=3m
 
       - name: Deploy ETL to Production
+        id: deploy_etl
         if: always() && steps.ctx.outcome == 'success' && needs.build-etl.result == 'success'
         run: |
           kubectl set image deployment/kolsherut-etl etl=${{ secrets.ACR_LOGIN_SERVER }}/kolsherut-etl:production -n default
@@ -491,6 +591,7 @@ jobs:
           kubectl rollout status deployment/kolsherut-etl -n default --timeout=3m
 
       - name: Deploy Retrieval to Production
+        id: deploy_retrieval
         if: always() && steps.ctx.outcome == 'success' && needs.build-retrieval.result == 'success'
         run: |
           kubectl set image deployment/kolsherut-retrieval kolsherut-retrieval=${{ secrets.ACR_LOGIN_SERVER }}/kolsherut-retrieval:production -n default
@@ -499,6 +600,7 @@ jobs:
           kubectl rollout status deployment/kolsherut-retrieval -n default --timeout=3m
 
       - name: Deploy FE to Production
+        id: deploy_fe
         if: always() && steps.ctx.outcome == 'success' && needs.build-fe.result == 'success'
         run: |
           kubectl set image deployment/kolsherut-fe kolsherut-fe=${{ secrets.ACR_LOGIN_SERVER }}/kolsherut-fe:production -n default
