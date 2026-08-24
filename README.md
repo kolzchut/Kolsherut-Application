@@ -1,6 +1,12 @@
 # KolSherut - כל שירות 
 
-![Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/WORKFLOW_FILE.yml/badge.svg?branch=main
+[![FE Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/fe-ACR.yml/badge.svg?branch=main)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/fe-ACR.yml)
+[![BE Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/be-ACR.yml/badge.svg?branch=main)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/be-ACR.yml)
+[![ETL Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/etl-ACR.yml/badge.svg?branch=main)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/etl-ACR.yml)
+[![Retrieval Build Status](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/retrieval-ACR.yml/badge.svg?branch=main)](https://github.com/kolzchut/Kolsherut-Application/actions/workflows/retrieval-ACR.yml)
+
+### [Repo][GitHub]
+### [Board][Board]
 
 [GitHub]: https://github.com/kolzchut/Kolsherut-Application
 [Board]: https://github.com/orgs/kolzchut/projects/8
