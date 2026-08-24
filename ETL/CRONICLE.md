@@ -38,6 +38,29 @@ On the **Schedule** tab, click **Run** next to the event (or open the event and 
 Home tab's Active Jobs table. Shift-clicking **Run Now** lets you customize the job's timestamp
 — useful for catch-up runs.
 
+## Editing an existing event
+
+1. **Schedule** tab → **Edit** next to the event (or open the event by clicking its name). Every
+   event also has a direct URL — `https://<env>/#Schedule?sub=edit_event&id=<event id>` — and the
+   event id is shown at the top of the edit page.
+2. Change what you need. For our jobs the interesting field is almost always **Script Source**
+   inside Plugin Parameters — the shell script the job runs. The standard script is 4 lines
+   (see [Data fetchers](#data-fetchers)); usually only the last line (`python3 -m engine
+   <spec_name>` or `python3 -m operators.<name>`) ever changes.
+3. Click **Save Changes** — a green "The event was saved successfully" banner confirms it. The
+   change applies from the next run (scheduled or manual); a job already running keeps its old
+   script.
+4. Verify: click **Run** on the event and follow the Job Details log, at least when the change
+   touched the script. Every edit is also recorded in Admin → **Activity Log** (who changed which
+   event, and when) — there is no undo, so note the old script before replacing it if you may
+   need to restore it.
+
+> **If the script points at code that must exist in the container** (a new spec, a new operator),
+> make sure a deploy has shipped that code to the environment *before* the event's next run —
+> the [dockerfile](dockerfile) copies `engine/`, `specs/`, `operators/`, and `transformers/` at
+> image build time. Editing the event and deploying the image are one change; doing only half
+> leaves a job that fails on its next run.
+
 ## Monitoring jobs and reading logs
 
 - **Live jobs**: Home tab → click the job in Active Jobs → the **Job Details** page shows live
@@ -140,15 +163,18 @@ python3 -m operators.<name>
 ```
 
 where `<name>` is one of the packages under
-[`operators/`](data/plugins/srm-etl/operators) — e.g. `publish` (Upload to DB), `deploy`,
-`taxonomy` (Refresh Taxonomies), `geocode`, `manual_data_entry`, `github_backup`, `ssg_updater`
+[`operators/`](data/plugins/srm-etl/operators) — e.g. `derive` (Upload to DB), `taxonomy`
+(Refresh Taxonomies), `geocode`, `manual_data_entry`, `github_backup`, `ssg_updater`
 (Trigger Release Of FE).
 
-> **Migration note:** the spec-driven engine replaced the old per-source operators in the code,
-> but repointing the live Cronicle jobs from `python -m operators.<name>` to
-> `python -m engine <spec_name>` and rebuilding the deployed image must happen together — see
-> [MIGRATION_STATUS.md](data/plugins/srm-etl/MIGRATION_STATUS.md) before touching the
-> production jobs.
+> **Migration note (completed 2026-08-24):** the spec-driven engine replaced the old per-source
+> operators, and every production fetcher event was repointed from `python -m operators.<name>`
+> to `python3 -m engine <spec_name>` — the mapping is: Enrich Entities → `entities`,
+> GilZahav → `gilzahav`, Kol-Zchut Organizations → `kolzchut_orgs`, Mahlakot Revaha → `revaha`,
+> Mental Health Clinic → `mental_health_clinics`, meser → `meser`, Mol_daycare → `day_care`,
+> SHIL → `shil`, Social Procurement Data → `soproc`, Tipat Halav → `tipat`. The `child_care`
+> spec still has no scheduled event. History in
+> [MIGRATION_STATUS.md](data/plugins/srm-etl/MIGRATION_STATUS.md).
 
 ## Creating users
 
