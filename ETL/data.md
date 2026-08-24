@@ -1,6 +1,6 @@
 # מקורות המידע של קול-שירות
 
-ה-ETL של קול-שירות שואב מידע מ-11 מקורות חיצוניים (המוגדרים כ"ספקים" ב-[`ETL/data/plugins/srm-etl/specs`](ETL/data/plugins/srm-etl/specs)), ומעשיר אותו במקור נוסף המנוהל ידנית. הדף הזה מרכז, לכל מקור: תיאור עסקי, קישור למקור הנתונים בעולם, וקישור לקובץ המפרט (Spec) שמגדיר איך המידע נשאב ומעובד.
+ה-ETL של קול-שירות שואב מידע מ-11 מקורות חיצוניים (המוגדרים כ"ספקים" ב-[`ETL/data/plugins/srm-etl/specs`](data/plugins/srm-etl/specs)), ומעשיר אותו במקור נוסף המנוהל ידנית. הדף הזה מרכז, לכל מקור: תיאור עסקי, קישור למקור הנתונים בעולם, וקישור לקובץ המפרט (Spec) שמגדיר איך המידע נשאב ומעובד.
 
 ---
 
@@ -11,7 +11,7 @@
 בנוסף, מאגר זה שואב מידע הנוגע לתוכניות רווחה ספציפיות כמו "נושמים לרווחה" ו"מרכזי עוצמה". הנתונים כוללים את פרטי ההתקשרות של המחלקות השונות (מספרי טלפון, דואר אלקטרוני ואתרי אינטרנט), וכן את כתובותיהן הפיזיות.
 
 - **מקור הנתונים:** [data.gov.il — "המחלקות לשירותים חברתיים" (social-departments)](https://data.gov.il/api/action/package_search?q=%22social-departments%22)
-- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/revaha.yaml](ETL/data/plugins/srm-etl/specs/revaha.yaml)
+- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/revaha.yaml](data/plugins/srm-etl/specs/revaha.yaml)
 
 ---
 
@@ -22,7 +22,7 @@
 בנוסף נבנים שירותים לפי קהל היעד של המרפאה (מבוגרים או ילדים), עם המצבים והמענים הרלוונטיים לתחום בריאות הנפש.
 
 - **מקור הנתונים:** [data.gov.il — מרפאות בריאות הנפש (mentalhealthclinics)](https://data.gov.il/api/action/package_search?q=%22mentalhealthclinics%22) — נכון לעת כתיבת מסמך זה הסט אינו מפורסם ציבורית באתר (מוחזר 403/ריק).
-- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/mental_health_clinics.yaml](ETL/data/plugins/srm-etl/specs/mental_health_clinics.yaml)
+- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/mental_health_clinics.yaml](data/plugins/srm-etl/specs/mental_health_clinics.yaml)
 
 ---
 
@@ -33,7 +33,7 @@
 בנוסף, המקור מספק את פרטי ההתקשרות המלאים של כל תחנה (טלפון, אימייל ואתר אינטרנט), כתובת התחנה, ופרטי הגעה נוספים במידה וקיימים, כדי להנגיש את דרכי הפנייה לציבור הרחב.
 
 - **מקור הנתונים:** [אתר שי"ל — משרד הרווחה](https://www.gov.il/he/Departments/Guides/molsa-shill-guide)
-- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/shil.yaml](ETL/data/plugins/srm-etl/specs/shil.yaml)
+- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/shil.yaml](data/plugins/srm-etl/specs/shil.yaml)
 
 ---
 
@@ -44,7 +44,7 @@
 המידע העסקי מספק פירוט מעמיק על כל שירות, לרבות תיאור השירות, פרטי המימוש שלו, אוכלוסיית היעד אליה הוא מיועד ומשך השירות הניתן. כמו כן, הנתונים מציינים האם השירות כרוך בתשלום, ומשייכים לו את מוקדי הסיוע הארציים הרלוונטיים (כדוגמת מוקד 118 של משרד הרווחה או 5400 של משרד הבריאות).
 
 - **מקור הנתונים:** [מפתח — התקציב הפתוח (BudgetKey)](https://next.obudget.org/) · קטלוג "קליק לרווחה" נשאב מעותק מקומי שמור (`specs/soproc/click-cache-backup.json`)
-- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/soproc.yaml](ETL/data/plugins/srm-etl/specs/soproc.yaml)
+- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/soproc.yaml](data/plugins/srm-etl/specs/soproc.yaml)
 
 ---
 
@@ -55,7 +55,7 @@
 הנתונים העסקיים המופקים ממקור זה מאגדים את זהות הגוף המפעיל של המסגרת, שם המסגרת, אוכלוסיית היעד הספציפית שהיא משרתת, סוג המסגרת, והמיקום הפיזי בו היא פועלת.
 
 - **מקור הנתונים:** [data.gov.il — מסגרות רווחה (welfare-frames)](https://data.gov.il/api/action/package_search?q=welfare-frames)
-- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/meser.yaml](ETL/data/plugins/srm-etl/specs/meser.yaml)
+- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/meser.yaml](data/plugins/srm-etl/specs/meser.yaml)
 
 ---
 
@@ -66,7 +66,7 @@
 הנתונים המופקים כוללים את זהות החברה המנהלת המפעילה כל מוסד, מיקום המוסד ופרטי הקשר שלו. בנוסף, נשאבים נתונים אופרטיביים כגון כמות יחידות הדיור הקיימות בכל בית דיור ומספר האנשים הממתינים בתור לקליטה במוסד.
 
 - **מקור הנתונים:** [אתר משרד הבינוי והשיכון — גיל הזהב](https://www.gov.il/apps/moch/viewlist/list/gil_zahav)
-- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/gilzahav.yaml](ETL/data/plugins/srm-etl/specs/gilzahav.yaml)
+- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/gilzahav.yaml](data/plugins/srm-etl/specs/gilzahav.yaml)
 
 ---
 
@@ -77,7 +77,7 @@
 המידע העסקי הנשאב כולל פרופיל ארגוני מקיף: מטרות הארגון, סוג המלכ"ר, שפות מתן השירות, ופריסת הסניפים של הארגון. בנוסף, המערכת מפיקה מידע מלא על השירותים שהארגון מציע, לרבות אוכלוסיית היעד, שעות ומועדי הפעילות, דרך מתן השירות (פרונטלי, מרחוק, צ'אט וכדומה), והאם נדרש תשלום בעבורו.
 
 - **מקור הנתונים:** [Guidestar Israel](https://www.guidestar.org.il/)
-- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/entities.yaml](ETL/data/plugins/srm-etl/specs/entities.yaml)
+- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/entities.yaml](data/plugins/srm-etl/specs/entities.yaml)
 
 ---
 
@@ -88,7 +88,7 @@
 המידע העסקי הנאסף מאפשר לאתר על פי סמל המעון את קהל היעד הספציפי לו הוא פונה, בהתאם למגזר האוכלוסייה (יהודי, ערבי, בדואי, דרוזי או צרקסי), ולהציג את פרטי הזכאות לסבסוד שכר הלימוד.
 
 - **מקור הנתונים:** [פורטל ההורים — משרד החינוך, איתור מעונות יום](https://parents.education.gov.il/prhnet/gov-education/kindergarten/search-daycare)
-- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/child_care.yaml](ETL/data/plugins/srm-etl/specs/child_care.yaml)
+- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/child_care.yaml](data/plugins/srm-etl/specs/child_care.yaml)
 
 ---
 
@@ -99,7 +99,7 @@
 המידע העסקי כולל את שם המסגרת ומיקומה, פרטי הגוף המפעיל (עמותה, חברה או רשות מקומית), ופרטי הקשר שלה. כל מסגרת מקושרת לשירות המתאים לסוגה (משפחתון או צהרון), הכולל תיאור, קהל יעד וזכאות לסבסוד ממשרד העבודה.
 
 - **מקור הנתונים:** [פורטל איתור מסגרות מוכרות — משרד העבודה](https://daycareclasssearch.labor.gov.il/)
-- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/day_care.yaml](ETL/data/plugins/srm-etl/specs/day_care.yaml)
+- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/day_care.yaml](data/plugins/srm-etl/specs/day_care.yaml)
 
 ---
 
@@ -110,7 +110,7 @@
 המידע משמש להשלמת זיהוי הארגונים הרשומים במערכת ולעדכון תאריך התיוג האחרון שלהם, ואינו מוסיף בעצמו מידע עסקי חדש על השירותים או הארגונים.
 
 - **מקור הנתונים:** [כל זכות — CargoExport (organization_number)](https://www.kolzchut.org.il/w/he/index.php?title=%D7%9E%D7%99%D7%95%D7%97%D7%93:CargoExport&tables=organization&fields=organization_number&where=organization_number+is+not+null&format=json&limit=1000)
-- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/kolzchut_orgs.yaml](ETL/data/plugins/srm-etl/specs/kolzchut_orgs.yaml)
+- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/kolzchut_orgs.yaml](data/plugins/srm-etl/specs/kolzchut_orgs.yaml)
 
 ---
 
@@ -121,7 +121,7 @@
 המידע העסקי כולל את מיקום כל תחנה ופרטי הקשר שלה, ואת הארגון (קופת חולים או משרד הבריאות) המפעיל אותה. בנוסף, המאגר מתעד את המוקד הטלפוני הארצי של טיפת חלב, המעניק ייעוץ בנושאי חיסונים, הנקה, תזונה והתפתחות הילד.
 
 - **מקור הנתונים:** [אתר משרד הבריאות — טיפת חלב](https://healthinstitutions.health.gov.il/TipotChalav)
-- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/tipat.yaml](ETL/data/plugins/srm-etl/specs/tipat.yaml)
+- **קובץ מפרט:** [ETL/data/plugins/srm-etl/specs/tipat.yaml](data/plugins/srm-etl/specs/tipat.yaml)
 
 ---
 
@@ -132,4 +132,4 @@
 המידע העסקי המנוהל באמצעותו מאפשר הוספה של גופים מפעילים, בין אם מדובר בישויות משפטיות מסודרות (עמותות או תאגידים) ובין אם ביחידות ציבוריות או ממשלתיות. המידע כולל תיאור מילולי של השירותים, תנאי קבלת השירות, הגדרה של שירותים הניתנים בפריסה ארצית, פרטי קשר, קהלי יעד, וציון ברור של מקור המידע שיוצג לציבור.
 
 - **מקור הנתונים:** טבלת Airtable ידנית (`AIRTABLE_DATAENTRY_BASE`) — אין API חיצוני; זהו המקום היחיד ברשימה זו שמוזן על-ידי אנשים ולא נשאב ממקור אוטומטי.
-- **קוד:** [ETL/data/plugins/srm-etl/operators/manual_data_entry](ETL/data/plugins/srm-etl/operators/manual_data_entry) — מקור זה עדיין לא הומר לפורמט ה-Spec המשותף (ראו [MIGRATION_STATUS.md](ETL/data/plugins/srm-etl/MIGRATION_STATUS.md)).
+- **קוד:** [ETL/data/plugins/srm-etl/operators/manual_data_entry](data/plugins/srm-etl/operators/manual_data_entry) — מקור זה עדיין לא הומר לפורמט ה-Spec המשותף (ראו [MIGRATION_STATUS.md](data/plugins/srm-etl/MIGRATION_STATUS.md)).
