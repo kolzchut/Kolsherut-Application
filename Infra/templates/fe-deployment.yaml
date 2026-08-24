@@ -6,6 +6,9 @@ metadata:
     {{- include "backend.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.frontend.replicaCount }}
+  # The sync-config initContainer copies the full SSG output to Azure Files
+  # on every pod start, which can exceed the 600s default deadline.
+  progressDeadlineSeconds: 1800
   {{- with .Values.frontend.strategy }}
   strategy:
     {{- toYaml . | nindent 4 }}

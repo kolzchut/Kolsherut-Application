@@ -239,7 +239,8 @@ frontend:
       memory: 2Gi
   persistence:
     enabled: true
-    size: "1Gi"
+    # Must hold the full SSG output (~2.2GB of p/ pages on production)
+    size: "5Gi"
     # Per-environment Azure File Share settings (provided via secrets files)
     azureStorageAccountName: ""  # MUST BE PROVIDED VIA SECRETS FILE
     azureStorageAccountKey: ""    # MUST BE PROVIDED VIA SECRETS FILE

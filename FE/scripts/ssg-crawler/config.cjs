@@ -20,7 +20,7 @@ module.exports = {
     TARGET_DOMAIN: TARGET_DOMAIN,
     LOCAL_BASE_URL: `http://127.0.0.1:3000`,
     MAX_PAGES: 35000,
-    MAX_CONCURRENCY: 5,
+    MAX_CONCURRENCY: 10,
     MAX_RETRIES: 3,
     SSG_USER_AGENT: process.env.SSG_USER_AGENT || 'KolsherutSSG',
     ALLOWED_DOMAINS: [

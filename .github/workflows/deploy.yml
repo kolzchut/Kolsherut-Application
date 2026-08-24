@@ -367,13 +367,15 @@ jobs:
           kubectl rollout restart deployment/kolsherut-retrieval -n default
           kubectl rollout status deployment/kolsherut-retrieval -n default --timeout=12m
 
+      # FE rollouts get 30m: the sync-config initContainer copies the whole
+      # SSG output to Azure Files on every pod start, which can take 15-25m.
       - name: Deploy FE Base
         id: deploy_fe_base
         if: ${{ !cancelled() && steps.ctx.outcome == 'success' && needs.build-fe.result == 'success' }}
-        timeout-minutes: 15
+        timeout-minutes: 35
         run: |
           kubectl rollout restart deployment/kolsherut-fe -n default
-          kubectl rollout status deployment/kolsherut-fe -n default --timeout=14m
+          kubectl rollout status deployment/kolsherut-fe -n default --timeout=30m
 
       # ── FE SSG phase: crawl the deployed app while the cluster is up ──
       - name: Setup Node.js (SSG)
@@ -391,9 +393,12 @@ jobs:
           name: fe-dist
           path: FE/dist
 
+      # The full crawl takes ~3h (measured); 330m is the effective max inside
+      # the 360m job cap after the cluster start and service deploys.
       - name: Build SSG
+        id: build_ssg
         if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' }}
-        timeout-minutes: 90
+        timeout-minutes: 330
         env:
           SSG_USER_AGENT: ${{ secrets.SSG_USER_AGENT }}
         run: |
@@ -401,14 +406,16 @@ jobs:
           npm install
           npm run build:${{ needs.detect.outputs.fe_env }}:ssg
 
+      # Everything below requires build_ssg success: a timed-out crawl must
+      # never be pushed or deployed as the stage/dev image.
       - name: Set up QEMU
-        if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.build_ssg.outcome == 'success' }}
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.build_ssg.outcome == 'success' }}
         uses: docker/setup-buildx-action@v3
       - name: Log in to ACR
-        if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.build_ssg.outcome == 'success' }}
         uses: docker/login-action@v3
         with:
           registry: ${{ secrets.ACR_LOGIN_SERVER }}
@@ -416,7 +423,7 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Build and Push Image with SSG
-        if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.build_ssg.outcome == 'success' }}
         uses: docker/build-push-action@v5
         with:
           context: ./FE
@@ -430,11 +437,11 @@ jobs:
 
       - name: Deploy FE with SSG
         id: deploy_fe_ssg
-        if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' }}
-        timeout-minutes: 15
+        if: ${{ !cancelled() && steps.build_ssg.outcome == 'success' }}
+        timeout-minutes: 35
         run: |
           kubectl rollout restart deployment/kolsherut-fe -n default
-          kubectl rollout status deployment/kolsherut-fe -n default --timeout=14m
+          kubectl rollout status deployment/kolsherut-fe -n default --timeout=30m
 
       # The cluster was off before this run started it, so return it to off —
       # even when a deploy failed or the run was cancelled (always()). A
@@ -616,7 +623,7 @@ jobs:
           kubectl set image deployment/kolsherut-fe kolsherut-fe=${{ secrets.ACR_LOGIN_SERVER }}/kolsherut-fe:production -n default
           kubectl set env deployment/kolsherut-fe CODE_VERSION=${{ needs.detect.outputs.version }} -n default
           kubectl rollout restart deployment/kolsherut-fe -n default
-          kubectl rollout status deployment/kolsherut-fe -n default --timeout=14m
+          kubectl rollout status deployment/kolsherut-fe -n default --timeout=30m
 
       - name: Fail If Any Build Failed
         if: >
