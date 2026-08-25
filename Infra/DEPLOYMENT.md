@@ -48,6 +48,18 @@ helm upgrade --install kolsherut . -f values.yaml -f values-prod.yaml -f secrets
 
 ---
 
+## Non-Prod Basic Auth (dev / staging)
+
+`dev.kolsherut.org.il` and `staging.kolsherut.org.il` are guarded by HTTP Basic Auth at the ingress (`frontend.ingress.basicAuth.enabled: true` in `values-dev.yaml` / `values-staging.yaml`). Production leaves it disabled. This keeps the non-prod sites out of search engines and away from casual visitors — a per-host `robots.txt` cannot do that (robots rules are per host and advisory only).
+
+*   **Scope:** only the **FE** ingress. The BE (`be-<env>`), ETL and retrieval ingresses are untouched: the browser calls the BE cross-origin (Basic Auth credentials would not carry over), and the SSG crawler in `deploy.yml` renders against `127.0.0.1:3000` and the BE hosts directly, so neither the deploy nor the SSG phase is affected.
+*   **Credentials:** `frontend.ingress.basicAuth.username` / `password` in `secrets-<env>.yaml` (see `secrets.template.yaml`). Helm renders them into the `<release>-fe-basic-auth` Secret (htpasswd, bcrypt) that the ingress `auth-secret` annotation points at. `helm upgrade` fails with a clear message if either is missing while `enabled` is true.
+*   **Rotate:** change the values in `secrets-<env>.yaml` and rerun the `helm upgrade` for that environment; ingress-nginx picks up the new Secret without a pod restart.
+*   **Automation that browses the non-prod FE** (e.g. the `evaluation/` headless-browser runner against staging) must now send the credentials, e.g. `https://<user>:<pass>@staging.kolsherut.org.il/`.
+*   **Disable for one environment:** set `frontend.ingress.basicAuth.enabled: false` in that env's values file.
+
+---
+
 ## Retrieval Service
 
 The `retrieval` service (FastAPI) runs from the self-contained image `kosherutregistry.azurecr.io/kolsherut-retrieval`, which **bundles the local embedding model** — there is no model volume to provision, the pod pulls the image and warms the model on startup. It is a pure hybrid retriever (semantic kNN + lexical BM25 fused by RRF) over `srm_services`; there is no reranker and no LLM.

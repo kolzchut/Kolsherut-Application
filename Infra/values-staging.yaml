@@ -47,6 +47,8 @@ frontend:
   image:
     tag: "stage"
   ingress:
+    basicAuth:
+      enabled: true
     hosts:
       - host: staging.kolsherut.org.il
         paths:

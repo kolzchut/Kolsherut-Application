@@ -230,6 +230,17 @@ frontend:
     hosts: []
     # TLS defined in values-env.yaml
     tls: []
+    # HTTP Basic Auth at the ingress (ingress-nginx auth-type/auth-secret).
+    # Enabled in values-dev.yaml / values-staging.yaml so non-prod sites are
+    # neither publicly browsable nor crawlable/indexed; prod stays open.
+    # Only the FE ingress is guarded: the browser calls be-<env> cross-origin,
+    # and the SSG crawler hits 127.0.0.1 + the BE hosts, so neither is affected.
+    # Credentials come from secrets-<env>.yaml (never from this file).
+    basicAuth:
+      enabled: false
+      realm: "Kolsherut - restricted environment"
+      username: ""  # MUST BE PROVIDED VIA SECRETS FILE when enabled
+      password: ""  # MUST BE PROVIDED VIA SECRETS FILE when enabled
   resources:
     requests:
       cpu: 250m

@@ -7,6 +7,11 @@ metadata:
     {{- include "backend.labels" . | nindent 4 }}
   annotations:
     {{- toYaml .Values.frontend.ingress.annotations | nindent 4 }}
+    {{- if .Values.frontend.ingress.basicAuth.enabled }}
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: {{ include "frontend.basicAuthSecretName" . }}
+    nginx.ingress.kubernetes.io/auth-realm: {{ .Values.frontend.ingress.basicAuth.realm | quote }}
+    {{- end }}
 spec:
   ingressClassName: {{ .Values.frontend.ingress.className }}
   {{- if .Values.frontend.ingress.tls }}

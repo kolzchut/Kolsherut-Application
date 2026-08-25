@@ -48,6 +48,8 @@ frontend:
   image:
     tag: "dev"
   ingress:
+    basicAuth:
+      enabled: true
     hosts:
       - host: dev.kolsherut.org.il
         paths:

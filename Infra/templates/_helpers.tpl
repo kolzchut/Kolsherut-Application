@@ -65,3 +65,10 @@ Frontend config PV name (paired with frontend.configClaimName).
 {{- define "frontend.configVolumeName" -}}
 {{ include "frontend.configClaimName" . }}-pv
 {{- end }}
+
+{{/*
+Name of the htpasswd Secret referenced by the FE ingress auth-secret annotation.
+*/}}
+{{- define "frontend.basicAuthSecretName" -}}
+{{ include "backend.fullname" . }}-fe-basic-auth
+{{- end }}
