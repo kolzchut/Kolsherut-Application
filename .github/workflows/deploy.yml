@@ -367,7 +367,7 @@ jobs:
           kubectl rollout restart deployment/kolsherut-retrieval -n default
           kubectl rollout status deployment/kolsherut-retrieval -n default --timeout=12m
 
-      # FE rollouts get 30m: the sync-config initContainer copies the whole
+      # FE rollouts get 45m: the sync-config initContainer copies the whole
       # SSG output to Azure Files on every pod start, which can take 15-25m.
       - name: Deploy FE Base
         id: deploy_fe_base
@@ -375,7 +375,7 @@ jobs:
         timeout-minutes: 35
         run: |
           kubectl rollout restart deployment/kolsherut-fe -n default
-          kubectl rollout status deployment/kolsherut-fe -n default --timeout=30m
+          kubectl rollout status deployment/kolsherut-fe -n default --timeout=45m
 
       # ── FE SSG phase: crawl the deployed app while the cluster is up ──
       - name: Setup Node.js (SSG)
@@ -441,7 +441,7 @@ jobs:
         timeout-minutes: 35
         run: |
           kubectl rollout restart deployment/kolsherut-fe -n default
-          kubectl rollout status deployment/kolsherut-fe -n default --timeout=30m
+          kubectl rollout status deployment/kolsherut-fe -n default --timeout=45m
 
       # The cluster was off before this run started it, so return it to off —
       # even when a deploy failed or the run was cancelled (always()). A
@@ -623,7 +623,7 @@ jobs:
           kubectl set image deployment/kolsherut-fe kolsherut-fe=${{ secrets.ACR_LOGIN_SERVER }}/kolsherut-fe:production -n default
           kubectl set env deployment/kolsherut-fe CODE_VERSION=${{ needs.detect.outputs.version }} -n default
           kubectl rollout restart deployment/kolsherut-fe -n default
-          kubectl rollout status deployment/kolsherut-fe -n default --timeout=30m
+          kubectl rollout status deployment/kolsherut-fe -n default --timeout=45m
 
       - name: Fail If Any Build Failed
         if: >

@@ -49,3 +49,19 @@ Selector labels
 app.kubernetes.io/name: {{ include "backend.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Frontend config PVC name. Static (pre-bound) PVCs cannot be resized, so the
+name carries a generation suffix: bumping frontend.persistence.volumeGeneration
+creates a fresh PV/PVC pair on the same Azure File Share and the FE rolls onto it.
+*/}}
+{{- define "frontend.configClaimName" -}}
+{{ include "backend.fullname" . }}-fe-config-{{ .Values.frontend.persistence.volumeGeneration }}
+{{- end }}
+
+{{/*
+Frontend config PV name (paired with frontend.configClaimName).
+*/}}
+{{- define "frontend.configVolumeName" -}}
+{{ include "frontend.configClaimName" . }}-pv
+{{- end }}

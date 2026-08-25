@@ -241,6 +241,11 @@ frontend:
     enabled: true
     # Must hold the full SSG output (~2.2GB of p/ pages on production)
     size: "5Gi"
+    # The PVC is statically bound to an Azure File Share and cannot be resized in
+    # place. Bump this suffix whenever `size` changes: Helm then creates a new
+    # PV/PVC pair pointing at the SAME share and the FE rolls onto it with no
+    # downtime (the share is RWX). Data is never moved.
+    volumeGeneration: "v2"
     # Per-environment Azure File Share settings (provided via secrets files)
     azureStorageAccountName: ""  # MUST BE PROVIDED VIA SECRETS FILE
     azureStorageAccountKey: ""    # MUST BE PROVIDED VIA SECRETS FILE
