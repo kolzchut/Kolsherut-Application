@@ -129,13 +129,14 @@ model, so it needs no API key.
 1. In case you got `.tar`s for **FE** and **BE**, load them using `docker load -i {fileName}` and skip to step 4.
 2. Make sure Docker is installed and running on your machine.
 3. In the **FE** folder run `npm run docker:build:local`, and in the **BE** folder run `npm run docker:build`.
-4. Make sure all the environment variables in the `docker-compose.yml` file are set correctly, and that its `image:` tags match the images you built/loaded (the build scripts tag images with the `version` from each `package.json`).
-5. Make sure all the configuration files are set correctly (FE configs: see [FE/README.md](FE/README.md#configuration-files)).
-6. Run in the main folder:
+4. Copy `.env.example` to `.env` in the main folder and fill in the Elasticsearch credentials and the image tags of the images you built/loaded (the build scripts tag images with the `version` from each `package.json`). `docker-compose.yml` itself holds no secrets.
+5. The `retrieval` service is built from `retrieval/` by compose (`docker compose build retrieval`; run `git lfs pull` there first so the embedding model is present). Leave it out with `docker compose up -d be fe` if you only need FE + BE.
+6. Make sure all the configuration files are set correctly (FE configs: see [FE/README.md](FE/README.md#configuration-files)).
+7. Run in the main folder:
     ```bash
     docker compose up -d
     ```
-* Be aware, frontend is served on host port 5173 (nginx listens on 4000 inside the container, mapped in `docker-compose.yml`) and backend on port 5000 (BE port can be set via environment variable PORT).
+* Be aware, frontend is served on host port 5173 (nginx listens on 4000 inside the container), backend on port 5000 and retrieval on port 8200. Host ports are set via `FE_PORT` / `BE_PORT` / `RETRIEVAL_PORT` in `.env`.
 
 ### Building tar files for FE and BE
 
