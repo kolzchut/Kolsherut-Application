@@ -144,6 +144,8 @@ The build exits non-zero if zero pages succeed, failing the CI job.
 
 Result: `dist/` contains the SPA shell **plus** tens of thousands of fully rendered `index.html` files, one per service card / taxonomy page, all baked into the Docker image.
 
+**Where the pages live once deployed:** in the cluster the `p/` folder (the card pages, ~2.2 GB on production) is served from the environment's **Azure File Share**, mounted at `/usr/share/nginx/html/p`. On every FE pod start the `sync-config` initContainer wipes `p/` on the share and copies the image's SSG output into it — which is why FE rollouts are allowed up to 45 minutes ([Infra/templates/fe-deployment.yaml](../Infra/templates/fe-deployment.yaml)). The share is always overwritten from the image, so never edit `p/` by hand; the share's `configs/` folder behaves differently — see [Configuration Files](#configuration-files) and [docs/azure-environments.md](../docs/azure-environments.md#frontend-configuration-on-the-file-share).
+
 ### 3. SSR — on-demand rendering for bots
 
 Pages that appear between builds (new services) or that were never crawled still need real HTML for search engines and link previews. That is handled at request time:
@@ -183,6 +185,12 @@ All runtime configuration lives in `public/configs/` and is fetched **at runtime
 - and on any failure routes the app to the **maintenance** page.
 
 Files loaded at runtime: `environment.json`, `config.json`, `strings.json`, `responseColors.json`, `filters.json`, `modules.json`, `metaTags.json`, `jsonLd.json`. The rest (`homepage.json`, `presets.json`, `linksBelow.json`, the per-env files) are fetched by the features that need them or consumed at build time.
+
+> **Deployed environments serve these files from an Azure File Share, not from the image.** On dev, staging and production the `configs/` folder is mounted from the environment's File Share ([Infra/templates/fe-deployment.yaml](../Infra/templates/fe-deployment.yaml)); on every pod start the image's files are copied to the share **only if missing** (`cp -rn`), so a file that already exists on the share is never overwritten by a deploy. Consequences:
+>
+> - **Changing a config in the repo is not enough.** To change a value on a running environment you must also edit the same file on that environment's share — step-by-step in [docs/azure-environments.md → Editing a config file](../docs/azure-environments.md#editing-a-config-file). Only brand-new files reach the share through a deploy.
+> - Conversely, edits made on the share should be mirrored back into `public/configs/` so Git does not drift from what is live.
+> - Invalid JSON saved on the share puts that environment on the maintenance page immediately.
 
 ### 1. `config.json`
 **Purpose:** Global settings — redirects, routes, maps, search behavior, Hotjar, default locations, taxonomy URL.
@@ -464,6 +472,6 @@ then inspect `dist/` — you should see per-route folders each holding an `index
 
 ## Cloud-Specific Notes
 
-- The `nginx-*-hasadna.conf` files are legacy configs from the Hasadna cloud (hosts `api.kolsherut.org.il` / `srm-*.whiletrue.industries`). On that cloud volumes could not be mounted, so the BE emulated a file server and nginx rerouted to it. The current Azure setup bakes everything into the image instead.
+- The `nginx-*-hasadna.conf` files are legacy configs from the Hasadna cloud (hosts `api.kolsherut.org.il` / `srm-*.whiletrue.industries`). On that cloud volumes could not be mounted, so the BE emulated a file server and nginx rerouted to it. The current Azure setup bakes everything into the image and additionally mounts `configs/` and `p/` from a per-environment Azure File Share (see [docs/azure-environments.md](../docs/azure-environments.md)).
 - `postbuild.cjs` also copies `staticwebapp-<env>.config.json` → `dist/staticwebapp.config.json` when present — a remnant of an Azure Static Web Apps deployment path; no such files currently exist in the repo, and the step warns and continues.
-- Planned follow-ups from the last cloud migration: move configs to per-env mounted volumes, generate the sitemap as part of the ETL, and promote env→env by copying the previous level's bucket.
+- Planned follow-ups from the last cloud migration: generate the sitemap as part of the ETL, and promote env→env by copying the previous level's bucket. (Configs on per-env mounted volumes is done — the Azure File Share above.)

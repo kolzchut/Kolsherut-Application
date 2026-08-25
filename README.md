@@ -57,6 +57,13 @@ Overview in **[ES/README.md](ES/README.md)**.
 
 The Helm chart that deploys all services to AKS — base [values.yaml](Infra/values.yaml), per-environment `values-<env>.yaml` overrides, and secrets templates. Deployment instructions in **[Infra/DEPLOYMENT.md](Infra/DEPLOYMENT.md)**.
 
+**Azure operations (for all team members):** **[docs/azure-environments.md](docs/azure-environments.md)** — portal links for every environment, how to start/stop the dev and staging clusters, and how to edit the frontend configuration files on each environment's Azure File Share (the share, not the repo, is what a running environment serves).
+
+## Docs (`docs/`)
+
+- **[Azure Environments — Operations Guide](docs/azure-environments.md)** — clusters, URLs, start/stop, editing live FE configs.
+- **[Embedding v4 (Gemini) spec](docs/embedding-v4-gemini-spec.md)** and **[Evaluation relevance-judging spec](docs/evaluation-relevance-judging-spec.md)** — design specs for the AI services.
+
 ## AI
 
 - **Retrieval** — [retrieval/README.md](retrieval/README.md): the hybrid retrieval microservice.
@@ -72,7 +79,7 @@ Current automated behavior:
 - Push to the `production` branch → builds and deploys changed services to **production** (`:production` image tag).
 - Publishing a GitHub Release (tag `v*`) → builds and deploys **all** services to production.
 
-Dev and stage clusters may be powered off; the deploy job detects a stopped cluster, starts it **once**, deploys every changed service inside that window, and stops it again afterwards. (Before the merge into one workflow, parallel per-service runs could stop the cluster under each other's deploys.) A cluster that was already running — e.g. started manually — is never stopped by the workflow.
+Dev and stage clusters may be powered off; the deploy job detects a stopped cluster, starts it **once**, deploys every changed service inside that window, and stops it again afterwards. (Before the merge into one workflow, parallel per-service runs could stop the cluster under each other's deploys.) A cluster that was already running — e.g. started manually — is never stopped by the workflow. Starting/stopping a cluster by hand is described in [docs/azure-environments.md](docs/azure-environments.md#starting-and-stopping-a-cluster).
 
 The FE deploy additionally runs a two-phase flow (fast base deploy, then a full SSG crawl and redeploy inside the same cluster window) — detailed in [FE/README.md](FE/README.md#cicd).
 

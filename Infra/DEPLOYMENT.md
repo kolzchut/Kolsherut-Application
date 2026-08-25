@@ -7,6 +7,7 @@ This guide explains how to deploy the Kolsherut application across different env
 1.  **Helm** installed.
 2.  **Kubectl** configured to point to the correct cluster.
 3.  **Local Secrets File**: You must have a `secrets-<env>.yaml` file locally. If not, copy `secrets.template.yaml` and fill in the credentials.
+4.  **A running cluster**: dev and staging clusters are usually stopped. Portal links and start/stop steps are in [docs/azure-environments.md](../docs/azure-environments.md), which also documents the frontend Azure File Share that `frontend.persistence` binds to.
 
 ## Deployment Command Structure
 
