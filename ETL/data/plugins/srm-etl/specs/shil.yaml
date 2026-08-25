@@ -35,6 +35,7 @@ outputs:
     table: Branches
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: shil
+    manage_status: true
     row_transforms:
       # The gov.il payload nests the address in an object column — flatten it first
       - op: flatten_nested_field
@@ -86,6 +87,7 @@ outputs:
     table: Services
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: shil
+    manage_status: true
     columns:
       - {target: id, source: id}
       - {target: name, source: name}

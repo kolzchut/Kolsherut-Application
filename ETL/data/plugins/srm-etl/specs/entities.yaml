@@ -51,6 +51,7 @@ outputs:
     derive_from: airtable_orgs
     row_transforms:
       - {op: filter_rows, predicate: equals, field: source, value: entities}
+      - {op: dedupe_rows, by: [id]}
     columns:
       - {target: id, source: id}
       - {target: kind, source: kind}
@@ -83,6 +84,7 @@ outputs:
     row_transforms:
       - {op: filter_rows, predicate: equals, field: source, value: entities}
       - {op: filter_rows, predicate: equals, field: status, value: ACTIVE}
+      - {op: dedupe_rows, by: [id]}
     columns:
       - {target: id, source: id}
       - {target: name, source: name}
@@ -114,6 +116,7 @@ outputs:
     derive_from: airtable_orgs
     row_transforms:
       - {op: filter_rows, predicate: equals, field: status, value: ACTIVE}
+      - {op: dedupe_rows, by: [id]}
     columns:
       - {target: id, source: id}
       - {target: name, source: name}

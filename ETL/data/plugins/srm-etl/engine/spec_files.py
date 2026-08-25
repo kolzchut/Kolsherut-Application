@@ -8,7 +8,9 @@ from transformers.values import normalize_scalar
 def read_data_file(file_path, file_reference):
     if file_path.suffix == '.csv':
         dtype = str if file_reference.get('dtype') == 'str' else None
-        return pd.read_csv(file_path, dtype=dtype).to_dict(orient='records')
+        # keep_default_na keeps empty cells as '' (like csv.DictReader) instead of float NaN
+        keep_default_na = dtype is not str
+        return pd.read_csv(file_path, dtype=dtype, keep_default_na=keep_default_na).to_dict(orient='records')
     if file_path.suffix == '.json':
         with open(file_path, encoding='utf-8') as data_file:
             return json.load(data_file)

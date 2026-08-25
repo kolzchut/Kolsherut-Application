@@ -120,6 +120,7 @@ outputs:
     table: Branches
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: mental-health-clinics
+    manage_status: true
     row_transforms:
       - op: groupby_aggregate
         by: [id]
@@ -160,6 +161,7 @@ outputs:
     table: Services
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: mental-health-clinics
+    manage_status: true
     row_transforms:
       # derive the groupby key before aggregating — service rows are grouped by generated name
       - op: template_field
@@ -192,6 +194,7 @@ outputs:
     table: Organizations
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: mental-health-clinics
+    manage_status: true
     columns:
       - {target: id, source: id}
       - {target: name, source: name}

@@ -40,6 +40,7 @@ jobs:
       env_tag: ${{ steps.compute.outputs.env_tag }}
       is_nonprod: ${{ steps.compute.outputs.is_nonprod }}
       is_prod: ${{ steps.compute.outputs.is_prod }}
+      nonprod_ssg: ${{ steps.compute.outputs.nonprod_ssg }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -70,6 +71,12 @@ jobs:
 
       - name: Compute Outputs
         id: compute
+        env:
+          # Repository secret. Only the literal string "true" enables the
+          # dev/stage SSG phase; unset or anything else skips it (the base
+          # image still deploys). The `secrets` context is unavailable in job
+          # `if:` conditions, so it is resolved here once into an output.
+          NONPROD_SSG_ENABLED: ${{ secrets.NONPROD_SSG_ENABLED }}
         run: |
           REF="${{ github.ref }}"
           EVENT="${{ github.event_name }}"
@@ -129,6 +136,13 @@ jobs:
             echo "is_prod=true" >> "$GITHUB_OUTPUT"
           else
             echo "is_prod=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          if [[ "${NONPROD_SSG_ENABLED,,}" == "true" ]]; then
+            echo "nonprod_ssg=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "nonprod_ssg=false" >> "$GITHUB_OUTPUT"
+            echo "NONPROD_SSG_ENABLED is not 'true': dev/stage deploys will skip the SSG phase"
           fi
 
   build-be:
@@ -224,9 +238,10 @@ jobs:
 
       # Non-prod SSG runs in deploy-nonprod (it crawls against the backend on
       # the cluster, which is only up during the deploy window) and re-images
-      # from this exact dist.
+      # from this exact dist. Skipped entirely when the NONPROD_SSG_ENABLED
+      # secret is not "true" (see the detect job).
       - name: Upload dist For SSG Phase
-        if: needs.detect.outputs.is_nonprod == 'true'
+        if: needs.detect.outputs.is_nonprod == 'true' && needs.detect.outputs.nonprod_ssg == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: fe-dist
@@ -272,9 +287,11 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    # Per-service deploy outcomes for the report-status badge job.
+    # Per-service deploy outcomes for the report-status badge job. When the
+    # SSG phase is disabled (NONPROD_SSG_ENABLED != "true") the FE outcome is
+    # the base deploy, since the SSG deploy step never runs.
     outputs:
-      fe: ${{ steps.deploy_fe_ssg.outcome }}
+      fe: ${{ needs.detect.outputs.nonprod_ssg == 'true' && steps.deploy_fe_ssg.outcome || steps.deploy_fe_base.outcome }}
       be: ${{ steps.deploy_be.outcome }}
       etl: ${{ steps.deploy_etl.outcome }}
       retrieval: ${{ steps.deploy_retrieval.outcome }}
@@ -378,8 +395,15 @@ jobs:
           kubectl rollout status deployment/kolsherut-fe -n default --timeout=45m
 
       # ── FE SSG phase: crawl the deployed app while the cluster is up ──
+      # Gated on the NONPROD_SSG_ENABLED repository secret (resolved in the
+      # detect job): when it is not "true" the base image stays live and the
+      # whole phase below is skipped, so dev/stage deploys finish in minutes.
+      - name: Skip SSG Phase (NONPROD_SSG_ENABLED Is Not "true")
+        if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' && needs.detect.outputs.nonprod_ssg != 'true' }}
+        run: echo "NONPROD_SSG_ENABLED is not 'true' - the base image stays live without pre-rendered pages"
+
       - name: Setup Node.js (SSG)
-        if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' && needs.detect.outputs.nonprod_ssg == 'true' }}
         uses: actions/setup-node@v3
         with:
           node-version: '20'
@@ -387,7 +411,7 @@ jobs:
           cache-dependency-path: 'FE/package-lock.json'
 
       - name: Download FE dist
-        if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' && needs.detect.outputs.nonprod_ssg == 'true' }}
         uses: actions/download-artifact@v4
         with:
           name: fe-dist
@@ -397,7 +421,7 @@ jobs:
       # the 360m job cap after the cluster start and service deploys.
       - name: Build SSG
         id: build_ssg
-        if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.deploy_fe_base.outcome == 'success' && needs.detect.outputs.nonprod_ssg == 'true' }}
         timeout-minutes: 330
         env:
           SSG_USER_AGENT: ${{ secrets.SSG_USER_AGENT }}

@@ -401,11 +401,26 @@ SSG for tens of thousands of pages takes a long time. To get code changes live f
 2. Docker image built & pushed to ACR with the env tag; `dist/` is uploaded as the `fe-dist` artifact for phase 2.
 3. Non-prod (dev/main): the shared `deploy-nonprod` job **starts the cluster once** (if it was stopped), deploys the BE first (so the SSG crawl hits the fresh backend), then `rollout restart` + waits for the FE rollout. The new code is now live, serving CSR/bot-SSR (old SSG pages are gone until phase 2).
 
-**Phase 2 — SSG, inside the same `deploy-nonprod` job (the cluster is up):**
+**Phase 2 — SSG, inside the same `deploy-nonprod` job (the cluster is up).** Runs only when the `NONPROD_SSG_ENABLED` secret is `true` — see [Toggling SSG on dev/stage](#toggling-ssg-on-devstage).
 4. The job downloads the `fe-dist` artifact and runs `npm run build:<env>:ssg` — the crawler discovers routes from the (now live) sitemaps and renders every page into `dist/`.
 5. The image is rebuilt (now containing all static pages) and **pushed again with the same tag**.
 6. Another `rollout restart` picks up the SSG-complete image.
 7. If the workflow started a stopped cluster, an `always()` step stops it again at the very end of the job — even on failure — so dev/stage clusters don't run up cost. A cluster a human started stays running.
+
+### Toggling SSG on dev/stage
+
+The full non-prod crawl takes ~3 hours and keeps the dev/stage cluster running for all of it. A single GitHub **repository secret** switches phase 2 off for the non-prod environments without touching the workflow:
+
+| Secret | Values | Effect |
+| --- | --- | --- |
+| `NONPROD_SSG_ENABLED` | `true` | Behaves as described above: base deploy → SSG crawl → SSG-complete image redeployed to dev/stage. |
+| | anything else, or **unset** | Phase 2 is skipped on dev/stage. The base image (CSR for humans, bot-SSR via the BE) stays live, the `fe-dist` artifact is not uploaded, the cluster is stopped right after the service deploys, and the FE badge reports the *base* deploy outcome. |
+
+Where it applies: **dev and stage only**. Production is never affected — the `build-fe` job always runs the SSG crawl for tags / the `production` branch regardless of this secret.
+
+How it is read: the `detect` job resolves the secret once (case-insensitive match on `true`) into the `nonprod_ssg` output, because the `secrets` context is not available in job-level `if:` conditions. Every phase-2 step in `deploy-nonprod` and the `Upload dist For SSG Phase` step in `build-fe` are gated on that output; a skipped run logs a `Skip SSG Phase` step so the reason is visible in the run summary.
+
+Setting it: GitHub → repository **Settings → Secrets and variables → Actions → Secrets** → `NONPROD_SSG_ENABLED` = `true` (or `gh secret set NONPROD_SSG_ENABLED --body true`). Delete the secret, or set it to `false`, to switch SSG off again. The change takes effect on the next deploy run; it never triggers one by itself. Note that after switching it off, the old pre-rendered `p/` pages are wiped on the next FE pod start (the `sync-config` initContainer overwrites the share from the image), so dev/stage serve no static pages until it is switched back on and a deploy completes.
 
 ### Production deploys
 

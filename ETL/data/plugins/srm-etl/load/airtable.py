@@ -3,6 +3,11 @@ import pandas as pd
 from pyairtable import Api
 from pyairtable.api.table import Table, UpdateRecordDict
 from srm_tools.logger import logger
+from load.airtable_values import (
+    is_empty_airtable_value,
+    is_missing_airtable_value,
+    raise_if_batches_failed,
+)
 from conf import settings
 
 
@@ -44,7 +49,8 @@ def update_airtable_records(
     base_id: str,
     key_field: str,
     batch_size: int = 10,
-    retrieve_not_updated_ids: bool = False
+    retrieve_not_updated_ids: bool = False,
+    batch_errors: Optional[List[str]] = None
 ) -> tuple[int, set[Any]] | int:
     """
     Update existing Airtable records using DataFrame columns as field names.
@@ -85,7 +91,7 @@ def update_airtable_records(
             fields: Dict[str, Any] = {
                 col: row[col]
                 for col in df.columns
-                if col != key_field and row.get(col) not in (None, '', 0, 'None')
+                if col != key_field and not is_empty_airtable_value(row.get(col))
             }
 
             if should_update_record(fields, existing_fields):
@@ -97,15 +103,19 @@ def update_airtable_records(
         logger.warning(f"Records not found in Airtable (not updated): {', '.join(sorted(not_found))}")
 
     modified_count = 0
+    collected_errors: List[str] = [] if batch_errors is None else batch_errors
     for i in range(0, len(updates), batch_size):
         batch = updates[i:i + batch_size]
         try:
-            table.batch_update(cast(List[UpdateRecordDict], batch))
+            table.batch_update(cast(List[UpdateRecordDict], batch), typecast=True)
             modified_count += len(batch)
         except Exception as e:
             logger.error(f"Failed batch update: {e}")
+            collected_errors.append(str(e))
 
     logger.info(f"Finished updating Airtable. Total modified: {modified_count}")
+    if batch_errors is None:
+        raise_if_batches_failed(collected_errors, 'update')
     if retrieve_not_updated_ids:
         return modified_count, not_found
     return modified_count
@@ -115,7 +125,8 @@ def create_airtable_records(
     df: pd.DataFrame,
     table_name: str,
     base_id: str,
-    batch_size: int = 10
+    batch_size: int = 10,
+    batch_errors: Optional[List[str]] = None
 ) -> int:
     """
     Create new Airtable records using DataFrame columns as field names.
@@ -130,20 +141,26 @@ def create_airtable_records(
 
     records: List[Dict[str, Any]] = []
     for _, row in df.iterrows():
-        fields: Dict[str, Any] = {col: row[col] for col in df.columns if row.get(col) is not None}
+        fields: Dict[str, Any] = {
+            col: row[col] for col in df.columns if not is_missing_airtable_value(row.get(col))
+        }
         if fields:
             records.append(fields)
 
     created_count = 0
+    collected_errors: List[str] = [] if batch_errors is None else batch_errors
     for i in range(0, len(records), batch_size):
         batch = records[i:i + batch_size]
         try:
-            table.batch_create(cast(List[Dict[str, Any]], batch))
+            table.batch_create(cast(List[Dict[str, Any]], batch), typecast=True)
             created_count += len(batch)
         except Exception as e:
             logger.error(f"Failed batch create: {e}")
+            collected_errors.append(str(e))
 
     logger.info(f"Finished creating Airtable records. Total created: {created_count}")
+    if batch_errors is None:
+        raise_if_batches_failed(collected_errors, 'create')
     return created_count
 
 
@@ -154,7 +171,8 @@ def update_if_exists_if_not_create(
         airtable_key: str,
         batch_size: int = 50,
         fields_to_update: Optional[List[str]] = None,
-        fields_to_create: Optional[List[str]] = None
+        fields_to_create: Optional[List[str]] = None,
+        batch_errors: Optional[List[str]] = None
 ) -> int:
     """
     Update existing Airtable records or create new ones if they don't exist.
@@ -166,8 +184,10 @@ def update_if_exists_if_not_create(
     :param batch_size: Number of records to process per batch
     :param fields_to_update: Specific list of columns to update. If None, all columns are updated.
     :param fields_to_create: Specific list of columns to create. If None, all columns are used for creation.
+    :param batch_errors: When given, failed-batch messages are appended to it instead of raising here.
     :return: Total number of modified or created records
     """
+    collected_errors: List[str] = [] if batch_errors is None else batch_errors
     df_for_update = df.copy()
     if fields_to_update is not None:
         update_cols = list(set(fields_to_update) | {airtable_key})
@@ -180,9 +200,10 @@ def update_if_exists_if_not_create(
         base_id=base_id,
         key_field=airtable_key,
         batch_size=batch_size,
-        retrieve_not_updated_ids=True
+        retrieve_not_updated_ids=True,
+        batch_errors=collected_errors
     )
-    logger.info(f"Updated {modified_count} branch records in Airtable")
+    logger.info(f"Updated {modified_count} {table_name} records in Airtable")
 
     if not_found:
         df_for_create = df[df[airtable_key].isin(not_found)].copy()
@@ -196,9 +217,12 @@ def update_if_exists_if_not_create(
             df=df_for_create,
             table_name=table_name,
             base_id=base_id,
-            batch_size=batch_size
+            batch_size=batch_size,
+            batch_errors=collected_errors
         )
-        logger.info(f"Created {created_count} new branch records in Airtable")
+        logger.info(f"Created {created_count} new {table_name} records in Airtable")
         modified_count += created_count
 
+    if batch_errors is None:
+        raise_if_batches_failed(collected_errors, 'load')
     return modified_count

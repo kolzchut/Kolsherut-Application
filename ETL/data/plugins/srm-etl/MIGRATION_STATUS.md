@@ -24,6 +24,27 @@ Until both are done, do not delete/replace the Cronicle jobs or deploy this bran
 scheduled runs for all 9 currently-live datasets (everything except child_care/day_care) will
 fail outright.
 
+## Live-run fixes (2026-08-25)
+
+The parity suite mocked Airtable, so the first live run of every spec against the staging base
+exposed loader regressions that the mocks could not see. All fixed and re-verified live:
+
+- `load/airtable.py` now passes `typecast=True` to `batch_update`/`batch_create`, exactly like the
+  old `dump_to_airtable(..., typecast=True)`. Without it Airtable rejected every link field written
+  by business id (`organization: ['500106406']`) with 422 INVALID_RECORD_ID. Note that typecast also
+  lets Airtable create select options and linked records for unknown values — specs must reference
+  ids that already exist.
+- Float NaN never reaches Airtable anymore: `engine/outputs.py` maps NaN → None before load, the
+  loader filters are NaN-aware (`load/airtable_values.py`), `engine/spec_files.py` reads `dtype: str`
+  CSVs with `keep_default_na=False`, and `transformers/guidestar_branches.py` no longer lets a NaN
+  `short_name` become the branch name (`"nan - <city>"`).
+- Batch failures are collected per output and raised once at the end of the spec run
+  (`raise_if_batches_failed`), so a failed load exits non-zero and emails instead of reporting success.
+- `engine/__main__.py` configures INFO logging when nothing else did, so standalone runs show
+  "Running spec / Loading output (N rows) / Finished spec".
+- `manage_status: true` restored on gilzahav, shil, revaha, tipat (branch + service, not the
+  national row) and mental_health_clinics — their old flows used `airtable_updater`'s default.
+
 ## Old-code quirks preserved for parity (change only intentionally)
 
 - **revaha**: every branch gets all 5 service ids (the old code mutated its SERVICES list

@@ -4,17 +4,22 @@ from srm_tools.data_cleaning import clean_org_name
 from srm_tools.logger import logger
 from transformers.guidestar_address import build_language_situations, calc_address, calc_location_key
 from transformers.guidestar_client import get_guidestar_client
+from transformers.values import none_if_missing
 
 NATIONAL_DISCLAIMER = ('שימו לב, ייתכן כי המיקום המוצג אינו מדויק וכי קיימים סניפים נוספים '
                        'שבהם ניתן לקבל את השירות. מומלץ ליצור קשר ישירות עם הארגון לקבלת מידע מדויק ומעודכן.')
 NON_FALLBACK_KINDS = ('עמותה', 'חל"צ', 'הקדש')
 
 
+def branch_org_name(org_row):
+    # Airtable-sourced org rows carry float NaN for a missing short_name, which is truthy.
+    return none_if_missing(org_row.get('short_name')) or none_if_missing(org_row.get('name'))
+
+
 def build_branch_row(org_row, branch):
     row = {
         'id': 'guidestar:' + branch['branchId'],
-        'name': branch.get('placeNickname')
-                or f'{org_row.get("short_name") or org_row.get("name")} - {branch["cityName"]}',
+        'name': branch.get('placeNickname') or f'{branch_org_name(org_row)} - {branch["cityName"]}',
         'address': calc_address(branch),
         'address_details': branch.get('drivingInstructions'),
         'description': None,

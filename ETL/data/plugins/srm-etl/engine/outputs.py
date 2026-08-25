@@ -12,8 +12,14 @@ INACTIVE_STATUS = 'INACTIVE'
 LOAD_BATCH_SIZE = 50
 
 
+def replace_missing_values_with_none(frame):
+    # Heterogeneous row dicts leave float NaN behind, which Airtable's JSON encoder rejects.
+    object_frame = frame.astype(object)
+    return object_frame.where(object_frame.notna(), None)
+
+
 def prepare_frame_for_load(frame, output_spec):
-    prepared_frame = frame.copy()
+    prepared_frame = replace_missing_values_with_none(frame)
     if output_spec.get('set_source', True):
         prepared_frame[SOURCE_COLUMN] = output_spec.get('source_id', output_spec['name'])
     if output_spec.get('set_status', True):
@@ -41,14 +47,16 @@ def sync_missing_rows_status(frame, output_spec, table_name, base_id):
 
 
 def load_output(frame, output_spec):
+    """Load one output into Airtable; returns the failed-batch messages (empty on success)."""
     if 'table' not in output_spec:
-        return
+        return []
     table_name = output_spec['table']
     base_id = resolve_settings_name(output_spec['base'])
     prepared_frame = prepare_frame_for_load(frame, output_spec)
     logger.info(f'Loading output "{output_spec["name"]}" into {table_name} ({len(prepared_frame)} rows)')
     if output_spec.get('manage_status'):
         sync_missing_rows_status(prepared_frame, output_spec, table_name, base_id)
+    batch_errors = []
     update_if_exists_if_not_create(
         prepared_frame,
         table_name,
@@ -56,4 +64,6 @@ def load_output(frame, output_spec):
         airtable_key=AIRTABLE_KEY_COLUMN,
         batch_size=LOAD_BATCH_SIZE,
         fields_to_update=output_spec.get('fields_to_update'),
+        batch_errors=batch_errors,
     )
+    return [f'{output_spec["name"]}: {error}' for error in batch_errors]

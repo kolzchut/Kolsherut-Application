@@ -36,6 +36,7 @@ outputs:
     table: Branches
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: gilzahav
+    manage_status: true
     columns:
       - target: id
         source: [field9]
@@ -71,6 +72,7 @@ outputs:
     table: Services
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: gilzahav
+    manage_status: true
     columns:
       - {target: id, source: id}
       - {target: name, source: name}

@@ -79,6 +79,9 @@ outputs:
     table: Branches
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: tipat-halav
+    # Legacy parity: the old flow deactivated stations missing from the feed. The national row
+    # lives in the next output, so it is flipped INACTIVE here and re-activated right after.
+    manage_status: true
     row_transforms:
       - op: filter_rows
         predicate: equals
@@ -142,6 +145,7 @@ outputs:
     table: Services
     base: AIRTABLE_DATA_IMPORT_BASE
     source_id: tipat-halav
+    manage_status: true
     columns:
       - {target: id, source: id}
       - {target: name, source: name}

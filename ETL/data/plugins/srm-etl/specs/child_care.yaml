@@ -64,4 +64,4 @@ outputs:
       - {target: responses, value: [human_services:care:daytime_care]}
       - {target: payment_required, value: 'yes'}
       - target: payment_details
-        value: 'שכר הלימוד במעונות היום נמצא תחת פיקוח, והוא נקבע לפי גיל הפעוט וסוג המסגרת. מידע נוסף ועדכני לגבי גובה שכר הלימוד ניתן למצוא ב<a target="_blank" href="https://www.gov.il/he/pages/tuition-daycare-and-supervised-nurseries>  אתר משרד העבודה</a>'
+        value: 'שכר הלימוד במעונות היום נמצא תחת פיקוח, והוא נקבע לפי גיל הפעוט וסוג המסגרת. מידע נוסף ועדכני לגבי גובה שכר הלימוד ניתן למצוא ב<a target="_blank" href="https://www.gov.il/he/pages/tuition-daycare-and-supervised-nurseries">  אתר משרד העבודה</a>'
