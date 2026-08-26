@@ -8,9 +8,8 @@ Everything runs in the `kolzchutIL.onmicrosoft.com` tenant, subscription `ea1162
 
 - [Environments at a glance](#environments-at-a-glance)
 - [Starting and stopping a cluster](#starting-and-stopping-a-cluster)
-- [Frontend configuration on the file share](#frontend-configuration-on-the-file-share)
-  - [Why the share exists](#why-the-share-exists)
-  - [What lives on the share](#what-lives-on-the-share)
+- [Frontend configuration](#frontend-configuration)
+  - [Where configuration lives](#where-configuration-lives)
   - [Editing a config file](#editing-a-config-file)
   - [Rules to remember](#rules-to-remember)
 - [Related documentation](#related-documentation)
@@ -23,7 +22,7 @@ Everything runs in the `kolzchutIL.onmicrosoft.com` tenant, subscription `ea1162
 | **Staging** | `Kolsherut-Staging` | [Kolsherut-Stage-Cluster][aks-stage] | [staging.kolsherut.org.il](https://staging.kolsherut.org.il/) | [be-staging.kolsherut.org.il](https://be-staging.kolsherut.org.il/) | [etl-staging.kolsherut.org.il](https://etl-staging.kolsherut.org.il/) |
 | **Development** | `Kolsherut-Development` | [Kolsherut-Development-Cluster][aks-dev] | [dev.kolsherut.org.il](https://dev.kolsherut.org.il/) | [be-dev.kolsherut.org.il](https://be-dev.kolsherut.org.il/) | [etl-dev.kolsherut.org.il](https://etl-dev.kolsherut.org.il/) |
 
-Frontend file shares (see [below](#frontend-configuration-on-the-file-share)):
+Frontend configuration is edited in the **[Kolsherut-FE-Configurations][fe-config-repo]** GitHub repository (see [below](#frontend-configuration)). The file shares it syncs to, for reference only — do not edit them by hand:
 
 | Environment | Storage account | Share | Portal link |
 | --- | --- | --- | --- |
@@ -53,57 +52,73 @@ Rules:
 - If you started dev or staging by hand, **stop it when you are done** — the deploy workflow leaves a manually started cluster running, so nothing else will stop it for you.
 - Starting a cluster while a deploy is running is harmless; stopping it mid-deploy will fail that deploy.
 
-## Frontend configuration on the file share
+## Frontend configuration
 
-### Why the share exists
+### Where configuration lives
 
 The frontend Docker image is fully static (nginx + the built `dist/`). Each environment additionally has an **Azure File Share** mounted into the frontend pod, so two folders are served from the share instead of from the image:
 
-| Folder on the share | Served at | Content | Synced on every pod start by |
+| Folder on the share | Served at | Content | Written by |
 | --- | --- | --- | --- |
-| `configs/` | `/configs/*.json` | the runtime configuration files from [`FE/public/configs/`](../FE/public/configs/) | `cp -rn` — **new files are added, existing files are never overwritten** |
-| `p/` | `/p/**` | the SSG-generated pages (tens of thousands of `index.html` files) | wipe + full copy from the image (**the share is always overwritten**) |
+| `configs/` | `/configs/*.json` | the runtime configuration files (`config.json`, `strings.json`, `filters.json`, …) | the **[Kolsherut-FE-Configurations][fe-config-repo]** repository — a commit to `main` mirrors the environment folder onto the share automatically |
+| `p/` | `/p/**` | the SSG-generated pages (tens of thousands of `index.html` files) | the deploy pipeline — wiped and re-copied from the image on every pod start |
 
-The wiring is in the Helm chart: [`Infra/templates/fe-deployment.yaml`](../Infra/templates/fe-deployment.yaml) (the `sync-config` initContainer and the two `volumeMounts`), [`fe-storage.yaml`](../Infra/templates/fe-storage.yaml) / [`fe-pvc.yaml`](../Infra/templates/fe-pvc.yaml) (static PV/PVC bound to the share) and `frontend.persistence` in [`Infra/values.yaml`](../Infra/values.yaml). The account name, key and share name per environment come from the secrets values files.
+**The configuration repository — not Azure and not this repository — is the source of truth for the config files a running environment serves.** Nobody edits files on the share by hand any more: the sync from the repository is a full mirror with deletions, so a manual edit in the Azure Portal is overwritten (and a manually added file deleted) on the next sync.
 
-Because `configs/` is copied only when a file is missing, **the share — not the repo — is the source of truth for the config files a running environment actually serves.** This lets a non-developer change a text, a filter or a colour on a live environment without a build, but it also means a config change committed to Git does **not** reach an environment where that file already exists on the share. See the rules below.
+The repository has one folder per environment:
 
-### What lives on the share
+| Folder | Environment | Site |
+| --- | --- | --- |
+| [`dev/`][fe-config-dev] | Development | [dev.kolsherut.org.il](https://dev.kolsherut.org.il/) |
+| [`stage/`][fe-config-stage] | Staging | [staging.kolsherut.org.il](https://staging.kolsherut.org.il/) |
+| [`production/`][fe-config-prod] | Production | [www.kolsherut.org.il](https://www.kolsherut.org.il) |
 
-Browse the share (links in the table above) → `configs/`. You will find the same files that are documented in [FE/README.md → Configuration Files](../FE/README.md#configuration-files): `config.json`, `strings.json`, `filters.json`, `responseColors.json`, `metaTags.json`, `modules.json`, `presets.json`, `homepage.json`, `linksBelow.json`, `jsonLd.json`, the per-environment files and `environment.json`.
+Each folder holds the same files that are documented in [FE/README.md → Configuration Files](../FE/README.md#configuration-files). You need write access to the configuration repository on GitHub (ask a team lead).
 
-The `p/` folder is the SSG output. Do not edit it by hand — it is rebuilt by the deploy pipeline and overwritten on every frontend pod restart.
+The Kubernetes wiring is in the Helm chart: [`Infra/templates/fe-deployment.yaml`](../Infra/templates/fe-deployment.yaml) (the `sync-config` initContainer and the two `volumeMounts`), [`fe-storage.yaml`](../Infra/templates/fe-storage.yaml) / [`fe-pvc.yaml`](../Infra/templates/fe-pvc.yaml) (static PV/PVC bound to the share) and `frontend.persistence` in [`Infra/values.yaml`](../Infra/values.yaml). The initContainer only adds config files that are **missing** from the share (`cp -rn`); it never overwrites an existing one.
 
 ### Editing a config file
 
-1. Open the share link for the environment you want to change (table above). Check the breadcrumb says the right storage account (`fedevaccount` / `festagingaccount` / `feproductionaccount`).
-2. Open the `configs/` folder.
-3. Find the file you need (see the FE README for what each file controls).
-4. Right-click the file (or use its `…` menu) → **Edit**.
+Everything happens in the browser on GitHub — no terminal, no Azure Portal.
 
-   ![File share browser with the context menu open on a config file](images/azure/file-share-edit-menu.png)
+1. Open the environment folder in the [configuration repository][fe-config-repo] (table above). Double-check the folder name: `dev/`, `stage/` or `production/`.
+2. Click the file you need (see the FE README for what each file controls), then the **pencil icon** (Edit this file).
+3. Make the change. Keep the JSON valid — see the rules below.
+4. Click **Commit changes…**:
+   - **Dev / staging:** *Commit directly to the `main` branch* is fine.
+   - **Production:** choose *Create a new branch and start a pull request*, and have someone review before merging. Pull requests run JSON validation only; nothing reaches the share until the merge.
+5. Once the commit is on `main`, the **Sync Configurations To Azure File Shares** workflow (repository → **Actions** tab) validates all JSON files and mirrors the changed environment folder(s) onto the share. It takes about a minute; a red run means nothing was synced — open it to see which file failed validation.
+6. Open the site for that environment and refresh. The frontend fetches config files with a cache-buster on every load, so a browser refresh is enough — no restart, no deploy.
 
-5. Make the change in the inline editor and click **Save**.
+Need to apply the same change to several environments? Edit the file in each folder (one commit can touch several folders — only the folders that changed are synced).
 
-   ![Inline editor of config.json on the file share](images/azure/file-share-edit-config.png)
-
-6. Open the site for that environment and verify. The frontend fetches config files with a cache-buster on every load, so a browser refresh is enough — no restart, no deploy.
+**Force a re-sync** (e.g. after a cancelled run or if the share looks wrong): **Actions** → *Sync Configurations To Azure File Shares* → **Run workflow** → pick an environment or `all`.
 
 ### Rules to remember
 
-- **Change configs in two places.** Whenever you change a config file in the repo (`FE/public/configs/*.json`), apply the same change on the share of every environment that should receive it. The repo change only reaches environments where the file does not exist on the share yet (i.e. a brand-new file). The reverse also holds: a change made only on the share is lost if someone recreates the share, and it will drift from Git — so mirror share edits back into the repo.
-- **Valid JSON only.** A trailing comma or a missing quote makes `loadConfig` fail and the site shows the **maintenance page** for everyone. Validate before saving, and test on dev or staging first.
-- **`environment.json` is per environment** — it points the frontend at that environment's backend. Do not copy it between shares.
-- **Never edit `p/`.** It is SSG output and is overwritten on every pod start.
-- A stopped dev/staging cluster does not serve the site, but the share is always available — you can edit configs while the cluster is off and they will be live when it starts.
+- **Never edit config files in the Azure Portal.** They will be overwritten by the next sync. The share links in the table at the top are for looking, not editing.
+- **Valid JSON only.** A trailing comma or a missing quote makes `loadConfig` fail and the site shows the **maintenance page** for everyone. CI blocks the sync on invalid JSON, but test on dev or staging first anyway.
+- **Test on dev/staging before production.** Production changes go through a pull request.
+- **`environment.json` is per environment** — it points the frontend at that environment's backend. Do not copy it between folders.
+- **Defaults still live in this repository.** [`FE/public/configs/`](../FE/public/configs/) is what a *brand-new* environment starts with, and the initContainer re-adds any file that exists in the image but is missing from the share. So:
+  - a change to `FE/public/configs/` does **not** reach an existing environment — make it in the configuration repository too;
+  - to **delete** a config file for good, remove it from both the configuration repository and `FE/public/configs/`, otherwise the next pod restart restores it and the next sync deletes it again;
+  - when adding a **new** config file, add it to the configuration repository folders *and* to `FE/public/configs/` if the frontend should ship it by default.
+- **Never edit `p/`.** It is SSG output and is overwritten on every pod start; the sync never touches it.
+- A stopped dev/staging cluster does not serve the site, but the share is always writable — a synced change is live when the cluster starts.
 
 ## Related documentation
 
 - [Root README → CI CD](../README.md#ci-cd) — which branch deploys where, and how the workflow starts/stops clusters.
+- [Kolsherut-FE-Configurations][fe-config-repo] — the configuration repository and its sync workflow.
 - [FE/README.md → Configuration Files](../FE/README.md#configuration-files) — what every config file controls.
 - [FE/README.md → SSG](../FE/README.md#2-ssg--build-time-pre-rendering) — how the `p/` pages are generated.
 - [Infra/DEPLOYMENT.md](../Infra/DEPLOYMENT.md) — deploying the Helm chart by hand.
 
+[fe-config-repo]: https://github.com/kolzchut/Kolsherut-FE-Configurations
+[fe-config-dev]: https://github.com/kolzchut/Kolsherut-FE-Configurations/tree/main/dev
+[fe-config-stage]: https://github.com/kolzchut/Kolsherut-FE-Configurations/tree/main/stage
+[fe-config-prod]: https://github.com/kolzchut/Kolsherut-FE-Configurations/tree/main/production
 [aks-prod]: https://portal.azure.com/#@kolzchutIL.onmicrosoft.com/resource/subscriptions/ea11628f-a9ed-4397-bacb-b9a541a77c62/resourceGroups/Kolsherut-Production/providers/Microsoft.ContainerService/managedClusters/Kolsherut-Production-Cluster/overview
 [aks-stage]: https://portal.azure.com/#@kolzchutIL.onmicrosoft.com/resource/subscriptions/ea11628f-a9ed-4397-bacb-b9a541a77c62/resourceGroups/Kolsherut-Staging/providers/Microsoft.ContainerService/managedClusters/Kolsherut-Stage-Cluster/overview
 [aks-dev]: https://portal.azure.com/#@kolzchutIL.onmicrosoft.com/resource/subscriptions/ea11628f-a9ed-4397-bacb-b9a541a77c62/resourceGroups/Kolsherut-Development/providers/Microsoft.ContainerService/managedClusters/Kolsherut-Development-Cluster/overview

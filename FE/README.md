@@ -144,7 +144,7 @@ The build exits non-zero if zero pages succeed, failing the CI job.
 
 Result: `dist/` contains the SPA shell **plus** tens of thousands of fully rendered `index.html` files, one per service card / taxonomy page, all baked into the Docker image.
 
-**Where the pages live once deployed:** in the cluster the `p/` folder (the card pages, ~2.2 GB on production) is served from the environment's **Azure File Share**, mounted at `/usr/share/nginx/html/p`. On every FE pod start the `sync-config` initContainer wipes `p/` on the share and copies the image's SSG output into it — which is why FE rollouts are allowed up to 45 minutes ([Infra/templates/fe-deployment.yaml](../Infra/templates/fe-deployment.yaml)). The share is always overwritten from the image, so never edit `p/` by hand; the share's `configs/` folder behaves differently — see [Configuration Files](#configuration-files) and [docs/azure-environments.md](../docs/azure-environments.md#frontend-configuration-on-the-file-share).
+**Where the pages live once deployed:** in the cluster the `p/` folder (the card pages, ~2.2 GB on production) is served from the environment's **Azure File Share**, mounted at `/usr/share/nginx/html/p`. On every FE pod start the `sync-config` initContainer wipes `p/` on the share and copies the image's SSG output into it — which is why FE rollouts are allowed up to 45 minutes ([Infra/templates/fe-deployment.yaml](../Infra/templates/fe-deployment.yaml)). The share is always overwritten from the image, so never edit `p/` by hand; the share's `configs/` folder behaves differently — see [Configuration Files](#configuration-files) and [docs/azure-environments.md](../docs/azure-environments.md#frontend-configuration).
 
 ### 3. SSR — on-demand rendering for bots
 
@@ -186,11 +186,12 @@ All runtime configuration lives in `public/configs/` and is fetched **at runtime
 
 Files loaded at runtime: `environment.json`, `config.json`, `strings.json`, `responseColors.json`, `filters.json`, `modules.json`, `metaTags.json`, `jsonLd.json`. The rest (`homepage.json`, `presets.json`, `linksBelow.json`, the per-env files) are fetched by the features that need them or consumed at build time.
 
-> **Deployed environments serve these files from an Azure File Share, not from the image.** On dev, staging and production the `configs/` folder is mounted from the environment's File Share ([Infra/templates/fe-deployment.yaml](../Infra/templates/fe-deployment.yaml)); on every pod start the image's files are copied to the share **only if missing** (`cp -rn`), so a file that already exists on the share is never overwritten by a deploy. Consequences:
+> **Deployed environments serve these files from an Azure File Share, not from the image — and the share is filled from the [Kolsherut-FE-Configurations](https://github.com/kolzchut/Kolsherut-FE-Configurations) repository.** On dev, staging and production the `configs/` folder is mounted from the environment's File Share ([Infra/templates/fe-deployment.yaml](../Infra/templates/fe-deployment.yaml)); a commit to that repository's `dev/`, `stage/` or `production/` folder is mirrored onto the matching share by CI. On every pod start the image's files are copied to the share **only if missing** (`cp -rn`), so a file that already exists on the share is never overwritten by a deploy. Consequences:
 >
-> - **Changing a config in the repo is not enough.** To change a value on a running environment you must also edit the same file on that environment's share — step-by-step in [docs/azure-environments.md → Editing a config file](../docs/azure-environments.md#editing-a-config-file). Only brand-new files reach the share through a deploy.
-> - Conversely, edits made on the share should be mirrored back into `public/configs/` so Git does not drift from what is live.
-> - Invalid JSON saved on the share puts that environment on the maintenance page immediately.
+> - **Changing a config in this repo is not enough.** To change a value on a running environment, edit the same file in the configuration repository — step-by-step in [docs/azure-environments.md → Editing a config file](../docs/azure-environments.md#editing-a-config-file). Only brand-new files reach the share through a deploy; `public/configs/` is the default set a fresh environment starts with.
+> - **Never edit the share in the Azure Portal** — the sync is a full mirror and overwrites manual edits.
+> - To delete a config file permanently, remove it both from the configuration repository and from `public/configs/`; otherwise the next pod start restores it.
+> - Invalid JSON puts that environment on the maintenance page immediately; the configuration repository's CI validates every file before syncing.
 
 ### 1. `config.json`
 **Purpose:** Global settings — redirects, routes, maps, search behavior, Hotjar, default locations, taxonomy URL.

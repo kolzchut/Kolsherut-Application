@@ -57,7 +57,7 @@ Overview in **[ES/README.md](ES/README.md)**.
 
 The Helm chart that deploys all services to AKS — base [values.yaml](Infra/values.yaml), per-environment `values-<env>.yaml` overrides, and secrets templates. Deployment instructions in **[Infra/DEPLOYMENT.md](Infra/DEPLOYMENT.md)**.
 
-**Azure operations (for all team members):** **[docs/azure-environments.md](docs/azure-environments.md)** — portal links for every environment, how to start/stop the dev and staging clusters, and how to edit the frontend configuration files on each environment's Azure File Share (the share, not the repo, is what a running environment serves).
+**Azure operations (for all team members):** **[docs/azure-environments.md](docs/azure-environments.md)** — portal links for every environment, how to start/stop the dev and staging clusters, and how to change the frontend configuration of a live environment through the [Kolsherut-FE-Configurations](https://github.com/kolzchut/Kolsherut-FE-Configurations) repository (it is synced to each environment's Azure File Share, which is what a running environment serves — not `FE/public/configs/`).
 
 ## Docs (`docs/`)
 
@@ -218,7 +218,7 @@ Q: How do I know which image is live?
 A: The release marked **Latest** on the [Releases page][Releases] is the current production version. To verify at the cluster level, check the deployment's image tag in AKS / ArgoCD, or the `CODE_VERSION` env on the production deployment.
 
 Q: I can't find the correct json config file, where is it?  
-A: FE config files are in `FE/public/configs/`; some rarely-changed data lives in `FE/src/assets/`. Full list in [FE/README.md](FE/README.md#configuration-files).
+A: The defaults shipped with the app are in `FE/public/configs/`; what a **deployed** environment actually serves is edited in the [Kolsherut-FE-Configurations](https://github.com/kolzchut/Kolsherut-FE-Configurations) repository (`dev/`, `stage/`, `production/` folders — see [docs/azure-environments.md](docs/azure-environments.md#frontend-configuration)). Some rarely-changed data lives in `FE/src/assets/`. Full list in [FE/README.md](FE/README.md#configuration-files).
 
 ### 7. Pre-Production Checklist
 - [ ] All intended PRs merged to main
