@@ -20,8 +20,8 @@ def stub_all_airtable_writes():
     manual_fixes.update_rows_in_airtable = NOOP
 
 
-def record_collapse_output(collapse_function, captured_rows, fetched_rows, table_name):
-    collapsed_rows = collapse_function(fetched_rows, table_name)
+def record_collapse_output(collapse_function, captured_rows, fetched_rows, table_name, current_rows_by_id=None):
+    collapsed_rows = collapse_function(fetched_rows, table_name, current_rows_by_id)
     captured_rows.setdefault(table_name, []).extend(collapsed_rows)
     return collapsed_rows
 

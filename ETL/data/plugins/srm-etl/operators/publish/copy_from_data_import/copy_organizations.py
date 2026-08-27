@@ -24,6 +24,7 @@ def copy_organizations_to_main_base(table_rows, source_id):
     rows = [apply_fixes_to_row(row) for row in rows]
     updated_organizations = {row[AIRTABLE_RECORD_ID_FIELD]: row['id'] for row in rows}
     rows_for_sync = [build_row_for_sync(row, table_fields) for row in rows]
-    sync_table_rows(settings.AIRTABLE_ORGANIZATION_TABLE, source_id, table_fields, rows_for_sync)
+    sync_table_rows(settings.AIRTABLE_ORGANIZATION_TABLE, source_id, table_fields, rows_for_sync,
+                    transform_merged_data=apply_fixes_to_row)
     print(f'Copied {len(rows_for_sync)} organizations to the main base')
     return updated_organizations

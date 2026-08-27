@@ -9,7 +9,11 @@ from pyairtable import Api
 
 from conf import settings
 
+from .audit_collector import record_airtable_write
+
 AIRTABLE_RECORD_ID_FIELD = '__airtable_id'
+AUDIT_UPDATE_OPERATION = 'update'
+AUDIT_CREATE_OPERATION = 'create'
 
 
 def _table(base_id, table_name):
@@ -46,6 +50,7 @@ def update_rows_in_airtable(base_id, table_name, rows):
         for row in rows
     ]
     if records:
+        record_airtable_write(base_id, table_name, AUDIT_UPDATE_OPERATION, records)
         _table(base_id, table_name).batch_update(records, typecast=True)
 
 
@@ -56,6 +61,7 @@ def create_rows_in_airtable(base_id, table_name, rows):
         for row in rows
     ]
     if records:
+        record_airtable_write(base_id, table_name, AUDIT_CREATE_OPERATION, records)
         _table(base_id, table_name).batch_create(records, typecast=True)
 
 

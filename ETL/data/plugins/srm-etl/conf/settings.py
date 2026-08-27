@@ -74,6 +74,13 @@ ES_PORT = int(get_env('ES_PORT'))
 ES_HTTP_AUTH = get_env('ES_HTTP_AUTH', required=False)
 
 
+# Audit repository for the publish operator's Airtable writes (feature is a
+# no-op when AUDIT_REPO_FULL_NAME is unset). Token falls back to KZ_GITHUB_TOKEN.
+AUDIT_REPO_FULL_NAME = get_env('ETL_AUDIT_REPO_FULL_NAME', required=False)
+AUDIT_REPO_BRANCH = get_env('ETL_AUDIT_REPO_BRANCH', 'main', required=False)
+AUDIT_REPO_TOKEN = get_env('ETL_AUDIT_REPO_TOKEN', required=False) or get_env('KZ_GITHUB_TOKEN', required=False)
+
+
 EMAIL_NOTIFIER_SENDER_EMAIL = get_env('EMAIL_NOTIFIER_SENDER_EMAIL')
 EMAIL_NOTIFIER_PASSWORD = get_env('EMAIL_NOTIFIER_PASSWORD')
 EMAIL_NOTIFIER_RECIPIENT_LIST = get_env('EMAIL_NOTIFIER_RECIPIENT_LIST',[],strategy=s.ARRAY)

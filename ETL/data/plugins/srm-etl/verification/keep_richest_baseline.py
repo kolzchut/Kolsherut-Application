@@ -11,7 +11,7 @@ def populated_field_count(fetched_row):
     return sum(1 for value in fetched_row['data'].values() if value not in EMPTY_VALUES)
 
 
-def keep_richest_rows_by_id(fetched_rows, _table_name):
+def keep_richest_rows_by_id(fetched_rows, _table_name, _current_rows_by_id=None):
     best_by_id = {}
     for fetched_row in fetched_rows:
         logical_id = fetched_row['id']

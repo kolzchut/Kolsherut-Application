@@ -8,6 +8,10 @@ mappings and the ES connection are validated before any external write, so a
 broken ES setup aborts the run before stage 1. Stats collected by any stage are
 flushed once, at the end, even when a stage fails mid-run.
 """
+from srm_tools.logger import logger
+
+from .airtable.audit_collector import reset_collected_audit
+from .airtable.audit_publisher import push_collected_audit_to_repository
 from .airtable.stats_collector import reset_collected_stats, write_stats_to_airtable
 from .copy_from_data_import.copy_from_data_import_main import copy_approved_data_from_data_import
 from .data_build.build_main import fetch_data_and_build_cards
@@ -26,6 +30,7 @@ def run_publish_pipeline(dump_directory=None):
     verify_elasticsearch_connection()
     print('Preflight OK: mappings loaded, Elasticsearch reachable')
     reset_collected_stats()
+    reset_collected_audit()
     try:
         print('[Stage 1/5] Copying approved data from the Data-Import base...')
         copy_approved_data_from_data_import()
@@ -43,4 +48,9 @@ def run_publish_pipeline(dump_directory=None):
     finally:
         print('Writing collected stats to the Stats table...')
         write_stats_to_airtable()
+        print('Pushing the collected Airtable writes to the audit repository...')
+        try:
+            push_collected_audit_to_repository()
+        except Exception:
+            logger.exception('Audit push failed; continuing - the audit is best-effort')
     print('===== Publish pipeline FINISHED successfully =====')

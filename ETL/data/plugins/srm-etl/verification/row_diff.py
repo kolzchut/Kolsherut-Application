@@ -38,7 +38,7 @@ def normalize_field(value, field_name, set_compare_fields):
 
 def diff_row_fields(legacy_row, new_row, set_compare_fields, ignore_fields):
     field_diffs = []
-    for field_name in sorted(set(legacy_row) | set(new_row)):
+    for field_name in sorted(set(legacy_row) | set(new_row), key=str):
         if field_name in ignore_fields:
             continue
         legacy_value = normalize_field(legacy_row.get(field_name), field_name, set_compare_fields)

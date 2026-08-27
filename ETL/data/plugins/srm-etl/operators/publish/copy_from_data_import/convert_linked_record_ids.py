@@ -22,12 +22,16 @@ def replace_linked_ids_with_main_record_ids(row, mapping, field_names):
 
 
 def build_id_to_airtable_record_id_map(base_id, table_name, require_id=False):
-    """Logical id -> Airtable record id for a main-base table; first occurrence wins."""
+    """Logical id -> Airtable record id for a main-base table; first occurrence wins.
+    Each id is also registered stripped of surrounding whitespace, so a stripped
+    lookup key (see remap_branch_location) matches an id stored with stray spaces."""
     mapping = {}
     for row in fetch_rows_from_airtable(base_id, table_name):
         if require_id and row.get('id') is None:
             continue
         mapping.setdefault(row['id'], row[AIRTABLE_RECORD_ID_FIELD])
+        if isinstance(row['id'], str) and row['id'].strip() != row['id']:
+            mapping.setdefault(row['id'].strip(), row[AIRTABLE_RECORD_ID_FIELD])
     return mapping
 
 

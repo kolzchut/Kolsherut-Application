@@ -20,8 +20,11 @@ def remap_branch_location(row, updated_locations):
     """The Data-Import location is a plain location id string; it becomes a one-item
     array remapped to the main-base record id (unmapped ids kept as-is). The string is
     stripped of surrounding whitespace first so it matches the existing Location id -
-    otherwise Airtable auto-creates a duplicate Location for the unmatched string."""
+    otherwise Airtable auto-creates a duplicate Location for the unmatched string.
+    A missing location becomes an empty list, never [None]."""
     location = row.get('location')
+    if not location:
+        return {**row, 'location': []}
     stripped_location = location.strip() if isinstance(location, str) else location
     return {**row, 'location': [updated_locations.get(stripped_location, stripped_location)]}
 
@@ -41,6 +44,7 @@ def copy_branches_to_main_base(table_rows, source_id, updated_organizations, upd
     )
     updated_branches = {row[AIRTABLE_RECORD_ID_FIELD]: row['id'] for row in rows}
     rows_for_sync = [build_row_for_sync(row, table_fields) for row in rows]
-    sync_table_rows(settings.AIRTABLE_BRANCH_TABLE, source_id, table_fields, rows_for_sync)
+    sync_table_rows(settings.AIRTABLE_BRANCH_TABLE, source_id, table_fields, rows_for_sync,
+                    transform_merged_data=apply_fixes_to_row)
     print(f'Copied {len(rows_for_sync)} branches to the main base')
     return updated_branches

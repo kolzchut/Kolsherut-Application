@@ -1,7 +1,9 @@
 """Merge one field's value across duplicate rows sharing a logical id.
 
 List/connection fields are unioned (order-preserving) so no link is ever lost;
-scalar fields take the latest non-empty value.
+scalar fields keep the first non-empty value. Two non-empty scalars that
+disagree are a DISPUTE the merge cannot decide by itself - the caller resolves
+them against the main base (see resolve_disputed_scalars).
 """
 
 EMPTY_VALUES = (None, '', [], {})
@@ -21,8 +23,17 @@ def union_link_lists(current_value, new_value):
     return current_items + [item for item in new_items if item not in current_items]
 
 
+def is_scalar_conflict(current_value, new_value):
+    """True when two non-empty, non-list values disagree - a dispute to resolve."""
+    if isinstance(current_value, list) or isinstance(new_value, list):
+        return False
+    if current_value in EMPTY_VALUES or new_value in EMPTY_VALUES:
+        return False
+    return current_value != new_value
+
+
 def merge_field_value(current_value, new_value):
-    """List fields are unioned; scalar fields take the latest non-empty value."""
+    """List fields are unioned; scalar fields keep the first non-empty value."""
     if isinstance(current_value, list) or isinstance(new_value, list):
         return union_link_lists(current_value, new_value)
-    return new_value if new_value not in EMPTY_VALUES else current_value
+    return current_value if current_value not in EMPTY_VALUES else new_value

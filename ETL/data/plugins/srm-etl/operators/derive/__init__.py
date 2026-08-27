@@ -7,6 +7,8 @@ from srm_tools.error_notifier import invoke_on
 
 def deriveData(*_):
 
+    logger.info('DEPRECATED - NOT IN USE ANYMORE - MOVED TO PUBLISHER INSTEAD')
+    return None
     logger.info('Starting Derive Data Flow')
 
     from_curation.operator()
@@ -19,6 +21,8 @@ def deriveData(*_):
     logger.info('---to_es operator finished---')
     to_sql.operator()
     logger.info('---to_sql operator finished---')
+
+
     # NOT RELEVANT ANYMORE - MAP BOX IS UNUSED AND TO_SITEMAP REPLACED IN THE BE
     # to_mapbox.operator()
     # logger.info('---to_mapbox operator finished---')

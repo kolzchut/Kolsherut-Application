@@ -14,6 +14,7 @@ run_publish_pipeline()
   4. cards_sync            - 8-field Cards table write-back (upsert by card_id, vanished -> INACTIVE)
   5. es_publish            - srm__cards + srm__autocomplete + srm_services, revision-swap reindex
   finally: write_stats_to_airtable() - single batched write to the Stats table
+           push_collected_audit_to_repository() - one audit commit of every Airtable write (best-effort)
 ```
 
 `PipelineData` (source_tables / cards / autocomplete) replaces the entire legacy `data/` folder.
@@ -56,15 +57,50 @@ run_publish_pipeline()
 11. Duplicate logical ids in a copy batch are MERGED into one record before upsert
     (`airtable/merge_fetched_rows/`): connection/list fields (service `organizations`/`branches`,
     branch `organization`/`location`, `situations`/`responses`/`urls`/... ) are unioned so no link
-    is lost, and scalar fields take the latest non-empty value. Legacy `from_curation` had no real
-    dedup - two Data-Import rows sharing an id (e.g. an org written by both `meser` and
-    `soproc`/`entities`) produced order-dependent last-write-wins overwrites into a single existing
-    record, or duplicate CREATEs for a brand-new id. `merge_fetched_row` still overwrites the
-    existing main-base row's links with the (now unioned) incoming set - it is not unioned against
-    the current record, since the copy re-derives every link from the Data-Import base each run.
+    is lost, and scalar fields keep the FIRST non-empty value. Scalars the duplicates disagree on
+    (both non-empty, different) are DISPUTED: the value already stored in the main base wins when
+    there is one, otherwise the first non-empty duplicate value - so a raw feed row (e.g.
+    `mol_daycare`'s "עירית ערד") can never overwrite a curated twin (`meser`'s "עיריית ערד").
+    Every dispute is logged. Legacy `from_curation` had no real dedup - two Data-Import rows
+    sharing an id (e.g. an org written by both `meser` and `soproc`/`entities`) produced
+    order-dependent last-write-wins overwrites into a single existing record, or duplicate CREATEs
+    for a brand-new id; in practice the curated main-base value survived, which this dispute rule
+    reproduces deterministically. `merge_fetched_row` still overwrites the existing main-base
+    row's links with the (now unioned) incoming set - it is not unioned against the current
+    record, since the copy re-derives every link from the Data-Import base each run.
+12. Manual fixes are RE-APPLIED after the duplicate-id merge (`sync_table_rows`'s
+    `transform_merged_data` hook, passed by all three copy modules): the pre-merge pass alone let
+    a duplicate row clobber a fixed value while the fix was still reported `Active`. The pre-merge
+    pass is kept (a `location` fix must land before `remap_branch_location`); re-application is
+    idempotent, and a fix whose `current_value` no longer matches the merged value now truthfully
+    reports `Obsolete`.
+13. A branch with no Data-Import `location` is copied with `location=[]` (legacy and the first
+    publish version produced `[None]`, which defeated the no-location guard downstream), and the
+    Location id -> record id map also registers whitespace-stripped ids, matching the stripped
+    lookup key in `remap_branch_location` - so a padded Location id can no longer make Airtable
+    auto-create a duplicate, ungeocodable Location. Known limitation: `hash_row` deletes all
+    whitespace, so a whitespace-only correction to an existing row classifies UNCHANGED and is
+    written only when another field changes too.
+14. Every Airtable write (both bases, all tables) is also committed to a dedicated audit
+    repository, one commit per run: `runs/<UTC timestamp>/<base>/<table>/<update|create>.json`
+    with the exact request payloads (`airtable/audit_collector.py` -> `airtable/audit_publisher.py`
+    -> `shared/github_commit_push.py`, Git Data API - the container has no git CLI). The push runs
+    in the `finally` block after the stats write (so the stats write is audited too) and is
+    best-effort: a failure is logged and never fails the pipeline.
 
 Everything else - card identity (`card_id = hasher(branch_id, service_id)`), Cards lifecycle,
 autocomplete templates/scoring, ES revision swap - is preserved exactly.
+
+## Audit repository configuration
+
+The audit push (deliberate change #14) is configured in `conf/settings.py` via environment
+variables; when `ETL_AUDIT_REPO_FULL_NAME` is unset the feature is a silent no-op.
+
+| Environment variable | Meaning | Default |
+|---|---|---|
+| `ETL_AUDIT_REPO_FULL_NAME` | Target repo, `owner/name` (e.g. `kolzchut/Kolsherut-Airtable-Audit`) | unset = audit disabled |
+| `ETL_AUDIT_REPO_BRANCH` | Branch the run commits land on | `main` |
+| `ETL_AUDIT_REPO_TOKEN` | GitHub token with `contents:write` on the repo | falls back to `KZ_GITHUB_TOKEN` |
 
 ## The frozen ES mappings
 

@@ -25,5 +25,6 @@ def copy_services_to_main_base(table_rows, source_id, updated_organizations, upd
         lambda row: len(row['organizations'] or []) > 0 or len(row['branches'] or []) > 0,
     )
     rows_for_sync = [build_row_for_sync(row, table_fields) for row in rows]
-    sync_table_rows(settings.AIRTABLE_SERVICE_TABLE, source_id, table_fields, rows_for_sync)
+    sync_table_rows(settings.AIRTABLE_SERVICE_TABLE, source_id, table_fields, rows_for_sync,
+                    transform_merged_data=apply_fixes_to_row)
     print(f'Copied {len(rows_for_sync)} services to the main base')
