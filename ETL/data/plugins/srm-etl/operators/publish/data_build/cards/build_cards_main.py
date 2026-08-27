@@ -1,5 +1,9 @@
 """Card build orchestration (legacy card_data_flow): pass A decides which cards
 exist and what they are tagged with; pass B enriches them for search & display.
+
+flat_table arrives as a generator streamed from the flatten stage, so the first
+comprehension of pass A is where the (service, branch) explosion is materialized
+for the only time in the run - hence the flattened-row count is logged there.
 """
 from srm_tools.hash import hasher
 from srm_tools.logger import logger
@@ -39,6 +43,7 @@ def add_card_taxonomies(card, situations_lookup, responses_lookup):
 
 def create_cards_and_tags(flat_table, situations_lookup, responses_lookup):
     cards = [dict(row, card_id=hasher(row['branch_id'], row['service_id'])) for row in flat_table]
+    print(f'Flattened {len(cards)} (service, branch) rows; building cards...')
     cards = merge_duplicate_services(cards)
     cards = [add_card_taxonomies(card, situations_lookup, responses_lookup) for card in cards]
     cards = apply_auto_tagging(cards, fetch_auto_tagging_rules())

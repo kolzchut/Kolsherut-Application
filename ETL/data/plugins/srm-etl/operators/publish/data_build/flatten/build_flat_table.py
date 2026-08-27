@@ -4,6 +4,11 @@ on (service_id, branch_id) - first occurrence wins (legacy flat_table_flow).
 branch_last_modified never reaches the flat table: the legacy join did not copy
 it and the legacy select silently ignored the missing name, so cards never
 carry it - preserved here on purpose.
+
+The branch lookup is built eagerly at call time; the joined rows are yielded
+lazily, so the flat table is never materialized - the card build is the single
+place the explosion becomes a list. The generator is consumed exactly once, in
+order, which is what keeps the first-occurrence-wins dedup deterministic.
 """
 BRANCH_JOINED_FIELDS = (
     'branch_id', 'branch_name', 'branch_operating_unit', 'branch_description', 'branch_urls',
@@ -38,11 +43,9 @@ def join_branch_onto_service_row(service_row, branch):
     return {name: joined.get(name) for name in FLAT_TABLE_FIELDS}
 
 
-def build_flat_table(flat_services, flat_branches):
-    branches_by_key = {branch['branch_key']: branch for branch in flat_branches}
-    rows = []
+def iterate_flat_table_rows(flat_service_rows, branches_by_key):
     seen_pairs = set()
-    for service_row in flat_services:
+    for service_row in flat_service_rows:
         branch = branches_by_key.get(service_row['branch_key'])
         if branch is None:
             continue
@@ -51,5 +54,10 @@ def build_flat_table(flat_services, flat_branches):
         if pair in seen_pairs:
             continue
         seen_pairs.add(pair)
-        rows.append(row)
-    return rows
+        yield row
+
+
+def build_flat_table(flat_services, flat_branches):
+    """Return a generator over the deduplicated flat rows; branch lookup built now."""
+    branches_by_key = {branch['branch_key']: branch for branch in flat_branches}
+    return iterate_flat_table_rows(flat_services, branches_by_key)

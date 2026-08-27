@@ -3,6 +3,11 @@
 Each service is unwound per linked organization, collects the organization's
 branches (soproc-filtered), merges them with its direct branch links (remapped
 through the dedup branch mapping), and yields one row per (service, branch_key).
+
+The branch lookups are built eagerly at call time; the row loop itself is a
+generator, so this pair-scale explosion is never held in memory. The generator
+is consumed exactly once, in order - order is load-bearing downstream, where the
+flat table and the card build both deduplicate first-occurrence-wins.
 """
 SOCIAL_PROCUREMENT_SERVICE_PREFIX = 'soproc:'  # "soproc" - the social-procurement data source
 SOCIAL_PROCUREMENT_ORGANIZATION_BRANCHES_LIMIT = 5
@@ -74,7 +79,15 @@ def unwind_service_organization_keys(service):
     return [None] if organizations is None else organizations
 
 
+def iterate_flat_service_rows(services, branch_context):
+    for service in services:
+        for organization_key in unwind_service_organization_keys(service):
+            for branch_key in merge_service_branch_keys(service, organization_key, branch_context):
+                yield rename_and_select_service_fields(service, branch_key)
+
+
 def build_flat_services(source_tables, flat_branches, branch_mapping):
+    """Return a generator over the (service, branch_key) rows; lookups built now."""
     branch_context = {
         'branch_mapping': branch_mapping,
         'branch_id_by_key': {branch['branch_key']: branch['branch_id'] for branch in flat_branches},
@@ -83,9 +96,4 @@ def build_flat_services(source_tables, flat_branches, branch_mapping):
         },
         'branches_by_organization': group_branch_keys_by_organization(flat_branches),
     }
-    rows = []
-    for service in source_tables['services']:
-        for organization_key in unwind_service_organization_keys(service):
-            for branch_key in merge_service_branch_keys(service, organization_key, branch_context):
-                rows.append(rename_and_select_service_fields(service, branch_key))
-    return rows
+    return iterate_flat_service_rows(source_tables['services'], branch_context)
