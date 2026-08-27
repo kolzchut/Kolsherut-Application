@@ -358,24 +358,26 @@ jobs:
           use-kubelogin: 'true'
 
       # BE deploys first so the FE SSG crawl below hits the fresh backend.
+      # 2m was not enough for be/etl when the cluster was just started for this
+      # deploy: the nodes are cold, so the image pull alone can outlast it.
       - name: Deploy BE
         id: deploy_be
         if: ${{ !cancelled() && steps.ctx.outcome == 'success' && needs.build-be.result == 'success' }}
-        timeout-minutes: 5
+        timeout-minutes: 12
         run: |
           kubectl rollout restart deployment/kolsherut-be -n default
-          kubectl rollout status deployment/kolsherut-be -n default --timeout=2m
+          kubectl rollout status deployment/kolsherut-be -n default --timeout=10m
 
       - name: Deploy ETL
         id: deploy_etl
         if: ${{ !cancelled() && steps.ctx.outcome == 'success' && needs.build-etl.result == 'success' }}
-        timeout-minutes: 5
+        timeout-minutes: 12
         run: |
           kubectl rollout restart deployment/kolsherut-etl -n default
-          kubectl rollout status deployment/kolsherut-etl -n default --timeout=2m
+          kubectl rollout status deployment/kolsherut-etl -n default --timeout=10m
 
       # Retrieval warms the embedding model before it reports Ready, so give
-      # the rollout longer than the 2m used by be/etl.
+      # the rollout longer than the other services.
       - name: Deploy Retrieval
         id: deploy_retrieval
         if: ${{ !cancelled() && steps.ctx.outcome == 'success' && needs.build-retrieval.result == 'success' }}
