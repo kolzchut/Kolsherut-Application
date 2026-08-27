@@ -3,9 +3,10 @@
 Dedup key = hasher(organization_id, geometry-or-branch_id, branch_name). The
 first row wins; later duplicates merge into it field by field: None filled,
 lists unioned (existing items first), differing strings only logged - with the
-incoming and existing branch ids - when fuzzy similarity < 80. Every original
-branch_key -> merged key is returned as the branch mapping consumed by the flat
-services builder. Pure: input rows are never mutated.
+incoming and existing branch ids - when fuzzy similarity < 80, and never for
+FUZZY_COMPARE_EXEMPT_FIELDS, where that similarity is meaningless. Every
+original branch_key -> merged key is returned as the branch mapping consumed by
+the flat services builder. Pure: input rows are never mutated.
 """
 from thefuzz import fuzz
 
@@ -14,6 +15,11 @@ from srm_tools.logger import logger
 
 FUZZY_SIMILARITY_THRESHOLD = 80
 MERGE_EXEMPT_FIELDS = ('branch_id', 'branch_key', 'branch_orig_address', 'branch_name')
+# Fields still merged normally (None is filled from the incoming row) but never
+# fuzzy-compared: two valid ISO timestamps always score below the threshold, so
+# the similarity warning carries no information. NOT a MERGE_EXEMPT_FIELDS entry:
+# exempting the field would also stop the None-filling and change merged output.
+FUZZY_COMPARE_EXEMPT_FIELDS = ('branch_last_modified',)
 
 
 def calculate_merged_branch_key(row):
@@ -28,6 +34,8 @@ def merged_field_value(existing, incoming_branch_id, field_name, incoming_value)
     if isinstance(incoming_value, list):
         return existing_value + [item for item in incoming_value if item not in existing_value]
     if isinstance(incoming_value, str):
+        if field_name in FUZZY_COMPARE_EXEMPT_FIELDS:
+            return existing_value
         similarity = fuzz.ratio(existing_value, incoming_value)
         if similarity < FUZZY_SIMILARITY_THRESHOLD:
             logger.warning(

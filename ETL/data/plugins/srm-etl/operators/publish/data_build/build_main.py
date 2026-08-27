@@ -1,5 +1,10 @@
 """Stage 2 - one Airtable pull of the main base + the pure in-memory card build
 (legacy to_dp.py operator). Returns PipelineData; no writes, no disk.
+
+The raw pull is released as soon as it is preprocessed, and the flatten stage
+returns generators, so the (service, branch) explosion is materialized exactly
+once - as the card list. The flattened-row count is therefore logged by the card
+build, which is where that list first exists.
 """
 from conf import settings
 from srm_tools.logger import logger
@@ -32,11 +37,11 @@ def fetch_data_and_build_cards():
     logger.info('Starting Data Build Flow')
     raw_tables = fetch_main_base_tables_from_airtable()
     source_tables = preprocess_source_tables(raw_tables)
+    del raw_tables
     print('Preprocessed the 6 source tables; flattening branches and services...')
     flat_branches, branch_mapping = build_flat_branches(source_tables)
     flat_services = build_flat_services(source_tables, flat_branches, branch_mapping)
     flat_table = build_flat_table(flat_services, flat_branches)
-    print(f'Flattened {len(flat_table)} (service, branch) rows; building cards...')
     cards = build_cards(source_tables, flat_table)
     logger.info('Finished Data Build Flow: %d cards', len(cards))
     return PipelineData(source_tables=source_tables, cards=cards)

@@ -5,8 +5,9 @@ with no consumer (places, responses, situations, orgs) were dropped (deliberate
 behavior change #5). srm_services mirrors the Airtable Services table one
 document per service, straight from the preprocessed source table. Search-only
 fields are added on card document copies so the in-memory cards stay
-Airtable-shaped. The frozen mappings arrive preloaded from the pipeline-start
-preflight.
+Airtable-shaped - streamed one at a time, since the bulk helper consumes the
+documents lazily and in order, so no second full copy of the cards is held.
+The frozen mappings arrive preloaded from the pipeline-start preflight.
 """
 from srm_tools.logger import logger
 
@@ -24,7 +25,7 @@ SERVICES_SOURCE_TABLE = 'services'
 def publish_to_elasticsearch(data, index_mappings):
     logger.info('Starting ES Flow')
     es_client = connect_to_elasticsearch()
-    card_documents = [add_card_search_fields(card) for card in data.cards]
+    card_documents = (add_card_search_fields(card) for card in data.cards)
     publish_rows_to_index(
         es_client, CARDS_INDEX_NAME, card_documents, CARDS_PRIMARY_KEY, index_mappings[CARDS_INDEX_NAME],
     )
