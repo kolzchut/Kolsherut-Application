@@ -17,6 +17,12 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      scope:
+        description: 'all = every service (a dispatch does not diff) | fe = FE + production SSG only'
+        type: choice
+        options: [all, fe]
+        default: all
 
 # One group per ref so runs serialize their cluster start/stop window.
 # cancel-in-progress must stay false: a cancelled run's async `az aks stop
@@ -92,6 +98,14 @@ jobs:
             DEPLOY_ALL=true
           fi
 
+          # A dispatch scoped to "fe" rebuilds and redeploys the FE alone - on a
+          # release tag that is the production SSG refresh. Only a dispatch can
+          # ask for it; pushes and releases are unaffected.
+          FE_ONLY=false
+          if [[ "$EVENT" == "workflow_dispatch" && "${{ inputs.scope }}" == "fe" ]]; then
+            FE_ONLY=true
+          fi
+
           for SVC in fe be etl retrieval; do
             case "$SVC" in
               fe)        CHANGED="${{ steps.filter.outputs.fe }}" ;;
@@ -99,7 +113,13 @@ jobs:
               etl)       CHANGED="${{ steps.filter.outputs.etl }}" ;;
               retrieval) CHANGED="${{ steps.filter.outputs.retrieval }}" ;;
             esac
-            if [[ "$DEPLOY_ALL" == "true" || "$CHANGED" == "true" ]]; then
+            if [[ "$FE_ONLY" == "true" ]]; then
+              if [[ "$SVC" == "fe" ]]; then
+                echo "$SVC=true" >> "$GITHUB_OUTPUT"
+              else
+                echo "$SVC=false" >> "$GITHUB_OUTPUT"
+              fi
+            elif [[ "$DEPLOY_ALL" == "true" || "$CHANGED" == "true" ]]; then
               echo "$SVC=true" >> "$GITHUB_OUTPUT"
             else
               echo "$SVC=false" >> "$GITHUB_OUTPUT"
