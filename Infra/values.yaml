@@ -52,6 +52,9 @@ secrets:
   
   KZ_GITHUB_TOKEN: ""
   KZ_KOLSHERUT_APPLICATION_GITHUB_TOKEN: ""
+  # Optional dedicated token for the publish operator's audit push.
+  # Leave empty to fall back to KZ_GITHUB_TOKEN (see conf/settings.py).
+  ETL_AUDIT_REPO_TOKEN: ""
 
 # ---------------------------------------------------------
 # 1. BACKEND CONFIGURATION
@@ -203,6 +206,11 @@ etl:
     CRONICLE_smtp_port: "587"
     CRONICLE_mail_options__auth__user: "notifier.etl@gmail.com"
     CRONICLE_secret_key: "" # MUST BE PROVIDED VIA SECRETS FILE
+
+    # Publish-operator Airtable audit repository. Unset FULL_NAME = audit disabled.
+    # Override ETL_AUDIT_REPO_BRANCH per environment to keep runs apart.
+    ETL_AUDIT_REPO_FULL_NAME: "kolzchut/Kolsherut-Airtable-Audit"
+    ETL_AUDIT_REPO_BRANCH: "main"
 
 # ---------------------------------------------------------
 # 4. FRONTEND CONFIGURATION

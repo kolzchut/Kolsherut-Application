@@ -115,6 +115,11 @@ spec:
                 secretKeyRef:
                   name: {{ include "backend.fullname" . }}-secrets
                   key: KZ_KOLSHERUT_APPLICATION_GITHUB_TOKEN
+            - name: ETL_AUDIT_REPO_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "backend.fullname" . }}-secrets
+                  key: ETL_AUDIT_REPO_TOKEN
             
             # --- Guidestar & External APIs ---
             - name: ETL_GUIDESTAR_USERNAME

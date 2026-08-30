@@ -102,6 +102,18 @@ variables; when `ETL_AUDIT_REPO_FULL_NAME` is unset the feature is a silent no-o
 | `ETL_AUDIT_REPO_BRANCH` | Branch the run commits land on | `main` |
 | `ETL_AUDIT_REPO_TOKEN` | GitHub token with `contents:write` on the repo | falls back to `KZ_GITHUB_TOKEN` |
 
+In the cluster these arrive through Helm: `ETL_AUDIT_REPO_FULL_NAME` and `ETL_AUDIT_REPO_BRANCH`
+from `etl.env` in `Infra/values.yaml` (override the branch per environment in
+`Infra/values-<env>.yaml` to keep dev/staging/prod runs apart), and `ETL_AUDIT_REPO_TOKEN` from
+the `-secrets` Secret. Leaving the token secret empty is the normal case - the push then reuses
+`KZ_GITHUB_TOKEN`.
+
+The token must be a GitHub PAT whose **Contents** permission on the audit repository is
+*Read and write* (fine-grained) or that carries the `repo` scope (classic). A read-only token
+fails the push with `403 Resource not accessible by personal access token` on the first
+`POST /git/blobs`, which the pipeline logs and swallows - the run still succeeds, so a
+misconfigured token shows up only as a missing commit.
+
 ## The frozen ES mappings
 
 The index mappings are frozen JSON snapshots of the mappings the legacy generator produced
