@@ -143,9 +143,10 @@ tables; the full source list with a link to each spec is in [data.md](data.md).
 
 Say you added `specs/new_source.yaml`:
 
-1. Rebuild and redeploy the Cronicle image so the new spec is inside the container (the
-   [dockerfile](dockerfile) copies `specs/` at build time). On a local compose run the plugins
-   folder is mounted, so no rebuild is needed.
+1. Push the spec. `specs/` is part of the plugin tree, so the `sync-etl-plugins` job copies
+   it to the environment's Azure File Share on its own - **no image rebuild, no cluster
+   start, no pod restart**. The next job run reads the new spec. On a local compose run the
+   plugins folder is mounted, so nothing extra is needed there either.
 2. **Schedule → Add Event**, name it after the source, category **Data Import**, plugin
    **Shell Script**, and use the standard script with `python3 -m engine new_source`.
 3. Set the timing (fetchers typically run weekly, on the weekend, at an hour no other fetcher

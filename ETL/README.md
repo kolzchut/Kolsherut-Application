@@ -81,6 +81,33 @@ The production schedule (16 events, split into the **Backup**, **Data Import**, 
 
 ![Production Cronicle schedule](image.png)
 
+## How a change ships
+
+The ETL has two independent deploy routes, picked automatically from what a push touched
+(see the `detect` job in [`deploy.yml`](../.github/workflows/deploy.yml)).
+
+| You changed | Route | What happens |
+|---|---|---|
+| Anything under `data/plugins/srm-etl/` | **Plugins** | `sync-etl-plugins` syncs only the new and changed files to the environment's `etl-plugins` Azure File Share. No image build, no cluster start, no pod restart — Cronicle forks a fresh `python3` per job, so the next run picks up the change. Files deleted from the repo are removed from the share. |
+| `dockerfile`, `requirements.txt`, `data/config.json` | **Image** | Full image rebuild, push to ACR, and `kubectl rollout restart`, exactly as before. Dev/stage clusters are started and stopped for it. |
+| Both | Both | The plugins sync completes before the pod is restarted. |
+| Anything else under `ETL/` (docs, tests) | **Image** | Falls back to a rebuild rather than deploying nothing. |
+
+The plugin tree is mounted from the share over the copy the
+[dockerfile](dockerfile) bakes into the image — one read-only bind mount per plugin
+directory, so `/opt/cronicle/plugins/srm-etl` itself stays on the container's local disk
+along with the scratch paths jobs write there (`gacache/`, `.checkpoints/`, `data/`,
+`backup/`). The image copy is the seed for a brand-new or emptied share; once the share is
+populated it is authoritative, and an image rebuild never reverts a plugin change.
+
+Because the plugin directories are mounted read-only, the ETL sets
+`PYTHONPYCACHEPREFIX=/tmp/pycache` (in [`Infra/values.yaml`](../Infra/values.yaml) under
+`etl.env`) to keep CPython's `.pyc` cache off the share. Adding a new top-level plugin
+directory means adding it to three places: the `COPY` lines in
+[dockerfile](dockerfile), `etl.pluginsShare.mountedDirectories` in
+[`Infra/values.yaml`](../Infra/values.yaml), and `PLUGIN_DIRECTORIES` in the
+`sync-etl-plugins` job.
+
 ## Running locally
 
 1. Create `data/plugins/srm-etl/.env` with the required variables (Airtable bases and API key,

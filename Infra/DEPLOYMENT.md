@@ -48,6 +48,62 @@ helm upgrade --install kolsherut . -f values.yaml -f values-prod.yaml -f secrets
 
 ---
 
+## ETL Plugins Share
+
+The ETL mounts the `srm-etl` plugin tree from an RWX Azure File Share (`etl-plugins` on the
+same storage account as the frontend share — see
+[docs/azure-environments.md](../docs/azure-environments.md)) so that CI can deploy a plugin
+change without an image build or a cluster start. The chart pieces are
+`templates/etl-plugins-storage.yaml` (Secret + static PV), `templates/etl-plugins-pvc.yaml`,
+and the `seed-plugins` initContainer plus ten read-only `subPath` mounts in
+`templates/etl-deployment.yaml`.
+
+**CI never runs Helm**, so adding or changing any of this requires a manual
+`helm upgrade` per environment. To bring an environment onto the share:
+
+1.  Create the `etl-plugins` share on that environment's storage account.
+2.  Put the account name and key in `secrets-<env>.yaml` under `etl.pluginsShare`
+    (same values as `frontend.persistence.*`) — see `secrets.template.yaml`.
+3.  Add the matching `<DEV|STAGE|PROD>_ETL_PLUGINS_STORAGE_ACCOUNT` / `_KEY` repository
+    secrets so the `sync-etl-plugins` job can reach it.
+4.  Run the `helm upgrade` for that environment.
+
+Order does not matter for safety: the image still carries a full copy of the plugin tree, so
+an ETL pod deployed before the share exists behaves exactly as it did before the share was
+introduced.
+
+On the first pod start with the share mounted, check the seeding decision:
+
+```bash
+kubectl logs deployment/kolsherut-etl -c seed-plugins -n default
+```
+
+**Both outcomes are healthy** — which one you get depends on the order you did the steps in:
+
+*   `share populated - leaving it alone` — the usual result when following the steps above,
+    because the `sync-etl-plugins` job writes the share over the REST API and needs neither
+    the mount nor a running pod. So if any plugin change was pushed between step 3 and step 4,
+    CI has already filled the share.
+*   `share empty - seeding from image` — the share was still empty at first mount, so the
+    initContainer populated it from the image copy.
+
+Either way the share is authoritative from then on, and an image rebuild never reverts a
+plugin change. If the initContainer instead fails, the share is present but incomplete: the
+sentinel checks refuse to start a pod on a half-synced tree. Re-run the `sync-etl-plugins`
+job (or empty the share to force a reseed) rather than restarting the pod.
+
+*   **Resize:** the PVC is statically bound and cannot be resized in place. Change
+    `etl.pluginsShare.size` **and** bump `etl.pluginsShare.shareGeneration`; Helm then creates
+    a fresh PV/PVC pair on the same share and the ETL rolls onto it.
+*   **Never** run `azcopy remove --recursive` or `az storage directory delete --recursive` on
+    this share. The ten plugin directories are `subPath` bind mounts resolved at container
+    start, so deleting one behind the mount leaves the running pod with a stale view until it
+    restarts. The CI sync only ever removes files.
+*   **Disable:** set `etl.pluginsShare.enabled: false` and the ETL falls back to the plugin
+    copy inside the image, with no share, no seeding and no mounts.
+
+---
+
 ## Non-Prod Basic Auth (dev / staging)
 
 `dev.kolsherut.org.il` and `staging.kolsherut.org.il` are guarded by HTTP Basic Auth at the ingress (`frontend.ingress.basicAuth.enabled: true` in `values-dev.yaml` / `values-staging.yaml`). Production leaves it disabled. This keeps the non-prod sites out of search engines and away from casual visitors — a per-host `robots.txt` cannot do that (robots rules are per host and advisory only).

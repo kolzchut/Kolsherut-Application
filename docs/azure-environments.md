@@ -30,6 +30,23 @@ Frontend configuration is edited in the **[Kolsherut-FE-Configurations][fe-confi
 | **Staging** | `festagingaccount` | `frontend` | [open][share-stage] |
 | **Development** | `fedevaccount` | `frontend` | [open][share-dev] |
 
+### ETL plugins share
+
+The same three storage accounts each carry a second share, `etl-plugins`, holding the
+srm-etl plugin tree that the ETL pod mounts. The `sync-etl-plugins` CI job writes it
+directly, which is why a plugin-only change deploys without starting a cluster. Do not edit
+it by hand — the next sync reverses anything you change, and it is deleted from the share if
+it is not in the repo.
+
+| Environment | Storage account | Share |
+| --- | --- | --- |
+| **Production** | `feproductionaccount` | `etl-plugins` |
+| **Staging** | `festagingaccount` | `etl-plugins` |
+| **Development** | `fedevaccount` | `etl-plugins` |
+
+If a share is ever emptied it self-heals: the ETL pod's `seed-plugins` initContainer finds
+it empty on the next start and repopulates it from the copy baked into the image.
+
 Which environment a Git branch or release deploys to is described in the root README's [CI CD](../README.md#ci-cd) section.
 
 ## Starting and stopping a cluster

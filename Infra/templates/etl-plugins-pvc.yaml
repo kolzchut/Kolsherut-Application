@@ -1,0 +1,17 @@
+{{- if .Values.etl.pluginsShare.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "etl.pluginsClaimName" . }}
+  labels:
+    component: etl
+    {{- include "backend.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  volumeName: {{ include "etl.pluginsVolumeName" . }}
+  resources:
+    requests:
+      storage: {{ .Values.etl.pluginsShare.size | quote }}
+{{- end }}

@@ -1,0 +1,61 @@
+{{- if .Values.etl.pluginsShare.enabled }}
+{{- $accountName := required "etl.pluginsShare.azureStorageAccountName is required when etl.pluginsShare is enabled (set it in secrets-<env>.yaml)" .Values.etl.pluginsShare.azureStorageAccountName -}}
+{{- $accountKey := required "etl.pluginsShare.azureStorageAccountKey is required when etl.pluginsShare is enabled (set it in secrets-<env>.yaml)" .Values.etl.pluginsShare.azureStorageAccountKey -}}
+# Secret holding the Azure Storage Account credentials for the ETL plugins file
+# share. The account name and key are provided per-environment via secrets files.
+# Guarded with `required` above: an empty credential renders a Secret that the
+# pod cannot mount, which surfaces as a stuck rollout far from its cause.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "backend.fullname" . }}-etl-plugins-storage-secret
+  labels:
+    component: etl
+    {{- include "backend.labels" . | nindent 4 }}
+type: Opaque
+data:
+  azurestorageaccountname: {{ $accountName | b64enc | quote }}
+  azurestorageaccountkey: {{ $accountKey | b64enc | quote }}
+---
+# Static PersistentVolume pointing to the pre-created Azure File Share that holds
+# the srm-etl plugin tree. CI syncs this share directly over the Azure Files REST
+# API, so a plugin change never needs an image build or a cluster start.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "etl.pluginsVolumeName" . }}
+  labels:
+    component: etl
+    {{- include "backend.labels" . | nindent 4 }}
+spec:
+  capacity:
+    storage: {{ .Values.etl.pluginsShare.size | quote }}
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  mountOptions:
+    # The pod runs as root and CI is the only writer, so the FE share's 0777 is
+    # wider than this needs to be.
+    - dir_mode=0755
+    - file_mode=0644
+    - uid=0
+    - gid=0
+    # cache=none, NOT the FE's cache=strict. CI writes over the Azure Files REST
+    # data plane, and REST-plane writes do not break SMB oplocks/leases - with a
+    # caching mount a running pod can keep serving the OLD bytes after a
+    # successful sync, with no error. Forking a fresh python3 per Cronicle job
+    # does not help: the staleness is in the kernel page cache, not the process.
+    # actimeo=0 does the same for new/deleted files and metadata.
+    - cache=none
+    - actimeo=0
+    - nosharesock
+  csi:
+    driver: file.csi.azure.com
+    volumeHandle: {{ include "backend.fullname" . }}-etl-plugins-fileshare-{{ .Values.etl.pluginsShare.shareGeneration }}
+    volumeAttributes:
+      shareName: {{ .Values.etl.pluginsShare.azureFileShareName | quote }}
+    nodeStageSecretRef:
+      name: {{ include "backend.fullname" . }}-etl-plugins-storage-secret
+      namespace: {{ .Release.Namespace }}
+{{- end }}

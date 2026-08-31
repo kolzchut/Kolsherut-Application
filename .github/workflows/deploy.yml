@@ -40,6 +40,7 @@ jobs:
       fe: ${{ steps.compute.outputs.fe }}
       be: ${{ steps.compute.outputs.be }}
       etl: ${{ steps.compute.outputs.etl }}
+      etl_plugins: ${{ steps.compute.outputs.etl_plugins }}
       retrieval: ${{ steps.compute.outputs.retrieval }}
       version: ${{ steps.compute.outputs.version }}
       fe_env: ${{ steps.compute.outputs.fe_env }}
@@ -67,8 +68,27 @@ jobs:
               - 'FE/**'
             be:
               - 'be/**'
+            # The ETL has two independent routes, so it needs three filters.
+            # Negation ('!ETL/data/plugins/**') is deliberately NOT used: a
+            # filter's patterns are OR-combined, so a '!' pattern matches every
+            # path outside its directory and the exclusion becomes a no-op.
             etl:
               - 'ETL/**'
+            etl_image:
+              - 'ETL/dockerfile'
+              - 'ETL/requirements.txt'
+              - 'ETL/data/config.json'
+            etl_plugins:
+              - 'ETL/data/plugins/srm-etl/operators/**'
+              - 'ETL/data/plugins/srm-etl/engine/**'
+              - 'ETL/data/plugins/srm-etl/specs/**'
+              - 'ETL/data/plugins/srm-etl/transformers/**'
+              - 'ETL/data/plugins/srm-etl/srm_tools/**'
+              - 'ETL/data/plugins/srm-etl/utilities/**'
+              - 'ETL/data/plugins/srm-etl/transform/**'
+              - 'ETL/data/plugins/srm-etl/extract/**'
+              - 'ETL/data/plugins/srm-etl/load/**'
+              - 'ETL/data/plugins/srm-etl/conf/**'
             retrieval:
               - 'retrieval/**'
             workflows:
@@ -106,11 +126,10 @@ jobs:
             FE_ONLY=true
           fi
 
-          for SVC in fe be etl retrieval; do
+          for SVC in fe be retrieval; do
             case "$SVC" in
               fe)        CHANGED="${{ steps.filter.outputs.fe }}" ;;
               be)        CHANGED="${{ steps.filter.outputs.be }}" ;;
-              etl)       CHANGED="${{ steps.filter.outputs.etl }}" ;;
               retrieval) CHANGED="${{ steps.filter.outputs.retrieval }}" ;;
             esac
             if [[ "$FE_ONLY" == "true" ]]; then
@@ -125,6 +144,42 @@ jobs:
               echo "$SVC=false" >> "$GITHUB_OUTPUT"
             fi
           done
+
+          # ETL is not in the loop above because it has two independent routes.
+          # `etl` is the image route (build + rollout, as every other service).
+          # `etl_plugins` syncs the plugin tree to its Azure File Share and
+          # touches no cluster at all. A plugin-only push must therefore leave
+          # `etl` false - that is precisely what keeps the dev/stage cluster from
+          # being started for a one-line operator change.
+          ETL_ANY="${{ steps.filter.outputs.etl }}"
+          ETL_IMAGE="${{ steps.filter.outputs.etl_image }}"
+          ETL_PLUGINS="${{ steps.filter.outputs.etl_plugins }}"
+
+          ETL=false
+          if [[ "$ETL_IMAGE" == "true" ]]; then
+            ETL=true
+          elif [[ "$ETL_ANY" == "true" && "$ETL_PLUGINS" != "true" ]]; then
+            # An ETL change that is neither an image input nor a plugin file -
+            # docs, tests, docker-compose.yml. Rebuild, exactly as before the
+            # split, rather than silently deploying nothing.
+            ETL=true
+          fi
+
+          if [[ "$FE_ONLY" == "true" ]]; then
+            ETL=false
+            ETL_PLUGINS=false
+          elif [[ "$DEPLOY_ALL" == "true" ]]; then
+            ETL=true
+            ETL_PLUGINS=true
+          fi
+
+          # The filter step is skipped for release/dispatch, leaving the outputs
+          # empty rather than "false".
+          [[ "$ETL_PLUGINS" == "true" ]] || ETL_PLUGINS=false
+
+          echo "etl=$ETL" >> "$GITHUB_OUTPUT"
+          echo "etl_plugins=$ETL_PLUGINS" >> "$GITHUB_OUTPUT"
+          echo "ETL routes: image=$ETL plugins=$ETL_PLUGINS"
 
           if [[ "$REF" == refs/tags/v* ]]; then
             echo "version=${REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
@@ -196,6 +251,156 @@ jobs:
       image_name: 'kolsherut-retrieval'
       version: ${{ needs.detect.outputs.version }}
       lfs: true
+
+  # ── ETL plugins route ──────────────────────────────────────────────────────
+  # The plugin tree is pure Python/YAML/CSV/JSON - nothing compiled - and
+  # Cronicle forks a fresh python3 per job, so a plugin change needs no image
+  # build and no pod restart. This job talks only to the Azure File Share that
+  # backs the ETL's plugin mounts, so it never starts the dev/stage cluster.
+  # That start/stop window was the bulk of the old round trip for a one-line
+  # operator change.
+  sync-etl-plugins:
+    needs: detect
+    if: needs.detect.outputs.etl_plugins == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      SHARE_NAME: etl-plugins
+      # Pinned deliberately, and NOT because the runner lacks azcopy - it ships
+      # one. --compare-hash=MD5 in the sync step is the single flag this whole
+      # job depends on, and its semantics have moved between azcopy releases, so
+      # an unpinned "latest" could silently revert the sync to full re-uploads
+      # with no diff in this repo to explain it.
+      # WHEN BUMPING THIS: re-run the acceptance test - push a one-line plugin
+      # change and confirm the sync reports a small "Number of File Transfers",
+      # not the whole ~225-file tree.
+      AZCOPY_VERSION: "10.32.8"
+      AZCOPY_BIN: /usr/local/bin/azcopy
+      # Must stay in step with etl.pluginsShare.mountedDirectories in
+      # Infra/values.yaml and the COPY lines in ETL/dockerfile.
+      PLUGIN_DIRECTORIES: "operators engine specs transformers srm_tools utilities transform extract load conf"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set Share Variables
+        run: |
+          if [[ "${{ needs.detect.outputs.is_prod }}" == "true" ]]; then
+            echo "STORAGE_ACCOUNT=${{ secrets.PROD_ETL_PLUGINS_STORAGE_ACCOUNT }}" >> $GITHUB_ENV
+            echo "STORAGE_KEY=${{ secrets.PROD_ETL_PLUGINS_STORAGE_KEY }}" >> $GITHUB_ENV
+          elif [[ "${{ needs.detect.outputs.env_tag }}" == "stage" ]]; then
+            echo "STORAGE_ACCOUNT=${{ secrets.STAGE_ETL_PLUGINS_STORAGE_ACCOUNT }}" >> $GITHUB_ENV
+            echo "STORAGE_KEY=${{ secrets.STAGE_ETL_PLUGINS_STORAGE_KEY }}" >> $GITHUB_ENV
+          else
+            echo "STORAGE_ACCOUNT=${{ secrets.DEV_ETL_PLUGINS_STORAGE_ACCOUNT }}" >> $GITHUB_ENV
+            echo "STORAGE_KEY=${{ secrets.DEV_ETL_PLUGINS_STORAGE_KEY }}" >> $GITHUB_ENV
+          fi
+
+      - name: Stage Plugin Tree
+        run: |
+          PLUGIN_SOURCE=ETL/data/plugins/srm-etl
+          STAGED="$RUNNER_TEMP/etl-plugins"
+          rm -rf "$STAGED"
+          for directory in $PLUGIN_DIRECTORIES; do
+            mkdir -p "$STAGED/$directory"
+            cp -r "$PLUGIN_SOURCE/$directory/." "$STAGED/$directory/"
+          done
+          # Bytecode must never reach the share: the plugin directories are
+          # mounted readOnly, and PYTHONPYCACHEPREFIX keeps the pod's own cache
+          # in /tmp. A clean CI checkout has none of this; the prune is what
+          # makes the step safe to run from a working tree too.
+          find "$STAGED" -name '__pycache__' -type d -prune -exec rm -rf {} +
+          find "$STAGED" -name '*.pyc' -delete
+          echo "${{ github.sha }}" > "$STAGED/VERSION"
+          echo "STAGED=$STAGED" >> $GITHUB_ENV
+
+      - name: Verify Staged Tree
+        run: |
+          if [[ -z "$STORAGE_ACCOUNT" ]]; then
+            echo "No ETL plugins storage account configured for this environment."
+            echo "Set the <DEV|STAGE|PROD>_ETL_PLUGINS_STORAGE_ACCOUNT and _KEY"
+            echo "repository secrets, and create the '$SHARE_NAME' share, before"
+            echo "merging a plugin change. See Infra/DEPLOYMENT.md."
+            exit 1
+          fi
+          FILE_COUNT=$(find "$STAGED" -type f | wc -l)
+          echo "staged $FILE_COUNT files for $STORAGE_ACCOUNT/$SHARE_NAME"
+          # The sync below runs with --delete-destination=true, so an empty or
+          # truncated staging directory is the one way this job could clear the
+          # share out from under a running pod. 200 sits well under the ~225
+          # tracked files and well above anything a partial checkout would give.
+          if [[ "$FILE_COUNT" -lt 200 ]]; then
+            echo "refusing to sync: only $FILE_COUNT files staged"
+            exit 1
+          fi
+          test -s "$STAGED/engine/__main__.py"
+          test -s "$STAGED/conf/settings.py"
+          # --delete-destination=true is only safe because every mounted
+          # directory is present in the staged tree and therefore never
+          # extraneous. Assert that here rather than leaving it to rest on
+          # `cp` failing under `set -e` in the previous step.
+          for directory in $PLUGIN_DIRECTORIES; do
+            if [[ ! -d "$STAGED/$directory" ]]; then
+              echo "refusing to sync: staged tree is missing $directory/"
+              exit 1
+            fi
+          done
+
+      - name: Install azcopy
+        run: |
+          set -o pipefail
+          # -f so a bad version tag fails here instead of writing an HTML error
+          # page into the tarball.
+          AZCOPY_URL="https://github.com/Azure/azure-storage-azcopy/releases/download/v$AZCOPY_VERSION/azcopy_linux_amd64_$AZCOPY_VERSION.tar.gz"
+          curl -fsSL -o "$RUNNER_TEMP/azcopy.tar.gz" "$AZCOPY_URL"
+          tar -xzf "$RUNNER_TEMP/azcopy.tar.gz" -C "$RUNNER_TEMP" --strip-components=1 --wildcards '*/azcopy'
+          sudo install -m 0755 "$RUNNER_TEMP/azcopy" "$AZCOPY_BIN"
+          # By absolute path: the runner's own azcopy is also on PATH.
+          "$AZCOPY_BIN" --version
+
+      - name: Sync Plugins To Share
+        id: sync
+        run: |
+          set -o pipefail
+          # A short-lived, share-scoped SAS rather than the account key: the
+          # long-lived key never leaves this job, and the credential that can
+          # write to the share expires in 30 minutes.
+          EXPIRY=$(date -u -d '30 minutes' '+%Y-%m-%dT%H:%MZ')
+          SAS=$(az storage share generate-sas --name "$SHARE_NAME" --account-name "$STORAGE_ACCOUNT" --account-key "$STORAGE_KEY" --permissions rwdlc --expiry "$EXPIRY" --https-only -o tsv)
+          echo "::add-mask::$SAS"
+          DESTINATION="https://$STORAGE_ACCOUNT.file.core.windows.net/$SHARE_NAME?$SAS"
+
+          # --compare-hash=MD5 is load-bearing. azcopy's default comparison is
+          # last-modified-time, and actions/checkout stamps every file with the
+          # checkout time - always newer than the share - so the default would
+          # re-upload the whole tree on every run and defeat the point of this
+          # job. --put-md5 stores the hash so the NEXT run can compare.
+          # Never add --preserve-smb-info: .pyc invalidation keys on source
+          # mtime+size, and fresh checkout mtimes are what keeps stale bytecode
+          # impossible.
+          # --delete-destination removes files deleted from the repo, which is
+          # what stops renamed modules lingering on the share as zombie imports.
+          # It can only ever delete NESTED paths: all ten mounted directories are
+          # always present in the staged tree, so they are never extraneous.
+          # Never run `azcopy remove --recursive` or `az storage directory delete
+          # --recursive` on this share - removing a directory behind a subPath
+          # bind mount leaves the running pod with a stale view until it restarts.
+          SYNC_FLAGS="--recursive --delete-destination=true --compare-hash=MD5 --put-md5"
+          "$AZCOPY_BIN" sync "$STAGED" "$DESTINATION" $SYNC_FLAGS 2>&1 | tee /tmp/azcopy.log
+
+      - name: Report Sync Summary
+        if: always() && steps.sync.outcome != 'skipped'
+        run: |
+          {
+            echo "### ETL plugins sync"
+            echo ""
+            echo "Share: $SHARE_NAME on $STORAGE_ACCOUNT, commit ${{ github.sha }}"
+            echo ""
+            echo '```'
+            sed -n '/[Ss]ummary/,$p' /tmp/azcopy.log || echo "no azcopy log produced"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
 
   build-fe:
     needs: detect
@@ -291,7 +496,7 @@ jobs:
           provenance: false
 
   deploy-nonprod:
-    needs: [detect, build-fe, build-be, build-etl, build-retrieval]
+    needs: [detect, build-fe, build-be, build-etl, build-retrieval, sync-etl-plugins]
     # !cancelled(): run even when some builds were skipped or failed (but not
     # when the run was cancelled) — each deploy
     # step below checks its own build's result, so one broken service never
@@ -388,9 +593,11 @@ jobs:
           kubectl rollout restart deployment/kolsherut-be -n default
           kubectl rollout status deployment/kolsherut-be -n default --timeout=10m
 
+      # The needs: edge already orders the plugins sync ahead of this, but a
+      # FAILED sync must not be rolled onto: the share would be half updated.
       - name: Deploy ETL
         id: deploy_etl
-        if: ${{ !cancelled() && steps.ctx.outcome == 'success' && needs.build-etl.result == 'success' }}
+        if: ${{ !cancelled() && steps.ctx.outcome == 'success' && needs.build-etl.result == 'success' && needs.sync-etl-plugins.result != 'failure' }}
         timeout-minutes: 12
         run: |
           kubectl rollout restart deployment/kolsherut-etl -n default
@@ -502,9 +709,10 @@ jobs:
           (needs.build-fe.result == 'failure' ||
            needs.build-be.result == 'failure' ||
            needs.build-etl.result == 'failure' ||
-           needs.build-retrieval.result == 'failure')
+           needs.build-retrieval.result == 'failure' ||
+           needs.sync-etl-plugins.result == 'failure')
         run: |
-          echo "At least one build job failed"
+          echo "At least one build or sync job failed"
           exit 1
 
   # Publishes per-service pass/fail + timestamp to .badges/ on the dev branch,
@@ -516,7 +724,7 @@ jobs:
   # concatenates them into the merge commit, which then skips ALL workflows
   # on main (this happened with PR #56).
   report-status:
-    needs: [detect, build-fe, build-be, build-etl, build-retrieval, deploy-nonprod, deploy-production]
+    needs: [detect, build-fe, build-be, build-etl, build-retrieval, sync-etl-plugins, deploy-nonprod, deploy-production]
     if: >
       !cancelled() &&
       needs.detect.result == 'success' &&
@@ -538,6 +746,7 @@ jobs:
           BUILD_BE: ${{ needs.build-be.result }}
           BUILD_ETL: ${{ needs.build-etl.result }}
           BUILD_RETRIEVAL: ${{ needs.build-retrieval.result }}
+          SYNC_ETL: ${{ needs.sync-etl-plugins.result }}
           NONPROD_FE: ${{ needs.deploy-nonprod.outputs.fe }}
           NONPROD_BE: ${{ needs.deploy-nonprod.outputs.be }}
           NONPROD_ETL: ${{ needs.deploy-nonprod.outputs.etl }}
@@ -578,6 +787,9 @@ jobs:
           update_badge be BE "$BUILD_BE" "$DEPLOY_BE"
           update_badge etl ETL "$BUILD_ETL" "$DEPLOY_ETL"
           update_badge retrieval Retrieval "$BUILD_RETRIEVAL" "$DEPLOY_RETRIEVAL"
+          # The plugins route has a single outcome - it never touches the
+          # cluster, so there is no separate deploy step to report.
+          update_badge etl-plugins "ETL Plugins" "$SYNC_ETL" "$SYNC_ETL"
 
       - name: Commit and Push Badges
         run: |
@@ -598,7 +810,7 @@ jobs:
           exit 1
 
   deploy-production:
-    needs: [detect, build-fe, build-be, build-etl, build-retrieval]
+    needs: [detect, build-fe, build-be, build-etl, build-retrieval, sync-etl-plugins]
     if: >
       !cancelled() &&
       needs.detect.result == 'success' &&
@@ -646,7 +858,7 @@ jobs:
 
       - name: Deploy ETL to Production
         id: deploy_etl
-        if: ${{ !cancelled() && steps.ctx.outcome == 'success' && needs.build-etl.result == 'success' }}
+        if: ${{ !cancelled() && steps.ctx.outcome == 'success' && needs.build-etl.result == 'success' && needs.sync-etl-plugins.result != 'failure' }}
         run: |
           kubectl set image deployment/kolsherut-etl etl=${{ secrets.ACR_LOGIN_SERVER }}/kolsherut-etl:production -n default
           kubectl set env deployment/kolsherut-etl CODE_VERSION=${{ needs.detect.outputs.version }} -n default
@@ -677,7 +889,8 @@ jobs:
           (needs.build-fe.result == 'failure' ||
            needs.build-be.result == 'failure' ||
            needs.build-etl.result == 'failure' ||
-           needs.build-retrieval.result == 'failure')
+           needs.build-retrieval.result == 'failure' ||
+           needs.sync-etl-plugins.result == 'failure')
         run: |
-          echo "At least one build job failed"
+          echo "At least one build or sync job failed"
           exit 1
