@@ -195,8 +195,44 @@ etl:
     storageClass: "managed-csi"
     size: 4Gi
 
+  # RWX Azure File Share holding the srm-etl plugin tree, mounted over the copy
+  # baked into the image. CI syncs it directly over the Azure Files REST API, so
+  # a plugin-only change needs no image build and no cluster start. The image
+  # copy remains the seed for a brand new or emptied share.
+  pluginsShare:
+    enabled: true
+    # The PVC is statically bound to the share and cannot be resized in place.
+    # Bump this suffix whenever `size` changes: Helm then creates a new PV/PVC
+    # pair pointing at the SAME share and the ETL rolls onto it. Data is never
+    # moved. Same mechanism as frontend.persistence.volumeGeneration.
+    shareGeneration: "v1"
+    size: "5Gi"
+    # One bind mount per directory. This list is the single source of truth for
+    # the seed loop and the mounts in etl-deployment.yaml, and it must stay in
+    # step with the COPY lines in ETL/dockerfile and the staging step of the
+    # sync-etl-plugins job in .github/workflows/deploy.yml.
+    mountedDirectories:
+      - operators
+      - engine
+      - specs
+      - transformers
+      - srm_tools
+      - utilities
+      - transform
+      - extract
+      - load
+      - conf
+    # Per-environment Azure File Share settings (provided via secrets files)
+    azureFileShareName: "etl-plugins"
+    azureStorageAccountName: ""   # MUST BE PROVIDED VIA SECRETS FILE
+    azureStorageAccountKey: ""    # MUST BE PROVIDED VIA SECRETS FILE
+
   env:
     TZ: "Asia/Jerusalem"
+    # Keep CPython's bytecode cache off the plugins share: the plugin directories
+    # are mounted readOnly, so without this every job start would fail to write
+    # ~225 .pyc files, silently lose the cache and pay a full compile each run.
+    PYTHONPYCACHEPREFIX: "/tmp/pycache"
     # CRONICLE hostname/url envs defined in values-env.yaml
     CRONICLE_ip: "0.0.0.0" 
     CRONICLE_server__port: "3012"    

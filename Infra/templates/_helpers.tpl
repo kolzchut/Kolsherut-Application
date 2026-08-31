@@ -72,3 +72,19 @@ Name of the htpasswd Secret referenced by the FE ingress auth-secret annotation.
 {{- define "frontend.basicAuthSecretName" -}}
 {{ include "backend.fullname" . }}-fe-basic-auth
 {{- end }}
+
+{{/*
+ETL plugins PVC name. Same static-PVC constraint as the frontend config claim:
+bumping etl.pluginsShare.shareGeneration creates a fresh PV/PVC pair on the same
+Azure File Share and the ETL rolls onto it.
+*/}}
+{{- define "etl.pluginsClaimName" -}}
+{{ include "backend.fullname" . }}-etl-plugins-{{ .Values.etl.pluginsShare.shareGeneration }}
+{{- end }}
+
+{{/*
+ETL plugins PV name (paired with etl.pluginsClaimName).
+*/}}
+{{- define "etl.pluginsVolumeName" -}}
+{{ include "etl.pluginsClaimName" . }}-pv
+{{- end }}

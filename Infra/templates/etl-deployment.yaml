@@ -35,6 +35,41 @@ spec:
                 sleep 2
               done
               
+      {{- if .Values.etl.pluginsShare.enabled }}
+        # The plugin tree lives on an RWX Azure File Share so CI can update it
+        # without an image build or a cluster start. The image still carries a
+        # full copy (see ETL/dockerfile), which is used here to seed a brand new
+        # or emptied share - after that the share is authoritative and an image
+        # rebuild never reverts a plugin change.
+        - name: seed-plugins
+          image: "{{ .Values.etl.image.repository }}:{{ .Values.etl.image.tag }}"
+          imagePullPolicy: {{ .Values.etl.image.pullPolicy }}
+          command:
+            - 'sh'
+            - '-c'
+            - |
+              SHARE=/mnt/plugins-share
+              SOURCE=/opt/cronicle/plugins/srm-etl
+              if [ -z "$(ls -A "$SHARE" 2>/dev/null)" ]; then
+                echo "share empty - seeding from image"
+                for directory in {{ join " " .Values.etl.pluginsShare.mountedDirectories }}; do
+                  mkdir -p "$SHARE/$directory"
+                  cp -rf "$SOURCE/$directory/." "$SHARE/$directory/"
+                done
+              else
+                echo "share populated - leaving it alone"
+              fi
+              # Fail the rollout rather than start a pod on a half-synced share:
+              # the container has no probes, so without this a broken share would
+              # present as a green deploy and only surface later as failing
+              # Cronicle jobs.
+              test -s "$SHARE/engine/__main__.py" || exit 1
+              test -s "$SHARE/conf/settings.py" || exit 1
+          volumeMounts:
+            - name: etl-plugins
+              mountPath: /mnt/plugins-share
+      {{- end }}
+
       containers:
         - name: etl
           image: "{{ .Values.etl.image.repository }}:{{ .Values.etl.image.tag }}"
@@ -50,6 +85,21 @@ spec:
           volumeMounts:
             - name: etl-storage
               mountPath: /opt/cronicle/data
+            {{- if .Values.etl.pluginsShare.enabled }}
+            # One bind mount per plugin directory rather than a single mount at
+            # /opt/cronicle/plugins/srm-etl: that directory is also the runtime
+            # CWD of every Cronicle job, and six scratch paths are written
+            # relative to it (gacache/ and .checkpoints/ hold SQLite, which does
+            # not survive SMB locking). Mounting only the code directories keeps
+            # the parent - and therefore all of that scratch - on the container's
+            # local writable layer. readOnly because CI is the only writer.
+            {{- range .Values.etl.pluginsShare.mountedDirectories }}
+            - name: etl-plugins
+              mountPath: /opt/cronicle/plugins/srm-etl/{{ . }}
+              subPath: {{ . }}
+              readOnly: true
+            {{- end }}
+            {{- end }}
 
           env:
             # -----------------------------------------------------
@@ -207,4 +257,9 @@ spec:
             claimName: {{ include "backend.fullname" . }}-etl-data
         {{- else }}
           emptyDir: {}
+        {{- end }}
+        {{- if .Values.etl.pluginsShare.enabled }}
+        - name: etl-plugins
+          persistentVolumeClaim:
+            claimName: {{ include "etl.pluginsClaimName" . }}
         {{- end }}
