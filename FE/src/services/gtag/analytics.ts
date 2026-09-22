@@ -7,7 +7,7 @@ import {getIsLandingPage} from "../../store/general/general.selector";
 let isInitialized = false;
 
 const init = () => {
-    if (navigator.userAgent.includes("KolsherutBot")) return;
+    if (navigator.userAgent.includes("KolSherutBot")) return;
     const analyticsId = window.environment.analyticsId;
     ReactGA.initialize(analyticsId, {
         gtagOptions: {
