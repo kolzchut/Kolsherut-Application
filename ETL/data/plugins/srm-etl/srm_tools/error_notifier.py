@@ -12,7 +12,7 @@ from srm_tools.logger import logger
 def report_failure_to_container_log(operation_name: str, error: str, is_test: bool = False):
     # Cronicle captures a job's stdout into its own job log, so a plain print never reaches
     # `kubectl logs` / Azure Container Insights. Write one JSON line to the container's stdout
-    # (PID 1) instead; the `kolsherut-etl-job-failed` alert in MONITORING.md matches on `event`.
+    # (PID 1) instead; MONITORING.md documents how to query these lines by `event`.
     line = json.dumps({
         'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(),
         'level': 'error',
