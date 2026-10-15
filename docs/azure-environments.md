@@ -131,6 +131,7 @@ Need to apply the same change to several environments? Edit the file in each fol
 - [FE/README.md → Configuration Files](../FE/README.md#configuration-files) — what every config file controls.
 - [FE/README.md → SSG](../FE/README.md#2-ssg--build-time-pre-rendering) — how the `p/` pages are generated.
 - [Infra/DEPLOYMENT.md](../Infra/DEPLOYMENT.md) — deploying the Helm chart by hand.
+- [MONITORING.md](../MONITORING.md) — logs, Log Analytics queries and alerts for production.
 
 [fe-config-repo]: https://github.com/kolzchut/Kolsherut-FE-Configurations
 [fe-config-dev]: https://github.com/kolzchut/Kolsherut-FE-Configurations/tree/main/dev

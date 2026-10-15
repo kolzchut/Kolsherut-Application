@@ -1,4 +1,7 @@
+import datetime
+import json
 import smtplib
+import sys
 import traceback
 
 from email.mime.text import MIMEText
@@ -6,7 +9,26 @@ from email.mime.multipart import MIMEMultipart
 from conf import settings
 from srm_tools.logger import logger
 
+def report_failure_to_container_log(operation_name: str, error: str, is_test: bool = False):
+    # Cronicle captures a job's stdout into its own job log, so a plain print never reaches
+    # `kubectl logs` / Azure Container Insights. Write one JSON line to the container's stdout
+    # (PID 1) instead; MONITORING.md documents how to query these lines by `event`.
+    line = json.dumps({
+        'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        'level': 'error',
+        'event': 'etl_job_failed_test' if is_test else 'etl_job_failed',
+        'env': settings.ENV_NAME,
+        'operation': operation_name,
+        'error': error[-2000:],
+    }, ensure_ascii=False)
+    try:
+        with open('/proc/1/fd/1', 'a') as container_stdout:
+            container_stdout.write(line + '\n')
+    except OSError:
+        sys.stderr.write(line + '\n')
+
 def send_failure_email(operation_name: str, error: str, is_test: bool = False,reraise: bool = True):
+    report_failure_to_container_log(operation_name, error, is_test)
     ENV_NAME = settings.ENV_NAME
     SMTP_SERVER = settings.SMTP_SERVER
     SMTP_PORT = settings.SMTP_PORT
@@ -39,7 +61,7 @@ def send_failure_email(operation_name: str, error: str, is_test: bool = False,re
         server.quit()
         logger.info(f"Email sent about {operation_name}.")
     except Exception as e:
-        logger.info(f"Failed to send email: {e}, {SENDER_EMAIL},{SENDER_PASSWORD}")
+        logger.info(f"Failed to send email: {e}, {SENDER_EMAIL}")
         raise Exception(f"Failed to send email:{e}. \nOperation {operation_name} encountered an error. \nERROR:{error}")
     
     if not is_test and reraise:

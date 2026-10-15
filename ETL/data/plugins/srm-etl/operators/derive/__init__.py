@@ -7,7 +7,7 @@ from srm_tools.error_notifier import invoke_on
 
 def deriveData(*_):
 
-    logger.info('DEPRECATED - NOT IN USE ANYMORE - MOVED TO PUBLISHER INSTEAD')
+    logger.info('DEPRECATED! - NOT IN USE ANYMORE - MOVED TO PUBLISHER INSTEAD')
     return None
     logger.info('Starting Derive Data Flow')
 

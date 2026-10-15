@@ -1,0 +1,63 @@
+{
+  "account_id": "",
+  "name_prefix": "[kolsherut] ",
+  "recipients": [
+    "CHANGE_ME@kolsherut.org.il"
+  ],
+  "zones": [
+    "kolsherut.org.il"
+  ],
+  "policies": [
+    {
+      "key": "http-ddos",
+      "name": "HTTP DDoS attack",
+      "alert_type": "dos_attack_l7",
+      "description": "Cloudflare detected and mitigated an HTTP (L7) DDoS attack on one of the zones."
+    },
+    {
+      "key": "security-events-spike",
+      "name": "Security events spike (WAF / geo blocks / rate limit)",
+      "alert_type": "clickhouse_alert_fw_anomaly",
+      "description": "Spike in Security Events (WAF custom rules incl. geo blocks, managed rules, rate limiting, bot fight). Business+ only.",
+      "filters": { "zones": "$zones" }
+    },
+    {
+      "key": "advanced-security-events-spike",
+      "name": "Advanced security events spike",
+      "alert_type": "clickhouse_alert_fw_ent_anomaly",
+      "description": "Same as security-events-spike with per-service filtering. Enterprise only.",
+      "filters": { "zones": "$zones" }
+    },
+    {
+      "key": "origin-unreachable",
+      "name": "Origin unreachable (passive origin monitoring)",
+      "alert_type": "real_origin_monitoring",
+      "description": "Cloudflare cannot reach the origin (sustained 521/522/523 errors)."
+    },
+    {
+      "key": "universal-ssl",
+      "name": "Universal SSL certificate events",
+      "alert_type": "universal_ssl_event_type",
+      "description": "Edge certificate validation, issuance, renewal and expiration events."
+    },
+    {
+      "key": "cloudflare-incidents",
+      "name": "Cloudflare incidents (major / critical)",
+      "alert_type": "incident_alert",
+      "description": "Cloudflare platform incidents with major or critical impact.",
+      "filters": { "incident_impact": ["INCIDENT_IMPACT_MAJOR", "INCIDENT_IMPACT_CRITICAL"] }
+    },
+    {
+      "key": "content-blocked",
+      "name": "Content blocked by Cloudflare",
+      "alert_type": "block_notification_new_block",
+      "description": "Cloudflare placed a block on a URL in one of the zones (Trust & Safety)."
+    },
+    {
+      "key": "abuse-report",
+      "name": "Abuse report received",
+      "alert_type": "abuse_report_alert",
+      "description": "A new abuse report was filed against one of the zones."
+    }
+  ]
+}
