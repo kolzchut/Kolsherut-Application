@@ -6,5 +6,6 @@ interface IProps {
     serviceId: string;
 }
 export default ({organizationName, serviceId}:IProps) =>{
-    return cardHeaderIcon.find(icon => icon?.organizationName === organizationName || (icon?.servicePrefix && serviceId.startsWith(icon.servicePrefix)));
+    const matches = cardHeaderIcon.filter(icon => icon?.organizationName === organizationName || (icon?.servicePrefix && serviceId.startsWith(icon.servicePrefix)));
+    return matches.filter((icon, index) => matches.findIndex(other => other.organizationLogo === icon.organizationLogo) === index);
 }

@@ -1,0 +1,220 @@
+name: meonot
+description: >-
+  מקור מידע זה שואב מפורטל ההורים של משרד החינוך את רשימת מעונות היום המסובסדים
+  לפעוטות בגילאי לידה עד שלוש שנים, המחזיקים ב"סמל מעון" רשמי מהמדינה.
+
+  המידע העסקי כולל את שם המעון ומיקומו, פרטי הגוף המפעיל ופרטי הקשר. כל מעון מקושר
+  לאחד מחמשת שירותי המעונות, בהתאם למגזר האוכלוסייה (יהודי, ערבי, בדואי, דרוזי או צרקסי).
+
+apis:
+  - name: fetch
+    # The "Excel" download is an HTML table. The latest year available is always year + 1.
+    url: "https://parents.education.gov.il/prhnet/Api/MeonotController/GetExcel?0=%%CURRENT_YEAR%%&1=0&2=0&3=0&4=0&5=0&csrt=6690085414305040436"
+    format: html_table
+    flavor: lxml
+    promote_first_row_header: true
+    all_text: true   # keep phone numbers as text, so leading zeros are not lost
+    url_macros:
+      '%%CURRENT_YEAR%%': current_year_plus_one
+
+lookups:
+  sector_service:
+    יהודי: meonot-jews
+    ערבי: meonot-arabs
+    בדואי: meonot-bedouin
+    דרוזי: meonot-druze
+    צרקסי: meonot-circassians
+
+static_data:
+  services:
+    - &service_base
+      source: meonot
+      data_sources: 'מידע נוסף אפשר למצוא ב<a target="_blank" href="https://parents.education.gov.il/prhnet/gov-education/kindergarten/search-daycare">פורטל ההורים באתר משרד החינוך</a>'
+      name: מעון יום מסובסד לפעוטות בפיקוח משרד החינוך
+      description: 'מסגרת טיפולית חינוכית עבור פעוטות בגילים 0-3 המופעלת על ידי עמותות וגופים שקיבלו "סמל מעון" מהמדינה. המעון פועל במתכונת יום ארוך ומחויב להעניק סל שירותים הכולל סדר יום המכוון לקידום ההתפתחות הגופנית, השכלית והרגשית של הפעוט.'
+      responses: [human_services:care:daytime_care]
+      payment_required: 'yes'
+      payment_details: 'שכר הלימוד במעונות היום נמצא תחת פיקוח, והוא נקבע לפי גיל הפעוט וסוג המסגרת. מידע נוסף ועדכני לגבי גובה שכר הלימוד ניתן למצוא ב<a target="_blank" href="https://www.gov.il/he/pages/tuition-daycare-and-supervised-nurseries">אתר משרד העבודה</a>'
+      status: ACTIVE
+      id: meonot-jews
+      details: ''
+      situations: [human_situations:age_group:infants]
+    - <<: *service_base
+      id: meonot-circassians
+      details: 'המעון מיועד עבור החברה הצרקסית.'
+      situations:
+        - human_situations:age_group:infants
+        - human_situations:sectors:circassians
+    - <<: *service_base
+      id: meonot-arabs
+      details: 'המעון מיועד עבור החברה הערבית.'
+      situations:
+        - human_situations:age_group:infants
+        - human_situations:sectors:arabs
+        - human_situations:language:arabic_speaking
+    - <<: *service_base
+      id: meonot-bedouin
+      details: 'המעון מיועד עבור החברה הבדואית.'
+      situations:
+        - human_situations:age_group:infants
+        - human_situations:sectors:bedouin
+        - human_situations:language:arabic_speaking
+    - <<: *service_base
+      id: meonot-druze
+      details: 'המעון מיועד עבור החברה הדרוזית.'
+      situations:
+        - human_situations:age_group:infants
+        - human_situations:sectors:druze
+        - human_situations:language:arabic_speaking
+
+outputs:
+  - name: service
+    derive_from: static_data.services
+    table: Services
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: meonot
+    manage_status: true
+    columns:
+      - {target: id, source: id}
+      - {target: data_sources, source: data_sources}
+      - {target: name, source: name}
+      - {target: description, source: description}
+      - {target: details, source: details}
+      - {target: situations, source: situations}
+      - {target: responses, source: responses}
+      - {target: payment_required, source: payment_required}
+      - {target: payment_details, source: payment_details}
+
+  # Intermediate resource - raw columns plus the cleaned helper columns the filters need
+  - name: meonot_base
+    derive_from: fetch
+    columns:
+      - {target: work_symbol, source: סמל זרוע העבודה}
+      - {target: license_status, source: סטטוס הרישוי}
+      - target: sector
+        source: מגזר
+        transforms:
+          - {op: strip}
+      - {target: phone, source: טלפון}
+      - target: phone_digits
+        source: טלפון
+        transforms:
+          - {op: regex_replace, pattern: '\D', replacement: ''}
+      - {target: org_id, source: 'ח"פ ארגון'}
+      - target: org_name
+        source: בעלות
+        transforms:
+          - op: replace_by_prefix_rules
+            rules:
+              - prefixes: [מ. אזורית, מ.א., מ.א]
+                replacements: {מ. אזורית: מועצה אזורית, מ.א.: מועצה אזורית, מ.א: מועצה אזורית}
+              - prefixes: [מ. מקומית, מ.מקומית]
+                replacements: {מ. מקומית: מועצה מקומית, מ.מקומית: מועצה מקומית}
+      # the last five characters of "שם וסמל מעון" are the daycare symbol
+      - target: symbol
+        source: שם וסמל מעון
+        transforms:
+          - {op: regex_replace, pattern: '^.*(\d{5})\s*$', replacement: '\1'}
+      # drop the first six characters (hyphen, space, five-digit symbol) and tidy spaces
+      - target: branch_name
+        source: שם וסמל מעון
+        transforms:
+          - {op: regex_replace, pattern: '^.{6}', replacement: ''}
+          - {op: regex_replace, pattern: '\s+', replacement: ' '}
+          - {op: strip}
+      - target: address
+        source: [יישוב, כתובת]
+        transforms:
+          - {op: join_present_fields, separator: ' '}
+      - {target: manager, source: מנהל/ת המעון}
+
+  # Intermediate resource - the filtered, organization-matched daycare rows
+  - name: meonot_records
+    derive_from: meonot_base
+    row_transforms:
+      - {op: filter_rows, predicate: str_len_between, field: work_symbol, min: 1}
+      - {op: filter_rows, predicate: equals, field: license_status, value: רישיון בתוקף}
+      - {op: filter_rows, predicate: str_len_between, field: phone_digits, min: 9, max: 10}
+      # organizations we already know by name (local authorities) keep their existing id
+      - op: airtable_lookup_match
+        match_field: org_name
+        lookup_table: Organizations
+        lookup_base: AIRTABLE_DATA_IMPORT_BASE
+        lookup_field: x_final_org_name
+        override_field: org_id
+        prefixes: [מועצה מקומית, מועצה אזורית]
+        normalizations: {}
+      # a branch can only be created under an organization we can identify
+      - {op: filter_rows, predicate: str_len_between, field: org_id, min: 5}
+    columns:
+      - {target: sector, source: sector}
+      - {target: phone, source: phone}
+      - {target: org_id, source: org_id}
+      - {target: org_name, source: org_name}
+      - {target: symbol, source: symbol}
+      - {target: branch_name, source: branch_name}
+      - {target: address, source: address}
+      - {target: manager, source: manager}
+
+  - name: organization
+    derive_from: meonot_records
+    table: Organizations
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: meonot
+    manage_status: true
+    fields_to_update: [id, source, status]
+    columns:
+      - {target: id, source: org_id}
+      - {target: name, source: org_name}
+      - {target: kind, value: חברה פרטית}
+
+  # Intermediate resource - branch rows before Airtable foreign-key resolution
+  - name: branch_base
+    derive_from: meonot_records
+    columns:
+      - target: id
+        source: symbol
+        transforms:
+          - {op: ensure_prefix, prefix: 'meonot-'}
+      - {target: name, source: branch_name}
+      - {target: phone_numbers, source: phone}
+      - {target: address, source: address}
+      - {target: location, source: address}
+      - target: description
+        source: [manager, symbol]
+        transforms:
+          - {op: template, template: "מנהל/מנהלת המעון: {manager}.\nסמל המעון במשרד החינוך: {symbol}.", empty_missing: true}
+      - {target: org_business_id, source: org_id}
+      - target: service_id_matcher
+        source: sector
+        transforms:
+          - {op: lookup_map, lookup: sector_service}
+
+  - name: branch
+    derive_from: branch_base
+    table: Branches
+    base: AIRTABLE_DATA_IMPORT_BASE
+    source_id: meonot
+    manage_status: true
+    row_transforms:
+      - op: resolve_foreign_key
+        source_table: Organizations
+        current_table: Branches
+        base: AIRTABLE_DATA_IMPORT_BASE
+        base_field: org_business_id
+        target_field: organization
+      - op: resolve_foreign_key
+        source_table: Services
+        current_table: Branches
+        base: AIRTABLE_DATA_IMPORT_BASE
+        base_field: service_id_matcher
+        target_field: services
+    columns:
+      - {target: id, source: id}
+      - {target: name, source: name}
+      - {target: phone_numbers, source: phone_numbers}
+      - {target: address, source: address}
+      - {target: location, source: location}
+      - {target: description, source: description}
+      - {target: organization, source: organization}
+      - {target: services, source: services}
