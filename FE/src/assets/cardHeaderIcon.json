@@ -8,5 +8,15 @@
     "organizationName": "משרד העבודה",
     "servicePrefix": "mol",
     "organizationLogo": "/icons/logo_misrad_havoda2.png"
+  },
+  {
+    "organizationName": "משרד החינוך",
+    "servicePrefix": "meonot",
+    "organizationLogo": "/icons/logo_misrad_hinuch.png"
+  },
+  {
+    "organizationName": "משרד העבודה",
+    "servicePrefix": "meonot",
+    "organizationLogo": "/icons/logo_misrad_havoda2.png"
   }
 ]
