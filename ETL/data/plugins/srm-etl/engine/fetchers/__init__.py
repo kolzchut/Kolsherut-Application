@@ -8,6 +8,7 @@ from engine.fetchers.html_table_fetch import fetch_html_table
 from engine.fetchers.json_fetch import fetch_json
 from engine.fetchers.link_next_paginated import fetch_link_next
 from engine.fetchers.page_param_paginated import fetch_page_param
+from engine.fetchers.xlsx_download import fetch_xlsx
 
 FETCHER_REGISTRY = {
     ('json', 'none'): fetch_json,
@@ -16,6 +17,7 @@ FETCHER_REGISTRY = {
     ('json', 'page_param'): fetch_page_param,
     ('json', 'budgetkey'): fetch_budgetkey,
     ('html_table', 'none'): fetch_html_table,
+    ('xlsx', 'none'): fetch_xlsx,
     ('click_cache', 'none'): fetch_click_cache,
     ('airtable', 'none'): fetch_airtable_table,
     ('google_drive_xlsx', 'none'): fetch_google_drive_xlsx,
