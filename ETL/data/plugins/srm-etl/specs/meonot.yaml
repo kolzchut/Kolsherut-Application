@@ -8,12 +8,9 @@ description: >-
 
 apis:
   - name: fetch
-    # The "Excel" download is an HTML table. The latest year available is always year + 1.
-    url: "https://parents.education.gov.il/prhnet/Api/MeonotController/GetExcel?0=%%CURRENT_YEAR%%&1=0&2=0&3=0&4=0&5=0&csrt=6690085414305040436"
-    format: html_table
-    flavor: lxml
-    promote_first_row_header: true
-    all_text: true   # keep phone numbers as text, so leading zeros are not lost
+    # Real xlsx download; the latest year available in the portal is always the current year + 1.
+    url: "https://parents.education.gov.il/api/data/meonot/GetMeonotExcel?year=%%CURRENT_YEAR%%&shemYeshuv=&shemRechov=&misparBait=&radius=0"
+    format: xlsx
     url_macros:
       '%%CURRENT_YEAR%%': current_year_plus_one
 
@@ -132,6 +129,7 @@ outputs:
   - name: meonot_records
     derive_from: meonot_base
     row_transforms:
+      - {op: filter_rows, predicate: not_null, field: work_symbol}
       - {op: filter_rows, predicate: str_len_between, field: work_symbol, min: 1}
       - {op: filter_rows, predicate: equals, field: license_status, value: רישיון בתוקף}
       - {op: filter_rows, predicate: str_len_between, field: phone_digits, min: 9, max: 10}
