@@ -19,7 +19,7 @@ const Header = ({branchOperatingUnit, addressParts, isNational, organizationName
     const onBackButtonClick = () => backToResults();
     const handleKeyDown = createKeyboardHandler(onBackButtonClick);
     const theme = useTheme<IDynamicThemeApp>();
-    const iconSource = getHeaderIcon({serviceId, organizationName});
+    const iconSources = getHeaderIcon({serviceId, organizationName});
     const isStringAddressParts = typeof addressParts === 'string';
 
     const classes = useStyle({accessibilityActive: theme.accessibilityActive});
@@ -52,8 +52,8 @@ const Header = ({branchOperatingUnit, addressParts, isNational, organizationName
             </div>}
             {isNational && <span className={`${classes.nationWideText}`}> {serviceGivenNationWide}</span>}
         </div>
-        {iconSource &&
-            <img className={classes.headerIcon} src={iconSource.organizationLogo} alt={iconSource.organizationName}/>}
+        {iconSources.map(iconSource =>
+            <img key={iconSource.organizationLogo} className={classes.headerIcon} src={iconSource.organizationLogo} alt={iconSource.organizationName}/>)}
     </div>
 }
 export default Header;

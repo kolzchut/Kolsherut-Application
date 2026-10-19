@@ -272,7 +272,8 @@ in the **Operator** field, where `<name>` is one of the packages under
 >   GilZahav → `gilzahav`, Kol-Zchut Organizations → `kolzchut_orgs`, Mahlakot Revaha → `revaha`,
 >   Mental Health Clinic → `mental_health_clinics`, meser → `meser`, Mol_daycare → `day_care`,
 >   SHIL → `shil`, Social Procurement Data → `soproc`, Tipat Halav → `tipat`. The `child_care`
->   spec still has no scheduled event. History in
+>   spec was later replaced by the `meonot` spec, which still needs a scheduled **Run SPEC**
+>   event (`Operator = meonot`, twice a week, e.g. Sun and Wed 01:30). History in
 >   [MIGRATION_STATUS.md](data/plugins/srm-etl/MIGRATION_STATUS.md).
 > - **2026-08-31** — all sixteen events were moved off the built-in Shell Script plugin onto the
 >   dedicated **Run Operator** / **Run SPEC** plugins (see
