@@ -17,8 +17,11 @@ def download_xlsx_bytes(url, params, headers):
     response.raise_for_status()
     content_type = response.headers.get('content-type', '')
     if SPREADSHEET_CONTENT_TYPE_MARKER not in content_type:
+        redirects = [f'{step.status_code} {step.url}' for step in response.history]
         raise RuntimeError(
-            f'Expected an xlsx file from {url} but got content-type "{content_type}": '
+            f'Expected an xlsx file from {url} but got HTTP {response.status_code} from '
+            f'{response.url} (redirects: {redirects}) with content-type "{content_type}", '
+            f'sent headers {sorted((headers or {}).keys())}: '
             f'{response.text[:ERROR_BODY_PREVIEW_CHARS]!r}')
     return io.BytesIO(response.content)
 
