@@ -11,6 +11,10 @@ apis:
     # Real xlsx download; the latest year available in the portal is always the current year + 1.
     url: "https://parents.education.gov.il/api/data/meonot/GetMeonotExcel?year=%%CURRENT_YEAR%%&shemYeshuv=&shemRechov=&misparBait=&radius=0"
     format: xlsx
+    # like gilzahav, the portal API may only answer requests that look like they came from its own page
+    headers:
+      Referer: "https://parents.education.gov.il/gov-education/daycare-home/search-daycare"
+      User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
     url_macros:
       '%%CURRENT_YEAR%%': current_year_plus_one
 
@@ -86,8 +90,8 @@ outputs:
   - name: meonot_base
     derive_from: fetch
     columns:
-      - {target: work_symbol, source: סמל זרוע העבודה}
-      - {target: license_status, source: סטטוס הרישוי}
+      - {target: work_symbol, source: זרוע העבודה}
+      - {target: license_status, source: סטטוס רישוי}
       - target: sector
         source: מגזר
         transforms:
@@ -97,7 +101,7 @@ outputs:
         source: טלפון
         transforms:
           - {op: regex_replace, pattern: '\D', replacement: ''}
-      - {target: org_id, source: 'ח"פ ארגון'}
+      - {target: org_id, source: 'ח"פ ארגון', optional: true}
       - target: org_name
         source: בעלות
         transforms:
