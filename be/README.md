@@ -117,3 +117,5 @@ Non-prod deploy details:
 Production deploy pins the image explicitly (`kubectl set image ... kolsherut-be:production`), stamps `CODE_VERSION`, and restarts the deployment with a 3-minute timeout.
 
 Runtime environment variables come from the Kubernetes deployment spec (managed in `Infra/`), not from the image.
+
+## change to re -run build to fix againt Brotli attack
