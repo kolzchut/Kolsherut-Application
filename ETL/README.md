@@ -27,7 +27,7 @@ and [`MIGRATION_STATUS.md`](data/plugins/srm-etl/MIGRATION_STATUS.md) (YAML-engi
                         geocode / taxonomy ──▶ Airtable (main base)
                                                  │
                                                  ▼
-                            Upload to DB (publish/derive pipeline)
+                            Upload to DB (publish pipeline)
                                                  │
                                                  ▼
                           Elasticsearch (srm__cards, srm__autocomplete, …)
@@ -65,7 +65,7 @@ ETL/
   [CRONICLE.md](CRONICLE.md#data-fetchers) for how to schedule one.
 - **Operators** — Python packages under
   [`operators/`](data/plugins/srm-etl/operators), run as `python3 -m operators.<name>`:
-  the publish/derive pipeline ("Upload to DB"), the taxonomy refresh, geocoding, manual data
+  the publish pipeline ("Upload to DB"), the curated-tables sync (`deploy`), the taxonomy refresh, geocoding, manual data
   entry, the GitHub backup trigger, and the frontend release trigger.
 
 ## Environments
@@ -73,10 +73,10 @@ ETL/
 | Environment | Address | What runs there |
 |-------------|---------|-----------------|
 | **prod** | https://etl.kolsherut.org.il/ | Everything: all data fetchers, Upload to DB, taxonomy, geocode, backups, FE release trigger |
-| **stage** | https://etl-staging.kolsherut.org.il/ | Only Upload to DB (the publish/derive pipeline) and the taxonomy refresh, against the staging stack |
+| **stage** | https://etl-staging.kolsherut.org.il/ | Only Upload to DB (the publish pipeline) and the taxonomy refresh, against the staging stack |
 | **dev** | https://etl-dev.kolsherut.org.il/ | Nothing scheduled — used for experiments |
 
-The production schedule (16 events, split into the **Backup**, **Data Import**, and
+The production schedule (17 events, split into the **Backup**, **Data Import**, and
 **Production** categories):
 
 ![Production Cronicle schedule](image.png)

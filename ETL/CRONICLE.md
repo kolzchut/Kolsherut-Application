@@ -54,8 +54,8 @@ inside the plugin; each event supplies only the name.
 
 ### The two plugins
 
-**Run Operator** — runs `python3 -m operators.<name>`. For standalone operators: `deploy`,
-`geocode`, `taxonomy`, `ssg_updater`, `github_backup`, `manual_data_entry`. Its **Executable**
+**Run Operator** — runs `python3 -m operators.<name>`. For standalone operators: `publish`,
+`deploy`, `geocode`, `taxonomy`, `ssg_updater`, `github_backup`, `manual_data_entry`. Its **Executable**
 field holds this single line:
 
 ```
@@ -92,13 +92,15 @@ becomes the module or spec name.
 ### Current event mapping
 
 All sixteen production events were converted on 2026-08-31 — nothing runs on the built-in
-Shell Script plugin anymore.
+Shell Script plugin anymore. A seventeenth, **Deploy Curated Tables**, was split out of Upload
+to DB on 2026-10-29 (see the [migration notes](#non-fetcher-jobs-operators)).
 
 | Event | Plugin | Operator |
 |-------|--------|----------|
 | Refresh Taxonomies | Run Operator | `taxonomy` |
 | Trigger Release Of FE | Run Operator | `ssg_updater` |
-| Upload to DB | Run Operator | `deploy` |
+| Upload to DB | Run Operator | `publish` |
+| Deploy Curated Tables | Run Operator | `deploy` |
 | Manual Data Entry | Run Operator | `manual_data_entry` |
 | Github Backup Trigger | Run Operator | `github_backup` |
 | Geocode | Run Operator | `geocode` |
@@ -194,7 +196,7 @@ uses three:
 |----------|----------|
 | **Backup** | GitHub Backup Trigger |
 | **Data Import** | All data fetchers + Geocode, Manual Data Entry, Refresh Taxonomies, Enrich Entities |
-| **Production** | Upload to DB, Trigger Release Of FE |
+| **Production** | Upload to DB, Deploy Curated Tables, Trigger Release Of FE |
 
 To add a category: **Admin → Categories → Add Category**, give it a title, optionally a
 highlight color for the Schedule tab, a max-concurrent-jobs limit, and default
@@ -261,7 +263,7 @@ Say you added `specs/new_source.yaml`:
 The pipeline and maintenance jobs are Python packages, not specs. Their events use the
 **Run Operator** plugin — equivalent to `python3 -m operators.<name>` — with the package name
 in the **Operator** field, where `<name>` is one of the packages under
-[`operators/`](data/plugins/srm-etl/operators) — e.g. `derive` (Upload to DB), `taxonomy`
+[`operators/`](data/plugins/srm-etl/operators) — e.g. `publish` (Upload to DB), `deploy` (Deploy Curated Tables), `taxonomy`
 (Refresh Taxonomies), `geocode`, `manual_data_entry`, `github_backup`, `ssg_updater`
 (Trigger Release Of FE).
 
@@ -281,6 +283,11 @@ in the **Operator** field, where `<name>` is one of the packages under
 >   from data.gov.il (Mol_daycare, Mahlakot Revaha, Mental Health Clinic, meser) failed because
 >   the portal's CKAN API returned 404 site-wide — verified from a regular browser, so an
 >   upstream outage, unrelated to the plugins.
+> - **2026-10-29** — the conversion had left **Upload to DB** on `deploy`, which only syncs the
+>   Presets / Situations / Responses / Locations tables between Airtable bases. No event ran
+>   the `publish` pipeline, so nothing reached Elasticsearch after 2026-08-31. Fix: the old
+>   event was renamed **Deploy Curated Tables** (still `deploy` — those tables still need
+>   syncing), and a new **Upload to DB** event runs `publish`, daily at 8am and 8pm.
 
 ## Creating users
 
